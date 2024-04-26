@@ -1,0 +1,9 @@
+Abacus
+Fusionar o no fusionar las graficas
+Ocultar las graficas
+star en number of graphics
+Todos en la misma ruta 
+hacer lifetime como start-stop
+Pares de canales para g_2
+Implementar start stop, histogram
+Versión ultra básica
