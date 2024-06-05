@@ -1,0 +1,10 @@
+comandos scpi para tresholdvoltage
+CONF (Configuracion): THR (lo que quiero cambiar) +" "+(valor)
+no distingue mayuscula y minuscula ()
+el treshold recibe cualquier con mayuscula o minuscula no interesa
+Increment threshold y decrement con flechita
+4 gráficas (Corregido)
+centrar los bins 
+0.5 segundos (Corregido)
+
+1 solo botón que sea saveplots()

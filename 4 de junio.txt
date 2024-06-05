@@ -1,0 +1,23 @@
+Texto aplicar cambios
+constante debug 
+Cuando no hay canal escogido mensaje de advertencia y pues no iniciar la medición
+Minimo de ventana
+Start-stop time
+Channel numero en archivos guardados
+Poner formato de la imagen
+
+Seleccione los canales a graficar: texto channels in the graphic (Texto más diciente)
+
+No connected device was found
+quitar la palabra error de las alertas
+Espacios de los titulos
+
+Versión 1.0.0 tempicosoftware
+
+2145 abacus main.py
+generar documentación
+
+publicar en una rama (Desarrollo Joan)
+Investigar tiempos tipícos de lifetime
+
+Siguiente paso g2()

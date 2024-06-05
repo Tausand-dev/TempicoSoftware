@@ -1,0 +1,3 @@
+Reminders PyTempicoSoftware
+Se trabajara en la version de python 3.8 de 64 bits. Cuando se cree el instalador se downgradeara
+Se tomara como base el daisy software
