@@ -11,3 +11,7 @@ Tempico Software is a suite of tools build to ensure your experience with Tausan
     - PySerial
     - PyInstaller
     - HID
+## UML overview
+The UML diagram provides a high-level approximation of the application's structure.
+
+
