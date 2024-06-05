@@ -35,7 +35,7 @@ import createsavefile as savefile
 import datetime
 from ui_settings import Ui_settings
 from Canvas import Canvas
-
+from constants import *
 
 
 
@@ -52,7 +52,7 @@ class SplashScreen(QMainWindow):
         self.image_label.setGeometry(0, 0, 400, 300)
 
         # Cargar la imagen
-        pixmap = QPixmap("./Sources/splash.png")  # Ajusta la ruta de tu imagen
+        pixmap = QPixmap(BANNER)  # Ajusta la ruta de tu imagen
         self.image_label.setPixmap(pixmap)
 
         # Mostrar la ventana principal después de 3 segundos
@@ -75,14 +75,14 @@ class MainWindow(QMainWindow):
         
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
-        self.setWindowIcon(QIcon('Sources/abacus_small.ico'))
+        self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(1000,700)
         self.conectedDevice=None
         
 
         if abacus.CURRENT_OS == 'win32':
             import ctypes
-            myappid = 'tempico.tempico.01'  # arbitrary string
+            myappid = APPID  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #------Menu bar-------------#
@@ -277,19 +277,18 @@ class MainWindow(QMainWindow):
                 message_box = QMessageBox()
                 message_box.setWindowTitle("Running measurement")
                 message_box.setText("It is not possible to make changes when a measurement is running.")
-                message_box.setStandardButtons(QMessageBox.Ok)
-                pixmap= QPixmap("/Sources/abacus_small.ico")
+                pixmap= QPixmap(ICON_LOCATION)
                 message_box.setIconPixmap(pixmap)
-                message_box.setIcon(QMessageBox.Warning)
+                message_box.setIcon(QMessageBox.Information)
+                message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
     
                 
         else:
             message_box = QMessageBox()
-            message_box.setIcon(QMessageBox.Warning)  
             message_box.setWindowTitle("No connected device")
             message_box.setText("No connected device was found")
-            pixmap= QPixmap("/Sources/abacus_small.ico")
+            pixmap= QPixmap(ICON_LOCATION)
             message_box.setIconPixmap(pixmap)
             message_box.setIcon(QMessageBox.Information)
             message_box.setStandardButtons(QMessageBox.Ok)
@@ -301,19 +300,23 @@ class MainWindow(QMainWindow):
                 settings_windows=GeneralSettingsWindow(self.conectedDevice)
                 settings_windows.exec_()
             else:
-                message_box = QMessageBox()
-                message_box.setIcon(QMessageBox.Warning)  # Icono de advertencia
-                message_box.setWindowTitle("Error: Running measurement")
+                message_box = QMessageBox()  # Icono de advertencia
+                message_box.setWindowTitle("Running measurement")
                 message_box.setText("It is not possible to make changes when a measurement is running.")
+                pixmap= QPixmap(ICON_LOCATION)
+                message_box.setIconPixmap(pixmap)
+                message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
     
                 
         else:
-            message_box = QMessageBox()
-            message_box.setIcon(QMessageBox.Warning)  # Icono de advertencia
-            message_box.setWindowTitle("Error: No Device Connected")
-            message_box.setText("No device connected was found")
+            message_box = QMessageBox()  # Icono de advertencia
+            message_box.setWindowTitle("No Connected Device ")
+            message_box.setText("No Connected device connected was found")
+            pixmap= QPixmap(ICON_LOCATION)
+            message_box.setIconPixmap(pixmap)
+            message_box.setIcon(QMessageBox.Information)
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
             
@@ -342,7 +345,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication([])
-    splash_pix = QPixmap('./Sources/splash.png')
+    splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)  
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
