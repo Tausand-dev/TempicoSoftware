@@ -34,6 +34,7 @@ import random
 import createsavefile as savefile
 import datetime
 from ui_settings import Ui_settings
+
 #Create graphic design#
 class Canvas():
     def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect, *args, **kwargs):
@@ -380,7 +381,7 @@ class Canvas():
                 dataPure.append(round(average_measurement))
                 return miliseconds_measurement
             else:
-                return 4
+                return None
         else:
             return None
         
@@ -429,7 +430,7 @@ class Canvas():
                     self.dataD.append(new_data4)
                     self.update_histogram(self.dataD,self.curveD,"D")
         except:
-            msg_box = QMessageBox()
+            msg_box = QMessageBox(self.parent)
             msg_box.setText("Connection with the device has been lost")
             msg_box.setWindowTitle("Connection Error")
             pixmap= QPixmap("/Sources/abacus_small.ico")
@@ -559,84 +560,116 @@ class Canvas():
             data=[]
             settings=[]
             column_names=[]
-            if self.setinelSaveA:
-                filename1=data_prefix+current_date_str+'channelA'
-                setting_A="Average cycles: "+str(self.channel1.getAverageCycles())+ "\nMode: "+str(self.channel1.getMode())+"\nNumber of stops:"+ str(self.channel1.getNumberOfStops())+"\nStop edge: "+str(self.channel1.getStopEdge())+ "\nStop mask: "+str(self.channel1.getStopMask())
-                settings.append(setting_A)
-                filenames.append(filename1)
-                data.append(self.datapureA)
-                column_names.append('channelA_data (ps)')
-            if self.setinelSaveB:
-                filename2=data_prefix+current_date_str+'channelB'
-                setting_B="Average cycles: "+str(self.channel2.getAverageCycles())+ "\nMode: "+str(self.channel2.getMode())+"\nNumber of stops:"+ str(self.channel2.getNumberOfStops())+"\nStop edge: "+str(self.channel2.getStopEdge())+ "\nStop mask: "+str(self.channel2.getStopMask())
-                settings.append(setting_B)
-                filenames.append(filename2)
-                data.append(self.datapureB)
-                column_names.append('channelB_data (ps)')
-            if self.setinelSaveC:
-                filename3=data_prefix+current_date_str+'channelC'
-                setting_C="Average cycles: "+str(self.channel3.getAverageCycles())+ "\nMode: "+str(self.channel3.getMode())+"\nNumber of stops:"+ str(self.channel3.getNumberOfStops())+"\nStop edge: "+str(self.channel3.getStopEdge())+ "\nStop mask: "+str(self.channel3.getStopMask())
-                settings.append(setting_C)
-                filenames.append(filename3)
-                data.append(self.datapureC)
-                column_names.append('channelC_data (ps)')
-            if self.setinelSaveD:
-                filename4=data_prefix+current_date_str+'channelD'
-                setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode: "+str(self.channel4.getMode())+"\nNumber of stops:"+ str(self.channel4.getNumberOfStops())+"\nStop edge: "+str(self.channel4.getStopEdge())+ "\nStop mask: "+str(self.channel4.getStopMask())
-                settings.append(setting_D)
-                filenames.append(filename4)
-                data.append(self.datapureD)
-                column_names.append('channelD_data (ps)')
-            folder_path=savefile.read_default_data()['Folder path']
+            #Open select the format
+            dialog = QDialog(self.parent)
+            dialog.setObjectName("ImageFormat")
+            dialog.resize(182, 105)
+            dialog.setWindowTitle("Select image format")
+            verticalLayout_2 = QVBoxLayout(dialog)
+            verticalLayout_2.setObjectName("verticalLayout_2")
+            VerticalImage = QVBoxLayout()
+            VerticalImage.setObjectName("VerticalImage")
+            SelectLabel = QLabel(dialog)
+            SelectLabel.setObjectName("SelectLabel")
+            SelectLabel.setText("Select the image format:")
+            VerticalImage.addWidget(SelectLabel)
+            FormatBox = QComboBox(dialog)
+            FormatBox.addItem("txt")
+            FormatBox.addItem("csv")
+            FormatBox.addItem("dat")
+            FormatBox.setObjectName("FormatBox")
+            VerticalImage.addWidget(FormatBox)
+            verticalLayout_2.addLayout(VerticalImage)
+            accepButton = QPushButton(dialog)
+            accepButton.setObjectName("accepButton")
+            accepButton.setText("Accept")
+            verticalLayout_2.addWidget(accepButton)
+            QMetaObject.connectSlotsByName(dialog)
             
-            try:
+            # Connect the accept button with real accept
+            accepButton.clicked.connect(dialog.accept)
+            
+            
+            if dialog.exec_() == QDialog.Accepted:
+                selected_format = FormatBox.currentText()
+                if self.setinelSaveA:
+                    filename1=data_prefix+current_date_str+'channelA'
+                    setting_A="Average cycles: "+str(self.channel1.getAverageCycles())+ "\nMode: "+str(self.channel1.getMode())+"\nNumber of stops:"+ str(self.channel1.getNumberOfStops())+"\nStop edge: "+str(self.channel1.getStopEdge())+ "\nStop mask: "+str(self.channel1.getStopMask())
+                    settings.append(setting_A)
+                    filenames.append(filename1)
+                    data.append(self.datapureA)
+                    column_names.append('channelA_data (ps)')
+                if self.setinelSaveB:
+                    filename2=data_prefix+current_date_str+'channelB'
+                    setting_B="Average cycles: "+str(self.channel2.getAverageCycles())+ "\nMode: "+str(self.channel2.getMode())+"\nNumber of stops:"+ str(self.channel2.getNumberOfStops())+"\nStop edge: "+str(self.channel2.getStopEdge())+ "\nStop mask: "+str(self.channel2.getStopMask())
+                    settings.append(setting_B)
+                    filenames.append(filename2)
+                    data.append(self.datapureB)
+                    column_names.append('channelB_data (ps)')
+                if self.setinelSaveC:
+                    filename3=data_prefix+current_date_str+'channelC'
+                    setting_C="Average cycles: "+str(self.channel3.getAverageCycles())+ "\nMode: "+str(self.channel3.getMode())+"\nNumber of stops:"+ str(self.channel3.getNumberOfStops())+"\nStop edge: "+str(self.channel3.getStopEdge())+ "\nStop mask: "+str(self.channel3.getStopMask())
+                    settings.append(setting_C)
+                    filenames.append(filename3)
+                    data.append(self.datapureC)
+                    column_names.append('channelC_data (ps)')
+                if self.setinelSaveD:
+                    filename4=data_prefix+current_date_str+'channelD'
+                    setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode: "+str(self.channel4.getMode())+"\nNumber of stops:"+ str(self.channel4.getNumberOfStops())+"\nStop edge: "+str(self.channel4.getStopEdge())+ "\nStop mask: "+str(self.channel4.getStopMask())
+                    settings.append(setting_D)
+                    filenames.append(filename4)
+                    data.append(self.datapureD)
+                    column_names.append('channelD_data (ps)')
+                folder_path=savefile.read_default_data()['Folder path']
                 
-                savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings)
+                try:
+                    
+                    savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings,selected_format)
+                    message_box = QMessageBox(self.parent)
+                    message_box.setIcon(QMessageBox.Information)
+                    inital_text="The files have been saved successfully in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    index=1
+                    for i in filenames:
+                        filenumber="File" + str(index)+": "
+                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        index+=1
+                    message_box.setText(inital_text+text_route)
+                    self.oldroute="The files have already been saved in path folder: "+ text_route
+                    message_box.setWindowTitle("Successful save")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                except:
+                    #If an error occurs, an error message box will be displayed.
+                    message_box = QMessageBox(self.parent)
+                    message_box.setIcon(QMessageBox.Critical)
+                    message_box.setText("The changes could not be saved.")
+                    message_box.setWindowTitle("Error saving")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                self.savebutton.setEnabled(True)
+                self.sentinelsave=1
+            else:
                 message_box = QMessageBox(self.parent)
                 message_box.setIcon(QMessageBox.Information)
-                inital_text="The files have been saved successfully in path folder: "
-                text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
-                index=1
-                for i in filenames:
-                    filenumber="File" + str(index)+": "
-                    text_route+="\n\n"+filenumber+i+".txt"
-                    index+=1
-                message_box.setText(inital_text+text_route)
-                self.oldroute="The files have already been saved in path folder: "+ text_route
+                message_box.setText(self.oldroute)
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
-            except:
-                #If an error occurs, an error message box will be displayed.
-                message_box = QMessageBox(self.parent)
-                message_box.setIcon(QMessageBox.Critical)
-                message_box.setText("The changes could not be saved.")
-                message_box.setWindowTitle("Error saving")
-                message_box.setStandardButtons(QMessageBox.Ok)
-                message_box.exec_()
-            self.savebutton.setEnabled(True)
-            self.sentinelsave=1
-        else:
-            message_box = QMessageBox(self.parent)
-            message_box.setIcon(QMessageBox.Information)
-            message_box.setText(self.oldroute)
-            message_box.setWindowTitle("Successful save")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.exec_()
     
     def save_plots(self):
         try:
             graph_names=[]
             #Open select the format
-            dialog = QDialog()
+            dialog = QDialog(self.parent)
     
             dialog.setObjectName("ImageFormat")
             dialog.resize(182, 105)
             dialog.setWindowTitle("Select image format")
             
-            pixmap = QIcon("/Sources/abacus_small.ico")
+            #pixmap = QIcon("./Sources/abacus_small.ico")
             
-            dialog.setWindowIcon(pixmap)
+            #dialog.setWindowIcon()
             
             verticalLayout_2 = QVBoxLayout(dialog)
             verticalLayout_2.setObjectName("verticalLayout_2")

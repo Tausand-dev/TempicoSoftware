@@ -1,6 +1,6 @@
 import os
 import pathlib
-import pandas as pd
+
 
 
 
@@ -102,7 +102,7 @@ def read_default_data():
         return None
 
 #Save the files in a txt files in the folder created
-def save_lists_as_columns_txt(data_lists, file_names, column_names, path,settings):
+def save_lists_as_columns_txt(data_lists, file_names, column_names, path,settings, extension):
     if not os.path.exists(path):
         os.makedirs(path)
         
@@ -110,7 +110,7 @@ def save_lists_as_columns_txt(data_lists, file_names, column_names, path,setting
         raise ValueError("Data lists, file names, and column names must have the same length.")
         
     for file_name, data_list, column_name,setting_channel in zip(file_names, data_lists, column_names,settings):
-        full_file_path = os.path.join(path, f"{file_name}.txt")
+        full_file_path = os.path.join(path, f"{file_name}."+str(extension))
         
         with open(full_file_path, 'w') as file:
             file.write(f"{setting_channel}\n")

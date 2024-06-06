@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
                 self.settings_channels.setupUi(self.dialog_settings, self.conectedDevice)
                 self.dialog_settings.exec_()
             else:
-                message_box = QMessageBox()
+                message_box = QMessageBox(self)
                 message_box.setWindowTitle("Running measurement")
                 message_box.setText("It is not possible to make changes when a measurement is running.")
                 pixmap= QPixmap(ICON_LOCATION)
@@ -285,7 +285,7 @@ class MainWindow(QMainWindow):
     
                 
         else:
-            message_box = QMessageBox()
+            message_box = QMessageBox(self)
             message_box.setWindowTitle("No connected device")
             message_box.setText("No connected device was found")
             pixmap= QPixmap(ICON_LOCATION)
@@ -300,7 +300,7 @@ class MainWindow(QMainWindow):
                 settings_windows=GeneralSettingsWindow(self.conectedDevice)
                 settings_windows.exec_()
             else:
-                message_box = QMessageBox()  # Icono de advertencia
+                message_box = QMessageBox(self)  # Icono de advertencia
                 message_box.setWindowTitle("Running measurement")
                 message_box.setText("It is not possible to make changes when a measurement is running.")
                 pixmap= QPixmap(ICON_LOCATION)
@@ -311,7 +311,7 @@ class MainWindow(QMainWindow):
     
                 
         else:
-            message_box = QMessageBox()  # Icono de advertencia
+            message_box = QMessageBox(self)  # Icono de advertencia
             message_box.setWindowTitle("No Connected Device ")
             message_box.setText("No Connected device connected was found")
             pixmap= QPixmap(ICON_LOCATION)

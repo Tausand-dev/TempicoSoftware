@@ -1,2 +1,2 @@
 
-            
+from ui_StarStopHistogram import Ui_HistogramaStartStop

@@ -24,8 +24,11 @@ class GeneralSettingsWindow(QDialog):
         #------Change treshold Voltage---------#
         self.thresholdvotlage=QLabel("Threshold voltage:",self)
         self.thresholdvotlage.setGeometry(65,10,150,20)
-        self.Comboboxthresholdvoltage=QComboBox(self)
-        self.Comboboxthresholdvoltage.addItems(["MINimum","MAXimum","DOWN","UP"])
+        self.Comboboxthresholdvoltage = QDoubleSpinBox(self)
+        self.Comboboxthresholdvoltage.setObjectName(u"Spinboxtreshold")
+        self.Comboboxthresholdvoltage.setMaximum(1.60)
+        self.Comboboxthresholdvoltage.setMinimum(0.90)
+        self.Comboboxthresholdvoltage.setSingleStep(0.01)
         self.Comboboxthresholdvoltage.setGeometry(180,10,100,20)
         #------Change number of runs---------#
         self.numberofruns=QLabel("Number of runs:",self)
@@ -38,7 +41,10 @@ class GeneralSettingsWindow(QDialog):
         self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)  # Mostrar botones de más/menos
         self.spinboxNumerOfStops.setAccelerated(True)  # Acelerar la velocidad del aumento/decremento
         self.spinboxNumerOfStops.setGeometry(180,40,100,20)
-        #------Reset Button---------#
+        #------Save Button---------#
+        
+        
+        
         button = QPushButton("Save changes", self)
         button.setGeometry(110, 80, 140, 40)
         
@@ -75,9 +81,12 @@ class GeneralSettingsWindow(QDialog):
     def getsettings(self):
         number_runs=self.device.getNumberOfRuns()
         self.spinboxNumerOfStops.setValue(int(number_runs))
+        tresholdVoltage= self.device.getThresholdVoltage()
+        self.Comboboxthresholdvoltage.setValue(float(tresholdVoltage))
     
     def setsettings(self):
-        self.device.setThresholdVoltage(self.Comboboxthresholdvoltage.currentText())
         self.device.setNumberOfRuns(self.spinboxNumerOfStops.value())
+        self.device.setThresholdVoltage(self.Comboboxthresholdvoltage.value())
         self.accept()
+    
 
