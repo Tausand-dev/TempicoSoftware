@@ -21,6 +21,7 @@ class Ui_settings(object):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
         Dialog.resize(527, 366)
+       
         self.dialog_1=Dialog
         self.device=device
         self.verticalLayout = QVBoxLayout(Dialog)
@@ -538,6 +539,9 @@ class Ui_settings(object):
 
 
         QMetaObject.connectSlotsByName(Dialog)
+        
+        
+    
     # setupUi
 
     def retranslateUi(self, Dialog):
@@ -742,10 +746,23 @@ class Ui_settings(object):
         
             
         
-                
-        
-        
-        
+    def event(self, event): 
+        if event.type() == QEvent.EnterWhatsThisMode: #Event called when ? is clicked                
+            QWhatsThis.leaveWhatsThisMode() #To change mouse cursor back to arrow
+            self.showHelp()
+            return True
+        return QDialog.event(self, event)       
+    
+     
+    def showHelp(self):
+        QMessageBox.information(self, "Help", 
+                                "Here is the information about the general settings:\n\n"
+                                "Average Cycles: This setting indicates how many internal measurements the device performs to provide an averaged result for each measurement. Increasing the number of cycles enhances data accuracy but decreases the program's response time.\n\n"
+                                "Mode: This represents the time interval within which stop data will be accepted. Measurements outside this interval will be disregarded.\n\n"
+                                "Number of Stops: This indicates how many stops will be measured after a start, with a maximum of 5. If all stops are not captured, the measurements will be invalid.\n\n"
+                                "Edge Type: This setting specifies whether the measurement will be taken at the start of the pulse (RISE) or at the end of the pulse (FALL).\n\n"
+                                "Stopmask: This accepts time values within which stops will be ignored, ranging from 0 microseconds to 4000 microseconds.")
+            
     
     
     def save_changes(self):

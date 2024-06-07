@@ -61,6 +61,7 @@ class Canvas():
         self.savebutton.clicked.connect(self.save_graphic)
         self.save_graphs.clicked.connect(self.save_plots)
         #Disable buttons init
+        self.startbutton.setEnabled(True)
         self.savebutton.setEnabled(False)
         self.stopbutton.setEnabled(False)
         self.save_graphs.setEnabled(False)
@@ -72,6 +73,10 @@ class Canvas():
         self.checkB=check2
         self.checkC=check3
         self.checkD=check4
+        self.checkA.setEnabled(True)
+        self.checkB.setEnabled(True)
+        self.checkC.setEnabled(True)
+        self.checkD.setEnabled(True)
         self.setinelSaveA=False
         self.setinelSaveB=False
         self.setinelSaveC=False
@@ -144,7 +149,9 @@ class Canvas():
         self.setinelSaveD=False
         
         #Set if the file is save with this sentinel
-        self.sentinelsave=0
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0
 
         # Add widgets selected to the list
         if self.checkA.isChecked():
@@ -170,11 +177,6 @@ class Canvas():
             self.setinelSaveA=True
             self.viewBoxA=self.plotA.getViewBox()
             self.viewBoxA.sigRangeChanged.connect(self.zoom_changedA)
-            
-            
-            
-            
-            
             
 
         if self.checkB.isChecked():
@@ -346,12 +348,10 @@ class Canvas():
     ##---Begin with get measurement----##
     ##---------------------------------##
     ##---------------------------------##  
-    def get_new_data(self, channel,dataPure,channelIndex):
-        
+    def get_new_data(self, channel,dataPure,channelIndex,stopnumber):
         
         
         measurements=self.device.fetch()
-
         if len(measurements[0])!=0:
             number_runs=self.device.getNumberOfRuns()
             if channelIndex=="A":
@@ -369,8 +369,8 @@ class Canvas():
             total_measurement=0
             total_points=0
             for i in range(number_runs):
-                if measurements[i+index_measurement][3]!=-1:
-                    total_measurement+=measurements[i][3]
+                if measurements[i+index_measurement][3+stopnumber]!=-1:
+                    total_measurement+=measurements[i][3+stopnumber]
                     total_points+=1
             if total_points!=0:    
                 average_measurement=total_measurement/total_points
@@ -403,32 +403,36 @@ class Canvas():
             
             #Get the update of graph A
             if self.setinelSaveA:
-                new_data1= self.get_new_data(self.channel1, self.datapureA,"A")
-                if new_data1 is not None:
-                    self.dataA.append(new_data1)
-                    self.update_histogram(self.dataA,self.curveA,"A")
+                for numberA in range(self.channel1.getNumberOfStops()):
+                    new_data1= self.get_new_data(self.channel1, self.datapureA,"A",numberA)
+                    if new_data1 is not None:
+                        self.dataA.append(new_data1)
+                        self.update_histogram(self.dataA,self.curveA,"A")
                     
             
             #Get the update of graph B
             if self.setinelSaveB:
-                new_data2= self.get_new_data(self.channel2, self.datapureB,"B")
-                if new_data2 is not None:
-                    self.dataB.append(new_data2)
-                    self.update_histogram(self.dataB,self.curveB,"B")
+                for numberB in range(self.channel2.getNumberOfStops()):
+                    new_data2= self.get_new_data(self.channel2, self.datapureB,"B",numberB)
+                    if new_data2 is not None:
+                        self.dataB.append(new_data2)
+                        self.update_histogram(self.dataB,self.curveB,"B")
             
             #Get the update of graph C
             if self.setinelSaveC:
-                new_data3= self.get_new_data(self.channel3, self.datapureC,"C")
-                if new_data3 is not None:
-                    self.dataC.append(new_data3)
-                    self.update_histogram(self.dataC,self.curveC,"C")
+                for numberC in range(self.channel3.getNumberOfStops()):
+                    new_data3= self.get_new_data(self.channel3, self.datapureC,"C",numberC)
+                    if new_data3 is not None:
+                        self.dataC.append(new_data3)
+                        self.update_histogram(self.dataC,self.curveC,"C")
             
             #Get the update of graph D
             if self.setinelSaveD:
-                new_data4= self.get_new_data(self.channel4, self.datapureD,"D")
-                if new_data4 is not None:
-                    self.dataD.append(new_data4)
-                    self.update_histogram(self.dataD,self.curveD,"D")
+                for numberD in range(self.channel4.getNumberOfStops()):
+                    new_data4= self.get_new_data(self.channel4, self.datapureD,"D",numberD)
+                    if new_data4 is not None:
+                        self.dataD.append(new_data4)
+                        self.update_histogram(self.dataD,self.curveD,"D")
         except:
             msg_box = QMessageBox(self.parent)
             msg_box.setText("Connection with the device has been lost")
@@ -442,6 +446,10 @@ class Canvas():
             self.hide_graphic2()
             self.disconnectButton.setEnabled(False)
             self.connectButton.setEnabled(True)
+            try:
+                 self.device.close()
+            except:
+                 pass
             
         
            
@@ -551,47 +559,52 @@ class Canvas():
     ##--------------##
     ##--------------## 
     def save_graphic(self):
-        if self.sentinelsave==0:
-            data_prefix=savefile.read_default_data()['Default Histogram Name']
-            current_date=datetime.datetime.now()
-            current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-            #Init filenames and data list
-            filenames=[]
-            data=[]
-            settings=[]
-            column_names=[]
-            #Open select the format
-            dialog = QDialog(self.parent)
-            dialog.setObjectName("ImageFormat")
-            dialog.resize(182, 105)
-            dialog.setWindowTitle("Select image format")
-            verticalLayout_2 = QVBoxLayout(dialog)
-            verticalLayout_2.setObjectName("verticalLayout_2")
-            VerticalImage = QVBoxLayout()
-            VerticalImage.setObjectName("VerticalImage")
-            SelectLabel = QLabel(dialog)
-            SelectLabel.setObjectName("SelectLabel")
-            SelectLabel.setText("Select the image format:")
-            VerticalImage.addWidget(SelectLabel)
-            FormatBox = QComboBox(dialog)
-            FormatBox.addItem("txt")
-            FormatBox.addItem("csv")
-            FormatBox.addItem("dat")
-            FormatBox.setObjectName("FormatBox")
-            VerticalImage.addWidget(FormatBox)
-            verticalLayout_2.addLayout(VerticalImage)
-            accepButton = QPushButton(dialog)
-            accepButton.setObjectName("accepButton")
-            accepButton.setText("Accept")
-            verticalLayout_2.addWidget(accepButton)
-            QMetaObject.connectSlotsByName(dialog)
-            
-            # Connect the accept button with real accept
-            accepButton.clicked.connect(dialog.accept)
-            
-            
-            if dialog.exec_() == QDialog.Accepted:
-                selected_format = FormatBox.currentText()
+        
+        data_prefix=savefile.read_default_data()['Default Histogram Name']
+        current_date=datetime.datetime.now()
+        current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        #Init filenames and data list
+        filenames=[]
+        data=[]
+        settings=[]
+        column_names=[]
+        #Open select the format
+        dialog = QDialog(self.parent)
+        dialog.setObjectName("TextFormat")
+        dialog.resize(282, 105)
+        dialog.setWindowTitle("Save")
+        verticalLayout_2 = QVBoxLayout(dialog)
+        verticalLayout_2.setObjectName("verticalLayout_2")
+        VerticalImage = QVBoxLayout()
+        VerticalImage.setObjectName("VerticalImage")
+        SelectLabel = QLabel(dialog)
+        SelectLabel.setObjectName("SelectLabel")
+        SelectLabel.setText("Select the text format:")
+        VerticalImage.addWidget(SelectLabel)
+        FormatBox = QComboBox(dialog)
+        FormatBox.addItem("txt")
+        FormatBox.addItem("csv")
+        FormatBox.addItem("dat")
+        FormatBox.setObjectName("FormatBox")
+        VerticalImage.addWidget(FormatBox)
+        verticalLayout_2.addLayout(VerticalImage)
+        accepButton = QPushButton(dialog)
+        accepButton.setObjectName("accepButton")
+        accepButton.setText("Accept")
+        verticalLayout_2.addWidget(accepButton)
+        QMetaObject.connectSlotsByName(dialog)
+        
+        # Connect the accept button with real accept
+        accepButton.clicked.connect(dialog.accept)
+        
+        
+        if dialog.exec_() == QDialog.Accepted:
+            selected_format = FormatBox.currentText()
+            conditiontxt= FormatBox.currentText()=="txt" and self.sentinelsavetxt==1
+            conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
+            conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
+            total_condition= conditiontxt or conditioncsv or conditiondat
+            if not total_condition:
                 if self.setinelSaveA:
                     filename1=data_prefix+current_date_str+'channelA'
                     setting_A="Average cycles: "+str(self.channel1.getAverageCycles())+ "\nMode: "+str(self.channel1.getMode())+"\nNumber of stops:"+ str(self.channel1.getNumberOfStops())+"\nStop edge: "+str(self.channel1.getStopEdge())+ "\nStop mask: "+str(self.channel1.getStopMask())
@@ -635,10 +648,19 @@ class Canvas():
                         text_route+="\n\n"+filenumber+i+"."+str(selected_format)
                         index+=1
                     message_box.setText(inital_text+text_route)
-                    self.oldroute="The files have already been saved in path folder: "+ text_route
+                    if selected_format=="txt":
+                        self.oldroutetxt="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavetxt=1
+                    elif selected_format=="csv":
+                        self.oldroutecsv="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavecsv=1
+                    elif selected_format=="dat":
+                        self.oldroutedat="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavedat=1
                     message_box.setWindowTitle("Successful save")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
+                    self.savebutton.setEnabled(True)
                 except:
                     #If an error occurs, an error message box will be displayed.
                     message_box = QMessageBox(self.parent)
@@ -647,12 +669,16 @@ class Canvas():
                     message_box.setWindowTitle("Error saving")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
-                self.savebutton.setEnabled(True)
-                self.sentinelsave=1
+                
             else:
                 message_box = QMessageBox(self.parent)
                 message_box.setIcon(QMessageBox.Information)
-                message_box.setText(self.oldroute)
+                if conditiontxt:
+                    message_box.setText(self.oldroutetxt)
+                elif conditioncsv:
+                    message_box.setText(self.oldroutecsv)
+                elif conditiondat:
+                    message_box.setText(self.oldroutedat)
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
@@ -664,8 +690,8 @@ class Canvas():
             dialog = QDialog(self.parent)
     
             dialog.setObjectName("ImageFormat")
-            dialog.resize(182, 105)
-            dialog.setWindowTitle("Select image format")
+            dialog.resize(282, 105)
+            dialog.setWindowTitle("Save plots")
             
             #pixmap = QIcon("./Sources/abacus_small.ico")
             

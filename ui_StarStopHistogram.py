@@ -293,6 +293,18 @@ class Ui_HistogramaStartStop(object):
         self.horizontalLayout.addWidget(self.GraphicArea)
         self.retranslateUi(HistogramaStartStop)
         QMetaObject.connectSlotsByName(HistogramaStartStop)
+        self.ClearchannelA.setEnabled(False)
+        self.ClearchannelB.setEnabled(False)
+        self.ClearchannelC.setEnabled(False)
+        self.ClearchannelD.setEnabled(False)
+        self.SaveGraph1.setEnabled(False)
+        self.StopGraph1.setEnabled(False)
+        self.SaveDoc.setEnabled(False)
+        self.SaveImage1.setEnabled(False)
+        self.Channel1Graph1.setEnabled(False)
+        self.Channel2Graph1.setEnabled(False)
+        self.Channel3Graph1.setEnabled(False)
+        self.Channel4Graph1.setEnabled(False)
     # setupUi
     #Start the animation    
 

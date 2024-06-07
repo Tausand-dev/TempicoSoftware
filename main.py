@@ -194,44 +194,64 @@ class MainWindow(QMainWindow):
             if self.connectsentinel==0:
                 self.connectButton.setEnabled(False)
                 self.disconnectButton.setEnabled(True)
-                self.conectedDevice.open()
-                
-                checkchannel1=self.ui.Channel1Graph1
-                checkchannel2=self.ui.Channel4Graph1
-                checkchannel3=self.ui.Channel2Graph1
-                checkchannel4=self.ui.Channel3Graph1
-                startbutton=self.ui.SaveGraph1
-                stopbutton=self.ui.StopGraph1
-                savebutton=self.ui.SaveDoc
-                #Save Plots
-                save_graph_1=self.ui.SaveImage1
-                
-                #Clear Plots
-                clear_channel_A=self.ui.ClearchannelA
-                clear_channel_B=self.ui.ClearchannelB
-                clear_channel_C=self.ui.ClearchannelC
-                clear_channel_D=self.ui.ClearchannelD
-                
-                channel1=self.conectedDevice.ch1
-                
-                channel2=self.conectedDevice.ch2
-                
-                channel3=self.conectedDevice.ch3
-                
-                channel4=self.conectedDevice.ch4
-                
-                
-                self.conectedDevice.setNumberOfRuns(2)
-                self.connectsentinel=1
-                self.grafico=Canvas(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton)
-                self.tabs.currentChanged.connect(self.clicked_tabs)
+                try:
+                    self.conectedDevice.open()
+                    
+                    checkchannel1=self.ui.Channel1Graph1
+                    checkchannel2=self.ui.Channel4Graph1
+                    checkchannel3=self.ui.Channel2Graph1
+                    checkchannel4=self.ui.Channel3Graph1
+                    startbutton=self.ui.SaveGraph1
+                    stopbutton=self.ui.StopGraph1
+                    savebutton=self.ui.SaveDoc
+                    #Save Plots
+                    save_graph_1=self.ui.SaveImage1
+                    
+                    #Clear Plots
+                    clear_channel_A=self.ui.ClearchannelA
+                    clear_channel_B=self.ui.ClearchannelB
+                    clear_channel_C=self.ui.ClearchannelC
+                    clear_channel_D=self.ui.ClearchannelD
+                    
+                    channel1=self.conectedDevice.ch1
+                    
+                    channel2=self.conectedDevice.ch2
+                    
+                    channel3=self.conectedDevice.ch3
+                    
+                    channel4=self.conectedDevice.ch4
+                    
+                    
+                    self.connectsentinel=1
+                    self.grafico=Canvas(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton)
+                    self.tabs.currentChanged.connect(self.clicked_tabs)
+                except:
+                    msg_box = QMessageBox(self)
+                    msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
+                    msg_box.setWindowTitle("Connection Error")
+                    pixmap= QPixmap("/Sources/abacus_small.ico")
+                    msg_box.setIconPixmap(pixmap)
+                    msg_box.setIcon(QMessageBox.Critical)
+                    msg_box.setStandardButtons(QMessageBox.Ok)
+                    msg_box.exec_()
+                    
             else:
                 if hasattr(self, 'grafico'):  # Verificar si self.grafico está definido
-                    self.conectedDevice.open()
-                    self.grafico.show_graphic(self.conectedDevice)
-                    
-                    self.connectButton.setEnabled(False)
-                    self.disconnectButton.setEnabled(True)
+                    try:
+                        self.conectedDevice.open()
+                        self.grafico.show_graphic(self.conectedDevice)
+                        
+                        self.connectButton.setEnabled(False)
+                        self.disconnectButton.setEnabled(True)
+                    except:
+                        msg_box = QMessageBox(self)
+                        msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
+                        msg_box.setWindowTitle("Connection Error")
+                        pixmap= QPixmap("/Sources/abacus_small.ico")
+                        msg_box.setIconPixmap(pixmap)
+                        msg_box.setIcon(QMessageBox.Critical)
+                        msg_box.setStandardButtons(QMessageBox.Ok)
+                        msg_box.exec_()
                 
         else: 
             self.connectButton.setEnabled(True)
