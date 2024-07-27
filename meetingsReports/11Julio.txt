@@ -1,0 +1,15 @@
+Python 3.7.0
+PyInstaller 5.7 en readMe
+Issue: tiempo de ejecución  en github
+PyAbacus
+PyAbacus desde origen
+Amarillo: Terminando medición
+Naranja: Advertencia de no datos
+log de errores
+Alinear statusLabel centro
+Average Cycles : 1 
+stop mask 0
+Martes 7 am.
+Si Lunes no hay correo Martes no hay conexión
+Prueba de g2 para que cambie el binwidth el usuario decide si quiere continuar
+

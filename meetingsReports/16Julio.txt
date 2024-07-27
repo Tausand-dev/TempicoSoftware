@@ -1,0 +1,8 @@
+Lenguaje tecnico mensajes
+Pruebas razón del parametro
+Texto en latex arreglar
+Cambiar texto a normal si se puede con sub indices y super indices
+gate conectar 5v o 3v, arduino 3.3 V
+voltaje del gate medir
+Jueves confirmación conexión
+Viernes 8 am

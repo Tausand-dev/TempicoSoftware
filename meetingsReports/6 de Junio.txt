@@ -1,0 +1,7 @@
+Arreglar save del text(Corregido)
+
+Mismo texto de los botones las subventanas (Corregido)
+texto de general settings para decirle al usuario cual es el valor valido (Parcialmente)
+Formatos de botones unificarlos(Corregido)
+g2 en abacus software
+hacer teoría de g2 en abacus software
