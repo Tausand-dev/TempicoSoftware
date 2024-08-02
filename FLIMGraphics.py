@@ -11,7 +11,7 @@ class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,
-                 numberMeasurementsSpinBox: QSpinBox, device: TempicoDevice):
+                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device):
         super().__init__()
         #Initialize the Tempico Device class
         self.device=device
@@ -28,6 +28,9 @@ class FLIMGraphic():
         #Initialize the labels
         self.statusLabel=statusLabel
         self.pointLabel=pointLabel
+        self.totalMeasurements=totalMeasurements
+        self.totalStart=totalStart
+        self.totalTime=totalTime
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
         #Fix the original value of Channels comboBox
@@ -35,6 +38,7 @@ class FLIMGraphic():
         self.comboBoxStartChannel.currentIndexChanged.connect(self.indexChangeStartChannel)
         self.comboBoxStopChannel.currentIndexChanged.connect(self.indexChangeStopChannel)
         #Set the enable init Buttons
+        self.startButton.setEnabled(False)
         self.stopButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.saveDataButton.setEnabled(False)
@@ -42,6 +46,10 @@ class FLIMGraphic():
         #Get initial index for comboBoxChannels
         self.oldStartChannelIndex=self.comboBoxStartChannel.currentIndex()
         self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
+        #Create the timer for label with total Time
+        self.time = QTime(0, 0, 0)
+        self.timerMeasurements = QTimer()
+        self.timerMeasurements.timeout.connect(self.update_timer)
         #-----------------------------------#
         #-----------------------------------#
         #----------Graphic Creation---------#
@@ -71,8 +79,7 @@ class FLIMGraphic():
         #--------End Buttons Connection-----#
         
         #----------Define other parameters and sentinels-------#
-        self.currentStartChannel=self.device.ch1
-        self.currentStopChannel=self.device.ch2
+        
         #Sentinel to know if there is a current thread running
         self.threadCreated=False
         #List of measured  values
@@ -80,18 +87,20 @@ class FLIMGraphic():
         #List of time Values X axis
         self.measuredTime=[]
         #--------End Define other parameters and sentinels-----#
+        if self.device!=None:
+            self.startButton.setEnabled(True)
         
         
         
     # Functions to verify that start and stop will not be the same channels
     def indexChangeStartChannel(self):
-        if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex():
+        if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex()+1:
             self.comboBoxStartChannel.setCurrentIndex(self.oldStartChannelIndex)
         else:
             self.oldStartChannelIndex=self.comboBoxStartChannel.currentIndex()
     
     def indexChangeStopChannel(self):
-        if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex():
+        if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex()+1:
             self.comboBoxStopChannel.setCurrentIndex(self.oldStopChannelIndex)
         else:
             self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
@@ -108,14 +117,19 @@ class FLIMGraphic():
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
+        self.updateLabels("0","0")
         #Reboot the list of measured values and time Data
         self.measuredData=[]
         self.measuredTime=[]
         #Get the selected channels
         self.getTempicoChannel()
+        #Init the timer measurements
+        self.time = QTime(0, 0, 0)
+        self.startTimer()
         #Create the thread object
         self.worker=WorkerThreadFLIM(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
                                      self.device)
+        
         #Create connections to main thread 
         self.worker.finished.connect(self.finishedThreadMeasurement)
         self.worker.createdSignal.connect(self.changeCreatedStatus)
@@ -123,6 +137,7 @@ class FLIMGraphic():
         self.worker.pointSignal.connect(self.changeStatusColor)
         self.worker.updateValues.connect(self.updateMeasurement)
         self.worker.updateLabel.connect(self.updateLabel)
+        self.worker.updateMeasurementsLabel.connect(self.updateLabels)
         #Start the thread
         self.worker.start()
     def getUnits(self,value):
@@ -163,6 +178,8 @@ class FLIMGraphic():
         self.changeStatusLabel("No measurement running")
         self.changeStatusColor(0)
         self.threadCreated=False
+        self.stopTimer()
+        
         
         
     #Function to change the status measurement
@@ -208,15 +225,17 @@ class FLIMGraphic():
         
         #Get the start channel before begin the measurement
         if startChannelValue==0:
+            self.currentStartChannel=None
+        elif startChannelValue==1:
             self.device.ch1.enableChannel()
             self.currentStartChannel=self.device.ch1
-        elif startChannelValue==1:
+        elif startChannelValue==2:
             self.device.ch2.enableChannel()
             self.currentStartChannel=self.device.ch2
-        elif startChannelValue==2:
+        elif startChannelValue==3:
             self.device.ch3.enableChannel()
             self.currentStartChannel=self.device.ch3
-        elif startChannelValue==3:
+        elif startChannelValue==4:
             self.device.ch4.enableChannel()
             self.currentStartChannel=self.device.ch4
         
@@ -253,10 +272,30 @@ class FLIMGraphic():
     def updateLabel(self,units):
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
     
-    def updateLabels(self,totalSampleTime,totalMeasurements,totalStarts):
-        pass
+    def updateLabels(self,totalMeasurements,totalStarts):
+        self.totalMeasurements.setText(totalMeasurements)
+        self.totalStart.setText(totalStarts)
+    
+    #Functions created for connect or disconnect the device
+    def connectedDevice(self,device):
+        self.device=device
+        self.startButton.setEnabled(True)
         
-        
+    def disconnectedDevice(self):
+        self.startButton.setEnabled(False)
+        self.startButton.setEnabled(False)
+    
+    #Functions to update the totalTime Label}
+    def update_timer(self):
+        self.time = self.time.addSecs(1)
+        self.totalTime.setText(self.time.toString('hh:mm:ss'))
+    
+    def startTimer(self):
+        self.timerMeasurements.start(1000)
+    
+    def stopTimer(self):
+        self.timerMeasurements.stop()
+        self.totalTime.setText("No measurement running")
     
 
 
@@ -271,6 +310,7 @@ class WorkerThreadFLIM(QThread):
     pointSignal=Signal(int)
     updateValues=Signal(list,list)
     updateLabel=Signal(str)
+    updateMeasurementsLabel=Signal(str,str)
     def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device):
         super().__init__()
         #Parameters of the measurement
@@ -304,9 +344,10 @@ class WorkerThreadFLIM(QThread):
     def takeMeasurements(self, percentage):
         #Init the config to take measurement
         self.device.setNumberOfRuns(100)
-        self.deviceStartChannel.setStopMask(0)
+        if self.deviceStartChannel!=None:
+            self.deviceStartChannel.setStopMask(0)
+            self.deviceStartChannel.setNumberOfStops(1)
         self.deviceStopChannel.setStopMask(0)
-        self.deviceStartChannel.setNumberOfStops(1)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
         if len(measurement)==0:
@@ -320,18 +361,37 @@ class WorkerThreadFLIM(QThread):
                 break
             #TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL
             #TO DO: CHECK IF THE START VALUE IS THE SAME
-            currentStartMeasurement=measurement[i]
-            currentStopMeasurement=measurement[i+100]
-            sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
-            sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
-            if sentinelStart:
-                self.totalStarts+=1
-            if sentinelStart and sentinelStop:
-                differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                if differenceValue>0:
-                    self.totalMeasurements+=1
-                    self.totalTime+=differenceValue
-                    self.startStopDifferences.append(differenceValue)
+            if self.deviceStartChannel!=None:
+                currentStartMeasurement=measurement[i]
+                currentStopMeasurement=measurement[i+100]
+                sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
+                sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                if sentinelStart:
+                    self.totalStarts+=1
+                if sentinelStart and sentinelStop:
+                    differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
+                    if differenceValue>0:
+                        self.totalStarts+=1
+                        self.totalMeasurements+=1
+                        self.totalTime+=differenceValue
+                        self.startStopDifferences.append(differenceValue)
+                
+                        
+            else:
+                currentStopMeasurement=measurement[i]
+                sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                partialStop=len(currentStopMeasurement)==4 
+                if sentinelStop:
+                    differenceValue=currentStopMeasurement[3]
+                    if differenceValue>0:
+                        self.totalMeasurements+=1
+                        self.totalStarts+=1
+                        self.totalTime+=differenceValue
+                        self.startStopDifferences.append(differenceValue)
+                if partialStop:
+                    self.totalStarts+=1
+                
+                
     #Function to created the data to update the histogram graphic
     def createFLIMData(self):
         if len(self.startStopDifferences)>0:
@@ -355,6 +415,7 @@ class WorkerThreadFLIM(QThread):
             counts,_ = np.histogram(newDifferences, bins=bin_edges)
             self.updateValues.emit(counts,domainValues)
             self.updateLabel.emit(units)
+        self.updateMeasurementsLabel.emit(str(self.totalMeasurements),str(self.totalStarts))
             
     #Function to get the scale in time of the histogram
     def getUnits(self,picosecondsValue):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'FLIMmeasurementcKAzLC.ui'
+## Form generated from reading UI file 'FLIMmeasurementLNLkHv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -78,7 +78,6 @@ class UiFLIM(object):
 
         self.binWidthComboBox = QComboBox(self.configurationParameters)
         self.binWidthComboBox.setObjectName(u"binWidthComboBox")
-        #Set the values for bin ComboBox
         self.powers_of_two = [ "480 ps", "960 ps", "2 ns", "4 ns", "8 ns", 
                               "16 ns", "32 ns", "64 ns", "128 ns", "256 ns",
                               "512 ns", "1 µs", "2 µs", "4 µs", "8 µs", "16 µs",
@@ -142,6 +141,16 @@ class UiFLIM(object):
 
         self.verticalLayout_3.addWidget(self.saveDataPlotFrame)
 
+        self.binWidthComboBox.raise_()
+        self.startChannelLabel.raise_()
+        self.startChannelComboBox.raise_()
+        self.stopChannelLabel.raise_()
+        self.stopChannelComboBox.raise_()
+        self.binWidthLabel.raise_()
+        self.numberMeasurementsLabel.raise_()
+        self.numberMeasurementsSpinBox.raise_()
+        self.startStopClearFrame.raise_()
+        self.saveDataPlotFrame.raise_()
 
         self.verticalLayout.addWidget(self.configurationParameters)
 
@@ -156,25 +165,6 @@ class UiFLIM(object):
         self.runParameters.setFrameShadow(QFrame.Sunken)
         self.verticalLayout_4 = QVBoxLayout(self.runParameters)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.totalSampleTImeFrame = QFrame(self.runParameters)
-        self.totalSampleTImeFrame.setObjectName(u"totalSampleTImeFrame")
-        self.totalSampleTImeFrame.setFrameShape(QFrame.StyledPanel)
-        self.totalSampleTImeFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_4 = QHBoxLayout(self.totalSampleTImeFrame)
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.totalSampleTimeLabel = QLabel(self.totalSampleTImeFrame)
-        self.totalSampleTimeLabel.setObjectName(u"totalSampleTimeLabel")
-
-        self.horizontalLayout_4.addWidget(self.totalSampleTimeLabel)
-
-        self.totalSampleTimeValue = QLabel(self.totalSampleTImeFrame)
-        self.totalSampleTimeValue.setObjectName(u"totalSampleTimeValue")
-
-        self.horizontalLayout_4.addWidget(self.totalSampleTimeValue)
-
-
-        self.verticalLayout_4.addWidget(self.totalSampleTImeFrame)
-
         self.totalMeasurementsFrame = QFrame(self.runParameters)
         self.totalMeasurementsFrame.setObjectName(u"totalMeasurementsFrame")
         self.totalMeasurementsFrame.setFrameShape(QFrame.StyledPanel)
@@ -433,7 +423,7 @@ class UiFLIM(object):
         self.statusLabel = QLabel(self.statusFrame)
         self.statusLabel.setObjectName(u"statusLabel")
         sizePolicy12 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy12.setHorizontalStretch(24)
+        sizePolicy12.setHorizontalStretch(16)
         sizePolicy12.setVerticalStretch(0)
         sizePolicy12.setHeightForWidth(self.statusLabel.sizePolicy().hasHeightForWidth())
         self.statusLabel.setSizePolicy(sizePolicy12)
@@ -452,15 +442,13 @@ class UiFLIM(object):
 
         self.drawPointLabel = QLabel(self.statusFrame)
         self.drawPointLabel.setObjectName(u"drawPointLabel")
-        sizePolicy.setHeightForWidth(self.drawPointLabel.sizePolicy().hasHeightForWidth())
-        sizePolicy100 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy100.setHorizontalStretch(1)
-        sizePolicy100.setVerticalStretch(0)
-        sizePolicy100.setHeightForWidth(self.drawPointLabel.sizePolicy().hasHeightForWidth())
-        
-        self.drawPointLabel.setSizePolicy(sizePolicy100)
+        sizePolicy14 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy14.setHorizontalStretch(9)
+        sizePolicy14.setVerticalStretch(0)
+        sizePolicy14.setHeightForWidth(self.drawPointLabel.sizePolicy().hasHeightForWidth())
+        self.drawPointLabel.setSizePolicy(sizePolicy14)
 
-        self.horizontalLayout_11.addWidget(self.drawPointLabel)
+        self.horizontalLayout_11.addWidget(self.drawPointLabel, 0, Qt.AlignRight)
 
 
         self.verticalLayout_2.addWidget(self.statusFrame)
@@ -468,9 +456,9 @@ class UiFLIM(object):
 
         self.horizontalLayout.addWidget(self.fitGraphicStatusFrame)
 
-        
+
         self.retranslateUi(Form)
-        
+
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
     # setupUi
@@ -478,10 +466,11 @@ class UiFLIM(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start Channel:", None))
-        self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Channel A", None))
-        self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel B", None))
-        self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel C", None))
-        self.startChannelComboBox.setItemText(3, QCoreApplication.translate("Form", u"Channel D", None))
+        self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Start channel", None))
+        self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel A", None))
+        self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel B", None))
+        self.startChannelComboBox.setItemText(3, QCoreApplication.translate("Form", u"Channel C", None))
+        self.startChannelComboBox.setItemText(4, QCoreApplication.translate("Form", u"Channel D", None))
 
         self.stopChannelLabel.setText(QCoreApplication.translate("Form", u"Stop Channel:", None))
         self.stopChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Channel A", None))
@@ -496,13 +485,11 @@ class UiFLIM(object):
         self.clearButton.setText(QCoreApplication.translate("Form", u"Clear", None))
         self.saveDataFileButton.setText(QCoreApplication.translate("Form", u"Save data file", None))
         self.savePlotButton.setText(QCoreApplication.translate("Form", u"Save Plot", None))
-        self.totalSampleTimeLabel.setText(QCoreApplication.translate("Form", u"Total Sample time:", None))
-        self.totalSampleTimeValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.totalMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Total measurements:", None))
         self.totalMeasurementsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.totalStartsLabel.setText(QCoreApplication.translate("Form", u"Total Starts:", None))
         self.totalStartsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
-        self.totalStopsLabel.setText(QCoreApplication.translate("Form", u"Total Stops:", None))
+        self.totalStopsLabel.setText(QCoreApplication.translate("Form", u"Total Time:", None))
         self.totalStopsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.functionLabel.setText(QCoreApplication.translate("Form", u"Function:", None))
         self.equationLabel.setText(QCoreApplication.translate("Form", u"Equation", None))
@@ -513,6 +500,7 @@ class UiFLIM(object):
         self.secondParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
         self.statusLabel.setText(QCoreApplication.translate("Form", u"Status:", None))
         self.statusValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
+        self.drawPointLabel.setText("")
     # retranslateUi
 
     def drawColorPoint(self):

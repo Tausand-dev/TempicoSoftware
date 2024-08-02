@@ -76,8 +76,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None, *args):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
-        
-        
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
@@ -151,6 +149,7 @@ class MainWindow(QMainWindow):
         
         #------g2 Graphic class---------#
         self.g2Graphic=None
+        self.FLIMGraphic=None
         self.g2_init_sentinel=0
         self.initg2DialogSentinel=0
         #------FLIM Graphic class---------#
@@ -203,6 +202,9 @@ class MainWindow(QMainWindow):
                     self.conectedDevice.open()
                     if self.g2Graphic!=None:
                          self.g2Graphic.connectDevice()
+                    if self.FLIMGraphic!=None:
+                        self.FLIMGraphic.connectedDevice(self.conectedDevice)
+                        
                 
                     checkchannel1=self.ui.Channel1Graph1
                     checkchannel2=self.ui.Channel4Graph1
@@ -256,6 +258,8 @@ class MainWindow(QMainWindow):
                             pass
                         if self.g2Graphic!=None and openSentinel:
                              self.g2Graphic.connectDevice()
+                        if self.FLIMGraphic!=None and openSentinel:
+                            self.FLIMGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -278,6 +282,8 @@ class MainWindow(QMainWindow):
                 pass
             if self.g2Graphic!=None and openSentinel:
                     self.g2Graphic.connectDevice() 
+            if self.FLIMGraphic!=None and openSentinel:
+                    self.FLIMGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
        
@@ -290,6 +296,8 @@ class MainWindow(QMainWindow):
             self.conectedDevice=None
         if self.g2Graphic!=None:
             self.g2Graphic.disconnectDevice()
+        if self.FLIMGraphic!=None:
+            self.FLIMGraphic.disconnectedDevice()
             
                     
         
@@ -318,9 +326,12 @@ class MainWindow(QMainWindow):
                   pointLabel=self.uiFLIM.drawPointLabel
                   comboBoxBinWidth=self.uiFLIM.binWidthComboBox
                   spinBoxNumberMeasurements=self.uiFLIM.numberMeasurementsSpinBox
+                  totalTime=self.uiFLIM.totalStopsValue
+                  totalMeasurements=self.uiFLIM.totalMeasurementsValue
+                  totalStarts=self.uiFLIM.totalStartsValue
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,
-                                               spinBoxNumberMeasurements,self.conectedDevice)
+                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,self.conectedDevice)
                   #If this sentinel dont have any use DELETE
                   self.flim_init_sentinel=1
 
