@@ -11,6 +11,8 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import matplotlib.pyplot as plt
+import io
 
 
 class UiFLIM(object):
@@ -280,6 +282,8 @@ class UiFLIM(object):
 
         self.functionComboBox = QComboBox(self.functionFrame)
         self.functionComboBox.setObjectName(u"functionComboBox")
+        self.functionsFit = ["Exponential"]
+        self.functionComboBox.addItems(self.functionsFit)
 
         self.horizontalLayout_9.addWidget(self.functionComboBox)
 
@@ -298,6 +302,7 @@ class UiFLIM(object):
         self.verticalLayout_6 = QVBoxLayout(self.equationFrame)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.equationLabel = QLabel(self.equationFrame)
+        
         self.equationLabel.setObjectName(u"equationLabel")
 
         self.verticalLayout_6.addWidget(self.equationLabel, 0, Qt.AlignHCenter)
@@ -466,6 +471,7 @@ class UiFLIM(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start Channel:", None))
+        self.set_latex_to_label(r'$E = mc^2$')
         self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Start channel", None))
         self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel A", None))
         self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel B", None))
@@ -492,7 +498,6 @@ class UiFLIM(object):
         self.totalStopsLabel.setText(QCoreApplication.translate("Form", u"Total Time:", None))
         self.totalStopsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.functionLabel.setText(QCoreApplication.translate("Form", u"Function:", None))
-        self.equationLabel.setText(QCoreApplication.translate("Form", u"Equation", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("Form", u"Fit parameters:", None))
         self.firstParameterLabel.setText(QCoreApplication.translate("Form", u"I_0:", None))
         self.firstParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
@@ -522,3 +527,15 @@ class UiFLIM(object):
         painter.drawEllipse(x, y, point_size, point_size)
         painter.end()
         self.drawPointLabel.setPixmap(pixmap)
+        
+    def set_latex_to_label(self, latex):
+        fig, ax = plt.subplots(figsize=(3, 1))
+        ax.text(0.5, 0.5, latex, fontsize=20, ha='center', va='center')
+        ax.axis('off')
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', transparent=True, bbox_inches='tight', pad_inches=0)
+        plt.close(fig)
+        buf.seek(0)
+        pixmap = QPixmap()
+        pixmap.loadFromData(buf.getvalue())
+        self.equationLabel.setPixmap(pixmap)
