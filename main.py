@@ -329,12 +329,16 @@ class MainWindow(QMainWindow):
                   totalTime=self.uiFLIM.totalStopsValue
                   totalMeasurements=self.uiFLIM.totalMeasurementsValue
                   totalStarts=self.uiFLIM.totalStartsValue
+                  applyButton=self.uiFLIM.applyButtton
+                  i0Parameter=self.uiFLIM.firstParameterValue
+                  tauParameter=self.uiFLIM.secondParameterValue
+                  
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,
-                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,self.conectedDevice)
+                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,self.conectedDevice,
+                                               applyButton,i0Parameter,tauParameter,self)
                   #If this sentinel dont have any use DELETE
                   self.flim_init_sentinel=1
-
         #   elif valor_padre==1:
               
         #       padre=self.tab3

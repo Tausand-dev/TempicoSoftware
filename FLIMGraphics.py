@@ -6,13 +6,17 @@ import pyqtgraph as pg
 import numpy as np
 import createsavefile as savefile
 import time
+from scipy.optimize import curve_fit
 from pyTempico import TempicoDevice
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,
-                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device):
+                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
+                 i0Parameter: QLabel,MainWindow):
         super().__init__()
+        #Initialize the main window
+        self.mainWindow=MainWindow
         #Initialize the Tempico Device class
         self.device=device
         #Initialize comboBox
@@ -25,12 +29,15 @@ class FLIMGraphic():
         self.clearButton=clearButton
         self.saveDataButton=saveDataButton
         self.savePlotButton=savePlotButton
+        self.applyButton=applyButton
         #Initialize the labels
         self.statusLabel=statusLabel
         self.pointLabel=pointLabel
         self.totalMeasurements=totalMeasurements
         self.totalStart=totalStart
         self.totalTime=totalTime
+        self.tauParameter=tauParameter
+        self.i0Parameter=i0Parameter
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
         #Fix the original value of Channels comboBox
@@ -43,6 +50,7 @@ class FLIMGraphic():
         self.clearButton.setEnabled(False)
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
+        self.applyButton.setEnabled(False)
         #Get initial index for comboBoxChannels
         self.oldStartChannelIndex=self.comboBoxStartChannel.currentIndex()
         self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
@@ -64,8 +72,10 @@ class FLIMGraphic():
         #Add Labels
         self.plotFLIM.setLabel('left','Counts')
         self.plotFLIM.setLabel('bottom','Time')
+        self.plotFLIM.addLegend()
         self.graphicLayout.addWidget(self.winFLIM)
-        self.curve = self.plotFLIM.plot(pen='b')
+        self.curve = self.plotFLIM.plot(pen='b',  name='Data')
+        self.curveFit = self.plotFLIM.plot(pen='r', name='Exponential fit')
         #-----------------------------------#
         #-----------------------------------#
         #--------End Graphic Creation-------#
@@ -76,6 +86,7 @@ class FLIMGraphic():
         self.startButton.clicked.connect(self.startMeasurement)
         self.stopButton.clicked.connect(self.stopMeasurement)
         self.clearButton.clicked.connect(self.clearGraphic)
+        self.applyButton.clicked.connect(self.applyAction)
         #--------End Buttons Connection-----#
         
         #----------Define other parameters and sentinels-------#
@@ -126,6 +137,7 @@ class FLIMGraphic():
         #Init the timer measurements
         self.time = QTime(0, 0, 0)
         self.startTimer()
+        self.curveFit.setData([],[])
         #Create the thread object
         self.worker=WorkerThreadFLIM(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
                                      self.device)
@@ -179,7 +191,7 @@ class FLIMGraphic():
         self.changeStatusColor(0)
         self.threadCreated=False
         self.stopTimer()
-        
+        self.applyButton.setEnabled(True)
         
         
     #Function to change the status measurement
@@ -296,7 +308,36 @@ class FLIMGraphic():
     def stopTimer(self):
         self.timerMeasurements.stop()
         self.totalTime.setText("No measurement running")
-    
+    #Connection with the ApplyButton
+    def applyAction(self):
+        if len(self.measuredData)>0:
+            try:
+                self.fitExpDecay(self.measuredTime,self.measuredData)
+            except NameError:
+                print(NameError)
+                print("No fue posible realizar el ajuste indicado")
+                #TO DO: Dialog with the message: It is not posible do the fit curve
+                pass    
+        
+    #fit exponential curver
+    def fitExpDecay(self,xData,yData):
+        # Initial guess for the parameters
+        initial_guess = [max(yData), np.mean(xData)]
+        # Curve fitting
+        popt, pcov = curve_fit(self.exp_decay, xData, yData, p0=initial_guess)
+        # Extracting the optimal values of I0 and tau0
+        I0_opt, tau0_opt = popt
+        yFit = self.exp_decay(xData, I0_opt, tau0_opt)
+        #Graphic of the fit curve
+        self.curveFit.setData(xData,yFit)
+        self.tauParameter.setText(str(round(tau0_opt,3)))
+        self.i0Parameter.setText(str(round(I0_opt,3)))
+        return I0_opt, tau0_opt
+        
+        
+    #Exponential Decay Function
+    def exp_decay(self,t, I0, tau0):
+        return I0 * np.exp(-t / tau0)
 
 
 #The measurement is created in a thread in order to avoid a low performance in the graphic interface
@@ -356,40 +397,40 @@ class WorkerThreadFLIM(QThread):
             self.pointSignal.emit(3)
         else:
             self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
-        for i in range(100):
-            if not self._is_running:
-                break
-            #TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL
-            #TO DO: CHECK IF THE START VALUE IS THE SAME
-            if self.deviceStartChannel!=None:
-                currentStartMeasurement=measurement[i]
-                currentStopMeasurement=measurement[i+100]
-                sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
-                sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
-                if sentinelStart:
-                    self.totalStarts+=1
-                if sentinelStart and sentinelStop:
-                    differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                    if differenceValue>0:
+            for i in range(100):
+                if not self._is_running:
+                    break
+                #TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL
+                #TO DO: CHECK IF THE START VALUE IS THE SAME
+                if self.deviceStartChannel!=None:
+                    currentStartMeasurement=measurement[i]
+                    currentStopMeasurement=measurement[i+100]
+                    sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
+                    sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                    if sentinelStart:
                         self.totalStarts+=1
-                        self.totalMeasurements+=1
-                        self.totalTime+=differenceValue
-                        self.startStopDifferences.append(differenceValue)
-                
-                        
-            else:
-                currentStopMeasurement=measurement[i]
-                sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
-                partialStop=len(currentStopMeasurement)==4 
-                if sentinelStop:
-                    differenceValue=currentStopMeasurement[3]
-                    if differenceValue>0:
-                        self.totalMeasurements+=1
+                    if sentinelStart and sentinelStop:
+                        differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
+                        if differenceValue>0:
+                            self.totalStarts+=1
+                            self.totalMeasurements+=1
+                            self.totalTime+=differenceValue
+                            self.startStopDifferences.append(differenceValue)
+                    
+                            
+                else:
+                    currentStopMeasurement=measurement[i]
+                    sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                    partialStop=len(currentStopMeasurement)==4 
+                    if sentinelStop:
+                        differenceValue=currentStopMeasurement[3]
+                        if differenceValue>0:
+                            self.totalMeasurements+=1
+                            self.totalStarts+=1
+                            self.totalTime+=differenceValue
+                            self.startStopDifferences.append(differenceValue)
+                    if partialStop:
                         self.totalStarts+=1
-                        self.totalTime+=differenceValue
-                        self.startStopDifferences.append(differenceValue)
-                if partialStop:
-                    self.totalStarts+=1
                 
                 
     #Function to created the data to update the histogram graphic

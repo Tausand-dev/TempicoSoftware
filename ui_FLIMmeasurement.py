@@ -302,12 +302,11 @@ class UiFLIM(object):
         self.verticalLayout_6 = QVBoxLayout(self.equationFrame)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.equationLabel = QLabel(self.equationFrame)
-        
+        self.applyButtton = QPushButton(self.equationFrame)
+        self.applyButtton.setText("Apply")
         self.equationLabel.setObjectName(u"equationLabel")
-
         self.verticalLayout_6.addWidget(self.equationLabel, 0, Qt.AlignHCenter)
-
-
+        self.verticalLayout_6.addWidget(self.applyButtton)
         self.verticalLayout_5.addWidget(self.equationFrame)
 
 
@@ -463,7 +462,6 @@ class UiFLIM(object):
 
 
         self.retranslateUi(Form)
-
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
     # setupUi
@@ -471,7 +469,7 @@ class UiFLIM(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start Channel:", None))
-        self.set_latex_to_label(r'$E = mc^2$')
+        self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}}$')
         self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Start channel", None))
         self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel A", None))
         self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel B", None))
