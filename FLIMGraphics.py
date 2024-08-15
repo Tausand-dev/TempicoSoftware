@@ -140,6 +140,7 @@ class FLIMGraphic():
         self.comboBoxStopChannel.setEnabled(False)
         self.binWidthComboBox.setEnabled(False)
         self.numberMeasurementsSpinBox.setEnabled(False)
+        self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
