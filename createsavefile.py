@@ -135,6 +135,24 @@ def save_g2_data(data, file_name, folder_path, settings, extension, textLabel):
             
             for tau, g2_value in zip(data[0], data[1]):
                 file.write(f"{tau}\t{g2_value}\n")
+                
+def save_FLIM_data(data, file_name, folder_path, settings, extension, textLabel):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    
+    if len(data[0]) != len(data[1]):
+        raise ValueError("Time and FLIM Values must have the same length")
+    else:
+    
+        full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+        
+        with open(full_path, 'w') as file:
+            file.write(settings + '\n')
+            
+            file.write(textLabel+"\tCounts FLIM\n")
+            
+            for tau, flimValue in zip(data[0], data[1]):
+                file.write(f"{tau}\t{flimValue}\n")
     
     
 

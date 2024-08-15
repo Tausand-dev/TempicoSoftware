@@ -55,6 +55,7 @@ class UiFLIM(object):
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.addItem("")
+        self.startChannelComboBox.addItem("")
         self.startChannelComboBox.setObjectName(u"startChannelComboBox")
 
         self.verticalLayout_3.addWidget(self.startChannelComboBox)
@@ -282,10 +283,11 @@ class UiFLIM(object):
 
         self.functionComboBox = QComboBox(self.functionFrame)
         self.functionComboBox.setObjectName(u"functionComboBox")
-        self.functionsFit = ["Exponential"]
+        self.functionsFit = ["Exponential","Kohlrausch","Shifted exponencial"]
         self.functionComboBox.addItems(self.functionsFit)
 
         self.horizontalLayout_9.addWidget(self.functionComboBox)
+        self.functionComboBox.currentIndexChanged.connect(self.functionChange)
 
 
         self.verticalLayout_5.addWidget(self.functionFrame)
@@ -394,7 +396,56 @@ class UiFLIM(object):
 
 
         self.verticalLayout_8.addWidget(self.secondParameterFrame)
+        
+        #Begin third parameter
+        
+        self.thirdParameterFrame = QFrame(self.parametersFrame)
+        self.thirdParameterFrame.setObjectName(u"secondParameterFrame")
+        sizePolicy10.setHeightForWidth(self.thirdParameterFrame.sizePolicy().hasHeightForWidth())
+        self.thirdParameterFrame.setSizePolicy(sizePolicy10)
+        self.thirdParameterFrame.setFrameShape(QFrame.StyledPanel)
+        self.thirdParameterFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_thirdParameter = QHBoxLayout(self.thirdParameterFrame)
+        self.horizontalLayout_thirdParameter.setObjectName(u"horizontalLayout_thirdParameter")
+        self.thirdParameterLabel = QLabel(self.thirdParameterFrame)
+        self.thirdParameterLabel.setObjectName(u"thirdParameterLabel")
 
+        self.horizontalLayout_thirdParameter.addWidget(self.thirdParameterLabel)
+
+        self.thirdParameterValue = QLabel(self.thirdParameterFrame)
+        self.thirdParameterFrame.setObjectName(u"secondParameterValue")
+
+        self.horizontalLayout_thirdParameter.addWidget(self.thirdParameterValue)
+
+
+        self.verticalLayout_8.addWidget(self.thirdParameterFrame)
+        
+        #End third parameter
+        
+        
+        #Begin fourth parameter
+        self.fourthParameterFrame = QFrame(self.parametersFrame)
+        self.fourthParameterFrame.setObjectName(u"secondParameterFrame")
+        sizePolicy10.setHeightForWidth(self.thirdParameterFrame.sizePolicy().hasHeightForWidth())
+        self.fourthParameterFrame.setSizePolicy(sizePolicy10)
+        self.fourthParameterFrame.setFrameShape(QFrame.StyledPanel)
+        self.fourthParameterFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_fourthParameter = QHBoxLayout(self.fourthParameterFrame)
+        self.horizontalLayout_fourthParameter.setObjectName(u"horizontalLayout_fourthParameter")
+        self.fourthParameterLabel = QLabel(self.fourthParameterFrame)
+        self.fourthParameterLabel.setObjectName(u"fourthParameterLabel")
+
+        self.horizontalLayout_fourthParameter.addWidget(self.fourthParameterLabel)
+
+        self.fourthParameterValue = QLabel(self.fourthParameterFrame)
+        self.fourthParameterFrame.setObjectName(u"secondParameterValue")
+
+        self.horizontalLayout_fourthParameter.addWidget(self.fourthParameterValue)
+
+
+        self.verticalLayout_8.addWidget(self.fourthParameterFrame)
+        
+        #End fourth parameter
 
         self.verticalLayout_7.addWidget(self.parametersFrame)
 
@@ -499,7 +550,7 @@ class UiFLIM(object):
         self.fitParametersLabel.setText(QCoreApplication.translate("Form", u"Fit parameters:", None))
         self.firstParameterLabel.setText(QCoreApplication.translate("Form", u"I_0:", None))
         self.firstParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
-        self.secondParameterLabel.setText(QCoreApplication.translate("Form", u"Tau:", None))
+        self.secondParameterLabel.setText(QCoreApplication.translate("Form", u"Tau_0:", None))
         self.secondParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
         self.statusLabel.setText(QCoreApplication.translate("Form", u"Status:", None))
         self.statusValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
@@ -537,3 +588,27 @@ class UiFLIM(object):
         pixmap = QPixmap()
         pixmap.loadFromData(buf.getvalue())
         self.equationLabel.setPixmap(pixmap)
+    
+
+    
+    def functionChange(self):
+        if self.functionComboBox.currentText()=="Exponential":
+            self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}}$')
+            self.thirdParameterLabel.setText("")
+            self.thirdParameterValue.setText("")
+            self.fourthParameterLabel.setText("")
+            self.fourthParameterValue.setText("")
+        elif self.functionComboBox.currentText()=="Kohlrausch":
+            self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}\beta}$')
+            self.thirdParameterLabel.setText("Beta:")
+            self.thirdParameterValue.setText("Undefined")
+            self.fourthParameterLabel.setText("")
+            self.fourthParameterValue.setText("")
+        elif self.functionComboBox.currentText()=="Shifted exponencial":
+            self.set_latex_to_label(r'$I_0 e^{\frac{-t+\alpha}{\tau_0}}+b$')
+            self.thirdParameterLabel.setText("Alpha:")
+            self.thirdParameterValue.setText("Undefined")
+            self.fourthParameterLabel.setText("b:")
+            self.fourthParameterValue.setText("Undefined")
+            
+        

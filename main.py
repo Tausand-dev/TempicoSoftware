@@ -332,11 +332,14 @@ class MainWindow(QMainWindow):
                   applyButton=self.uiFLIM.applyButtton
                   i0Parameter=self.uiFLIM.firstParameterValue
                   tauParameter=self.uiFLIM.secondParameterValue
+                  thirdParameter=self.uiFLIM.thirdParameterValue
+                  functionComboBox=self.uiFLIM.functionComboBox
+                  fourthParameter=self.uiFLIM.fourthParameterValue
                   
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,
-                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,
+                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,self.conectedDevice,
-                                               applyButton,i0Parameter,tauParameter,self)
+                                               applyButton,i0Parameter,tauParameter,thirdParameter,fourthParameter,self)
                   #If this sentinel dont have any use DELETE
                   self.flim_init_sentinel=1
         #   elif valor_padre==1:

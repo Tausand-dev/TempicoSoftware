@@ -1,2 +1,2 @@
 
-        main_widget.setLayout(layout)
+    #-----Functions for construc every Qtab--------#

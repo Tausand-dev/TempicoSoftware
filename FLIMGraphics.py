@@ -6,14 +6,15 @@ import pyqtgraph as pg
 import numpy as np
 import createsavefile as savefile
 import time
+import datetime
 from scipy.optimize import curve_fit
 from pyTempico import TempicoDevice
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton,
-                 clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,
+                 clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,functionComboBox:QComboBox,
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
-                 i0Parameter: QLabel,MainWindow):
+                 i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow):
         super().__init__()
         #Initialize the main window
         self.mainWindow=MainWindow
@@ -23,6 +24,7 @@ class FLIMGraphic():
         self.comboBoxStartChannel=comboBoxStartChannel
         self.comboBoxStopChannel=comboBoxStopChannel
         self.binWidthComboBox=binWidthComboBox
+        self.functionComboBox=functionComboBox
         #Initialize Buttons
         self.startButton=startButton
         self.stopButton=stopButton
@@ -38,6 +40,8 @@ class FLIMGraphic():
         self.totalTime=totalTime
         self.tauParameter=tauParameter
         self.i0Parameter=i0Parameter
+        self.thirdParameter=thirdParameter
+        self.fourthParameter=fourthParameter
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
         #Fix the original value of Channels comboBox
@@ -75,7 +79,7 @@ class FLIMGraphic():
         self.plotFLIM.addLegend()
         self.graphicLayout.addWidget(self.winFLIM)
         self.curve = self.plotFLIM.plot(pen='b',  name='Data')
-        self.curveFit = self.plotFLIM.plot(pen='r', name='Exponential fit')
+        self.curveFit = self.plotFLIM.plot(pen='r', name='Data fit')
         #-----------------------------------#
         #-----------------------------------#
         #--------End Graphic Creation-------#
@@ -87,6 +91,9 @@ class FLIMGraphic():
         self.stopButton.clicked.connect(self.stopMeasurement)
         self.clearButton.clicked.connect(self.clearGraphic)
         self.applyButton.clicked.connect(self.applyAction)
+        self.savePlotButton.clicked.connect(self.savePlotFLIM)
+        self.functionComboBox.currentIndexChanged.connect(self.changeFunction)
+        self.saveDataButton.clicked.connect(self.saveFLIMData)
         #--------End Buttons Connection-----#
         
         #----------Define other parameters and sentinels-------#
@@ -97,11 +104,18 @@ class FLIMGraphic():
         self.measuredData=[]
         #List of time Values X axis
         self.measuredTime=[]
+        #List of Fit Parameter
+        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+        #Sentinel to know what is the current fit
+        self.currentFit=""
+        #Sentiinels to check the files saved
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0        
         #--------End Define other parameters and sentinels-----#
         if self.device!=None:
             self.startButton.setEnabled(True)
-        
-        
+            
         
     # Functions to verify that start and stop will not be the same channels
     def indexChangeStartChannel(self):
@@ -121,6 +135,7 @@ class FLIMGraphic():
         self.startButton.setEnabled(False)
         self.stopButton.setEnabled(True)
         self.clearButton.setEnabled(True)
+        self.applyButton.setEnabled(False)
         self.comboBoxStartChannel.setEnabled(False)
         self.comboBoxStopChannel.setEnabled(False)
         self.binWidthComboBox.setEnabled(False)
@@ -152,6 +167,7 @@ class FLIMGraphic():
         self.worker.updateMeasurementsLabel.connect(self.updateLabels)
         #Start the thread
         self.worker.start()
+        
     def getUnits(self,value):
         if value < 1e3:
             return ["ps",1]
@@ -183,6 +199,7 @@ class FLIMGraphic():
         self.stopButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.startButton.setEnabled(True)
+        self.savePlotButton.setEnabled(True)
         self.comboBoxStartChannel.setEnabled(True)
         self.comboBoxStopChannel.setEnabled(True)
         self.binWidthComboBox.setEnabled(True)
@@ -192,6 +209,7 @@ class FLIMGraphic():
         self.threadCreated=False
         self.stopTimer()
         self.applyButton.setEnabled(True)
+        self.saveDataButton.setEnabled(True)
         
         
     #Function to change the status measurement
@@ -282,6 +300,7 @@ class FLIMGraphic():
         self.curve.setData(self.measuredTime,self.measuredData)
     #Function to get the Label with the correct units
     def updateLabel(self,units):
+        self.unitsLabel='Time ('+units+')'
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
     
     def updateLabels(self,totalMeasurements,totalStarts):
@@ -297,7 +316,7 @@ class FLIMGraphic():
         self.startButton.setEnabled(False)
         self.startButton.setEnabled(False)
     
-    #Functions to update the totalTime Label}
+    #Functions to update the totalTime Label
     def update_timer(self):
         self.time = self.time.addSecs(1)
         self.totalTime.setText(self.time.toString('hh:mm:ss'))
@@ -308,16 +327,61 @@ class FLIMGraphic():
     def stopTimer(self):
         self.timerMeasurements.stop()
         self.totalTime.setText("No measurement running")
+    #Connection with change of comboBox
+    def changeFunction(self):
+        if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
+            self.i0Parameter.setText(str(self.FitParameters[0]))
+            self.tauParameter.setText(str(self.FitParameters[1]))
+        elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
+            self.i0Parameter.setText(str(self.FitParameters[0]))
+            self.tauParameter.setText(str(self.FitParameters[1]))
+            self.thirdParameter.setText(str(self.FitParameters[2]))
+        elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
+            self.i0Parameter.setText(str(self.FitParameters[0]))
+            self.tauParameter.setText(str(self.FitParameters[1]))
+            self.thirdParameter.setText(str(self.FitParameters[2]))
+            self.fourthParameter.setText(str(self.FitParameters[3]))
+        else:
+            self.i0Parameter.setText("Undefined")
+            self.tauParameter.setText("Undefined")
+            if self.functionComboBox.currentIndex()==1:
+                self.thirdParameter.setText("Undefined")
+            elif self.functionComboBox.currentIndex()==2:
+                self.fourthParameter.setText("Undefined")
+            
+        
     #Connection with the ApplyButton
     def applyAction(self):
         if len(self.measuredData)>0:
             try:
-                self.fitExpDecay(self.measuredTime,self.measuredData)
+                if self.functionComboBox.currentText()=="Exponential":
+                    i0,tau0=self.fitExpDecay(self.measuredTime,self.measuredData)
+                    self.currentFit="ExpDecay"
+                    self.FitParameters[0]=round(i0,3)
+                    self.FitParameters[1]=round(tau0,3)
+                elif self.functionComboBox.currentText()=="Kohlrausch":
+                    i0,tau0,beta=self.fitKohlrauschFit(self.measuredTime,self.measuredData)
+                    self.currentFit="fitKohlrausch"
+                    self.FitParameters[0]=round(i0,3)
+                    self.FitParameters[1]=round(tau0,3)
+                    self.FitParameters[2]=round(beta,3)
+                    
+                elif self.functionComboBox.currentText()=="Shifted exponencial":
+                    i0,tau0,alpha,b=self.fitShiiftedExponential(self.measuredTime,self.measuredData)   
+                    self.currentFit="ShiftedExponential"
+                    self.FitParameters[0]=round(i0,3)
+                    self.FitParameters[1]=round(tau0,3)
+                    self.FitParameters[2]=round(alpha,3)
+                    self.FitParameters[3]=round(b,3)
+                    
             except NameError:
-                print(NameError)
-                print("No fue posible realizar el ajuste indicado")
-                #TO DO: Dialog with the message: It is not posible do the fit curve
-                pass    
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Critical)
+                message_box.setText("The parameters for the graph could not be determined.")
+                message_box.setWindowTitle("Error generating the fit")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+                    
         
     #fit exponential curver
     def fitExpDecay(self,xData,yData):
@@ -330,14 +394,227 @@ class FLIMGraphic():
         yFit = self.exp_decay(xData, I0_opt, tau0_opt)
         #Graphic of the fit curve
         self.curveFit.setData(xData,yFit)
-        self.tauParameter.setText(str(round(tau0_opt,3)))
-        self.i0Parameter.setText(str(round(I0_opt,3)))
+        self.tauParameter.setText(str(round(I0_opt,3)))
+        self.i0Parameter.setText(str(round(tau0_opt,3)))
         return I0_opt, tau0_opt
+
+    #fit kohlrausch curver
+    def fitKohlrauschFit(self,xData,yData):
+        # Initial guess for the parameters
+        initial_guess = [max(yData), np.mean(xData), 1.0]
+        # Curve fitting
+        popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
+        # Extracting the optimal values of I0 and tau0
+        I0_opt, tau0_opt, beta_opt = popt
+        yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
+        #Graphic of the fit curve
+        self.curveFit.setData(xData,yFit)
+        self.tauParameter.setText(str(round(I0_opt,3)))
+        self.i0Parameter.setText(str(round(tau0_opt,3)))
+        self.thirdParameter.setText(str(round(beta_opt,3)))
+        return I0_opt, tau0_opt, beta_opt
+    
+    #fit Shifted Exponential
+    def fitShiiftedExponential(self, xData, yData):
+        # Initial guess for the parameters: I0, tau0, alpha, b
+        initial_guess = [max(yData), np.mean(xData), 0.0, 0.0]
+        # Curve fitting
+        popt, pcov = curve_fit(self.shifted_decay_function, xData, yData, p0=initial_guess)
+        # Extracting the optimal values of I0, tau0, alpha, and b
+        I0_opt, tau0_opt, alpha_opt, b_opt = popt
+        # Calculate the fitted curve
+        yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
+        # Graphic of the fit curve
+        self.curveFit.setData(xData, yFit)
+        # Set the fitted parameters in the UI
+        self.tauParameter.setText(str(round(tau0_opt, 3)))
+        self.i0Parameter.setText(str(round(I0_opt, 3)))
+        self.thirdParameter.setText(str(round(alpha_opt, 3)))
+        self.fourthParameter.setText(str(round(b_opt, 3)))
+
+        return I0_opt, tau0_opt, alpha_opt, b_opt
+    
+    
+        
         
         
     #Exponential Decay Function
     def exp_decay(self,t, I0, tau0):
         return I0 * np.exp(-t / tau0)
+
+    #Kohlrausch Decay Function
+    def kohl_decay(self,t, I0, tau0,beta):
+        return I0 * np.exp((-t / tau0)*beta)
+    
+    #Shifted Exponential Function
+    def shifted_decay_function(self, t, I0, tau0, alpha, b):
+        # Define the decay function with the new equation
+        return I0 * np.exp(-(t - alpha) / tau0) + b
+
+    
+    #Save buttons
+    #Save Plot Button
+    def savePlotFLIM(self):
+        try:
+            graph_names=[]
+            #Open select the format
+            dialog =QDialog(self.mainWindow)    
+            dialog.setObjectName("ImageFormat")
+            dialog.resize(285,105)
+            dialog.setWindowTitle("Save Plots")
+            verticalLayout_2 = QVBoxLayout(dialog)
+            verticalLayout_2.setObjectName("verticalLayout_2")
+            VerticalImage = QVBoxLayout()
+            VerticalImage.setObjectName("VerticalImage")
+            SelectLabel = QLabel(dialog)
+            SelectLabel.setObjectName("SelectLabel")
+            SelectLabel.setText("Select the image format:")
+            VerticalImage.addWidget(SelectLabel)
+            FormatBox = QComboBox(dialog)
+            FormatBox.addItem("png")
+            FormatBox.addItem("tiff")
+            FormatBox.addItem("jpg")
+            FormatBox.setObjectName("FormatBox")
+            VerticalImage.addWidget(FormatBox)
+            verticalLayout_2.addLayout(VerticalImage)
+            
+            accepButton = QPushButton(dialog)
+            accepButton.setObjectName("accepButton")
+            accepButton.setText("Accept")
+            verticalLayout_2.addWidget(accepButton)
+            
+            QMetaObject.connectSlotsByName(dialog)
+            
+            # Conectar el botón "Accept" al método accept del diálogo
+            accepButton.clicked.connect(dialog.accept)
+            if dialog.exec_()==QDialog.Accepted:
+                selected_format=FormatBox.currentText()
+                exporter=pg.exporters.ImageExporter(self.plotFLIM)
+                exporter.parameters()['width'] = 800
+                exporter.parameters()['height'] = 600
+                folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                current_date=datetime.datetime.now()
+                current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                graph_name='FLIMMeasurement'+current_date_str
+                exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
+                text_route="\n"+graph_name+"."+selected_format
+                graph_names.append(graph_name)
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setText(initial_text+text_route)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                # show successful save
+                message_box.exec_()            
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The plots could not be saved.")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+    #Save Data Button
+    def saveFLIMData(self):
+        #Open select the format
+        dialog = QDialog(self.mainWindow)
+        dialog.setObjectName("TextFormat")
+        dialog.resize(282, 105)
+        dialog.setWindowTitle("Save")
+        verticalLayout_2 = QVBoxLayout(dialog)
+        verticalLayout_2.setObjectName("verticalLayout_2")
+        VerticalImage = QVBoxLayout()
+        VerticalImage.setObjectName("VerticalImage")
+        SelectLabel = QLabel(dialog)
+        SelectLabel.setObjectName("SelectLabel")
+        SelectLabel.setText("Select the text format:")
+        VerticalImage.addWidget(SelectLabel)
+        FormatBox = QComboBox(dialog)
+        FormatBox.addItem("txt")
+        FormatBox.addItem("csv")
+        FormatBox.addItem("dat")
+        FormatBox.setObjectName("FormatBox")
+        VerticalImage.addWidget(FormatBox)
+        verticalLayout_2.addLayout(VerticalImage)
+        accepButton = QPushButton(dialog)
+        accepButton.setObjectName("accepButton")
+        accepButton.setText("Accept")
+        verticalLayout_2.addWidget(accepButton)
+        QMetaObject.connectSlotsByName(dialog)
+        # Connect the accept button with real accept
+        accepButton.clicked.connect(dialog.accept)
+        if dialog.exec_() == QDialog.Accepted:
+            selected_format = FormatBox.currentText()
+            conditiontxt= FormatBox.currentText()=="txt" and self.sentinelsavetxt==1
+            conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
+            conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
+            total_condition= conditiontxt or conditiondat or conditioncsv
+            folder_path=savefile.read_default_data()['Folder path']
+            if not total_condition:
+                current_date=datetime.datetime.now()
+                current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                fitSetting=""
+                if self.currentFit=="ExpDecay":
+                    fitSetting="Exponential Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])
+                elif self.currentFit=="Kohlrausch":
+                    fitSetting="Kohlrausch Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Beta: '+ str(self.FitParameters[2])
+                elif self.currentFit=="ShiftedExponential":
+                    fitSetting="Shifted Exponential Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'alpha: '+ str(self.FitParameters[2])+'\n'+'b: '+ str(self.FitParameters[3])
+                elif self.currentFit=="":
+                    fitSetting=""
+                    
+                #Channel Setting
+                fitSetting+='\n'+self.comboBoxStartChannel.currentText()
+                fitSetting+='\n'+self.comboBoxStopChannel.currentText()
+                
+                
+                #Put the settings and fit
+                filename="FLIMMeasurement"+current_date_str
+                data=[self.measuredTime,self.measuredData ]
+                try:
+                    savefile.save_FLIM_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
+                    if selected_format=="txt":
+                        self.oldtxtName=filename
+                        self.sentinelsavetxt=1
+                    elif selected_format=="csv":
+                        self.oldcsvName=filename
+                        self.sentinelsavecsv=1
+                    elif selected_format=="dat":
+                        self.olddatName=filename
+                        self.sentinelsavedat=1
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Information)
+                    if selected_format=="txt":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                    elif selected_format=="csv":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                    elif selected_format=="dat":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                    message_box.setText(textRoute)
+                    message_box.setWindowTitle("Successful save")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()   
+                except NameError:
+                    print(NameError)
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Critical)
+                    message_box.setText("The changes could not be saved.")
+                    message_box.setWindowTitle("Error saving")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()         
+            else:
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
+                if selected_format=="txt":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                elif selected_format=="csv":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                elif selected_format=="dat":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                message_box.setText(textRoute)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+
 
 
 #The measurement is created in a thread in order to avoid a low performance in the graphic interface
@@ -374,12 +651,12 @@ class WorkerThreadFLIM(QThread):
     def run(self):
         #Prueba: TO DO BORRAR
         self.createdSignal.emit()
-        i=1
-        while i<201 and self._is_running:
-            percentage=round(i/2)
+        while self.totalMeasurements<self.numberMeasurements and self._is_running:
+            
+            percentage=round((self.totalMeasurements*100)/self.numberMeasurements,2)
             self.takeMeasurements(percentage)
             self.createFLIMData()
-            i+=1
+            
             
     #Take one measurement function
     def takeMeasurements(self, percentage):
@@ -391,6 +668,7 @@ class WorkerThreadFLIM(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
+        print(measurement)
         if len(measurement)==0:
             self.totalRuns+=100
             self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
@@ -431,6 +709,8 @@ class WorkerThreadFLIM(QThread):
                             self.startStopDifferences.append(differenceValue)
                     if partialStop:
                         self.totalStarts+=1
+                if self.totalMeasurements>=self.numberMeasurements:
+                    break
                 
                 
     #Function to created the data to update the histogram graphic
@@ -483,6 +763,7 @@ class WorkerThreadFLIM(QThread):
     #Function to clear the graphic
     def clear(self):
         self.startStopDifferences=[]
+        self.totalMeasurements=0
         
     #Stop thread function
     @Slot()
