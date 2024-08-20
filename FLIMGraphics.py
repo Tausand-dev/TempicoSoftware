@@ -111,7 +111,12 @@ class FLIMGraphic():
         #Sentiinels to check the files saved
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
-        self.sentinelsavedat=0        
+        self.sentinelsavedat=0  
+        #Variables for save the graphic 
+        self.ylabel='Counts'
+        self.xlabel='Time'
+        self.xDataFitCopy=[]
+        self.yDataFitCopy=[]
         #--------End Define other parameters and sentinels-----#
         if self.device!=None:
             self.startButton.setEnabled(True)
@@ -141,6 +146,7 @@ class FLIMGraphic():
         self.binWidthComboBox.setEnabled(False)
         self.numberMeasurementsSpinBox.setEnabled(False)
         self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
+        self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
@@ -303,6 +309,7 @@ class FLIMGraphic():
     def updateLabel(self,units):
         self.unitsLabel='Time ('+units+')'
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
+        self.xlabel='Time ('+units+')'
     
     def updateLabels(self,totalMeasurements,totalStarts):
         self.totalMeasurements.setText(totalMeasurements)
@@ -393,6 +400,8 @@ class FLIMGraphic():
         # Extracting the optimal values of I0 and tau0
         I0_opt, tau0_opt = popt
         yFit = self.exp_decay(xData, I0_opt, tau0_opt)
+        self.xDataFitCopy=xData
+        self.yDataFitCopy=yFit
         #Graphic of the fit curve
         self.curveFit.setData(xData,yFit)
         self.tauParameter.setText(str(round(I0_opt,3)))
@@ -408,6 +417,8 @@ class FLIMGraphic():
         # Extracting the optimal values of I0 and tau0
         I0_opt, tau0_opt, beta_opt = popt
         yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
+        self.xDataFitCopy=xData
+        self.yDataFitCopy=yFit
         #Graphic of the fit curve
         self.curveFit.setData(xData,yFit)
         self.tauParameter.setText(str(round(I0_opt,3)))
@@ -425,6 +436,8 @@ class FLIMGraphic():
         I0_opt, tau0_opt, alpha_opt, b_opt = popt
         # Calculate the fitted curve
         yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
+        self.xDataFitCopy=xData
+        self.yDataFitCopy=yFit
         # Graphic of the fit curve
         self.curveFit.setData(xData, yFit)
         # Set the fitted parameters in the UI
@@ -486,13 +499,37 @@ class FLIMGraphic():
             
             QMetaObject.connectSlotsByName(dialog)
             
-            # Conectar el botón "Accept" al método accept del diálogo
+            # Connect the button "Accept" to the accept dialog method
             accepButton.clicked.connect(dialog.accept)
             if dialog.exec_()==QDialog.Accepted:
                 selected_format=FormatBox.currentText()
-                exporter=pg.exporters.ImageExporter(self.plotFLIM)
-                exporter.parameters()['width'] = 800
-                exporter.parameters()['height'] = 600
+                copyWin=pg.GraphicsLayoutWidget()
+                copyWin.setBackground('w')
+                copyPlot=copyWin.addPlot()
+                copyPlot.showGrid(x=True, y=True)
+                copyPlot.setLabel('left',self.ylabel)
+                copyPlot.setLabel('bottom',self.xlabel)
+                copyPlot.addLegend()
+                copyCurve=copyPlot.plot(pen='b', name='Data')
+                copyFit=copyPlot.plot(pen='r', name='Data fit')
+                copyCurve.setData(self.measuredTime,self.measuredData)
+                copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
+                # Add a footer for the graphic
+                if self.currentFit=="ExpDecay":
+                    textFooter="Fit: Exponential Decay, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])
+                elif self.currentFit=="fitKohlrausch":
+                    textFooter="Fit: Kohlrausch fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])+" 	β:"+str(self.FitParameters[2])
+                elif self.currentFit=="ShiftedExponential":
+                    textFooter="Fit: Shifted exponential fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                else:
+                    textFooter="No fit has been applied"
+                    
+                footer = pg.LabelItem(text=textFooter, justify='left')
+                copyWin.addItem(footer, row=2, col=0)
+                copyWin.ci.layout.setRowStretchFactor(0.4, 0.1)
+                exporter=pg.exporters.ImageExporter(copyWin.scene())
+                exporter.parameters()['width'] = 1000
+                exporter.parameters()['height'] = 700
                 folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
@@ -507,13 +544,15 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 # show successful save
                 message_box.exec_()            
-        except:
+        except NameError:
+            print(NameError)
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The plots could not be saved.")
             message_box.setWindowTitle("Error saving")
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+            
     #Save Data Button
     def saveFLIMData(self):
         #Open select the format
@@ -669,49 +708,53 @@ class WorkerThreadFLIM(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
-        print(measurement)
-        if len(measurement)==0:
+        try:
+            if len(measurement)==0:
+                self.totalRuns+=100
+                self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
+                self.pointSignal.emit(3)
+            else:
+                self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
+                for i in range(100):
+                    if not self._is_running:
+                        break
+                    #TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL
+                    #TO DO: CHECK IF THE START VALUE IS THE SAME
+                    if self.deviceStartChannel!=None:
+                        currentStartMeasurement=measurement[i]
+                        currentStopMeasurement=measurement[i+100]
+                        sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
+                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                        if sentinelStart:
+                            self.totalStarts+=1
+                        if sentinelStart and sentinelStop:
+                            differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
+                            if differenceValue>0:
+                                self.totalStarts+=1
+                                self.totalMeasurements+=1
+                                self.totalTime+=differenceValue
+                                self.startStopDifferences.append(differenceValue)
+                        
+                                
+                    else:
+                        currentStopMeasurement=measurement[i]
+                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                        partialStop=len(currentStopMeasurement)==4 
+                        if sentinelStop:
+                            differenceValue=currentStopMeasurement[3]
+                            if differenceValue>0:
+                                self.totalMeasurements+=1
+                                self.totalStarts+=1
+                                self.totalTime+=differenceValue
+                                self.startStopDifferences.append(differenceValue)
+                        if partialStop:
+                            self.totalStarts+=1
+                    if self.totalMeasurements>=self.numberMeasurements:
+                        break
+        except:
             self.totalRuns+=100
             self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
             self.pointSignal.emit(3)
-        else:
-            self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
-            for i in range(100):
-                if not self._is_running:
-                    break
-                #TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL
-                #TO DO: CHECK IF THE START VALUE IS THE SAME
-                if self.deviceStartChannel!=None:
-                    currentStartMeasurement=measurement[i]
-                    currentStopMeasurement=measurement[i+100]
-                    sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
-                    sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
-                    if sentinelStart:
-                        self.totalStarts+=1
-                    if sentinelStart and sentinelStop:
-                        differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                        if differenceValue>0:
-                            self.totalStarts+=1
-                            self.totalMeasurements+=1
-                            self.totalTime+=differenceValue
-                            self.startStopDifferences.append(differenceValue)
-                    
-                            
-                else:
-                    currentStopMeasurement=measurement[i]
-                    sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
-                    partialStop=len(currentStopMeasurement)==4 
-                    if sentinelStop:
-                        differenceValue=currentStopMeasurement[3]
-                        if differenceValue>0:
-                            self.totalMeasurements+=1
-                            self.totalStarts+=1
-                            self.totalTime+=differenceValue
-                            self.startStopDifferences.append(differenceValue)
-                    if partialStop:
-                        self.totalStarts+=1
-                if self.totalMeasurements>=self.numberMeasurements:
-                    break
                 
                 
     #Function to created the data to update the histogram graphic
