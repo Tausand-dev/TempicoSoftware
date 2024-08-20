@@ -785,11 +785,11 @@ class FLIMGraphic():
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 fitSetting=""
                 if self.currentFit=="ExpDecay":
-                    fitSetting="Exponential Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])
+                    fitSetting="Exponential Fit"+'\n'+'I_0*e^(-t/tau_0)'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])
                 elif self.currentFit=="Kohlrausch":
-                    fitSetting="Kohlrausch Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Beta: '+ str(self.FitParameters[2])
+                    fitSetting="Kohlrausch Fit"+'\n'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Beta: '+ str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    fitSetting="Shifted Exponential Fit"+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'alpha: '+ str(self.FitParameters[2])+'\n'+'b: '+ str(self.FitParameters[3])
+                    fitSetting="Shifted Exponential Fit"+'\n'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'alpha: '+ str(self.FitParameters[2])+'\n'+'b: '+ str(self.FitParameters[3])
                 elif self.currentFit=="":
                     fitSetting=""
                     
