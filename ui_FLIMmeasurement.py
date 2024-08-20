@@ -446,6 +446,27 @@ class UiFLIM(object):
         self.verticalLayout_8.addWidget(self.fourthParameterFrame)
         
         #End fourth parameter
+        
+        #Begin Button Change Initial Parameters
+        self.buttonParameterFrame = QFrame(self.parametersFrame)
+        self.buttonParameterFrame.setObjectName(u"buttonParameterFrame")
+        sizePolicy10.setHeightForWidth(self.buttonParameterFrame.sizePolicy().hasHeightForWidth())
+        self.buttonParameterFrame.setSizePolicy(sizePolicy10)
+        self.buttonParameterFrame.setFrameShape(QFrame.StyledPanel)
+        self.buttonParameterFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_buttonParameter = QHBoxLayout(self.buttonParameterFrame)
+        self.horizontalLayout_buttonParameter.setObjectName(u"horizontalLayout_fourthParameter")
+        self.buttonParameterLabel = QPushButton("Initial Parameters",self.buttonParameterFrame)
+        self.buttonParameterLabel.setObjectName(u"buttonParameterLabel")
+
+        self.horizontalLayout_buttonParameter.addWidget(self.buttonParameterLabel)
+
+        
+
+
+        self.verticalLayout_8.addWidget(self.buttonParameterFrame)
+        
+        #End fourth parameter
 
         self.verticalLayout_7.addWidget(self.parametersFrame)
 
