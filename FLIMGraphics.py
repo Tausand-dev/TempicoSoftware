@@ -12,7 +12,7 @@ from pyTempico import TempicoDevice
 import math
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
-    def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton,
+    def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,functionComboBox:QComboBox,
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
                  i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow):
@@ -33,6 +33,7 @@ class FLIMGraphic():
         self.saveDataButton=saveDataButton
         self.savePlotButton=savePlotButton
         self.applyButton=applyButton
+        self.initialParametersButton=initialParametersButton
         #Initialize the labels
         self.statusLabel=statusLabel
         self.pointLabel=pointLabel
@@ -56,6 +57,7 @@ class FLIMGraphic():
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.applyButton.setEnabled(False)
+        self.initialParametersButton.setEnabled(False)
         #Get initial index for comboBoxChannels
         self.oldStartChannelIndex=self.comboBoxStartChannel.currentIndex()
         self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
@@ -95,6 +97,7 @@ class FLIMGraphic():
         self.savePlotButton.clicked.connect(self.savePlotFLIM)
         self.functionComboBox.currentIndexChanged.connect(self.changeFunction)
         self.saveDataButton.clicked.connect(self.saveFLIMData)
+        self.initialParametersButton.clicked.connect(self.initialParametersDialog)
         #--------End Buttons Connection-----#
         
         #----------Define other parameters and sentinels-------#
@@ -118,6 +121,14 @@ class FLIMGraphic():
         self.xlabel='Time'
         self.xDataFitCopy=[]
         self.yDataFitCopy=[]
+        #InitialValuesForFit
+        self.initialI0=0
+        self.initialTau0=0
+        self.initialBeta=0
+        self.initialAlpha=0
+        self.initialB=0
+        #Sentinel to check if there is a initial Parameters change
+        self.changeInitialParameters=False
         #--------End Define other parameters and sentinels-----#
         if self.device!=None:
             self.startButton.setEnabled(True)
@@ -142,6 +153,7 @@ class FLIMGraphic():
         self.stopButton.setEnabled(True)
         self.clearButton.setEnabled(True)
         self.applyButton.setEnabled(False)
+        self.initialParametersButton.setEnabled(False)
         self.comboBoxStartChannel.setEnabled(False)
         self.comboBoxStopChannel.setEnabled(False)
         self.binWidthComboBox.setEnabled(False)
@@ -216,7 +228,15 @@ class FLIMGraphic():
         self.changeStatusColor(0)
         self.threadCreated=False
         self.stopTimer()
-        self.applyButton.setEnabled(True)
+        if len(self.measuredTime)>0:
+            self.applyButton.setEnabled(True)
+            self.initialParametersButton.setEnabled(True)
+            if not self.changeInitialParameters:
+                self.initialI0=max(self.measuredData)
+                self.initialTau0=np.mean(self.measuredTime)
+                self.initialBeta=1.0
+                self.initialAlpha=0
+                self.initialB=0
         self.saveDataButton.setEnabled(True)
         
         
@@ -406,7 +426,7 @@ class FLIMGraphic():
     def fitExpDecay(self,xData,yData):
         # Initial guess for the parameters
         try:
-            initial_guess = [max(yData), np.mean(xData)]
+            initial_guess = [self.initialI0, self.initialTau0]
             # Curve fitting
             popt, pcov = curve_fit(self.exp_decay, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0 and tau0
@@ -441,7 +461,7 @@ class FLIMGraphic():
     def fitKohlrauschFit(self,xData,yData):
         try:
             # Initial guess for the parameters
-            initial_guess = [max(yData), np.mean(xData), 1.0]
+            initial_guess = [self.initialI0, self.initialTau0, self.initialBeta]
             # Curve fitting
             popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0 and tau0
@@ -471,13 +491,120 @@ class FLIMGraphic():
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()  
             return "Undefined","Undefined","Undefined"
+    #Initial Parameters Dialog
+    def initialParametersDialog(self):
+        self.initialDialog = QDialog(self.mainWindow)
+        self.initialDialog.setWindowTitle("Select Function Parameters")
+        layout = QVBoxLayout(self.initialDialog)
+        # ComboBox for selecting the function type
+        self.combo_box = QComboBox()
+        self.combo_box.addItems(["Exponential fit", "Kohlrausch fit", "Shifted Exponential fit"])
+        layout.addWidget(self.combo_box)
+        # Form layout for input fields
+        form_layout = QFormLayout()
+        layout.addLayout(form_layout)
+        # Input fields for Exponential
+        self.I_0_field = QDoubleSpinBox()
+        self.I_0_field.setDecimals(2)
+        self.I_0_field.setRange(-float('inf'), float('inf'))
         
+        self.Tau_0_field = QDoubleSpinBox()
+        self.Tau_0_field.setDecimals(2)
+        self.Tau_0_field.setRange(-float('inf'), float('inf'))
+        
+        # Additional fields for Kolrausch
+        self.Beta_field = QDoubleSpinBox()
+        self.Beta_field.setDecimals(2)
+        self.Beta_field.setRange(-float('inf'), float('inf'))
+        
+        # Additional fields for Shifted Exponential
+        self.Alpha_field = QDoubleSpinBox()
+        self.Alpha_field.setDecimals(2)
+        self.Alpha_field.setRange(-float('inf'), float('inf'))
+        
+        self.B_field = QDoubleSpinBox()
+        self.B_field.setDecimals(2)
+        self.B_field.setRange(-float('inf'), float('inf'))
+        # Function to update the form based on the selected function
+        def update_form():
+            # Clear the form
+            for i in reversed(range(form_layout.count())):
+                form_layout.itemAt(i).widget().setParent(None)
+            if self.combo_box.currentText() == "Exponential fit":
+                self.I_0_field.setValue(self.initialI0)
+                self.Tau_0_field.setValue(self.initialTau0)
+                form_layout.addRow("I_0:", self.I_0_field)
+                form_layout.addRow("Tau_0:", self.Tau_0_field)
+            elif self.combo_box.currentText() == "Kohlrausch fit":
+                self.I_0_field.setValue(self.initialI0)
+                self.Tau_0_field.setValue(self.initialTau0)
+                self.Beta_field.setValue(self.initialBeta)
+                form_layout.addRow("I_0:", self.I_0_field)
+                form_layout.addRow("Tau_0:", self.Tau_0_field)
+                form_layout.addRow("Beta:", self.Beta_field)
+            elif self.combo_box.currentText() == "Shifted Exponential fit":
+                self.I_0_field.setValue(self.initialI0)
+                self.Tau_0_field.setValue(self.initialTau0)
+                self.Alpha_field.setValue(self.initialAlpha)
+                self.B_field.setValue(self.initialB)
+                form_layout.addRow("I_0:", self.I_0_field)
+                form_layout.addRow("Tau_0:", self.Tau_0_field)
+                form_layout.addRow("Alpha:", self.Alpha_field)
+                form_layout.addRow("b:", self.B_field)
+        # Connect the ComboBox change signal to the update function
+        self.combo_box.currentIndexChanged.connect(update_form)
+        # Initialize the form
+        update_form()
+        # Apply and Reset buttons
+        button_layout = QHBoxLayout()
+        apply_button = QPushButton("Apply")
+        reset_button = QPushButton("Reset")
+        button_layout.addWidget(apply_button)
+        button_layout.addWidget(reset_button)
+        apply_button.clicked.connect(self.applyInitialDialog)
+        reset_button.clicked.connect(self.resetInitialDialog)
+        layout.addLayout(button_layout)
+        self.initialDialog.exec_()
+    
+    #Function to connect the apply button
+    def applyInitialDialog(self):
+        print("Se ejecuta")
+        if self.combo_box.currentText()=="Exponential fit":
+            self.initialI0=self.I_0_field.value()
+            self.initialTau0=self.Tau_0_field.value()
+        elif self.combo_box.currentText()=="Kohlrausch fit":
+            self.initialI0=self.I_0_field.value()
+            self.initialTau0=self.Tau_0_field.value()
+            self.initialBeta=self.Beta_field.value()
+        elif self.combo_box.currentText()=="Shifted Exponential fit":
+            self.initialI0=self.I_0_field.value()
+            self.initialTau0=self.Tau_0_field.value()
+            self.initialAlpha=self.Alpha_field.value()
+            self.initialB=self.B_field.value()
+        self.changeInitialParameters=True
+        self.initialDialog.accept()
+    #Function to connect the reset button
+    def resetInitialDialog(self):
+        if len(self.measuredData)>0:
+            self.initialI0=max(self.measuredData)
+            self.initialTau0=np.mean(self.measuredTime)
+            self.initialBeta=1.0
+            self.initialAlpha=0
+            self.initialB=0
+            self.I_0_field.setValue(self.initialI0)
+            self.Tau_0_field.setValue(self.initialTau0)
+            self.Beta_field.setValue(self.initialBeta)
+            self.Alpha_field.setValue(self.initialAlpha)
+            self.B_field.setValue(self.initialB)
+        self.changeInitialParameters=False
+        self.initialDialog.accept()
+
     
     #fit Shifted Exponential
     def fitShiiftedExponential(self, xData, yData):
         try:
             # Initial guess for the parameters: I0, tau0, alpha, b
-            initial_guess = [max(yData), np.mean(xData), 0.0, 0.0]
+            initial_guess = [self.initialI0, self.initialTau0, self.initialAlpha, self.initialB]
             # Curve fitting
             popt, pcov = curve_fit(self.shifted_decay_function, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0, tau0, alpha, and b

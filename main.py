@@ -322,6 +322,7 @@ class MainWindow(QMainWindow):
                   clearButton=self.uiFLIM.clearButton
                   saveDataButton=self.uiFLIM.saveDataFileButton
                   savePlotButton=self.uiFLIM.savePlotButton
+                  initialParametersButton=self.uiFLIM.buttonParameterLabel
                   statusLabel=self.uiFLIM.statusValue
                   pointLabel=self.uiFLIM.drawPointLabel
                   comboBoxBinWidth=self.uiFLIM.binWidthComboBox
@@ -336,7 +337,7 @@ class MainWindow(QMainWindow):
                   functionComboBox=self.uiFLIM.functionComboBox
                   fourthParameter=self.uiFLIM.fourthParameterValue
                   
-                  self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,
+                  self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,self.conectedDevice,
                                                applyButton,i0Parameter,tauParameter,thirdParameter,fourthParameter,self)
