@@ -9,6 +9,7 @@ import time
 import datetime
 from scipy.optimize import curve_fit
 from pyTempico import TempicoDevice
+import math
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton,
@@ -364,27 +365,37 @@ class FLIMGraphic():
             try:
                 if self.functionComboBox.currentText()=="Exponential":
                     i0,tau0=self.fitExpDecay(self.measuredTime,self.measuredData)
-                    self.currentFit="ExpDecay"
-                    self.FitParameters[0]=round(i0,3)
-                    self.FitParameters[1]=round(tau0,3)
+                    if i0=="Undefined" or str(i0)=='nan':
+                        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+                    else:
+                        self.currentFit="ExpDecay"
+                        self.FitParameters[0]=round(i0,3)
+                        self.FitParameters[1]=round(tau0,3)
                 elif self.functionComboBox.currentText()=="Kohlrausch":
                     i0,tau0,beta=self.fitKohlrauschFit(self.measuredTime,self.measuredData)
-                    self.currentFit="fitKohlrausch"
-                    self.FitParameters[0]=round(i0,3)
-                    self.FitParameters[1]=round(tau0,3)
-                    self.FitParameters[2]=round(beta,3)
+                    print(str(i0)=='nan')
+                    if i0=="Undefined" or str(i0)=='nan':
+                        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+                    else:
+                        self.currentFit="fitKohlrausch"
+                        self.FitParameters[0]=round(i0,3)
+                        self.FitParameters[1]=round(tau0,3)
+                        self.FitParameters[2]=round(beta,3)
                     
                 elif self.functionComboBox.currentText()=="Shifted exponencial":
-                    i0,tau0,alpha,b=self.fitShiiftedExponential(self.measuredTime,self.measuredData)   
-                    self.currentFit="ShiftedExponential"
-                    self.FitParameters[0]=round(i0,3)
-                    self.FitParameters[1]=round(tau0,3)
-                    self.FitParameters[2]=round(alpha,3)
-                    self.FitParameters[3]=round(b,3)
+                    i0,tau0,alpha,b=self.fitShiiftedExponential(self.measuredTime,self.measuredData)
+                    if i0=="Undefined" or str(i0)=='nan':
+                        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+                    else:   
+                        self.currentFit="ShiftedExponential"
+                        self.FitParameters[0]=round(i0,3)
+                        self.FitParameters[1]=round(tau0,3)
+                        self.FitParameters[2]=round(alpha,3)
+                        self.FitParameters[3]=round(b,3)
                     
             except NameError:
                 message_box = QMessageBox(self.mainWindow)
-                message_box.setIcon(QMessageBox.Critical)
+                message_box.setIcon(QMessageBox.Warning)
                 message_box.setText("The parameters for the graph could not be determined.")
                 message_box.setWindowTitle("Error generating the fit")
                 message_box.setStandardButtons(QMessageBox.Ok)
@@ -394,59 +405,112 @@ class FLIMGraphic():
     #fit exponential curver
     def fitExpDecay(self,xData,yData):
         # Initial guess for the parameters
-        initial_guess = [max(yData), np.mean(xData)]
-        # Curve fitting
-        popt, pcov = curve_fit(self.exp_decay, xData, yData, p0=initial_guess)
-        # Extracting the optimal values of I0 and tau0
-        I0_opt, tau0_opt = popt
-        yFit = self.exp_decay(xData, I0_opt, tau0_opt)
-        self.xDataFitCopy=xData
-        self.yDataFitCopy=yFit
-        #Graphic of the fit curve
-        self.curveFit.setData(xData,yFit)
-        self.tauParameter.setText(str(round(I0_opt,3)))
-        self.i0Parameter.setText(str(round(tau0_opt,3)))
-        return I0_opt, tau0_opt
+        try:
+            initial_guess = [max(yData), np.mean(xData)]
+            # Curve fitting
+            popt, pcov = curve_fit(self.exp_decay, xData, yData, p0=initial_guess)
+            # Extracting the optimal values of I0 and tau0
+            I0_opt, tau0_opt = popt
+            yFit = self.exp_decay(xData, I0_opt, tau0_opt)
+            self.xDataFitCopy=xData
+            self.yDataFitCopy=yFit
+            #Graphic of the fit curve
+            self.curveFit.setData(xData,yFit)
+            if str(I0_opt)=='nan':
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Warning)
+                message_box.setText("The parameters for the graph could not be determined.")
+                message_box.setWindowTitle("Error generating the fit")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+            else:
+                self.tauParameter.setText(str(round(I0_opt,3)))
+                self.i0Parameter.setText(str(round(tau0_opt,3)))
+            return I0_opt, tau0_opt
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Warning)
+            message_box.setText("The parameters for the graph could not be determined.")
+            message_box.setWindowTitle("Error generating the fit")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            return "Undefined","Undefined"
+        
 
     #fit kohlrausch curver
     def fitKohlrauschFit(self,xData,yData):
-        # Initial guess for the parameters
-        initial_guess = [max(yData), np.mean(xData), 1.0]
-        # Curve fitting
-        popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
-        # Extracting the optimal values of I0 and tau0
-        I0_opt, tau0_opt, beta_opt = popt
-        yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
-        self.xDataFitCopy=xData
-        self.yDataFitCopy=yFit
-        #Graphic of the fit curve
-        self.curveFit.setData(xData,yFit)
-        self.tauParameter.setText(str(round(I0_opt,3)))
-        self.i0Parameter.setText(str(round(tau0_opt,3)))
-        self.thirdParameter.setText(str(round(beta_opt,3)))
-        return I0_opt, tau0_opt, beta_opt
+        try:
+            # Initial guess for the parameters
+            initial_guess = [max(yData), np.mean(xData), 1.0]
+            # Curve fitting
+            popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
+            # Extracting the optimal values of I0 and tau0
+            I0_opt, tau0_opt, beta_opt = popt
+            yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
+            self.xDataFitCopy=xData
+            self.yDataFitCopy=yFit
+            #Graphic of the fit curve
+            self.curveFit.setData(xData,yFit)
+            if str(I0_opt)=='nan':
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Warning)
+                message_box.setText("The parameters for the graph could not be determined.")
+                message_box.setWindowTitle("Error generating the fit")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+            else:
+                self.tauParameter.setText(str(round(I0_opt,3)))
+                self.i0Parameter.setText(str(round(tau0_opt,3)))
+                self.thirdParameter.setText(str(round(beta_opt,3)))
+            return I0_opt, tau0_opt, beta_opt
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Warning)
+            message_box.setText("The parameters for the graph could not be determined.")
+            message_box.setWindowTitle("Error generating the fit")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()  
+            return "Undefined","Undefined","Undefined"
+        
     
     #fit Shifted Exponential
     def fitShiiftedExponential(self, xData, yData):
-        # Initial guess for the parameters: I0, tau0, alpha, b
-        initial_guess = [max(yData), np.mean(xData), 0.0, 0.0]
-        # Curve fitting
-        popt, pcov = curve_fit(self.shifted_decay_function, xData, yData, p0=initial_guess)
-        # Extracting the optimal values of I0, tau0, alpha, and b
-        I0_opt, tau0_opt, alpha_opt, b_opt = popt
-        # Calculate the fitted curve
-        yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
-        self.xDataFitCopy=xData
-        self.yDataFitCopy=yFit
-        # Graphic of the fit curve
-        self.curveFit.setData(xData, yFit)
-        # Set the fitted parameters in the UI
-        self.tauParameter.setText(str(round(tau0_opt, 3)))
-        self.i0Parameter.setText(str(round(I0_opt, 3)))
-        self.thirdParameter.setText(str(round(alpha_opt, 3)))
-        self.fourthParameter.setText(str(round(b_opt, 3)))
-
-        return I0_opt, tau0_opt, alpha_opt, b_opt
+        try:
+            # Initial guess for the parameters: I0, tau0, alpha, b
+            initial_guess = [max(yData), np.mean(xData), 0.0, 0.0]
+            # Curve fitting
+            popt, pcov = curve_fit(self.shifted_decay_function, xData, yData, p0=initial_guess)
+            # Extracting the optimal values of I0, tau0, alpha, and b
+            I0_opt, tau0_opt, alpha_opt, b_opt = popt
+            # Calculate the fitted curve
+            yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
+            self.xDataFitCopy=xData
+            self.yDataFitCopy=yFit
+            # Graphic of the fit curve
+            self.curveFit.setData(xData, yFit)
+            # Set the fitted parameters in the UI
+            if str(I0_opt)=='nan':
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Warning)
+                message_box.setText("The parameters for the graph could not be determined.")
+                message_box.setWindowTitle("Error generating the fit")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+            else:
+                self.tauParameter.setText(str(round(tau0_opt, 3)))
+                self.i0Parameter.setText(str(round(I0_opt, 3)))
+                self.thirdParameter.setText(str(round(alpha_opt, 3)))
+                self.fourthParameter.setText(str(round(b_opt, 3)))
+            return I0_opt, tau0_opt, alpha_opt, b_opt
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Warning)
+            message_box.setText("The parameters for the graph could not be determined.")
+            message_box.setWindowTitle("Error generating the fit")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            return "Undefined","Undefined","Undefined","Undefined"
+        
     
     
         
@@ -458,7 +522,7 @@ class FLIMGraphic():
 
     #Kohlrausch Decay Function
     def kohl_decay(self,t, I0, tau0,beta):
-        return I0 * np.exp((-t / tau0)*beta)
+        return I0 * np.exp((-t / tau0)**beta)
     
     #Shifted Exponential Function
     def shifted_decay_function(self, t, I0, tau0, alpha, b):
@@ -516,11 +580,11 @@ class FLIMGraphic():
                 copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
                 # Add a footer for the graphic
                 if self.currentFit=="ExpDecay":
-                    textFooter="Fit: Exponential Decay, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])
+                    textFooter="Fit: Exponential Decay, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])
                 elif self.currentFit=="fitKohlrausch":
-                    textFooter="Fit: Kohlrausch fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])+" 	β:"+str(self.FitParameters[2])
+                    textFooter="Fit: Kohlrausch fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" 	β:"+str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    textFooter="Fit: Shifted exponential fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ:"+str(self.FitParameters[1])+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                    textFooter="Fit: Shifted exponential fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
                 else:
                     textFooter="No fit has been applied"
                     

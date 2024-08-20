@@ -599,7 +599,7 @@ class UiFLIM(object):
             self.fourthParameterLabel.setText("")
             self.fourthParameterValue.setText("")
         elif self.functionComboBox.currentText()=="Kohlrausch":
-            self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}\beta}$')
+            self.set_latex_to_label(r'$I_0 e^{(\frac{-t}{\tau_0})^{\beta}}$')
             self.thirdParameterLabel.setText("Beta:")
             self.thirdParameterValue.setText("Undefined")
             self.fourthParameterLabel.setText("")
