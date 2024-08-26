@@ -13,7 +13,7 @@ import math
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
-                 clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,functionComboBox:QComboBox,
+                 clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
                  i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow):
         super().__init__()
@@ -26,6 +26,7 @@ class FLIMGraphic():
         self.comboBoxStopChannel=comboBoxStopChannel
         self.binWidthComboBox=binWidthComboBox
         self.functionComboBox=functionComboBox
+        self.numberBins=numberBins
         #Initialize Buttons
         self.startButton=startButton
         self.stopButton=stopButton
@@ -146,8 +147,29 @@ class FLIMGraphic():
         self.changeInitialParametersDoub=False
         self.changeInitialParametersShif=False
         #--------End Define other parameters and sentinels-----#
+        #--------Init the the timer to check the connection----#
+        self.timerStatus=QTimer()
+        self.timerStatus.timeout.connect(self.checkDeviceStatus)
         if self.device!=None:
             self.startButton.setEnabled(True)
+            self.timerStatus.start(500)
+            
+            
+    #Verify the connection of the function
+    def checkDeviceStatus(self):
+        try:
+            self.device.readIdnFromDevice()
+        except:
+            
+            if self.threadCreated:
+                self.worker.stop()
+            self.disconnectedDevice()
+            msg_box = QMessageBox(self.mainWindow)
+            msg_box.setText("Connection with the device has been lost")
+            msg_box.setWindowTitle("Connection Error")
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setStandardButtons(QMessageBox.Ok)
+            msg_box.exec_()
             
         
     # Functions to verify that start and stop will not be the same channels
@@ -165,6 +187,7 @@ class FLIMGraphic():
     #Function to catch the start button action
     def startMeasurement(self):
         #Disable or enable the necessary
+        self.timerStatus.stop()
         self.startButton.setEnabled(False)
         self.stopButton.setEnabled(True)
         self.clearButton.setEnabled(True)
@@ -173,6 +196,7 @@ class FLIMGraphic():
         self.comboBoxStartChannel.setEnabled(False)
         self.comboBoxStopChannel.setEnabled(False)
         self.binWidthComboBox.setEnabled(False)
+        self.numberBins.setEnabled(False)
         self.numberMeasurementsSpinBox.setEnabled(False)
         self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
@@ -233,6 +257,7 @@ class FLIMGraphic():
             self.worker.clear()
         
     def enableAfterFinisihThread(self):
+        self.numberBins.setEnabled(True)
         self.stopButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.startButton.setEnabled(True)
@@ -245,6 +270,7 @@ class FLIMGraphic():
         self.changeStatusColor(0)
         self.threadCreated=False
         self.stopTimer()
+        self.timerStatus.start(500)
         if len(self.measuredTime)>0:
             self.applyButton.setEnabled(True)
             self.initialParametersButton.setEnabled(True)
@@ -386,11 +412,16 @@ class FLIMGraphic():
     
     #Functions created for connect or disconnect the device
     def connectedDevice(self,device):
+        self.mainWindow.disconnectButton.setEnabled(True)
+        self.mainWindow.connectButton.setEnabled(False)
+        self.timerStatus.start(500)
         self.device=device
         self.startButton.setEnabled(True)
         
     def disconnectedDevice(self):
-        self.startButton.setEnabled(False)
+        self.mainWindow.disconnectButton.setEnabled(False)
+        self.mainWindow.connectButton.setEnabled(True)
+        self.timerStatus.stop()
         self.startButton.setEnabled(False)
     
     #Functions to update the totalTime Label
@@ -852,13 +883,13 @@ class FLIMGraphic():
                 copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
                 # Add a footer for the graphic
                 if self.currentFit=="ExpDecay":
-                    textFooter="Fit: Exponential Decay: I_0*e^(-t/tau_0) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
+                    textFooter="Fit: I_0*e^(-t/tau_0) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
                 elif self.currentFit=="fitKohlrausch":
-                    textFooter="Fit: Kohlrausch fit: I_0*e^((-t/tau_0)^(Beta)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
+                    textFooter="Fit: I_0*e^((-t/tau_0)^(Beta)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    textFooter="Fit: Shifted exponential fit: I_0*e^((-t+alpha)/tau_0))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                    textFooter="Fit: I_0*e^((-t+alpha)/tau_0))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
                 elif self.currentFit=="DoubleExponential":
-                    textFooter="Fit: Double exponential fit: I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
+                    textFooter="Fit: I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
                     
                 else:
                     textFooter="No fit has been applied"

@@ -337,8 +337,9 @@ class MainWindow(QMainWindow):
                   functionComboBox=self.uiFLIM.functionComboBox
                   fourthParameter=self.uiFLIM.fourthParameterValue
                   timeRange=self.uiFLIM.timeRangeValue
+                  numberBinsComboBox=self.uiFLIM.numberBinsComboBox
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
-                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,functionComboBox,
+                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
                                                applyButton,i0Parameter,tauParameter,thirdParameter,fourthParameter,self)
                   #If this sentinel dont have any use DELETE
