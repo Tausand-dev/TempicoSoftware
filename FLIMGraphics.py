@@ -14,7 +14,7 @@ class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,functionComboBox:QComboBox,
-                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
+                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
                  i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow):
         super().__init__()
         #Initialize the main window
@@ -44,6 +44,7 @@ class FLIMGraphic():
         self.i0Parameter=i0Parameter
         self.thirdParameter=thirdParameter
         self.fourthParameter=fourthParameter
+        self.timeRange=timeRange
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
         #Fix the original value of Channels comboBox
@@ -121,14 +122,29 @@ class FLIMGraphic():
         self.xlabel='Time'
         self.xDataFitCopy=[]
         self.yDataFitCopy=[]
-        #InitialValuesForFit
+        #InitialValuesFor exponential Fit
         self.initialI0=0
         self.initialTau0=0
+        #InitialValuesFor kol Fit
+        self.initialI0Kol=0
+        self.initialTau0Kol=0
         self.initialBeta=0
+        #InitialValuesFor shifted Exponential
+        self.initialI0Shif=0
+        self.initialTau0Shif=0
         self.initialAlpha=0
         self.initialB=0
+        #InitialValuesFor double Exponential
+        self.initialI0Doub=0
+        self.initialTau0Doub=0
+        self.initialTau1Doub=0
+        self.initialAlphaDoub=0
+        
         #Sentinel to check if there is a initial Parameters change
-        self.changeInitialParameters=False
+        self.changeInitialParametersExp=False
+        self.changeInitialParametersKol=False
+        self.changeInitialParametersDoub=False
+        self.changeInitialParametersShif=False
         #--------End Define other parameters and sentinels-----#
         if self.device!=None:
             self.startButton.setEnabled(True)
@@ -169,13 +185,14 @@ class FLIMGraphic():
         self.measuredTime=[]
         #Get the selected channels
         self.getTempicoChannel()
+        timeRangeps=self.timeRangeValue()
         #Init the timer measurements
         self.time = QTime(0, 0, 0)
         self.startTimer()
         self.curveFit.setData([],[])
         #Create the thread object
         self.worker=WorkerThreadFLIM(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
-                                     self.device)
+                                     self.device,timeRangeps)
         
         #Create connections to main thread 
         self.worker.finished.connect(self.finishedThreadMeasurement)
@@ -231,12 +248,27 @@ class FLIMGraphic():
         if len(self.measuredTime)>0:
             self.applyButton.setEnabled(True)
             self.initialParametersButton.setEnabled(True)
-            if not self.changeInitialParameters:
+            if not self.changeInitialParametersExp:
                 self.initialI0=max(self.measuredData)
                 self.initialTau0=np.mean(self.measuredTime)
-                self.initialBeta=1.0
+            if not self.changeInitialParametersKol:
+                self.initialI0Kol=max(self.measuredData)
+                self.initialTau0Kol=np.mean(self.measuredTime)
+                self.initialBeta=0
+            if not self.changeInitialParametersShif:
+                self.initialI0Shif=max(self.measuredData)
+                self.initialTau0Shif=np.mean(self.measuredTime)
                 self.initialAlpha=0
                 self.initialB=0
+            if not self.changeInitialParametersDoub:
+                self.initialI0Doub=max(self.measuredData)
+                self.initialTau0Doub=np.mean(self.measuredTime)
+                self.initialTau1Doub=np.mean(self.measuredTime)
+                self.initialAlphaDoub=0
+                
+                
+                
+                
         self.saveDataButton.setEnabled(True)
         
         
@@ -310,6 +342,21 @@ class FLIMGraphic():
         elif stopChannelValue==3:
             self.device.ch4.enableChannel()
             self.currentStopChannel=self.device.ch4
+        
+    #Get the value of the time range label
+    def timeRangeValue(self):
+        unitsList=self.timeRange.text().split(" ")
+        if unitsList[1]=='ps':
+            multiplier=1
+        elif unitsList[1]=='ns':
+            multiplier=10**3
+        elif unitsList[1]=='µs':
+            multiplier=10**6
+        elif unitsList[1]=='ms':
+            multiplier=10**9
+        valueRange=float(unitsList[0])
+        picoSecondsValue=valueRange*multiplier
+        return picoSecondsValue
             
     #Function to execute when the thread is finished
     def finishedThreadMeasurement(self):
@@ -328,6 +375,7 @@ class FLIMGraphic():
         self.curve.setData(self.measuredTime,self.measuredData)
     #Function to get the Label with the correct units
     def updateLabel(self,units):
+        self.units=units
         self.unitsLabel='Time ('+units+')'
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
         self.xlabel='Time ('+units+')'
@@ -360,15 +408,20 @@ class FLIMGraphic():
     def changeFunction(self):
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
             self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1]))
+            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1]))
+            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
             self.thirdParameter.setText(str(self.FitParameters[2]))
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
             self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1]))
+            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
             self.thirdParameter.setText(str(self.FitParameters[2]))
+            self.fourthParameter.setText(str(self.FitParameters[3]))
+        elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
+            self.i0Parameter.setText(str(self.FitParameters[0]))
+            self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units)
+            self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units)
             self.fourthParameter.setText(str(self.FitParameters[3]))
         else:
             self.i0Parameter.setText("Undefined")
@@ -412,6 +465,17 @@ class FLIMGraphic():
                         self.FitParameters[1]=round(tau0,3)
                         self.FitParameters[2]=round(alpha,3)
                         self.FitParameters[3]=round(b,3)
+                        
+                elif self.functionComboBox.currentText()=="Double exponencial":
+                    i0,tau0,tau1,alpha=self.fitDoubleExponential(self.measuredTime,self.measuredData)
+                    if i0=="Undefined" or str(i0)=='nan':
+                        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+                    else:   
+                        self.currentFit="DoubleExponential"
+                        self.FitParameters[0]=round(i0,3)
+                        self.FitParameters[1]=round(tau0,3)
+                        self.FitParameters[2]=round(tau1,3)
+                        self.FitParameters[3]=round(alpha,3)
                     
             except NameError:
                 message_box = QMessageBox(self.mainWindow)
@@ -420,6 +484,7 @@ class FLIMGraphic():
                 message_box.setWindowTitle("Error generating the fit")
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
+    
                     
         
     #fit exponential curver
@@ -444,7 +509,7 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3)))
+                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units)
                 self.i0Parameter.setText(str(round(tau0_opt,3)))
             return I0_opt, tau0_opt
         except:
@@ -461,7 +526,7 @@ class FLIMGraphic():
     def fitKohlrauschFit(self,xData,yData):
         try:
             # Initial guess for the parameters
-            initial_guess = [self.initialI0, self.initialTau0, self.initialBeta]
+            initial_guess = [self.initialI0Kol, self.initialTau0Kol, self.initialBeta]
             # Curve fitting
             popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0 and tau0
@@ -479,7 +544,7 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3)))
+                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units)
                 self.i0Parameter.setText(str(round(tau0_opt,3)))
                 self.thirdParameter.setText(str(round(beta_opt,3)))
             return I0_opt, tau0_opt, beta_opt
@@ -498,7 +563,7 @@ class FLIMGraphic():
         layout = QVBoxLayout(self.initialDialog)
         # ComboBox for selecting the function type
         self.combo_box = QComboBox()
-        self.combo_box.addItems(["Exponential fit", "Kohlrausch fit", "Shifted Exponential fit"])
+        self.combo_box.addItems(["Exponential fit", "Kohlrausch fit", "Shifted Exponential fit","Double Exponential fit"])
         layout.addWidget(self.combo_box)
         # Form layout for input fields
         form_layout = QFormLayout()
@@ -533,24 +598,33 @@ class FLIMGraphic():
             if self.combo_box.currentText() == "Exponential fit":
                 self.I_0_field.setValue(self.initialI0)
                 self.Tau_0_field.setValue(self.initialTau0)
-                form_layout.addRow("I_0:", self.I_0_field)
-                form_layout.addRow("Tau_0:", self.Tau_0_field)
+                form_layout.addRow("I<sub>0<\sub>:", self.I_0_field)
+                form_layout.addRow("τ<sub>0<\sub>:", self.Tau_0_field)
             elif self.combo_box.currentText() == "Kohlrausch fit":
-                self.I_0_field.setValue(self.initialI0)
-                self.Tau_0_field.setValue(self.initialTau0)
+                self.I_0_field.setValue(self.initialI0Kol)
+                self.Tau_0_field.setValue(self.initialTau0Kol)
                 self.Beta_field.setValue(self.initialBeta)
-                form_layout.addRow("I_0:", self.I_0_field)
-                form_layout.addRow("Tau_0:", self.Tau_0_field)
-                form_layout.addRow("Beta:", self.Beta_field)
+                form_layout.addRow("I<sub>0<\sub>:", self.I_0_field)
+                form_layout.addRow("τ<sub>0<\sub>:", self.Tau_0_field)
+                form_layout.addRow("β:", self.Beta_field)
             elif self.combo_box.currentText() == "Shifted Exponential fit":
-                self.I_0_field.setValue(self.initialI0)
-                self.Tau_0_field.setValue(self.initialTau0)
+                self.I_0_field.setValue(self.initialI0Shif)
+                self.Tau_0_field.setValue(self.initialTau0Shif)
                 self.Alpha_field.setValue(self.initialAlpha)
                 self.B_field.setValue(self.initialB)
-                form_layout.addRow("I_0:", self.I_0_field)
-                form_layout.addRow("Tau_0:", self.Tau_0_field)
-                form_layout.addRow("Alpha:", self.Alpha_field)
+                form_layout.addRow("I<sub>0<\sub>:", self.I_0_field)
+                form_layout.addRow("τ<sub>0<\sub>:", self.Tau_0_field)
+                form_layout.addRow("α:", self.Alpha_field)
                 form_layout.addRow("b:", self.B_field)
+            elif self.combo_box.currentText() == "Double Exponential fit":
+                self.I_0_field.setValue(self.initialI0Doub)
+                self.Tau_0_field.setValue(self.initialTau0Doub)
+                self.Alpha_field.setValue(self.initialTau1Doub)
+                self.B_field.setValue(self.initialAlphaDoub)
+                form_layout.addRow("I<sub>0<\sub>:", self.I_0_field)
+                form_layout.addRow("τ<sub>0<\sub>:", self.Tau_0_field)
+                form_layout.addRow("τ<sub>1<\sub>:", self.Alpha_field)
+                form_layout.addRow("α:", self.B_field)
         # Connect the ComboBox change signal to the update function
         self.combo_box.currentIndexChanged.connect(update_form)
         # Initialize the form
@@ -572,39 +646,70 @@ class FLIMGraphic():
         if self.combo_box.currentText()=="Exponential fit":
             self.initialI0=self.I_0_field.value()
             self.initialTau0=self.Tau_0_field.value()
+            self.changeInitialParametersExp=True
         elif self.combo_box.currentText()=="Kohlrausch fit":
-            self.initialI0=self.I_0_field.value()
-            self.initialTau0=self.Tau_0_field.value()
+            self.initialI0Kol=self.I_0_field.value()
+            self.initialTau0Kol=self.Tau_0_field.value()
             self.initialBeta=self.Beta_field.value()
+            self.changeInitialParametersKol=True
         elif self.combo_box.currentText()=="Shifted Exponential fit":
-            self.initialI0=self.I_0_field.value()
-            self.initialTau0=self.Tau_0_field.value()
+            self.initialI0Shif=self.I_0_field.value()
+            self.initialTau0Shif=self.Tau_0_field.value()
             self.initialAlpha=self.Alpha_field.value()
             self.initialB=self.B_field.value()
-        self.changeInitialParameters=True
+            self.changeInitialParametersShif=True
+        elif self.combo_box.currentText()=="Double Exponential fit":
+            self.initialI0Doub=self.I_0_field.value()
+            self.initialTau0Doub=self.Tau_0_field.value()
+            self.initialTau1Doub=self.Alpha_field.value()
+            self.initialAlphaDoub=self.B_field.value()
+            self.changeInitialParametersDoub=True
         self.initialDialog.accept()
     #Function to connect the reset button
     def resetInitialDialog(self):
         if len(self.measuredData)>0:
-            self.initialI0=max(self.measuredData)
-            self.initialTau0=np.mean(self.measuredTime)
-            self.initialBeta=1.0
-            self.initialAlpha=0
-            self.initialB=0
-            self.I_0_field.setValue(self.initialI0)
-            self.Tau_0_field.setValue(self.initialTau0)
-            self.Beta_field.setValue(self.initialBeta)
-            self.Alpha_field.setValue(self.initialAlpha)
-            self.B_field.setValue(self.initialB)
-        self.changeInitialParameters=False
-        self.initialDialog.accept()
+            if self.combo_box.currentText()=="Exponential fit":
+                self.initialI0=max(self.measuredData)
+                self.initialTau0=np.mean(self.measuredTime)
+                self.I_0_field.setValue(self.initialI0)
+                self.Tau_0_field.setValue(self.initialTau0)
+                self.changeInitialParametersExp=False
+            elif self.combo_box.currentText()=="Kohlrausch fit":
+                self.initialI0Kol=max(self.measuredData)
+                self.initialTau0Kol=np.mean(self.measuredTime)
+                self.initialBeta=1.0
+                self.Beta_field.setValue(self.initialBeta)
+                self.I_0_field.setValue(self.initialI0Kol)
+                self.Tau_0_field.setValue(self.initialTau0Kol)
+                self.changeInitialParametersKol=False
+            elif self.combo_box.currentText()=="Shifted Exponential fit":
+                self.initialI0Shif=max(self.measuredData)
+                self.initialTau0Shif=np.mean(self.measuredTime)
+                self.initialAlpha=0
+                self.initialB=0
+                self.I_0_field.setValue(self.initialI0Shif)
+                self.Tau_0_field.setValue(self.initialTau0Shif)
+                self.Alpha_field.setValue(self.initialAlpha)
+                self.B_field.setValue(self.initialB)
+                self.changeInitialParametersShif=False
+            elif self.combo_box.currentText()=="Double Exponential fit":
+                self.initialI0Doub=max(self.measuredData)
+                self.initialTau0Doub=np.mean(self.measuredTime)
+                self.initialAlphaDoub=0
+                self.initialTau1Doub=np.mean(self.measuredTime)
+                self.I_0_field.setValue(self.initialI0Doub)
+                self.Tau_0_field.setValue(self.initialTau0Doub)
+                self.Alpha_field.setValue(self.initialTau1Doub)
+                self.B_field.setValue(self.initialAlphaDoub)
+                self.changeInitialParametersDoub=False
+        
 
     
     #fit Shifted Exponential
     def fitShiiftedExponential(self, xData, yData):
         try:
             # Initial guess for the parameters: I0, tau0, alpha, b
-            initial_guess = [self.initialI0, self.initialTau0, self.initialAlpha, self.initialB]
+            initial_guess = [self.initialI0Shif, self.initialTau0Shif, self.initialAlpha, self.initialB]
             # Curve fitting
             popt, pcov = curve_fit(self.shifted_decay_function, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0, tau0, alpha, and b
@@ -624,11 +729,48 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(tau0_opt, 3)))
-                self.i0Parameter.setText(str(round(I0_opt, 3)))
+                self.tauParameter.setText(str(round(I0_opt, 3)))
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units)
                 self.thirdParameter.setText(str(round(alpha_opt, 3)))
                 self.fourthParameter.setText(str(round(b_opt, 3)))
             return I0_opt, tau0_opt, alpha_opt, b_opt
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Warning)
+            message_box.setText("The parameters for the graph could not be determined.")
+            message_box.setWindowTitle("Error generating the fit")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            return "Undefined","Undefined","Undefined","Undefined"
+    
+    def fitDoubleExponential(self, xData, yData):
+        try:
+            # Initial guess for the parameters: I0, tau0, alpha, b
+            initial_guess = [self.initialI0Doub, self.initialTau0Doub, self.initialTau1Doub, self.initialAlphaDoub]
+            # Curve fitting
+            popt, pcov = curve_fit(self.double_Exponential, xData, yData, p0=initial_guess)
+            # Extracting the optimal values of I0, tau0, alpha, and b
+            I0_opt, tau0_opt, tau1_opt, alpha_opt = popt
+            # Calculate the fitted curve
+            yFit = self.double_Exponential(xData, I0_opt, tau0_opt, tau1_opt, alpha_opt)
+            self.xDataFitCopy=xData
+            self.yDataFitCopy=yFit
+            # Graphic of the fit curve
+            self.curveFit.setData(xData, yFit)
+            # Set the fitted parameters in the UI
+            if str(I0_opt)=='nan':
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Warning)
+                message_box.setText("The parameters for the graph could not be determined.")
+                message_box.setWindowTitle("Error generating the fit")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+            else:
+                self.tauParameter.setText(str(round(I0_opt, 3)))
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units)
+                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units)
+                self.fourthParameter.setText(str(round(alpha_opt, 3)))
+            return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
@@ -655,6 +797,9 @@ class FLIMGraphic():
     def shifted_decay_function(self, t, I0, tau0, alpha, b):
         # Define the decay function with the new equation
         return I0 * np.exp(-(t - alpha) / tau0) + b
+    #Double Exponential Function
+    def double_Exponential(self,t, I0, tau0, tau1, alpha): 
+        return I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))
 
     
     #Save buttons
@@ -707,11 +852,14 @@ class FLIMGraphic():
                 copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
                 # Add a footer for the graphic
                 if self.currentFit=="ExpDecay":
-                    textFooter="Fit: Exponential Decay, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])
+                    textFooter="Fit: Exponential Decay: I_0*e^(-t/tau_0) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
                 elif self.currentFit=="fitKohlrausch":
-                    textFooter="Fit: Kohlrausch fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" 	β:"+str(self.FitParameters[2])
+                    textFooter="Fit: Kohlrausch fit: I_0*e^((-t/tau_0)^(Beta)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    textFooter="Fit: Shifted exponential fit, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                    textFooter="Fit: Shifted exponential fit: I_0*e^((-t+alpha)/tau_0))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                elif self.currentFit=="DoubleExponential":
+                    textFooter="Fit: Double exponential fit: I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
+                    
                 else:
                     textFooter="No fit has been applied"
                     
@@ -790,6 +938,8 @@ class FLIMGraphic():
                     fitSetting="Kohlrausch Fit"+'\n'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Beta: '+ str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
                     fitSetting="Shifted Exponential Fit"+'\n'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'alpha: '+ str(self.FitParameters[2])+'\n'+'b: '+ str(self.FitParameters[3])
+                elif self.currentFit=="DoubleExponential":
+                    fitSetting="Double Exponential Fit"+'\n'+'I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Tau_1: '+ str(self.FitParameters[2])+'\n'+'alpha: '+ str(self.FitParameters[3])
                 elif self.currentFit=="":
                     fitSetting=""
                     
@@ -860,7 +1010,7 @@ class WorkerThreadFLIM(QThread):
     updateValues=Signal(list,list)
     updateLabel=Signal(str)
     updateMeasurementsLabel=Signal(str,str)
-    def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device):
+    def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device,TimeRange):
         super().__init__()
         #Parameters of the measurement
         self.totalTime=0
@@ -874,6 +1024,7 @@ class WorkerThreadFLIM(QThread):
         self.binwidthText=binwidthText
         self.numberMeasurements=numberMeasurements
         self.device=device
+        self.TimeRange=TimeRange
         #Getting the value in picoSeconds of binWidtrh
         self.getBinWidthNumber()
         #Measurement List
@@ -924,7 +1075,8 @@ class WorkerThreadFLIM(QThread):
                                 self.totalStarts+=1
                                 self.totalMeasurements+=1
                                 self.totalTime+=differenceValue
-                                self.startStopDifferences.append(differenceValue)
+                                if differenceValue<=self.TimeRange:
+                                    self.startStopDifferences.append(differenceValue)
                         
                                 
                     else:
@@ -937,7 +1089,8 @@ class WorkerThreadFLIM(QThread):
                                 self.totalMeasurements+=1
                                 self.totalStarts+=1
                                 self.totalTime+=differenceValue
-                                self.startStopDifferences.append(differenceValue)
+                                if differenceValue<=self.TimeRange:
+                                    self.startStopDifferences.append(differenceValue)
                         if partialStop:
                             self.totalStarts+=1
                     if self.totalMeasurements>=self.numberMeasurements:

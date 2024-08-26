@@ -71,23 +71,47 @@ class UiFLIM(object):
         self.stopChannelComboBox.addItem("")
         self.stopChannelComboBox.addItem("")
         self.stopChannelComboBox.setObjectName(u"stopChannelComboBox")
+        
 
         self.verticalLayout_3.addWidget(self.stopChannelComboBox)
+        self.horizontalLayoutBin=QHBoxLayout()
 
         self.binWidthLabel = QLabel(self.configurationParameters)
         self.binWidthLabel.setObjectName(u"binWidthLabel")
-
-        self.verticalLayout_3.addWidget(self.binWidthLabel)
+        self.numberBinsLabel = QLabel(self.configurationParameters)
+        self.numberBinsLabel.setObjectName(u"numberBinsLabel")
+        self.timeRangeLabel = QLabel(self.configurationParameters)
+        self.timeRangeLabel.setObjectName(u"timeRangeLabel")
+        
+        self.horizontalLayoutBin.addWidget(self.binWidthLabel)
+        self.horizontalLayoutBin.addWidget(self.numberBinsLabel)
+        self.horizontalLayoutBin.addWidget(self.timeRangeLabel)
+        self.binWidthLabel.setAlignment(Qt.AlignLeft)
+        self.numberBinsLabel.setAlignment(Qt.AlignLeft)
+        self.timeRangeLabel.setAlignment(Qt.AlignLeft)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutBin)
 
         self.binWidthComboBox = QComboBox(self.configurationParameters)
         self.binWidthComboBox.setObjectName(u"binWidthComboBox")
+        self.sentinelChangeBins=True
         self.powers_of_two = [ "480 ps", "960 ps", "2 ns", "4 ns", "8 ns", 
                               "16 ns", "32 ns", "64 ns", "128 ns", "256 ns",
                               "512 ns", "1 µs", "2 µs", "4 µs", "8 µs", "16 µs",
                               "32 µs", "64 µs", "100 µs"]
+        self.horizontalLayoutBoxes=QHBoxLayout()
         self.binWidthComboBox.addItems(self.powers_of_two)
-
-        self.verticalLayout_3.addWidget(self.binWidthComboBox)
+        self.numberOfBinsValues = [ "10","20","30","40","50","60","70","80","90","100"
+                                   ,"200","300","400","500","600","700","800","900","1000",
+                                   "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
+        self.numberBinsComboBox = QComboBox(self.configurationParameters)
+        self.numberBinsComboBox.addItems(self.numberOfBinsValues)
+        self.numberBinsComboBox.currentIndexChanged.connect(self.setTimeRange)
+        self.binWidthComboBox.currentIndexChanged.connect(self.maxNumberBins)
+        self.timeRangeValue = QLabel("4 ms",self.configurationParameters)
+        self.horizontalLayoutBoxes.addWidget(self.binWidthComboBox)
+        self.horizontalLayoutBoxes.addWidget(self.numberBinsComboBox)
+        self.horizontalLayoutBoxes.addWidget(self.timeRangeValue)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutBoxes)
 
         self.numberMeasurementsLabel = QLabel(self.configurationParameters)
         self.numberMeasurementsLabel.setObjectName(u"numberMeasurementsLabel")
@@ -283,7 +307,7 @@ class UiFLIM(object):
 
         self.functionComboBox = QComboBox(self.functionFrame)
         self.functionComboBox.setObjectName(u"functionComboBox")
-        self.functionsFit = ["Exponential","Kohlrausch","Shifted exponencial"]
+        self.functionsFit = ["Exponential","Kohlrausch","Shifted exponencial","Double exponencial"]
         self.functionComboBox.addItems(self.functionsFit)
 
         self.horizontalLayout_9.addWidget(self.functionComboBox)
@@ -555,6 +579,8 @@ class UiFLIM(object):
         self.stopChannelComboBox.setItemText(3, QCoreApplication.translate("Form", u"Channel D", None))
 
         self.binWidthLabel.setText(QCoreApplication.translate("Form", u"Bin width:", None))
+        self.numberBinsLabel.setText(QCoreApplication.translate("Form", u"Number bins:", None))
+        self.timeRangeLabel.setText(QCoreApplication.translate("Form", u"Maximum time:", None))
         self.numberMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Number of measurements:", None))
         self.startButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.stopButton.setText(QCoreApplication.translate("Form", u"Stop", None))
@@ -631,5 +657,74 @@ class UiFLIM(object):
             self.thirdParameterValue.setText("Undefined")
             self.fourthParameterLabel.setText("b:")
             self.fourthParameterValue.setText("Undefined")
+        elif self.functionComboBox.currentText()=="Double exponencial":
+            self.set_latex_to_label(r'$I_0(\alpha e^{\frac{-t}{\tau_0}}+(1-\alpha)e^{\frac{-t}{\tau_1}})$')
+            self.thirdParameterLabel.setText("τ<sub>1<\sub>:")
+            self.thirdParameterValue.setText("Undefined")
+            self.fourthParameterLabel.setText("α:")
+            self.fourthParameterValue.setText("Undefined")
+    
+    #Function to get the time range when the numberBins comboBox is changed
+    def setTimeRange(self):
+        if self.sentinelChangeBins:
+            binWidthValue=self.binWidthComboBox.currentText()
+            numericalValue=self.transformUnits(binWidthValue)
+            currentRange=int(self.numberBinsComboBox.currentText())*numericalValue
+            units,divisionFactor=self.transformIntoString(currentRange)
+            normalizedValue=round(currentRange/divisionFactor,2)
+            timeRangeString=str(normalizedValue)+" "+units
+            self.timeRangeValue.setText(timeRangeString)
+        self.sentinelChangeBins=True
+    
+    def setTimeRangeChangeBinWidth(self):
+        binWidthValue=self.binWidthComboBox.currentText()
+        numericalValue=self.transformUnits(binWidthValue)
+        currentRange=int(self.numberOfBinsValues[0])*numericalValue
+        units,divisionFactor=self.transformIntoString(currentRange)
+        normalizedValue=round(currentRange/divisionFactor,2)
+        timeRangeString=str(normalizedValue)+" "+units
+        self.timeRangeValue.setText(timeRangeString)
+        self.sentinelChangeBins=True
+    
+    #Function to get the maximum time range and eliminate the values from the comboBox for some binWidths
+    def maxNumberBins(self):
+        maximumRange=4*(10**9)
+        self.sentinelChangeBins=False
+        self.numberBinsComboBox.clear()
+        binWidthValue=self.binWidthComboBox.currentText()
+        numericalValue=self.transformUnits(binWidthValue)
+        for i in range(len(self.numberOfBinsValues)):
+            numericalBin=float(self.numberOfBinsValues[i])
+            totalRange=numericalBin*numericalValue
+            if totalRange<=maximumRange:
+                self.sentinelChangeBins=False
+                self.numberBinsComboBox.addItem(self.numberOfBinsValues[i])
+        self.setTimeRangeChangeBinWidth()
+        
+    #Function to transform string input value in picoseconds float
+    def transformUnits(self, unitsValue):
+        units=unitsValue.split(" ")
+        if units[1]=="ps":
+            value=float(units[0])
+        elif units[1]=="ns":
+            value=float(units[0])*(10**(3))
+        elif units[1]=="µs":
+            value=float(units[0])*(10**(6))
+        return value
+
+    #Function to transform picoseconds float value into a string value
+        
+    
+    def transformIntoString(self,value):
+        if value < 1e3:
+            return ["ps",1]
+        elif value < 1e6:
+            return ["ns",10**3]
+        elif value < 1e9:
+            return ["µs",10**6]
+        elif value < 1e12:
+            return ["ms",10**9]
+            
+            
             
         

@@ -1,2 +1,2 @@
 
-        self.g2_init_sentinel=0
+              if self.FLIMGraphic==None:
