@@ -1085,24 +1085,29 @@ class FLIMGraphic():
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 fitSetting=""
                 if self.currentFit=="ExpDecay":
-                    fitSetting="Exponential Fit"+'\n'+'I_0*e^(-t/tau_0)'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])
+                    fitSetting="Exponential Fit:"+'\t'+'I_0*e^(-t/tau_0)'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])
                 elif self.currentFit=="Kohlrausch":
-                    fitSetting="Kohlrausch Fit"+'\n'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Beta: '+ str(self.FitParameters[2])
+                    fitSetting="Kohlrausch Fit:"+'\t'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Beta: '+'\t'+ str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    fitSetting="Shifted Exponential Fit"+'\n'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'alpha: '+ str(self.FitParameters[2])+'\n'+'b: '+ str(self.FitParameters[3])
+                    fitSetting="Shifted Exponential Fit"+'\t'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[2])+'\n'+'b: '+'\t'+ str(self.FitParameters[3])
                 elif self.currentFit=="DoubleExponential":
-                    fitSetting="Double Exponential Fit"+'\n'+'I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))'+'\n'+'Tau_0:'+str(self.FitParameters[0])+'\n'+'I_0:'+str(self.FitParameters[1])+'\n'+'Tau_1: '+ str(self.FitParameters[2])+'\n'+'alpha: '+ str(self.FitParameters[3])
+                    fitSetting="Double Exponential Fit"+'\t'+'I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Tau_1: '+'\t'+ str(self.FitParameters[2])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[3])
                 elif self.currentFit=="":
                     fitSetting=""
                     
                 #Channel Setting
-                fitSetting+='\n'+self.comboBoxStartChannel.currentText()
-                fitSetting+='\n'+self.comboBoxStopChannel.currentText()
+                fitSetting+='\n'+'Start Channel: '+'\t'+self.comboBoxStartChannel.currentText()
+                fitSetting+='\n'+'Stop Channel: '+'\t'+self.comboBoxStopChannel.currentText()
                 
                 
                 #Put the settings and fit
                 filename="FLIMMeasurement"+current_date_str
-                data=[self.measuredTime,self.measuredData ]
+                #Round the values in order to get a better txt files
+                newMeasuredTime=[]
+                for i in self.measuredTime:
+                    newValue=round(i,3)
+                    newMeasuredTime.append(newValue)
+                data=[newMeasuredTime,self.measuredData ]
                 try:
                     savefile.save_FLIM_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
                     if selected_format=="txt":
