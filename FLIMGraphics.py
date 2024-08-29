@@ -202,6 +202,9 @@ class FLIMGraphic():
         self.numberMeasurementsSpinBox.setEnabled(False)
         self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
+        self.sentinelsavecsv=0
+        self.sentinelsavetxt=0
+        self.sentinelsavedat=0
         #Change the parameters labels to undefined
         self.resetParametersLabels()
         #Change status Values
@@ -218,6 +221,8 @@ class FLIMGraphic():
         #Init the timer measurements
         self.time = QTime(0, 0, 0)
         self.startTimer()
+        self.xDataFitCopy=[]
+        self.yDataFitCopy=[]
         self.curveFit.setData([],[])
         #Create the thread object
         self.worker=WorkerThreadFLIM(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
@@ -1105,7 +1110,7 @@ class FLIMGraphic():
                 #Round the values in order to get a better txt files
                 newMeasuredTime=[]
                 for i in self.measuredTime:
-                    newValue=round(i,3)
+                    newValue=round(i,5)
                     newMeasuredTime.append(newValue)
                 data=[newMeasuredTime,self.measuredData ]
                 try:
