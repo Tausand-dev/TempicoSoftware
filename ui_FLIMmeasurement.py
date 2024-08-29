@@ -86,9 +86,9 @@ class UiFLIM(object):
         self.horizontalLayoutBin.addWidget(self.binWidthLabel)
         self.horizontalLayoutBin.addWidget(self.numberBinsLabel)
         self.horizontalLayoutBin.addWidget(self.timeRangeLabel)
-        self.binWidthLabel.setAlignment(Qt.AlignLeft)
-        self.numberBinsLabel.setAlignment(Qt.AlignLeft)
-        self.timeRangeLabel.setAlignment(Qt.AlignLeft)
+        self.binWidthLabel.setAlignment(Qt.AlignVCenter)
+        self.numberBinsLabel.setAlignment(Qt.AlignVCenter)
+        self.timeRangeLabel.setAlignment(Qt.AlignVCenter)
         self.verticalLayout_3.addLayout(self.horizontalLayoutBin)
 
         self.binWidthComboBox = QComboBox(self.configurationParameters)

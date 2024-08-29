@@ -112,6 +112,7 @@ class FLIMGraphic():
         self.measuredTime=[]
         #List of Fit Parameter
         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+        self.FitCov=["nan","nan","nan","nan"]
         #Sentinel to know what is the current fit
         self.currentFit=""
         #Sentiinels to check the files saved
@@ -197,9 +198,12 @@ class FLIMGraphic():
         self.comboBoxStopChannel.setEnabled(False)
         self.binWidthComboBox.setEnabled(False)
         self.numberBins.setEnabled(False)
+        self.mainWindow.tabs.setTabEnabled(0,False)
         self.numberMeasurementsSpinBox.setEnabled(False)
         self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
+        #Change the parameters labels to undefined
+        self.resetParametersLabels()
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
@@ -207,6 +211,7 @@ class FLIMGraphic():
         #Reboot the list of measured values and time Data
         self.measuredData=[]
         self.measuredTime=[]
+        self.curve.setData(self.measuredTime,self.measuredData)
         #Get the selected channels
         self.getTempicoChannel()
         timeRangeps=self.timeRangeValue()
@@ -266,6 +271,7 @@ class FLIMGraphic():
         self.comboBoxStopChannel.setEnabled(True)
         self.binWidthComboBox.setEnabled(True)
         self.numberMeasurementsSpinBox.setEnabled(True)
+        self.mainWindow.tabs.setTabEnabled(0,True)
         self.changeStatusLabel("No measurement running")
         self.changeStatusColor(0)
         self.threadCreated=False
@@ -291,10 +297,6 @@ class FLIMGraphic():
                 self.initialTau0Doub=np.mean(self.measuredTime)
                 self.initialTau1Doub=np.mean(self.measuredTime)
                 self.initialAlphaDoub=0
-                
-                
-                
-                
         self.saveDataButton.setEnabled(True)
         
         
@@ -406,6 +408,7 @@ class FLIMGraphic():
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
         self.xlabel='Time ('+units+')'
     
+    
     def updateLabels(self,totalMeasurements,totalStarts):
         self.totalMeasurements.setText(totalMeasurements)
         self.totalStart.setText(totalStarts)
@@ -438,22 +441,43 @@ class FLIMGraphic():
     #Connection with change of comboBox
     def changeFunction(self):
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
-            self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+            if self.FitParameters[0]!="Undefined":
+                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
+            else:
+                self.i0Parameter.setText(str(self.FitParameters[0]))
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
-            self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
-            self.thirdParameter.setText(str(self.FitParameters[2]))
+            if self.FitParameters[0]!="Undefined":
+                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
+                self.thirdParameter.setText(str(self.FitParameters[2])+" Cov: "+self.FitCov[2])
+            else:
+                self.i0Parameter.setText(str(self.FitParameters[0]))
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+                self.thirdParameter.setText(str(self.FitParameters[2]))
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
-            self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1])+self.units)
-            self.thirdParameter.setText(str(self.FitParameters[2]))
-            self.fourthParameter.setText(str(self.FitParameters[3]))
+            if self.FitParameters[0]!="Undefined":
+                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
+                self.thirdParameter.setText(str(self.FitParameters[2])+" Cov: "+self.FitCov[2])
+                self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
+            else:
+                self.i0Parameter.setText(str(self.FitParameters[0]))
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+                self.thirdParameter.setText(str(self.FitParameters[2]))
+                self.fourthParameter.setText(str(self.FitParameters[3]))
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
-            self.i0Parameter.setText(str(self.FitParameters[0]))
-            self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units)
-            self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units)
-            self.fourthParameter.setText(str(self.FitParameters[3]))
+            if self.FitParameters[0]!="Undefined":
+                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units+" Cov: "+self.FitCov[0])
+                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" Cov: "+self.FitCov[2])
+                self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
+            else:
+                self.i0Parameter.setText(str(self.FitParameters[0]))
+                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units)
+                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units)
+                self.fourthParameter.setText(str(self.FitParameters[3]))
         else:
             self.i0Parameter.setText("Undefined")
             self.tauParameter.setText("Undefined")
@@ -461,8 +485,7 @@ class FLIMGraphic():
                 self.thirdParameter.setText("Undefined")
             elif self.functionComboBox.currentIndex()==2:
                 self.fourthParameter.setText("Undefined")
-            
-        
+             
     #Connection with the ApplyButton
     def applyAction(self):
         if len(self.measuredData)>0:
@@ -517,7 +540,26 @@ class FLIMGraphic():
                 message_box.exec_()
     
                     
-        
+    #Reset the labels when a measurement begins
+    def resetParametersLabels(self):
+        if self.currentFit=="DoubleExponential":
+            self.tauParameter.setText("Undefined")
+            self.i0Parameter.setText("Undefined")
+            self.thirdParameter.setText("Undefined")
+            self.fourthParameter.setText("Undefined")
+        elif self.currentFit=="ShiftedExponential":
+            self.tauParameter.setText("Undefined")
+            self.i0Parameter.setText("Undefined")
+            self.thirdParameter.setText("Undefined")
+            self.fourthParameter.setText("Undefined")
+        elif self.currentFit=="fitKohlrausch":
+            self.tauParameter.setText("Undefined")
+            self.i0Parameter.setText("Undefined")
+            self.thirdParameter.setText("Undefined")
+        elif self.currentFit=="ExpDecay":
+            self.tauParameter.setText("Undefined")
+            self.i0Parameter.setText("Undefined")
+            
     #fit exponential curver
     def fitExpDecay(self,xData,yData):
         # Initial guess for the parameters
@@ -530,6 +572,21 @@ class FLIMGraphic():
             yFit = self.exp_decay(xData, I0_opt, tau0_opt)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
+            try:
+                I_0Cov=pcov[0][0]
+                tau_0Cov=pcov[1][1]
+                I_0CovString=self.roundStringPCov(I_0Cov)
+                tau_0CovString=self.roundStringPCov(tau_0Cov)
+                self.FitCov[0]=I_0CovString
+                self.FitCov[1]=tau_0CovString
+            except:
+                self.FitCov[0]="nan"
+                self.FitCov[1]="nan"         
+            print("Covariance parameters")
+            print("Covariance I_0")
+            print(I_0CovString)
+            print("Covariance tau_0")
+            print(tau_0CovString) 
             #Graphic of the fit curve
             self.curveFit.setData(xData,yFit)
             if str(I0_opt)=='nan':
@@ -540,8 +597,8 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units)
-                self.i0Parameter.setText(str(round(tau0_opt,3)))
+                self.tauParameter.setText(str(round(I0_opt,3))+" Cov: "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" Cov: "+tau_0CovString)
             return I0_opt, tau0_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -565,6 +622,20 @@ class FLIMGraphic():
             yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
+            try:
+                I_0Cov=pcov[0][0]
+                tau_0Cov=pcov[1][1]
+                betaCov=pcov[2][2]
+                I_0CovString=self.roundStringPCov(I_0Cov)
+                tau_0CovString=self.roundStringPCov(tau_0Cov)
+                betaCovString=self.roundStringPCov(betaCov)
+                self.FitCov[0]=I_0CovString
+                self.FitCov[1]=tau_0CovString
+                self.FitCov[2]=betaCovString
+            except:
+                self.FitCov[0]="nan"
+                self.FitCov[1]="nan"
+                self.FitCov[2]="nan"
             #Graphic of the fit curve
             self.curveFit.setData(xData,yFit)
             if str(I0_opt)=='nan':
@@ -575,9 +646,9 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units)
-                self.i0Parameter.setText(str(round(tau0_opt,3)))
-                self.thirdParameter.setText(str(round(beta_opt,3)))
+                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" Cov: "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt,3))+" Cov: "+tau_0CovString)
+                self.thirdParameter.setText(str(round(beta_opt,3))+" Cov: "+betaCovString)
             return I0_opt, tau0_opt, beta_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -663,7 +734,7 @@ class FLIMGraphic():
         # Apply and Reset buttons
         button_layout = QHBoxLayout()
         apply_button = QPushButton("Apply")
-        reset_button = QPushButton("Reset")
+        reset_button = QPushButton("Default Values")
         button_layout.addWidget(apply_button)
         button_layout.addWidget(reset_button)
         apply_button.clicked.connect(self.applyInitialDialog)
@@ -749,6 +820,24 @@ class FLIMGraphic():
             yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
+            try:
+                I_0Cov=pcov[0][0]
+                tau_0Cov=pcov[1][1]
+                alphaCov=pcov[2][2]
+                bCov=pcov[3][3]
+                I_0CovString=self.roundStringPCov(I_0Cov)
+                tau_0CovString=self.roundStringPCov(tau_0Cov)
+                alphaCovString=self.roundStringPCov(alphaCov)
+                bCovString=self.roundStringPCov(bCov)
+                self.FitCov[0]=I_0CovString
+                self.FitCov[1]=tau_0CovString
+                self.FitCov[2]=alphaCovString
+                self.FitCov[3]=bCovString
+            except:
+                self.FitCov[0]="nan"
+                self.FitCov[1]="nan"
+                self.FitCov[2]="nan"
+                self.FitCov[3]="nan"
             # Graphic of the fit curve
             self.curveFit.setData(xData, yFit)
             # Set the fitted parameters in the UI
@@ -760,10 +849,10 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3)))
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units)
-                self.thirdParameter.setText(str(round(alpha_opt, 3)))
-                self.fourthParameter.setText(str(round(b_opt, 3)))
+                self.tauParameter.setText(str(round(I0_opt, 3))+" Cov: "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" Cov: "+tau_0CovString)
+                self.thirdParameter.setText(str(round(alpha_opt, 3))+" Cov: "+alphaCovString)
+                self.fourthParameter.setText(str(round(b_opt, 3))+" Cov: "+bCovString)
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -774,6 +863,8 @@ class FLIMGraphic():
             message_box.exec_()
             return "Undefined","Undefined","Undefined","Undefined"
     
+    
+    #fit Double exponential
     def fitDoubleExponential(self, xData, yData):
         try:
             # Initial guess for the parameters: I0, tau0, alpha, b
@@ -786,6 +877,24 @@ class FLIMGraphic():
             yFit = self.double_Exponential(xData, I0_opt, tau0_opt, tau1_opt, alpha_opt)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
+            try:
+                I_0Cov=pcov[0][0]
+                tau_0Cov=pcov[1][1]
+                tau_1Cov=pcov[2][2]
+                alphaCov=pcov[3][3]
+                I_0CovString=self.roundStringPCov(I_0Cov)
+                tau_0CovString=self.roundStringPCov(tau_0Cov)
+                tau_1CovString=self.roundStringPCov(tau_1Cov)
+                alphaCovString=self.roundStringPCov(alphaCov)
+                self.FitCov[0]=I_0CovString
+                self.FitCov[1]=tau_0CovString
+                self.FitCov[2]=tau_1CovString
+                self.FitCov[3]=alphaCovString
+            except:
+                self.FitCov[0]="nan"
+                self.FitCov[1]="nan"
+                self.FitCov[2]="nan"
+                self.FitCov[3]="nan"
             # Graphic of the fit curve
             self.curveFit.setData(xData, yFit)
             # Set the fitted parameters in the UI
@@ -797,10 +906,10 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3)))
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units)
-                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units)
-                self.fourthParameter.setText(str(round(alpha_opt, 3)))
+                self.tauParameter.setText(str(round(I0_opt, 3))+" Cov: "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" Cov: "+tau_0CovString)
+                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" Cov: "+tau_1CovString)
+                self.fourthParameter.setText(str(round(alpha_opt, 3))+" Cov: "+alphaCovString)
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -832,6 +941,17 @@ class FLIMGraphic():
     def double_Exponential(self,t, I0, tau0, tau1, alpha): 
         return I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))
 
+    #Function to get the string of the pcov numbers
+    
+    def roundStringPCov(self, number):
+        if number == 0:
+            return "0.00"
+        exponent = int(math.floor(math.log10(abs(number))))
+        rounded_number = round(number / (10 ** exponent), 2)
+        if exponent != 0:
+            return f"{rounded_number:.2f}e{exponent:+d}"
+        else:
+            return f"{rounded_number:.2f}"
     
     #Save buttons
     #Save Plot Button
@@ -883,13 +1003,13 @@ class FLIMGraphic():
                 copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
                 # Add a footer for the graphic
                 if self.currentFit=="ExpDecay":
-                    textFooter="Fit: I_0*e^(-t/tau_0) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
+                    textFooter="Fit: I_0*e^(-t/τ<sub>0</sub>) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
                 elif self.currentFit=="fitKohlrausch":
-                    textFooter="Fit: I_0*e^((-t/tau_0)^(Beta)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
+                    textFooter="Fit: I_0*e^((-t/τ<sub>0</sub>)^(β)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    textFooter="Fit: I_0*e^((-t+alpha)/tau_0))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                    textFooter="Fit: I_0*e^((-t+α)/τ<sub>0</sub>))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
                 elif self.currentFit=="DoubleExponential":
-                    textFooter="Fit: I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
+                    textFooter="Fit: I0*(α*e^(-t/τ<sub>0</sub>)+(1-α)*e^(-t/τ<sub>1</sub>)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
                     
                 else:
                     textFooter="No fit has been applied"
@@ -897,6 +1017,7 @@ class FLIMGraphic():
                 footer = pg.LabelItem(text=textFooter, justify='left')
                 copyWin.addItem(footer, row=2, col=0)
                 copyWin.ci.layout.setRowStretchFactor(0.4, 0.1)
+                copyPlot.getViewBox().setState(self.plotFLIM.getViewBox().getState())
                 exporter=pg.exporters.ImageExporter(copyWin.scene())
                 exporter.parameters()['width'] = 1000
                 exporter.parameters()['height'] = 700
@@ -1060,6 +1181,9 @@ class WorkerThreadFLIM(QThread):
         self.getBinWidthNumber()
         #Measurement List
         self.startStopDifferences=[]
+        #Get the sequence of no measurements
+        self.noMeasurementsCounter=0
+        
     #Main Function
     def run(self):
         #Prueba: TO DO BORRAR
@@ -1067,8 +1191,14 @@ class WorkerThreadFLIM(QThread):
         while self.totalMeasurements<self.numberMeasurements and self._is_running:
             
             percentage=round((self.totalMeasurements*100)/self.numberMeasurements,2)
-            self.takeMeasurements(percentage)
-            self.createFLIMData()
+            self.checkDeviceStatus()
+            #Try in order to avoid the errors related to suddenly disconnect the device
+            self.checkDeviceStatus()
+            try:
+                self.takeMeasurements(percentage)
+                self.createFLIMData()
+            except:
+                pass
             
             
     #Take one measurement function
@@ -1084,10 +1214,15 @@ class WorkerThreadFLIM(QThread):
         try:
             if len(measurement)==0:
                 self.totalRuns+=100
+                self.noMeasurementsCounter+=100
                 self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
                 self.pointSignal.emit(3)
             else:
-                self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
+                if self.noMeasurementsCounter>=100:
+                    self.statusSignal.emit("Measurement running: Stop Channel is not taking measurements")
+                    self.pointSignal.emit(3)
+                else:
+                    self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
                 for i in range(100):
                     if not self._is_running:
                         break
@@ -1103,11 +1238,17 @@ class WorkerThreadFLIM(QThread):
                         if sentinelStart and sentinelStop:
                             differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
                             if differenceValue>0:
-                                self.totalStarts+=1
                                 self.totalMeasurements+=1
                                 self.totalTime+=differenceValue
                                 if differenceValue<=self.TimeRange:
+                                    self.noMeasurementsCounter=0
                                     self.startStopDifferences.append(differenceValue)
+                                else:
+                                    self.noMeasurementsCounter+=1
+                            else:
+                                self.noMeasurementsCounter+=1
+                        else:
+                            self.noMeasurementsCounter+=1
                         
                                 
                     else:
@@ -1118,16 +1259,27 @@ class WorkerThreadFLIM(QThread):
                             differenceValue=currentStopMeasurement[3]
                             if differenceValue>0:
                                 self.totalMeasurements+=1
-                                self.totalStarts+=1
                                 self.totalTime+=differenceValue
                                 if differenceValue<=self.TimeRange:
+                                    self.noMeasurementsCounter=0
                                     self.startStopDifferences.append(differenceValue)
+                                else:
+                                    self.noMeasurementsCounter+=1
+                            else:
+                                self.noMeasurementsCounter+=1
+                        else:
+                            self.noMeasurementsCounter+=1
                         if partialStop:
                             self.totalStarts+=1
                     if self.totalMeasurements>=self.numberMeasurements:
                         break
+                if self.noMeasurementsCounter>=100:
+                    self.statusSignal.emit("Measurement running: Stop Channel is not taking measurements")
+                    self.pointSignal.emit(3)
+                    
         except:
             self.totalRuns+=100
+            self.noMeasurementsCounter+=100
             self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
             self.pointSignal.emit(3)
                 
@@ -1183,7 +1335,14 @@ class WorkerThreadFLIM(QThread):
     def clear(self):
         self.startStopDifferences=[]
         self.totalMeasurements=0
-        
+    
+    #Check the connection of the device
+    def checkDeviceStatus(self):
+        try:
+            self.device.readIdnFromDevice()
+        except:
+            self.stop()
+    
     #Stop thread function
     @Slot()
     def stop(self):

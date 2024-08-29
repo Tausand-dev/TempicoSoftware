@@ -1,2 +1,2 @@
 
-              if self.FLIMGraphic==None:
+        settings_windows.exec_()
