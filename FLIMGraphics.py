@@ -204,6 +204,10 @@ class FLIMGraphic():
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
         #Change the parameters labels to undefined
         self.resetParametersLabels()
+        #Reset save parameters
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
@@ -446,7 +450,7 @@ class FLIMGraphic():
                 self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+                self.tauParameter.setText(str(self.FitParameters[1]))
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             if self.FitParameters[0]!="Undefined":
                 self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
@@ -454,7 +458,7 @@ class FLIMGraphic():
                 self.thirdParameter.setText(str(self.FitParameters[2])+" Cov: "+self.FitCov[2])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+                self.tauParameter.setText(str(self.FitParameters[1]))
                 self.thirdParameter.setText(str(self.FitParameters[2]))
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
             if self.FitParameters[0]!="Undefined":
@@ -464,7 +468,7 @@ class FLIMGraphic():
                 self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units)
+                self.tauParameter.setText(str(self.FitParameters[1]))
                 self.thirdParameter.setText(str(self.FitParameters[2]))
                 self.fourthParameter.setText(str(self.FitParameters[3]))
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
@@ -475,8 +479,8 @@ class FLIMGraphic():
                 self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units)
-                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units)
+                self.tauParameter.setText(str(self.FitParameters[1]))
+                self.thirdParameter.setText(str(self.FitParameters[2]))
                 self.fourthParameter.setText(str(self.FitParameters[3]))
         else:
             self.i0Parameter.setText("Undefined")
@@ -493,6 +497,7 @@ class FLIMGraphic():
                 if self.functionComboBox.currentText()=="Exponential":
                     i0,tau0=self.fitExpDecay(self.measuredTime,self.measuredData)
                     if i0=="Undefined" or str(i0)=='nan':
+                        self.currentFit=""
                         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
                     else:
                         self.currentFit="ExpDecay"
@@ -502,6 +507,7 @@ class FLIMGraphic():
                     i0,tau0,beta=self.fitKohlrauschFit(self.measuredTime,self.measuredData)
                     print(str(i0)=='nan')
                     if i0=="Undefined" or str(i0)=='nan':
+                        self.currentFit=""
                         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
                     else:
                         self.currentFit="fitKohlrausch"
@@ -512,6 +518,7 @@ class FLIMGraphic():
                 elif self.functionComboBox.currentText()=="Shifted exponencial":
                     i0,tau0,alpha,b=self.fitShiiftedExponential(self.measuredTime,self.measuredData)
                     if i0=="Undefined" or str(i0)=='nan':
+                        self.currentFit=""
                         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
                     else:   
                         self.currentFit="ShiftedExponential"
@@ -523,6 +530,7 @@ class FLIMGraphic():
                 elif self.functionComboBox.currentText()=="Double exponencial":
                     i0,tau0,tau1,alpha=self.fitDoubleExponential(self.measuredTime,self.measuredData)
                     if i0=="Undefined" or str(i0)=='nan':
+                        self.currentFit=""
                         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
                     else:   
                         self.currentFit="DoubleExponential"
@@ -1105,7 +1113,7 @@ class FLIMGraphic():
                 #Round the values in order to get a better txt files
                 newMeasuredTime=[]
                 for i in self.measuredTime:
-                    newValue=round(i,3)
+                    newValue=round(i,5)
                     newMeasuredTime.append(newValue)
                 data=[newMeasuredTime,self.measuredData ]
                 try:
@@ -1184,6 +1192,8 @@ class WorkerThreadFLIM(QThread):
         self.TimeRange=TimeRange
         #Getting the value in picoSeconds of binWidtrh
         self.getBinWidthNumber()
+        #Getting the mode of the device
+        self.measurementMode()
         #Measurement List
         self.startStopDifferences=[]
         #Get the sequence of no measurements
@@ -1205,7 +1215,19 @@ class WorkerThreadFLIM(QThread):
             except:
                 pass
             
-            
+    #Functon to define the mode of the measurement
+    def measurementMode(self):
+        if self.TimeRange<=500000:
+            self.device.ch1.setMode(1)
+            self.device.ch2.setMode(1)
+            self.device.ch3.setMode(1)
+            self.device.ch4.setMode(1)
+        else:
+            self.device.ch1.setMode(2)
+            self.device.ch2.setMode(2)
+            self.device.ch3.setMode(2)
+            self.device.ch4.setMode(2)
+        
     #Take one measurement function
     def takeMeasurements(self, percentage):
         #Init the config to take measurement

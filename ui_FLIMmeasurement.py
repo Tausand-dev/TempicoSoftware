@@ -57,6 +57,7 @@ class UiFLIM(object):
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.setObjectName(u"startChannelComboBox")
+        self.startChannelComboBox.currentIndexChanged.connect(self.startChange)
 
         self.verticalLayout_3.addWidget(self.startChannelComboBox)
 
@@ -558,6 +559,8 @@ class UiFLIM(object):
 
 
         self.retranslateUi(Form)
+        #The initial default value of the label
+        self.timeRangeValue.setText("24.0 ns")
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
     # setupUi
@@ -670,6 +673,8 @@ class UiFLIM(object):
             binWidthValue=self.binWidthComboBox.currentText()
             numericalValue=self.transformUnits(binWidthValue)
             currentRange=int(self.numberBinsComboBox.currentText())*numericalValue
+            if self.startChannelComboBox.currentIndex()==0 and currentRange<24000:
+                currentRange=24000
             units,divisionFactor=self.transformIntoString(currentRange)
             normalizedValue=round(currentRange/divisionFactor,2)
             timeRangeString=str(normalizedValue)+" "+units
@@ -680,6 +685,8 @@ class UiFLIM(object):
         binWidthValue=self.binWidthComboBox.currentText()
         numericalValue=self.transformUnits(binWidthValue)
         currentRange=int(self.numberOfBinsValues[0])*numericalValue
+        if self.startChannelComboBox.currentIndex()==0 and currentRange<24000:
+            currentRange=24000
         units,divisionFactor=self.transformIntoString(currentRange)
         normalizedValue=round(currentRange/divisionFactor,2)
         timeRangeString=str(normalizedValue)+" "+units
@@ -713,6 +720,8 @@ class UiFLIM(object):
         return value
 
     #Function to transform picoseconds float value into a string value
+    def startChange(self):
+        self.setTimeRangeChangeBinWidth()
         
     
     def transformIntoString(self,value):
