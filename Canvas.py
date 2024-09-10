@@ -768,6 +768,12 @@ class WorkerThreadStartStopHistogram(QThread):
         self.setinelSaveD=sentinelSaveD
         #Sentinel to know if the thread stil running
         self.itsRunning=True
+        self.device.ch1.enableChannel()
+        self.device.ch2.enableChannel()
+        self.device.ch3.enableChannel()
+        self.device.ch4.enableChannel()
+        
+        
         
     #Main function
     def run(self):

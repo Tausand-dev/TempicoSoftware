@@ -281,6 +281,10 @@ class FLIMGraphic():
         self.threadCreated=False
         self.stopTimer()
         self.timerStatus.start(500)
+        self.device.ch1.enableChannel()
+        self.device.ch2.enableChannel()
+        self.device.ch3.enableChannel()
+        self.device.ch4.enableChannel()
         if len(self.measuredTime)>0:
             self.applyButton.setEnabled(True)
             self.initialParametersButton.setEnabled(True)
