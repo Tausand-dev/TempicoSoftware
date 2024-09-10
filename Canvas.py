@@ -124,8 +124,10 @@ class Canvas():
         #Sentinel thread worker thread created
         self.threadCreatedSentinel=False
         
+
+
         
-        
+    #Function to know the state of device   
     ##---------------------------------##
     ##---------------------------------##
     ##------Begin the create graphs----##
@@ -833,8 +835,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         self.dataSignal.emit(new_data4,"D")
                         
                         
-        except NameError as e:
-            print(e)
+        except:
             self.dialogInit.emit()
             self.stop()
              
