@@ -1,5 +1,5 @@
 from PySide2.QtCore import *
-from PySide2.QtCore import Qt
+from PySide2.QtCore import QObject, Qt
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 import sys
@@ -120,6 +120,9 @@ class Canvas():
         self.datapureB=[]
         self.datapureC=[]
         self.datapureD=[]
+        
+        #Sentinel thread worker thread created
+        self.threadCreatedSentinel=False
         
         
         
@@ -276,12 +279,16 @@ class Canvas():
             self.gridlayout.addWidget(widgets[1], 0, 1)
             self.gridlayout.addWidget(widgets[2], 1, 0)
             self.gridlayout.addWidget(widgets[3], 1, 1)
+            
+        #Crete the worker Thread
+        self.worker=WorkerThreadStartStopHistogram(self.parent,self.device,self.setinelSaveA,self.setinelSaveB,self.setinelSaveC,self.setinelSaveD)
+        self.worker.finished.connect(self.threadComplete)
+        self.worker.dataPureSignal.connect(self.updateDataPure)
+        self.worker.dataSignal.connect(self.updateSignal)
+        self.worker.threadCreated.connect(self.threadRunning)
+        self.worker.dialogInit.connect(self.createDialog)
+        self.worker.start()
         
-        
-        #Set the time for update function
-        self.timer.timeout.connect(self.update)
-        #Set the update graphics time
-        self.timer.start(500)
     
     
     ##---------------------------------##
@@ -289,7 +296,7 @@ class Canvas():
     ##--Begin with start-stop buttons--##
     ##---------------------------------##
     ##---------------------------------##  
-        
+    
     
     def start_graphic(self):
         if (not self.checkA.isChecked() and not self.checkB.isChecked() and not self.checkC.isChecked() and not self.checkD.isChecked()):
@@ -327,6 +334,9 @@ class Canvas():
         self.startbutton.setEnabled(True)
         
     def stop_graphic(self):
+        if self.threadCreatedSentinel:
+            self.worker.stop()
+            time.sleep(1)
         self.disconnectButton.setEnabled(True)
         self.currentmeasurement=False
         self.stopbutton.setEnabled(False)
@@ -341,119 +351,14 @@ class Canvas():
         self.checkB.setEnabled(True)
         self.checkC.setEnabled(True)
         self.checkD.setEnabled(True)
-        self.timer.stop()
     
-    ##---------------------------------##
-    ##---------------------------------##
-    ##---Begin with get measurement----##
-    ##---------------------------------##
-    ##---------------------------------##  
-    def get_new_data(self, channel,dataPure,channelIndex,stopnumber):
+    #Future function if we want to add the option of number of measurements
+    def threadComplete(self):
+        self.threadCreated=False
+        self.stop_graphic()
+    
+    
         
-        
-        measurements=self.device.fetch()
-        if len(measurements[0])!=0:
-            number_runs=self.device.getNumberOfRuns()
-            if channelIndex=="A":
-                index_measurement=0
-                
-            elif channelIndex=="B":
-                index_measurement=number_runs
-                
-            elif channelIndex=="C":
-                index_measurement=number_runs*2
-                
-            elif channelIndex=="D":
-                index_measurement=number_runs*3
-                
-            total_measurement=0
-            total_points=0
-            for i in range(number_runs):
-                if measurements[i+index_measurement][3+stopnumber]!=-1:
-                    total_measurement+=measurements[i][3+stopnumber]
-                    total_points+=1
-            if total_points!=0:    
-                average_measurement=total_measurement/total_points
-                if channel.getMode()==2:
-                    miliseconds_measurement=average_measurement/(10**9)
-                else:
-                    miliseconds_measurement=average_measurement/(10**3)    
-                dataPure.append(round(average_measurement))
-                return miliseconds_measurement
-            else:
-                return None
-        else:
-            return None
-        
-    
-    
-    ##---------------------------------##
-    ##---------------------------------##
-    ##--------Update function----------##
-    ##---------------------------------##
-    ##---------------------------------## 
-    
-    
-    def update(self):
-        #verify the device connection
-        
-        #Get the measure of the device
-        try:
-            self.device.measure()
-            
-            #Get the update of graph A
-            if self.setinelSaveA:
-                for numberA in range(self.channel1.getNumberOfStops()):
-                    new_data1= self.get_new_data(self.channel1, self.datapureA,"A",numberA)
-                    if new_data1 is not None:
-                        self.dataA.append(new_data1)
-                        self.update_histogram(self.dataA,self.curveA,"A")
-                    
-            
-            #Get the update of graph B
-            if self.setinelSaveB:
-                for numberB in range(self.channel2.getNumberOfStops()):
-                    new_data2= self.get_new_data(self.channel2, self.datapureB,"B",numberB)
-                    if new_data2 is not None:
-                        self.dataB.append(new_data2)
-                        self.update_histogram(self.dataB,self.curveB,"B")
-            
-            #Get the update of graph C
-            if self.setinelSaveC:
-                for numberC in range(self.channel3.getNumberOfStops()):
-                    new_data3= self.get_new_data(self.channel3, self.datapureC,"C",numberC)
-                    if new_data3 is not None:
-                        self.dataC.append(new_data3)
-                        self.update_histogram(self.dataC,self.curveC,"C")
-            
-            #Get the update of graph D
-            if self.setinelSaveD:
-                for numberD in range(self.channel4.getNumberOfStops()):
-                    new_data4= self.get_new_data(self.channel4, self.datapureD,"D",numberD)
-                    if new_data4 is not None:
-                        self.dataD.append(new_data4)
-                        self.update_histogram(self.dataD,self.curveD,"D")
-        except:
-            msg_box = QMessageBox(self.parent)
-            msg_box.setText("Connection with the device has been lost")
-            msg_box.setWindowTitle("Connection Error")
-            pixmap= QPixmap("/Sources/abacus_small.ico")
-            msg_box.setIconPixmap(pixmap)
-            msg_box.setIcon(QMessageBox.Critical)
-            msg_box.setStandardButtons(QMessageBox.Ok)
-            msg_box.exec_()
-            self.stop_graphic()
-            self.hide_graphic2()
-            self.disconnectButton.setEnabled(False)
-            self.connectButton.setEnabled(True)
-            try:
-                 self.device.close()
-            except:
-                 pass
-            
-        
-           
-    
     ##---------------------------------##
     ##---------------------------------##
     ##------Clear graphics buttons-----##
@@ -517,8 +422,6 @@ class Canvas():
         self.curveA.setData(binsA, self.histA)  # Update the graphic
         
         
-            
-    
     #Change the zoom of the graphic B
     def zoom_changedB(self):
         # Function called for graphB zoom
@@ -793,3 +696,188 @@ class Canvas():
             message_box.setWindowTitle("Error saving")
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+
+    #Function to connect the Thread with update signal
+    def updateSignal(self,value,channel):
+        if channel=="A":
+            self.dataA.append(value)
+            self.update_histogram(self.dataA,self.curveA,"A")
+        elif channel=="B":
+            self.dataB.append(value)
+            self.update_histogram(self.dataB,self.curveB,"B")
+        elif channel=="C":
+            self.dataC.append(value)
+            self.update_histogram(self.dataC,self.curveC,"C")
+        elif channel=="D":
+            self.dataD.append(value)
+            self.update_histogram(self.dataD,self.curveD,"D")
+    
+    #Update dataPure
+    def updateDataPure(self,value,channel):
+        if channel=="A":
+            self.datapureA.append(value)
+        elif channel=="B":
+            self.datapureB.append(value)
+        elif channel=="C":
+            self.datapureC.append(value)
+        elif channel=="D":
+            self.datapureD.append(value)
+    
+    #Change the status of sentinel dataThreadCreated
+    def threadRunning(self,status):
+        if status==0:
+            self.threadCreatedSentinel=True
+        elif status==1:
+            self.threadCreatedSentinel=False
+    
+    def createDialog(self):
+        msg_box = QMessageBox(self.parent)
+        msg_box.setText("Connection with the device has been lost")
+        msg_box.setWindowTitle("Connection Error")
+        pixmap= QPixmap("/Sources/abacus_small.ico")
+        msg_box.setIconPixmap(pixmap)
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+        self.stop_graphic()
+        self.hide_graphic2()
+        self.disconnectButton.setEnabled(False)
+        self.connectButton.setEnabled(True)
+        try:
+                self.device.close()
+        except:
+            pass
+        
+    
+    
+    
+        
+    
+class WorkerThreadStartStopHistogram(QThread):
+    dataSignal=Signal(float,str)
+    dataPureSignal=Signal(float,str)
+    threadCreated=Signal(int)
+    dialogInit=Signal()
+    def __init__(self,parent,device,sentinelSaveA,sentinelSaveB,sentinelSaveC,sentinelSaveD):
+        super().__init__()
+        self.parent=parent
+        self.device=device
+        self.setinelSaveA=sentinelSaveA
+        self.setinelSaveB=sentinelSaveB
+        self.setinelSaveC=sentinelSaveC
+        self.setinelSaveD=sentinelSaveD
+        #Sentinel to know if the thread stil running
+        self.itsRunning=True
+        
+    #Main function
+    def run(self):
+        self.threadCreated.emit(0)
+        while self.itsRunning:
+             self.update()
+             time.sleep(0.5)
+        
+    
+    
+    ##---------------------------------##
+    ##---------------------------------##
+    ##--------Update function----------##
+    ##---------------------------------##
+    ##---------------------------------## 
+    def update(self):
+        #verify the device connection
+        #Get the measure of the device
+        
+        try:
+            #Get the update of graph A
+            if self.setinelSaveA:
+                for numberA in range(self.device.ch1.getNumberOfStops()):
+                    new_data1= self.getNewData(self.device.ch1,"A",numberA)
+                    
+                    if new_data1 is not None:
+                        #Emit data
+                        self.dataSignal.emit(new_data1,"A")
+                        
+                    
+            
+            #Get the update of graph B
+            if self.setinelSaveB:
+                for numberB in range(self.device.ch2.getNumberOfStops()):
+                    new_data2= self.getNewData(self.device.ch2,"B",numberB)
+                    if new_data2 is not None:
+                        #Emit data
+                        self.dataSignal.emit(new_data2,"B")
+
+
+
+            #Get the update of graph C
+            if self.setinelSaveC:
+                for numberC in range(self.device.ch3.getNumberOfStops()):
+                    new_data3= self.getNewData(self.device.ch3,"C",numberC)
+                    if new_data3 is not None:
+                        #Emit data
+                        self.dataSignal.emit(new_data3,"C")
+            
+            
+            #Get the update of graph D
+            if self.setinelSaveD:
+                for numberD in range(self.device.ch4.getNumberOfStops()):
+                    new_data4= self.getNewData(self.device.ch4,"D",numberD)
+                    if new_data4 is not None:
+                        #Emit data
+                        self.dataSignal.emit(new_data4,"D")
+                        
+                        
+        except NameError as e:
+            print(e)
+            self.dialogInit.emit()
+            self.stop()
+             
+    ##---------------------------------##
+    ##---------------------------------##
+    ##---Begin with get measurement----##
+    ##---------------------------------##
+    ##---------------------------------##  
+    
+    def getNewData(self,channel,channelIndex,stopNumber):
+        
+        measurements=self.device.measure()
+        
+        if len(measurements)!=0:
+            if len(measurements[0])!=0:
+                number_runs=self.device.getNumberOfRuns()
+                if channelIndex=="A":
+                    index_measurement=0    
+                elif channelIndex=="B":
+                    index_measurement=number_runs
+                elif channelIndex=="C":
+                    index_measurement=number_runs*2
+                elif channelIndex=="D":
+                    index_measurement=number_runs*3
+                    
+                total_measurement=0
+                total_points=0
+                for i in range(number_runs):
+                    if measurements[i+index_measurement][3+stopNumber]!=-1:
+                        total_measurement+=measurements[i][3+stopNumber]
+                        total_points+=1
+                if total_points!=0:    
+                    average_measurement=total_measurement/total_points
+                    if channel.getMode()==2:
+                        miliseconds_measurement=average_measurement/(10**9)
+                    else:
+                        miliseconds_measurement=average_measurement/(10**3)    
+                    self.dataPureSignal.emit(round(average_measurement),channelIndex)
+                    return miliseconds_measurement
+                else:
+                    return None
+            else:
+                return None
+        else:
+            return None
+    @Slot()
+    def stop(self):
+        self.threadCreated.emit(1)
+        self.itsRunning=False
+        
+        
+        

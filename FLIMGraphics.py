@@ -1011,13 +1011,13 @@ class FLIMGraphic():
                 copyFit.setData(self.xDataFitCopy,self.yDataFitCopy)
                 # Add a footer for the graphic
                 if self.currentFit=="ExpDecay":
-                    textFooter="Fit: I_0*e^(-t/τ<sub>0</sub>) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
+                    textFooter="Fit: I<sub>0</sub>*e^(-t/τ<sub>0</sub>) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units
                 elif self.currentFit=="fitKohlrausch":
-                    textFooter="Fit: I_0*e^((-t/τ<sub>0</sub>)^(β)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
+                    textFooter="Fit: I<sub>0</sub>*e^((-t/τ<sub>0</sub>)^(β)) , Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" 	β:"+str(self.FitParameters[2])
                 elif self.currentFit=="ShiftedExponential":
-                    textFooter="Fit: I_0*e^((-t+α)/τ<sub>0</sub>))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
+                    textFooter="Fit: I<sub>0</sub>*e^((-t+α)/τ<sub>0</sub>))+b, Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" α:"+str(self.FitParameters[2])+" b:"+str(self.FitParameters[3])
                 elif self.currentFit=="DoubleExponential":
-                    textFooter="Fit: I0*(α*e^(-t/τ<sub>0</sub>)+(1-α)*e^(-t/τ<sub>1</sub>)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
+                    textFooter="Fit: I<sub>0</sub>*(α*e^(-t/τ<sub>0</sub>)+(1-α)*e^(-t/τ<sub>1</sub>)), Parameters: I<sub>0</sub>="+str(self.FitParameters[0])+" τ<sub>0</sub>:"+str(self.FitParameters[1])+" "+self.units+" τ<sub>1</sub>:"+str(self.FitParameters[2])+" "+self.units+" α:"+str(self.FitParameters[3])
                     
                 else:
                     textFooter="No fit has been applied"

@@ -104,8 +104,11 @@ class UiFLIM(object):
         self.numberOfBinsValues = [ "10","20","30","40","50","60","70","80","90","100"
                                    ,"200","300","400","500","600","700","800","900","1000",
                                    "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
+        initialValues=["50","60","70","80","90","100"
+                        ,"200","300","400","500","600","700","800","900","1000",
+                        "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
         self.numberBinsComboBox = QComboBox(self.configurationParameters)
-        self.numberBinsComboBox.addItems(self.numberOfBinsValues)
+        self.numberBinsComboBox.addItems(initialValues)
         self.numberBinsComboBox.currentIndexChanged.connect(self.setTimeRange)
         self.binWidthComboBox.currentIndexChanged.connect(self.maxNumberBins)
         self.timeRangeValue = QLabel("4 ms",self.configurationParameters)
@@ -675,6 +678,8 @@ class UiFLIM(object):
             currentRange=int(self.numberBinsComboBox.currentText())*numericalValue
             if self.startChannelComboBox.currentIndex()==0 and currentRange<24000:
                 currentRange=24000
+                minimunBinsNumber=round(24000/numericalValue)
+                self.minimumNumberBins(minimunBinsNumber)
             units,divisionFactor=self.transformIntoString(currentRange)
             normalizedValue=round(currentRange/divisionFactor,2)
             timeRangeString=str(normalizedValue)+" "+units
@@ -687,6 +692,9 @@ class UiFLIM(object):
         currentRange=int(self.numberOfBinsValues[0])*numericalValue
         if self.startChannelComboBox.currentIndex()==0 and currentRange<24000:
             currentRange=24000
+            minimunBinsNumber=round(24000/numericalValue)
+            self.minimumNumberBins(minimunBinsNumber)
+            
         units,divisionFactor=self.transformIntoString(currentRange)
         normalizedValue=round(currentRange/divisionFactor,2)
         timeRangeString=str(normalizedValue)+" "+units
@@ -733,6 +741,17 @@ class UiFLIM(object):
             return ["µs",10**6]
         elif value < 1e12:
             return ["ms",10**9]
+    #Function to get the minimun number of bins
+    def minimumNumberBins(self,minimum):
+        self.numberBinsComboBox.clear()
+        valuesToAdd=[str(int(minimum))]
+        for i in range(len(self.numberOfBinsValues)):
+            numericalBin=float(self.numberOfBinsValues[i])
+            if numericalBin>minimum:
+                valuesToAdd.append(self.numberOfBinsValues[i])
+        self.numberBinsComboBox.addItems(valuesToAdd)
+        
+    
             
             
             
