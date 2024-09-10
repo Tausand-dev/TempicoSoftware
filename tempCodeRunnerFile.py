@@ -1,2 +1,1 @@
-
-        settings_windows.exec_()
+Ui_HistogramaStartStop
