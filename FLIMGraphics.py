@@ -147,6 +147,11 @@ class FLIMGraphic():
         self.changeInitialParametersKol=False
         self.changeInitialParametersDoub=False
         self.changeInitialParametersShif=False
+        #Variables to define the mode of the old channels
+        self.oldChannelA=1
+        self.oldChannelB=1
+        self.oldChannelC=1
+        self.oldChannelD=1
         #--------End Define other parameters and sentinels-----#
         #--------Init the the timer to check the connection----#
         self.timerStatus=QTimer()
@@ -204,6 +209,8 @@ class FLIMGraphic():
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
         #Change the parameters labels to undefined
         self.resetParametersLabels()
+        #Save the channels mode before measurement
+        self.saveMode()
         #Reset save parameters
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
@@ -281,6 +288,7 @@ class FLIMGraphic():
         self.threadCreated=False
         self.stopTimer()
         self.timerStatus.start(500)
+        self.setOldMode()
         self.device.ch1.enableChannel()
         self.device.ch2.enableChannel()
         self.device.ch3.enableChannel()
@@ -307,7 +315,7 @@ class FLIMGraphic():
                 self.initialAlphaDoub=0
         self.saveDataButton.setEnabled(True)
         
-        
+    
     #Function to change the status measurement
     def changeStatusLabel(self, textValue):
         self.statusLabel.setText(textValue)
@@ -378,6 +386,32 @@ class FLIMGraphic():
         elif stopChannelValue==3:
             self.device.ch4.enableChannel()
             self.currentStopChannel=self.device.ch4
+    
+    
+    #Get the mode of the channel to save in a variable before start measurement
+    def saveMode(self):
+        try:
+            self.oldChannelA=self.device.ch1.getMode()
+            self.oldChannelB=self.device.ch2.getMode()
+            self.oldChannelC=self.device.ch3.getMode()
+            self.oldChannelD=self.device.ch4.getMode()
+        except:
+            pass
+    
+    #Set the mode before measurement in every channel
+    def setOldMode(self):
+        try:
+            self.device.ch1.setMode(self.oldChannelA)
+            self.device.ch2.setMode(self.oldChannelB)
+            self.device.ch3.setMode(self.oldChannelC)
+            self.device.ch4.setMode(self.oldChannelD) 
+        except:
+            pass
+        
+        
+    
+    
+    
         
     #Get the value of the time range label
     def timeRangeValue(self):
