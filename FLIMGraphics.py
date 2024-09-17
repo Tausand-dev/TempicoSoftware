@@ -621,12 +621,20 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=pcov[0][0]
-                tau_0Cov=pcov[1][1]
-                I_0CovString=self.roundStringPCov(I_0Cov)
-                tau_0CovString=self.roundStringPCov(tau_0Cov)
-                self.FitCov[0]=I_0CovString
-                self.FitCov[1]=tau_0CovString
+                I_0Cov=np.sqrt(pcov[0][0])
+                tau_0Cov=np.sqrt(pcov[1][1])
+                if I_0Cov>I0_opt:
+                    self.FitCov[0]="nan"
+                    I_0CovString="nan"
+                else:
+                    I_0CovString=self.roundStringPCov(I_0Cov)
+                    self.FitCov[0]=I_0CovString
+                if tau_0Cov>tau_0Cov:
+                    self.FitCov[1]="nan"
+                    tau_0CovString="nan"
+                else:
+                    tau_0CovString=self.roundStringPCov(tau_0Cov)    
+                    self.FitCov[1]=tau_0CovString
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"         
@@ -646,7 +654,10 @@ class FLIMGraphic():
                 message_box.exec_()
             else:
                 self.tauParameter.setText(str(round(I0_opt,3))+" ± "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                if tau_0CovString=="nan":
+                    self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString)
+                else:
+                    self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString+self.units)
             return I0_opt, tau0_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -671,15 +682,32 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=pcov[0][0]
-                tau_0Cov=pcov[1][1]
-                betaCov=pcov[2][2]
-                I_0CovString=self.roundStringPCov(I_0Cov)
-                tau_0CovString=self.roundStringPCov(tau_0Cov)
-                betaCovString=self.roundStringPCov(betaCov)
-                self.FitCov[0]=I_0CovString
-                self.FitCov[1]=tau_0CovString
-                self.FitCov[2]=betaCovString
+                I_0Cov=np.sqrt(pcov[0][0])
+                tau_0Cov=np.sqrt(pcov[1][1])
+                betaCov=np.sqrt(pcov[2][2])
+                #Try to get the first parameter
+                if I_0Cov>I0_opt:
+                    self.FitCov[0]="nan"    
+                    I_0CovString="nan"
+                else:
+                    I_0CovString=self.roundStringPCov(I_0Cov)
+                    self.FitCov[0]=I_0CovString
+                #Try to get the second parameter
+                if tau_0Cov>tau0_opt:
+                    self.FitCov[1]="nan"    
+                    tau_0CovString="nan"
+                else:
+                    tau_0CovString=self.roundStringPCov(tau_0Cov)
+                    self.FitCov[1]=tau_0CovString
+                    
+                #Try to get the third parameter
+                
+                if betaCov>beta_opt:
+                    self.FitCov[2]="nan"    
+                    betaCovString="nan"
+                else:
+                    betaCovString=self.roundStringPCov(betaCov)
+                    self.FitCov[2]=betaCovString
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"
@@ -694,7 +722,10 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString+self.units)
+                if I_0CovString=="nan":
+                    self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString)
+                else:
+                    self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString+self.units)
                 self.i0Parameter.setText(str(round(tau0_opt,3))+" ± "+tau_0CovString)
                 self.thirdParameter.setText(str(round(beta_opt,3))+" ± "+betaCovString)
             return I0_opt, tau0_opt, beta_opt
@@ -869,18 +900,44 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=pcov[0][0]
-                tau_0Cov=pcov[1][1]
-                alphaCov=pcov[2][2]
-                bCov=pcov[3][3]
-                I_0CovString=self.roundStringPCov(I_0Cov)
-                tau_0CovString=self.roundStringPCov(tau_0Cov)
-                alphaCovString=self.roundStringPCov(alphaCov)
-                bCovString=self.roundStringPCov(bCov)
-                self.FitCov[0]=I_0CovString
-                self.FitCov[1]=tau_0CovString
-                self.FitCov[2]=alphaCovString
-                self.FitCov[3]=bCovString
+                I_0Cov=np.sqrt(pcov[0][0])
+                tau_0Cov=np.sqrt(pcov[1][1])
+                alphaCov=np.sqrt(pcov[2][2])
+                bCov=np.sqrt(pcov[3][3])
+                
+                #Get I0 parameter
+                if I_0Cov>I0_opt:
+                    self.FitCov[0]="nan"
+                    I_0CovString="nan"
+                else:
+                    I_0CovString=self.roundStringPCov(I_0Cov)
+                    self.FitCov[0]=I_0CovString
+        
+                #Get tau parameter
+                if tau_0Cov>tau0_opt:
+                    self.FitCov[1]="nan"
+                    tau_0CovString="nan"
+                else:
+                    tau_0CovString=self.roundStringPCov(tau_0Cov)
+                    self.FitCov[1]=tau_0CovString
+               
+               #Get alpha parameter
+                if alphaCov>alpha_opt:
+                    self.FitCov[2]="nan"
+                    alphaCovString="nan"
+                else:
+                    alphaCovString=self.roundStringPCov(alphaCov)
+                    self.FitCov[2]=alphaCovString
+                
+                
+                #Get b parameter
+                if bCov>b_opt:
+                    self.FitCov[3]="nan"
+                    bCovString="nan"
+                else:
+                    bCovString=self.roundStringPCov(bCov)
+                    self.FitCov[3]=bCovString
+                
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"
@@ -898,7 +955,10 @@ class FLIMGraphic():
                 message_box.exec_()
             else:
                 self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                if tau_0CovString=="nan":
+                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString)
+                else:
+                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
                 self.thirdParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
                 self.fourthParameter.setText(str(round(b_opt, 3))+" ± "+bCovString)
             return I0_opt, tau0_opt, alpha_opt, b_opt
@@ -926,18 +986,47 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=pcov[0][0]
-                tau_0Cov=pcov[1][1]
-                tau_1Cov=pcov[2][2]
-                alphaCov=pcov[3][3]
-                I_0CovString=self.roundStringPCov(I_0Cov)
-                tau_0CovString=self.roundStringPCov(tau_0Cov)
-                tau_1CovString=self.roundStringPCov(tau_1Cov)
-                alphaCovString=self.roundStringPCov(alphaCov)
-                self.FitCov[0]=I_0CovString
-                self.FitCov[1]=tau_0CovString
-                self.FitCov[2]=tau_1CovString
-                self.FitCov[3]=alphaCovString
+                I_0Cov=np.sqrt(pcov[0][0])
+                tau_0Cov=np.sqrt(pcov[1][1])
+                tau_1Cov=np.sqrt(pcov[2][2])
+                alphaCov=np.sqrt(pcov[3][3])
+                print(I_0Cov)
+                print(tau_0Cov)
+                print(tau_1Cov)
+                print(alphaCov)
+                
+                #Get I0 parameter
+                if I_0Cov>I0_opt:
+                    self.FitCov[0]="nan"
+                    I_0CovString="nan"
+                else:
+                    I_0CovString=self.roundStringPCov(I_0Cov)
+                    self.FitCov[0]=I_0CovString
+        
+                #Get tau parameter
+                if tau_0Cov>tau0_opt:
+                    self.FitCov[1]="nan"
+                    tau_0CovString="nan"
+                else:
+                    tau_0CovString=self.roundStringPCov(tau_0Cov)
+                    self.FitCov[1]=tau_0CovString
+               
+               #Get tau1 parameter
+                if tau_1Cov>tau1_opt:
+                    self.FitCov[2]="nan"
+                    tau_1CovString="nan"
+                else:
+                    tau_1CovString=self.roundStringPCov(tau_1Cov)
+                    self.FitCov[2]=tau_1CovString
+                
+                
+                #Get alpha parameter
+                if alphaCov>alpha_opt:
+                    self.FitCov[3]="nan"
+                    alphaCovString="nan"
+                else:
+                    alphaCovString=self.roundStringPCov(alphaCov)
+                    self.FitCov[3]=alphaCovString           
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"
@@ -955,8 +1044,14 @@ class FLIMGraphic():
                 message_box.exec_()
             else:
                 self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
-                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString+self.units)
+                if tau_0CovString=="nan":
+                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString)
+                else:
+                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                if tau_1CovString=="nan":
+                    self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString)
+                else:
+                    self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString+self.units)
                 self.fourthParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
