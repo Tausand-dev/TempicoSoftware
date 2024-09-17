@@ -16,7 +16,7 @@ class FLIMGraphic():
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
-                 i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow):
+                 i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow, timerStatus: QTimer):
         super().__init__()
         #Initialize the main window
         self.mainWindow=MainWindow
@@ -155,7 +155,7 @@ class FLIMGraphic():
         self.oldChannelD=1
         #--------End Define other parameters and sentinels-----#
         #--------Init the the timer to check the connection----#
-        self.timerStatus=QTimer()
+        self.timerStatus=timerStatus
         self.timerStatus.timeout.connect(self.checkDeviceStatus)
         if self.device!=None:
             self.startButton.setEnabled(True)

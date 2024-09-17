@@ -81,6 +81,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(1000,700)
         self.conectedDevice=None
+        self.FLIMTimer=QTimer()
         
 
         if abacus.CURRENT_OS == 'win32':
@@ -232,7 +233,7 @@ class MainWindow(QMainWindow):
                     
                     
                     self.connectsentinel=1
-                    self.grafico=Canvas(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton)
+                    self.grafico=Canvas(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self)
                     
                 except NameError:
                     print(NameError)
@@ -307,6 +308,7 @@ class MainWindow(QMainWindow):
           valor_padre=self.tabs.currentIndex()
           padre=self.tab1
           if valor_padre==0:
+              self.FLIMTimer.stop()
               padre=self.tab1
               self.construct_start_stop_histogram(padre)
           elif valor_padre==1:
@@ -341,7 +343,7 @@ class MainWindow(QMainWindow):
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
-                                               applyButton,i0Parameter,tauParameter,thirdParameter,fourthParameter,self)
+                                               applyButton,i0Parameter,tauParameter,thirdParameter,fourthParameter,self,self.FLIMTimer)
                   #If this sentinel dont have any use DELETE
                   self.flim_init_sentinel=1
         #   elif valor_padre==1:

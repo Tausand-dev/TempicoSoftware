@@ -37,7 +37,7 @@ from ui_settings import Ui_settings
 
 #Create graphic design#
 class Canvas():
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect, *args, **kwargs):
+    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow, *args, **kwargs):
         super().__init__()
         #Disconnect button
         self.disconnectButton= disconnect
@@ -88,6 +88,7 @@ class Canvas():
         ##---------------------------------##
         ##---------------------------------##
         self.parent=parent
+        self.mainWindow=mainWindow
         self.gridlayout=QGridLayout(self.parent)
         self.startbutton.clicked.connect(self.start_graphic)
         self.stopbutton.clicked.connect(self.stop_graphic)
@@ -311,6 +312,7 @@ class Canvas():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.mainWindow.tabs.setTabEnabled(1,False)
             self.disconnectButton.setEnabled(False)
             self.currentmeasurement=True
             self.create_graphs()
@@ -339,6 +341,7 @@ class Canvas():
         if self.threadCreatedSentinel:
             self.worker.stop()
             time.sleep(1)
+        self.mainWindow.tabs.setTabEnabled(1,True)
         self.disconnectButton.setEnabled(True)
         self.currentmeasurement=False
         self.stopbutton.setEnabled(False)
@@ -356,6 +359,7 @@ class Canvas():
     
     #Future function if we want to add the option of number of measurements
     def threadComplete(self):
+        self.mainWindow.tabs.setTabEnabled(1,True)
         self.threadCreated=False
         self.stop_graphic()
     
