@@ -10,6 +10,7 @@ import datetime
 from scipy.optimize import curve_fit
 from pyTempico import TempicoDevice
 import math
+import re
 class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
@@ -653,11 +654,13 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" ± "+I_0CovString)
+                maxRoundTau0=self.maxRound(I_0CovString)
+                maxRoundI0=self.maxRound(tau_0CovString)
+                self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" ± "+I_0CovString)
                 if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString)
+                    self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
                 else:
-                    self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                    self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
             return I0_opt, tau0_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -722,12 +725,15 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
+                maxRoundTau0=self.maxRound(I_0CovString)
+                maxRoundI0=self.maxRound(tau_0CovString)
+                maxRoundBeta=self.maxRound(betaCovString)
                 if I_0CovString=="nan":
-                    self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString)
+                    self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" "+self.units+" ± "+I_0CovString)
                 else:
-                    self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString+self.units)
-                self.i0Parameter.setText(str(round(tau0_opt,3))+" ± "+tau_0CovString)
-                self.thirdParameter.setText(str(round(beta_opt,3))+" ± "+betaCovString)
+                    self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" "+self.units+" ± "+I_0CovString+self.units)
+                self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" ± "+tau_0CovString)
+                self.thirdParameter.setText(str(round(beta_opt,maxRoundBeta))+" ± "+betaCovString)
             return I0_opt, tau0_opt, beta_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -954,13 +960,17 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
+                maxRoundTau0=self.maxRound(I_0CovString)
+                maxRoundI0=self.maxRound(tau_0CovString)
+                maxRoundAlpha=self.maxRound(alphaCovString)
+                maxRoundB=self.maxRound(bCovString)
+                self.tauParameter.setText(str(round(I0_opt, maxRoundTau0))+" ± "+I_0CovString)
                 if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString)
+                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
                 else:
-                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
-                self.thirdParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
-                self.fourthParameter.setText(str(round(b_opt, 3))+" ± "+bCovString)
+                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
+                self.thirdParameter.setText(str(round(alpha_opt, maxRoundAlpha))+" ± "+alphaCovString)
+                self.fourthParameter.setText(str(round(b_opt, maxRoundB))+" ± "+bCovString)
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -1043,18 +1053,23 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
+                maxRoundTau0=self.maxRound(I_0CovString)
+                maxRoundI0=self.maxRound(tau_0CovString)
+                maxRoundTau1=self.maxRound(tau_1CovString)
+                maxRoundalpha=self.maxRound(alphaCovString)
+                self.tauParameter.setText(str(round(I0_opt, maxRoundTau0))+" ± "+I_0CovString)
                 if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString)
+                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
                 else:
-                    self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
                 if tau_1CovString=="nan":
-                    self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString)
+                    self.thirdParameter.setText(str(round(tau1_opt, maxRoundTau1))+" "+self.units+" ± "+tau_1CovString)
                 else:
-                    self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString+self.units)
-                self.fourthParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
+                    self.thirdParameter.setText(str(round(tau1_opt, maxRoundTau1))+" "+self.units+" ± "+tau_1CovString+self.units)
+                self.fourthParameter.setText(str(round(alpha_opt, maxRoundalpha))+" ± "+alphaCovString)
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
-        except:
+        except NameError as e:
+            print(e)
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
             message_box.setText("The parameters for the graph could not be determined.")
@@ -1083,6 +1098,32 @@ class FLIMGraphic():
     #Double Exponential Function
     def double_Exponential(self,t, I0, tau0, tau1, alpha): 
         return I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))
+
+    #Function to get the maximum number of decimal numbers from sd (Standard Deviation)
+    
+    def maxRound(self,string):
+        try:
+            num = float(string)
+            
+            if '.' not in string and 'e' not in string:
+                return 3
+            
+            parts = re.split('[eE]', string)
+            base = parts[0]
+            if '.' in base:
+                base_decimals = len(base.split('.')[1])
+            else:
+                base_decimals = 0
+            if len(parts) > 1:
+                exponent = int(parts[1])
+                total_decimals = max(0, base_decimals - exponent)
+            else:
+                total_decimals = base_decimals
+            
+            return total_decimals
+        except:
+            return 3
+    
 
     #Function to get the string of the pcov numbers
     
