@@ -484,37 +484,37 @@ class FLIMGraphic():
     def changeFunction(self):
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
+                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
             else:
-                self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1]))
+                self.i0Parameter.setText(str(self.FitParameters[1]))
+                self.tauParameter.setText(str(self.FitParameters[0]))
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" Cov: "+self.FitCov[2])
+                self.i0Parameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[0]+self.units)
+                self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
                 self.tauParameter.setText(str(self.FitParameters[1]))
                 self.thirdParameter.setText(str(self.FitParameters[2]))
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" Cov: "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" Cov: "+self.FitCov[2])
-                self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
+                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
+                self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
+                self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
             else:
-                self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1]))
+                self.i0Parameter.setText(str(self.FitParameters[1]))
+                self.tauParameter.setText(str(self.FitParameters[0]))
                 self.thirdParameter.setText(str(self.FitParameters[2]))
                 self.fourthParameter.setText(str(self.FitParameters[3]))
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" Cov: "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units+" Cov: "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" Cov: "+self.FitCov[2])
-                self.fourthParameter.setText(str(self.FitParameters[3])+" Cov: "+self.FitCov[3])
+                self.i0Parameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[1])
+                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units+" ± "+self.FitCov[0]+self.units)
+                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2]+self.units)
+                self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
                 self.tauParameter.setText(str(self.FitParameters[1]))
@@ -643,8 +643,8 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" Cov: "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" Cov: "+tau_0CovString)
+                self.tauParameter.setText(str(round(I0_opt,3))+" ± "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt,3))+" "+self.units+" ± "+tau_0CovString+self.units)
             return I0_opt, tau0_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -692,9 +692,9 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" Cov: "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt,3))+" Cov: "+tau_0CovString)
-                self.thirdParameter.setText(str(round(beta_opt,3))+" Cov: "+betaCovString)
+                self.tauParameter.setText(str(round(I0_opt,3))+" "+self.units+" ± "+I_0CovString+self.units)
+                self.i0Parameter.setText(str(round(tau0_opt,3))+" ± "+tau_0CovString)
+                self.thirdParameter.setText(str(round(beta_opt,3))+" ± "+betaCovString)
             return I0_opt, tau0_opt, beta_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -895,10 +895,10 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3))+" Cov: "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" Cov: "+tau_0CovString)
-                self.thirdParameter.setText(str(round(alpha_opt, 3))+" Cov: "+alphaCovString)
-                self.fourthParameter.setText(str(round(b_opt, 3))+" Cov: "+bCovString)
+                self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                self.thirdParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
+                self.fourthParameter.setText(str(round(b_opt, 3))+" ± "+bCovString)
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
             message_box = QMessageBox(self.mainWindow)
@@ -952,10 +952,10 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
-                self.tauParameter.setText(str(round(I0_opt, 3))+" Cov: "+I_0CovString)
-                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" Cov: "+tau_0CovString)
-                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" Cov: "+tau_1CovString)
-                self.fourthParameter.setText(str(round(alpha_opt, 3))+" Cov: "+alphaCovString)
+                self.tauParameter.setText(str(round(I0_opt, 3))+" ± "+I_0CovString)
+                self.i0Parameter.setText(str(round(tau0_opt, 3))+" "+self.units+" ± "+tau_0CovString+self.units)
+                self.thirdParameter.setText(str(round(tau1_opt, 3))+" "+self.units+" ± "+tau_1CovString+self.units)
+                self.fourthParameter.setText(str(round(alpha_opt, 3))+" ± "+alphaCovString)
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             message_box = QMessageBox(self.mainWindow)

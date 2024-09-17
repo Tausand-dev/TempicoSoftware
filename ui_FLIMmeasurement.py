@@ -311,7 +311,7 @@ class UiFLIM(object):
 
         self.functionComboBox = QComboBox(self.functionFrame)
         self.functionComboBox.setObjectName(u"functionComboBox")
-        self.functionsFit = ["Exponential","Kohlrausch","Shifted exponencial","Double exponencial"]
+        self.functionsFit = ["Exponential","Kohlrausch","Shifted exponential","Double exponential"]
         self.functionComboBox.addItems(self.functionsFit)
 
         self.horizontalLayout_9.addWidget(self.functionComboBox)
@@ -657,13 +657,13 @@ class UiFLIM(object):
             self.thirdParameterValue.setText("Undefined")
             self.fourthParameterLabel.setText("")
             self.fourthParameterValue.setText("")
-        elif self.functionComboBox.currentText()=="Shifted exponencial":
+        elif self.functionComboBox.currentText()=="Shifted exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t+\alpha}{\tau_0}}+b$')
             self.thirdParameterLabel.setText("α:")
             self.thirdParameterValue.setText("Undefined")
             self.fourthParameterLabel.setText("b:")
             self.fourthParameterValue.setText("Undefined")
-        elif self.functionComboBox.currentText()=="Double exponencial":
+        elif self.functionComboBox.currentText()=="Double exponential":
             self.set_latex_to_label(r'$I_0(\alpha e^{\frac{-t}{\tau_0}}+(1-\alpha)e^{\frac{-t}{\tau_1}})$')
             self.thirdParameterLabel.setText("τ<sub>1<\sub>:")
             self.thirdParameterValue.setText("Undefined")
