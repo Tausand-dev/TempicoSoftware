@@ -491,8 +491,8 @@ class FLIMGraphic():
                 self.tauParameter.setText(str(self.FitParameters[0]))
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[0]+self.units)
+                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
                 self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
@@ -511,8 +511,8 @@ class FLIMGraphic():
                 self.fourthParameter.setText(str(self.FitParameters[3]))
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[1])
-                self.tauParameter.setText(str(self.FitParameters[1])+" "+self.units+" ± "+self.FitCov[0]+self.units)
+                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                self.tauParameter.setText(str(self.FitParameters[0])+" "+" ± "+self.FitCov[0])
                 self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2]+self.units)
                 self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
             else:
@@ -553,7 +553,7 @@ class FLIMGraphic():
                         self.FitParameters[1]=round(tau0,3)
                         self.FitParameters[2]=round(beta,3)
                     
-                elif self.functionComboBox.currentText()=="Shifted exponencial":
+                elif self.functionComboBox.currentText()=="Shifted exponential":
                     i0,tau0,alpha,b=self.fitShiiftedExponential(self.measuredTime,self.measuredData)
                     if i0=="Undefined" or str(i0)=='nan':
                         self.currentFit=""
@@ -565,7 +565,7 @@ class FLIMGraphic():
                         self.FitParameters[2]=round(alpha,3)
                         self.FitParameters[3]=round(b,3)
                         
-                elif self.functionComboBox.currentText()=="Double exponencial":
+                elif self.functionComboBox.currentText()=="Double exponential":
                     i0,tau0,tau1,alpha=self.fitDoubleExponential(self.measuredTime,self.measuredData)
                     if i0=="Undefined" or str(i0)=='nan':
                         self.currentFit=""
@@ -588,21 +588,23 @@ class FLIMGraphic():
                     
     #Reset the labels when a measurement begins
     def resetParametersLabels(self):
-        if self.currentFit=="DoubleExponential":
+        self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
+        self.currentFit=""
+        if self.functionComboBox.currentText()=="Double exponential":
             self.tauParameter.setText("Undefined")
             self.i0Parameter.setText("Undefined")
             self.thirdParameter.setText("Undefined")
             self.fourthParameter.setText("Undefined")
-        elif self.currentFit=="ShiftedExponential":
+        elif self.functionComboBox.currentText()=="Shifted exponential":
             self.tauParameter.setText("Undefined")
             self.i0Parameter.setText("Undefined")
             self.thirdParameter.setText("Undefined")
             self.fourthParameter.setText("Undefined")
-        elif self.currentFit=="fitKohlrausch":
+        elif self.functionComboBox.currentText()=="Kohlrausch":
             self.tauParameter.setText("Undefined")
             self.i0Parameter.setText("Undefined")
             self.thirdParameter.setText("Undefined")
-        elif self.currentFit=="ExpDecay":
+        elif self.functionComboBox.currentText()=="Exponential":
             self.tauParameter.setText("Undefined")
             self.i0Parameter.setText("Undefined")
             
