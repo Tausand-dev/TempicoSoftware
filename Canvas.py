@@ -37,7 +37,7 @@ from ui_settings import Ui_settings
 
 #Create graphic design#
 class Canvas():
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow, *args, **kwargs):
+    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
         super().__init__()
         #Disconnect button
         self.disconnectButton= disconnect
@@ -124,6 +124,21 @@ class Canvas():
         
         #Sentinel thread worker thread created
         self.threadCreatedSentinel=False
+        #get the value of the status Bar
+        self.statusValue=statusValue
+        self.statusPoint=statusPoint
+        #Check if the zoom is not changed
+        self.sentinelZoomChangedA=0 
+        self.sentinelZoomChangedB=0
+        self.sentinelZoomChangedC=0
+        self.sentinelZoomChangedD=0
+        #Check if the zoom is in code
+        self.zoomCodeA=False
+        self.zoomCodeB=False
+        self.zoomCodeC=False
+        self.zoomCodeD=False
+        #Check if the device take a measurement before
+        self.beforeMeasurement=False
         
 
 
@@ -182,7 +197,7 @@ class Canvas():
             self.curveA=self.plotA.plot(self.binsA, self.histA, stepMode=True, fillLevel=0, brush=(0, 0, 255, 150),name="ChannelA (Blue)")
             self.setinelSaveA=True
             self.viewBoxA=self.plotA.getViewBox()
-            self.viewBoxA.sigRangeChanged.connect(self.zoom_changedA)
+            self.signalConnected =self.plotA.sigRangeChanged.connect(self.zoom_changedA)
             
 
         if self.checkB.isChecked():
@@ -201,6 +216,7 @@ class Canvas():
                 self.plotB.setLabel('bottom', 'Start-stop time (ms)')
             self.plotB.setMouseEnabled(x=True, y=False)
             self.plotB.disableAutoRange(axis=pg.ViewBox.XAxis)
+            self.zoomCodeB=True
             self.plotB.setXRange(0,5)
             self.clear_channel_B.setEnabled(True)
             widgets.append(self.winB)
@@ -226,6 +242,7 @@ class Canvas():
                 self.plotC.setLabel('bottom', 'Start-stop time (ms)')
             self.plotC.setMouseEnabled(x=True, y=False)
             self.plotC.disableAutoRange(axis=pg.ViewBox.XAxis)
+            self.zoomCodeC=True
             self.plotC.setXRange(0,5)
             self.clear_channel_C.setEnabled(True)
             widgets.append(self.winC)
@@ -251,6 +268,7 @@ class Canvas():
                 self.plotD.setLabel('bottom', 'Start-stop time (ms)')
             self.plotD.setMouseEnabled(x=True, y=False)
             self.plotD.disableAutoRange(axis=pg.ViewBox.XAxis)
+            self.zoomCodeD=True
             self.plotD.setXRange(0,5)
             self.clear_channel_D.setEnabled(True)
             widgets.append(self.winD)
@@ -290,6 +308,10 @@ class Canvas():
         self.worker.dataSignal.connect(self.updateSignal)
         self.worker.threadCreated.connect(self.threadRunning)
         self.worker.dialogInit.connect(self.createDialog)
+        self.worker.colorValue.connect(self.changeColorThread)
+        self.worker.stringValue.connect(self.changeStatusThread)
+        self.worker.dialogSignal.connect(self.dialogChangeMode)
+        self.worker.newMaxValueSignal.connect(self.changeZoomMax)
         self.worker.start()
         
     
@@ -312,10 +334,16 @@ class Canvas():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.sentinelZoomChangedA=0
+            self.sentinelZoomChangedB=0
+            self.sentinelZoomChangedC=0
+            self.sentinelZoomChangedD=0
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.disconnectButton.setEnabled(False)
             self.currentmeasurement=True
             self.create_graphs()
+            self.statusValue.setText("Measurement running")
+            self.changeStatusColor(1)
             self.stopbutton.setEnabled(True)
             self.startbutton.setEnabled(False)
             self.checkA.setEnabled(False)
@@ -341,6 +369,9 @@ class Canvas():
         if self.threadCreatedSentinel:
             self.worker.stop()
             time.sleep(1)
+        self.beforeMeasurement=True
+        self.statusValue.setText("No measurement running")
+        self.changeStatusColor(0)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.disconnectButton.setEnabled(True)
         self.currentmeasurement=False
@@ -391,19 +422,23 @@ class Canvas():
     def update_histogram(self, data, curve, indexChannel):
         # Calculate the histogram
         if indexChannel=="A":
+            self.zoomCodeA=True
             x_range = self.viewBoxA.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
             binsU = np.linspace(x_min, x_max, num=61)
             
         elif indexChannel == "B":
+            self.zoomCodeB=True
             x_range = self.viewBoxB.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
             binsU = np.linspace(x_min, x_max, num=61)
         elif indexChannel == "C":
+            self.zoomCodeC=True
             x_range = self.viewBoxC.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
             binsU = np.linspace(x_min, x_max, num=61)
         elif indexChannel == "D":
+            self.zoomCodeD=True
             x_range = self.viewBoxD.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
             binsU = np.linspace(x_min, x_max, num=61)
@@ -419,6 +454,11 @@ class Canvas():
     
     
     def zoom_changedA(self):
+        if self.zoomCodeA:
+            print("Zoom de codigo")
+        else:
+            self.sentinelZoomChangedA+=1
+            print("Zoom de usuario")
         # Function called for graphA zoom 
         x_range = self.viewBoxA.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -426,10 +466,20 @@ class Canvas():
         binsA = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histA, _ = np.histogram(self.dataA, bins=binsA)
         self.curveA.setData(binsA, self.histA)  # Update the graphic
+        self.zoomCodeA=False
+        
+    
+    
+        
         
         
     #Change the zoom of the graphic B
     def zoom_changedB(self):
+        if self.zoomCodeB:
+            print("Zoom de codigo")
+        else:
+            self.sentinelZoomChangedB+=1
+            print("Zoom de usuario")
         # Function called for graphB zoom
         x_range = self.viewBoxB.viewRange()[0]   # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]    # Get the max and min current range in the view
@@ -437,10 +487,16 @@ class Canvas():
         binsB = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histB, _ = np.histogram(self.dataB, bins=binsB)
         self.curveB.setData(binsB, self.histB)  # Update the graphic
+        self.zoomCodeB=False
         
     
     #Change the zoom of the graphic C
     def zoom_changedC(self):
+        if self.zoomCodeC:
+            print("Zoom de codigo")
+        else:
+            self.sentinelZoomChangedC+=1
+            print("Zoom de usuario")
         # Function called for graphC zoom
         x_range = self.viewBoxC.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -448,10 +504,16 @@ class Canvas():
         binsC = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histC, _ = np.histogram(self.dataC, bins=binsC)
         self.curveC.setData(binsC, self.histC)  # Update the graphic
+        self.zoomCodeC=False
         
         
     #Change the zoom of the graphic D
     def zoom_changedD(self):
+        if self.zoomCodeD:
+            print("Zoom de codigo")
+        else:
+            self.sentinelZoomChangedD+=1
+            print("Zoom de usuario")
         # Function called for graphD zoom
           
         x_range = self.viewBoxD.viewRange()[0]  # Get current x range in the view
@@ -460,6 +522,7 @@ class Canvas():
         binsD = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histD, _ = np.histogram(self.dataD, bins=binsD)
         self.curveD.setData(binsD, self.histD)  # Update the graphic
+        self.zoomCodeD=False
     
     
     ##--------------##
@@ -697,11 +760,13 @@ class Canvas():
             
         except:
             message_box = QMessageBox(self.parent)
-            message_box.setIcon(QMessageBox.Critical)
-            message_box.setText("The plots could not be saved.")
-            message_box.setWindowTitle("Error saving")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.exec_()
+            message_box.setIcon(QMessageBox.Question)  # Cambiar a un icono de pregunta
+            message_box.setText("Do you want to change the mode?")  # Texto del mensaje
+            message_box.setWindowTitle("Change Mode")  # Título de la ventana
+            message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)  # Botones "Yes" y "No"
+
+            # Ejecutar el cuadro de diálogo y obtener la respuesta
+            response = message_box.exec_()
 
     #Function to connect the Thread with update signal
     def updateSignal(self,value,channel):
@@ -753,6 +818,121 @@ class Canvas():
                 self.device.close()
         except:
             pass
+    
+    #Change the color of status Point
+    #Function to change the color of point measurement
+    def changeStatusColor(self, color):
+        pixmap = QPixmap(self.statusPoint.size())
+        pixmap.fill(Qt.transparent)  
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.Antialiasing) 
+        #Define the colors
+        #Number 0 is for gray
+        #Number 1 is for green
+        #Number 2 is for yellow
+        #Number 3 is for orange
+        if color==0:
+            painter.setBrush(QColor(128, 128, 128))  
+        elif color==1:
+            painter.setBrush(QColor(0, 255, 0))  
+        elif color==2:
+            painter.setBrush(QColor(255, 255, 0))  
+        elif color==3:
+            painter.setBrush(QColor(255, 165, 0))  
+        painter.setPen(Qt.NoPen)
+        point_size = min(self.statusPoint.width(), self.statusPoint.height()) // 2
+        x = (self.statusPoint.width() - point_size) // 2
+        y = (self.statusPoint.height() - point_size) // 2
+        painter.drawEllipse(x, y, point_size, point_size)
+        painter.end()
+        self.statusPoint.setPixmap(pixmap)
+    
+    def changeColorThread(self, color):
+        pixmap = QPixmap(self.statusPoint.size())
+        pixmap.fill(Qt.transparent)  
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.Antialiasing) 
+        #Define the colors
+        #Number 0 is for gray
+        #Number 1 is for green
+        #Number 2 is for yellow
+        #Number 3 is for orange
+        if color==0:
+            painter.setBrush(QColor(128, 128, 128))  
+        elif color==1:
+            painter.setBrush(QColor(0, 255, 0))  
+        elif color==2:
+            painter.setBrush(QColor(255, 255, 0))  
+        elif color==3:
+            painter.setBrush(QColor(255, 165, 0))  
+        painter.setPen(Qt.NoPen)
+        point_size = min(self.statusPoint.width(), self.statusPoint.height()) // 2
+        x = (self.statusPoint.width() - point_size) // 2
+        y = (self.statusPoint.height() - point_size) // 2
+        painter.drawEllipse(x, y, point_size, point_size)
+        painter.end()
+        self.statusPoint.setPixmap(pixmap)
+        
+        
+    
+    def changeStatusThread(self, newText):
+        self.statusValue.setText(newText)
+    
+    def dialogChangeMode(self):
+        message_box = QMessageBox(self.parent)
+        message_box.setIcon(QMessageBox.Question)  
+        message_box.setText("The data collected mostly falls outside the reliable range of mode 1. Would you like to switch to mode 2?")  
+        message_box.setWindowTitle("Change Mode")  
+        message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) 
+        response = message_box.exec_()
+        #Change for all modes
+        if response == QMessageBox.Yes:
+            self.device.ch1.setMode(2)  
+        
+    
+    #Change the maxValue according to max value in the list
+    def changeZoomMax(self, newMaxValue,channel):
+        
+        if channel=='A':
+            if self.beforeMeasurement:
+                if not (self.sentinelZoomChangedA>1):
+                    self.zoomCodeA=True
+                    self.plotA.setXRange(0,newMaxValue)
+            else:
+                if not (self.sentinelZoomChangedA>0):
+                    self.zoomCodeA=True
+                    self.plotA.setXRange(0,newMaxValue)
+                
+        elif channel=='B':
+            if self.beforeMeasurement:
+                if not (self.sentinelZoomChangedB>1):
+                    self.zoomCodeB=True
+                    self.plotB.setXRange(0,newMaxValue)
+            else:
+                if not (self.sentinelZoomChangedB>0):
+                    self.zoomCodeB=True
+                    self.plotB.setXRange(0,newMaxValue)
+        elif channel=='C':
+            if self.beforeMeasurement:
+                if not (self.sentinelZoomChangedC>1):
+                    self.zoomCodeC=True
+                    self.plotC.setXRange(0,newMaxValue)
+            else:
+                if not (self.sentinelZoomChangedC>0):
+                    self.zoomCodeC=True
+                    self.plotC.setXRange(0,newMaxValue)
+                
+        elif channel=='D':
+            if self.beforeMeasurement:
+                if not (self.sentinelZoomChangedD>1):
+                    self.zoomCodeD=True
+                    self.plotD.setXRange(0,newMaxValue)
+            else:
+                if not (self.sentinelZoomChangedD>0):
+                    self.zoomCodeD=True
+                    self.plotD.setXRange(0,newMaxValue)
+                
+        
         
     
     
@@ -764,8 +944,22 @@ class WorkerThreadStartStopHistogram(QThread):
     dataPureSignal=Signal(float,str)
     threadCreated=Signal(int)
     dialogInit=Signal()
+    colorValue=Signal(int)
+    stringValue=Signal(str)
+    dialogSignal=Signal()
+    newMaxValueSignal=Signal(float,str)
+    
+    
     def __init__(self,parent,device,sentinelSaveA,sentinelSaveB,sentinelSaveC,sentinelSaveD):
         super().__init__()
+        self.totalA=0
+        self.outOfRangeA=0
+        self.totalB=0
+        self.outOfRangeB=0
+        self.totalC=0
+        self.outOfRangeC=0
+        self.totalD=0
+        self.outOfRangeD=0
         self.parent=parent
         self.device=device
         self.setinelSaveA=sentinelSaveA
@@ -778,6 +972,11 @@ class WorkerThreadStartStopHistogram(QThread):
         self.device.ch2.enableChannel()
         self.device.ch3.enableChannel()
         self.device.ch4.enableChannel()
+        self.sentinelDialog=False
+        self.currentMaxValueA=0
+        self.currentMaxValueB=0
+        self.currentMaxValueC=0
+        self.currentMaxValueD=0
         
         
         
@@ -807,6 +1006,18 @@ class WorkerThreadStartStopHistogram(QThread):
                     
                     if new_data1 is not None:
                         #Emit data
+                        if self.totalA>10:
+                            ratioValue=self.outOfRangeA/self.totalA
+                            if ratioValue>0.6:
+                                if not self.sentinelDialog:
+                                    self.dialogSignal.emit()
+                                    self.sentinelDialog=True
+                                self.colorValue.emit(3)
+                                self.stringValue.emit("Change A Mode")
+                            else:
+                                self.colorValue.emit(1)
+                                self.stringValue.emit("Measurement running")
+                                
                         self.dataSignal.emit(new_data1,"A")
                         
                     
@@ -876,7 +1087,25 @@ class WorkerThreadStartStopHistogram(QThread):
                     if channel.getMode()==2:
                         miliseconds_measurement=average_measurement/(10**9)
                     else:
-                        miliseconds_measurement=average_measurement/(10**3)    
+                        if average_measurement>500000:
+                            self.outOfRangeA+=1
+                        miliseconds_measurement=average_measurement/(10**3) 
+                    
+                    #Change the histogram range according to max Value
+                    if channelIndex=='A' and miliseconds_measurement>self.currentMaxValueA:
+                        self.currentMaxValueA=miliseconds_measurement
+                        self.newMaxValueSignal.emit(miliseconds_measurement,'A')
+                    elif channelIndex=='B' and miliseconds_measurement>self.currentMaxValueB:
+                        self.currentMaxValueB=miliseconds_measurement
+                        self.newMaxValueSignal.emit(miliseconds_measurement,'B')
+                    elif channelIndex=='C' and miliseconds_measurement>self.currentMaxValueC:
+                        self.currentMaxValueC=miliseconds_measurement
+                        self.newMaxValueSignal.emit(miliseconds_measurement,'C')
+                    elif channelIndex=='D' and miliseconds_measurement>self.currentMaxValueD:
+                        self.currentMaxValueC=miliseconds_measurement
+                        self.newMaxValueSignal.emit(miliseconds_measurement,'D')
+                        
+                    self.totalA+=1    
                     self.dataPureSignal.emit(round(average_measurement),channelIndex)
                     return miliseconds_measurement
                 else:
@@ -889,6 +1118,7 @@ class WorkerThreadStartStopHistogram(QThread):
     def stop(self):
         self.threadCreated.emit(1)
         self.itsRunning=False
+    
         
         
         

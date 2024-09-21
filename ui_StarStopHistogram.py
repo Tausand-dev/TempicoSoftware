@@ -269,14 +269,28 @@ class Ui_HistogramaStartStop(object):
 
         self.horizontalLayout.addWidget(self.GraphConfigurationArea)
         
+        #Add the total widget
+        self.TotalGraphicArea= QWidget(HistogramaStartStop)
+        self.TotalGraphicArea.setObjectName(u"TotalGraphicArea")
+        self.TotalGraphicArea.setEnabled(True)
 
-        self.GraphicArea = QWidget(HistogramaStartStop)
-        self.GraphicArea.setObjectName(u"GraphicArea")
+        #Add size policy
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy4.setHorizontalStretch(7)
         sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.GraphicArea.sizePolicy().hasHeightForWidth())
-        self.GraphicArea.setSizePolicy(sizePolicy4)
+        sizePolicy4.setHeightForWidth(self.TotalGraphicArea.sizePolicy().hasHeightForWidth())
+        self.TotalGraphicArea.setSizePolicy(sizePolicy4)
+        self.verticalLayoutGraph=QVBoxLayout(self.TotalGraphicArea)
+        self.verticalLayoutGraph.setObjectName(u"verticalLayoutGraph")
+        
+        
+        self.GraphicArea = QWidget(self.TotalGraphicArea)
+        self.GraphicArea.setObjectName(u"GraphicArea")
+        sizePolicy51 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy51.setHorizontalStretch(7)
+        sizePolicy51.setVerticalStretch(95)
+        sizePolicy51.setHeightForWidth(self.GraphicArea.sizePolicy().hasHeightForWidth())
+        self.GraphicArea.setSizePolicy(sizePolicy51)
         self.GraphicArea.setAutoFillBackground(True)
         self.gridLayout = QGridLayout(self.GraphicArea)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -289,8 +303,64 @@ class Ui_HistogramaStartStop(object):
         self.Graph3.setSizePolicy(sizePolicy5)
         self.Graph3.setFrameShape(QFrame.StyledPanel)
         self.Graph3.setFrameShadow(QFrame.Plain)
-        self.gridLayout.addWidget(self.Graph3, 2, 0, 1, 1)        
-        self.horizontalLayout.addWidget(self.GraphicArea)
+        self.gridLayout.addWidget(self.Graph3, 2, 0, 1, 1)  
+        self.verticalLayoutGraph.addWidget(self.GraphicArea)
+        
+        
+        #add status Label
+        
+        
+        self.widgetStatus = QWidget(self.TotalGraphicArea)
+        self.widgetStatus.setObjectName(u"widgetStatus")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(5)
+        sizePolicy7.setHeightForWidth(self.widgetStatus.sizePolicy().hasHeightForWidth())
+        self.widgetStatus.setSizePolicy(sizePolicy7)
+        self.verticalLayout_9 = QVBoxLayout(self.widgetStatus)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.statusFrame = QFrame(self.widgetStatus)
+        self.statusFrame.setObjectName(u"statusFrame")
+        self.statusFrame.setFrameShape(QFrame.Panel)
+        self.statusFrame.setFrameShadow(QFrame.Sunken)
+        self.horizontalLayout_15 = QHBoxLayout(self.statusFrame)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.statusLabel = QLabel(self.statusFrame)
+        self.statusLabel.setObjectName(u"statusLabel")
+        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy8.setHorizontalStretch(45)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.statusLabel.sizePolicy().hasHeightForWidth())
+        self.statusLabel.setSizePolicy(sizePolicy8)
+
+        self.horizontalLayout_15.addWidget(self.statusLabel)
+
+        self.valueStatusLabel = QLabel(self.statusFrame)
+        self.valueStatusLabel.setObjectName(u"valueStatusLabel")
+        sizePolicy8.setHeightForWidth(self.valueStatusLabel.sizePolicy().hasHeightForWidth())
+        self.valueStatusLabel.setSizePolicy(sizePolicy8)
+
+        self.horizontalLayout_15.addWidget(self.valueStatusLabel)
+
+        self.pointLabel = QLabel(self.statusFrame)
+        self.pointLabel.setObjectName(u"pointLabel")
+        sizePolicy9 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy9.setHorizontalStretch(5)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.pointLabel.sizePolicy().hasHeightForWidth())
+        self.pointLabel.setSizePolicy(sizePolicy9)
+
+        self.horizontalLayout_15.addWidget(self.pointLabel)
+
+
+        self.verticalLayout_9.addWidget(self.statusFrame)
+
+
+        self.verticalLayoutGraph.addWidget(self.widgetStatus)
+        
+        #End Status Label      
+        self.horizontalLayout.addWidget(self.TotalGraphicArea)
+        
         self.retranslateUi(HistogramaStartStop)
         QMetaObject.connectSlotsByName(HistogramaStartStop)
         self.ClearchannelA.setEnabled(False)
@@ -305,6 +375,7 @@ class Ui_HistogramaStartStop(object):
         self.Channel2Graph1.setEnabled(False)
         self.Channel3Graph1.setEnabled(False)
         self.Channel4Graph1.setEnabled(False)
+        self.drawColorPoint()
     # setupUi
     #Start the animation    
 
@@ -329,10 +400,33 @@ class Ui_HistogramaStartStop(object):
         self.ClearchannelB.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear B", None))
         self.ClearchannelC.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear C", None))
         self.ClearchannelD.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear D", None))
+        self.statusLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"Status:", None))
+        self.valueStatusLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"No measurement running", None))
+        self.pointLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"", None))
+        
         
     # retranslateUi
 
 #Create graphic design#
+    def drawColorPoint(self):
+            pixmap = QPixmap(self.pointLabel.size())
+            pixmap.fill(Qt.transparent)  
+
+            painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.Antialiasing) 
+            painter.setBrush(QColor(128, 128, 128))  
+            painter.setPen(Qt.NoPen)
+
+            # Definir el tamaño del punto (círculo)
+            point_size = min(self.pointLabel.width(), self.pointLabel.height()) // 2
+
+            # Calcular la posición del círculo para que quede centrado
+            x = (self.pointLabel.width() - point_size) // 2
+            y = (self.pointLabel.height() - point_size) // 2
+
+            painter.drawEllipse(x, y, point_size, point_size)
+            painter.end()
+            self.pointLabel.setPixmap(pixmap)
 
 
 
