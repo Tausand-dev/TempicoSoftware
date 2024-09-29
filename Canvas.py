@@ -1050,7 +1050,8 @@ class WorkerThreadStartStopHistogram(QThread):
                         self.dataSignal.emit(new_data4,"D")
                         
                         
-        except:
+        except NameError as e:
+            print(e)
             self.dialogInit.emit()
             self.stop()
              
@@ -1063,6 +1064,7 @@ class WorkerThreadStartStopHistogram(QThread):
     def getNewData(self,channel,channelIndex,stopNumber):
         
         measurements=self.device.measure()
+        
         
         if len(measurements)!=0:
             if len(measurements[0])!=0:
