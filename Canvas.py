@@ -1012,7 +1012,6 @@ class Canvas():
             else:
                 if not (self.sentinelZoomChangedD>0):
                     self.zoomCodeD=True
-                    print("Se ejecuta")
                     self.plotD.setXRange(0,newMaxValue)
                 
     #auto range beetween 0 and max of Data the graphic with autorange button
@@ -1098,6 +1097,19 @@ class WorkerThreadStartStopHistogram(QThread):
         self.openDialog=False
         #List of channels to change
         self.channelsToChange=[]
+        #sentinel for the starts
+        self.totalStarts=0
+        #List of channels witouth measurement
+        self.channelsNM=[]
+        #String with the state of the device
+        self.currentState=""
+        #String with NM
+        self.currentNM=""
+        #Sentinels to know if there is not a measurement
+        self.noMeasurementA=0
+        self.noMeasurementB=0
+        self.noMeasurementC=0
+        self.noMeasurementD=0
 
 
         
@@ -1153,6 +1165,11 @@ class WorkerThreadStartStopHistogram(QThread):
                         else:
                         #Emit data
                             self.dataSignal.emit(new_data1,"A")
+                    else:
+                        if self.noMeasurementA>2 and ('A' not in self.channelsNM):
+                            self.channelsNM.append('A')
+                        elif 'A' in self.channelsNM and self.noMeasurementA==0:
+                            self.channelsNM.remove('A')
                         
                     
             
@@ -1188,6 +1205,14 @@ class WorkerThreadStartStopHistogram(QThread):
                         else:
                             self.dataSignal.emit(new_data2,"B")
 
+                    else:
+                        if self.noMeasurementB>2 and ('B' not in self.channelsNM):
+                            self.channelsNM.append('B')
+                        elif 'B' in self.channelsNM and self.noMeasurementB==0:
+                            self.channelsNM.remove('B')
+                            
+                    
+
 
 
             #Get the update of graph C
@@ -1222,6 +1247,14 @@ class WorkerThreadStartStopHistogram(QThread):
                         #Emit data
                         else:
                             self.dataSignal.emit(new_data3,"C")
+
+                    else:
+                        if self.noMeasurementC>2 and ('C' not in self.channelsNM):
+                            self.channelsNM.append('C')
+                        elif 'C' in self.channelsNM and self.noMeasurementC==0:
+                            self.channelsNM.remove('C')
+                    
+                    
             
             
             #Get the update of graph D
@@ -1256,6 +1289,13 @@ class WorkerThreadStartStopHistogram(QThread):
                         #Emit data
                         else:
                             self.dataSignal.emit(new_data4,"D")
+
+                    else:
+                        if self.noMeasurementD>2 and ('D' not in self.channelsNM):
+                            self.channelsNM.append('D')
+                        elif 'D' in self.channelsNM and self.noMeasurementD==0:
+                            self.channelsNM.remove('D')
+                    
             
             if len(self.channelsToChange)>0:
                 stringEmit="Consider changing mode of the channels:"
@@ -1264,12 +1304,29 @@ class WorkerThreadStartStopHistogram(QThread):
                         stringEmit+=" "+self.channelsToChange[i]
                     else:
                         stringEmit+=", "+self.channelsToChange[i]
+                self.currentState= stringEmit
                 self.colorValue.emit(3)
-                self.stringValue.emit(stringEmit)
-            else:
+                self.stringValue.emit(self.currentState)
+            
+                
+            if len(self.channelsNM)>0:
+                stringEmit="NM: "
+                for i in range(len(self.channelsNM)):
+                    if i==0:
+                        stringEmit+=" "+self.channelsNM[i] 
+                    else:
+                        stringEmit+=", "+self.channelsNM[i] 
+                self.currentNM=stringEmit
+                emitStringProblems=self.currentState+" "+self.currentNM
+                self.colorValue.emit(3)
+                self.stringValue.emit(emitStringProblems)
+
+            if len(self.channelsToChange)==0:
+                self.currentState=""
+
+            if len(self.channelsNM)==0 and len(self.channelsToChange)==0:
                 self.colorValue.emit(1)
                 self.stringValue.emit("Measurement running")        
-
                 
                 
 
@@ -1293,17 +1350,27 @@ class WorkerThreadStartStopHistogram(QThread):
     def getNewData(self,channel,channelIndex,stopNumber):
         
         measurements=self.device.measure()
+        if len(measurements)==0:
+            number_runs=self.device.getNumberOfRuns()
+            self.totalStarts+=number_runs
         
+
         if len(measurements)!=0:
             if len(measurements[0])!=0:
+                self.totalStarts=0
+                
                 number_runs=self.device.getNumberOfRuns()
                 if channelIndex=="A":
+                    self.noMeasurementA+=1
                     index_measurement=0    
                 elif channelIndex=="B":
+                    self.noMeasurementB+=1
                     index_measurement=number_runs
                 elif channelIndex=="C":
+                    self.noMeasurementC+=1
                     index_measurement=number_runs*2
                 elif channelIndex=="D":
+                    self.noMeasurementD+=1
                     index_measurement=number_runs*3
                     
                 total_measurement=0
@@ -1313,6 +1380,14 @@ class WorkerThreadStartStopHistogram(QThread):
                         total_measurement+=measurements[i+index_measurement][3+stopNumber]
                         total_points+=1
                 if total_points!=0:    
+                    if channelIndex=='A':
+                        self.noMeasurementA=0
+                    elif channelIndex=='B':
+                        self.noMeasurementB=0
+                    elif channelIndex=='C':
+                        self.noMeasurementC=0
+                    elif channelIndex=='D':
+                        self.noMeasurementD=0
                     average_measurement=total_measurement/total_points
                     if channel.getMode()==2:
                         miliseconds_measurement=average_measurement/(10**9)
