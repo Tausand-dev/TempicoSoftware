@@ -288,6 +288,7 @@ class Canvas():
             self.setinelSaveD=True
             self.viewBoxD=self.plotD.getViewBox()
             self.plotD.sigRangeChanged.connect(self.zoom_changedD)
+            #Button autorange
             self.autoRangeButtonD=self.plotD.autoBtn
             self.autoRangeButtonD.clicked.disconnect()
             self.autoRangeButtonD.clicked.connect(self.autoRangeD)
