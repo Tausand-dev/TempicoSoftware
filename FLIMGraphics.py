@@ -485,14 +485,24 @@ class FLIMGraphic():
     def changeFunction(self):
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                #Check the first cov parameter with units
+                if self.FitCov[1]!='nan':
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                else:
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+                ####################
                 self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[1]))
                 self.tauParameter.setText(str(self.FitParameters[0]))
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                #Check the first cov parameter with units
+                if self.FitCov[1]!='nan':
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                else:
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+                ####################
                 self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
                 self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
             else:
@@ -501,7 +511,12 @@ class FLIMGraphic():
                 self.thirdParameter.setText(str(self.FitParameters[2]))
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                #Check the first cov parameter with units
+                if self.FitCov[1]!='nan':
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                else:
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+                ####################
                 self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
                 self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
                 self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
@@ -512,9 +527,20 @@ class FLIMGraphic():
                 self.fourthParameter.setText(str(self.FitParameters[3]))
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
             if self.FitParameters[0]!="Undefined":
-                self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                #Check the first cov parameter with units
+                if self.FitCov[1]!='nan':
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
+                else:
+                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+                ####################
                 self.tauParameter.setText(str(self.FitParameters[0])+" "+" ± "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2]+self.units)
+                #Check the second cov parameter with units
+                if self.FitCov[2]!='nan':
+                    self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2]+self.units)
+                else:
+                    self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2])
+                ####################
+
                 self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
             else:
                 self.i0Parameter.setText(str(self.FitParameters[0]))
@@ -618,8 +644,11 @@ class FLIMGraphic():
             popt, pcov = curve_fit(self.exp_decay, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0 and tau0
             I0_opt, tau0_opt = popt
-            yFit = self.exp_decay(xData, I0_opt, tau0_opt)
             self.xDataFitCopy=xData
+            yFit=[]
+            for i in xData:
+                value=self.exp_decay(i, I0_opt, tau0_opt)
+                yFit.append(value)
             self.yDataFitCopy=yFit
             try:
                 I_0Cov=np.sqrt(pcov[0][0])
@@ -639,14 +668,12 @@ class FLIMGraphic():
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"         
-            print("Covariance parameters")
-            print("Covariance I_0")
-            print(I_0CovString)
-            print("Covariance tau_0")
-            print(tau_0CovString) 
+            print(I_0Cov)
+            print(tau_0Cov)
             #Graphic of the fit curve
             self.curveFit.setData(xData,yFit)
             if str(I0_opt)=='nan':
+                self.curveFit.setData([],[])
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Warning)
                 message_box.setText("The parameters for the graph could not be determined.")
@@ -663,6 +690,7 @@ class FLIMGraphic():
                     self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
             return I0_opt, tau0_opt
         except:
+            self.curveFit.setData([],[])
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
             message_box.setText("The parameters for the graph could not be determined.")
@@ -681,7 +709,10 @@ class FLIMGraphic():
             popt, pcov = curve_fit(self.kohl_decay, xData, yData, p0=initial_guess)
             # Extracting the optimal values of I0 and tau0
             I0_opt, tau0_opt, beta_opt = popt
-            yFit = self.kohl_decay(xData, I0_opt, tau0_opt,beta_opt)
+            yFit=[]
+            for i in xData:
+                value=self.kohl_decay(i, I0_opt, tau0_opt,beta_opt)
+                yFit.append(value)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
@@ -718,6 +749,7 @@ class FLIMGraphic():
             #Graphic of the fit curve
             self.curveFit.setData(xData,yFit)
             if str(I0_opt)=='nan':
+                self.curveFit.setData([],[])
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Warning)
                 message_box.setText("The parameters for the graph could not be determined.")
@@ -736,6 +768,7 @@ class FLIMGraphic():
                 self.thirdParameter.setText(str(round(beta_opt,maxRoundBeta))+" ± "+betaCovString)
             return I0_opt, tau0_opt, beta_opt
         except:
+            self.curveFit.setData([],[])
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
             message_box.setText("The parameters for the graph could not be determined.")
@@ -902,7 +935,10 @@ class FLIMGraphic():
             # Extracting the optimal values of I0, tau0, alpha, and b
             I0_opt, tau0_opt, alpha_opt, b_opt = popt
             # Calculate the fitted curve
-            yFit = self.shifted_decay_function(xData, I0_opt, tau0_opt, alpha_opt, b_opt)
+            yFit=[]
+            for i in xData:
+                value=self.shifted_decay_function(i, I0_opt, tau0_opt, alpha_opt, b_opt)
+                yFit.append(value)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
@@ -953,6 +989,7 @@ class FLIMGraphic():
             self.curveFit.setData(xData, yFit)
             # Set the fitted parameters in the UI
             if str(I0_opt)=='nan':
+                self.curveFit.setData([],[])
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Warning)
                 message_box.setText("The parameters for the graph could not be determined.")
@@ -973,6 +1010,7 @@ class FLIMGraphic():
                 self.fourthParameter.setText(str(round(b_opt, maxRoundB))+" ± "+bCovString)
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
+            self.curveFit.setData([],[])
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
             message_box.setText("The parameters for the graph could not be determined.")
@@ -992,7 +1030,10 @@ class FLIMGraphic():
             # Extracting the optimal values of I0, tau0, alpha, and b
             I0_opt, tau0_opt, tau1_opt, alpha_opt = popt
             # Calculate the fitted curve
-            yFit = self.double_Exponential(xData, I0_opt, tau0_opt, tau1_opt, alpha_opt)
+            yFit=[]
+            for i in xData:
+                value=self.double_Exponential(i, I0_opt, tau0_opt, tau1_opt, alpha_opt)
+                yFit.append(value)
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
@@ -1046,6 +1087,7 @@ class FLIMGraphic():
             self.curveFit.setData(xData, yFit)
             # Set the fitted parameters in the UI
             if str(I0_opt)=='nan':
+                self.curveFit.setData([],[])
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Warning)
                 message_box.setText("The parameters for the graph could not be determined.")
@@ -1068,8 +1110,8 @@ class FLIMGraphic():
                     self.thirdParameter.setText(str(round(tau1_opt, maxRoundTau1))+" "+self.units+" ± "+tau_1CovString+self.units)
                 self.fourthParameter.setText(str(round(alpha_opt, maxRoundalpha))+" ± "+alphaCovString)
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
-        except NameError as e:
-            print(e)
+        except:
+            self.curveFit.setData([],[])
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Warning)
             message_box.setText("The parameters for the graph could not be determined.")
