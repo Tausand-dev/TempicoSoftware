@@ -158,7 +158,10 @@ class Canvas():
         self.dataB=[]
         self.dataC=[]
         self.dataD=[]
-        
+        self.datapureA=[]
+        self.datapureB=[]
+        self.datapureC=[]
+        self.datapureD=[]
         # Create a list with the selected widgets
         widgets = []
         
@@ -438,6 +441,7 @@ class Canvas():
             x_range = self.viewBoxA.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
             binsU = np.linspace(x_min, x_max, num=61)
+            
             
         elif indexChannel == "B":
             self.zoomCodeB=True
@@ -908,6 +912,7 @@ class Canvas():
                 for i in range(len(self.datapureA)):
                     temporalDataA.append(self.datapureA[i]/(10**9))
                 self.dataA=temporalDataA
+                self.update_histogram(self.dataA,self.curveA,"A")
                 maxValue=max(self.dataA)
                 self.zoomCodeA=True
                 self.changeZoomMax(maxValue,'A')
@@ -919,7 +924,9 @@ class Canvas():
                 temporalDataB=[]
                 for i in range(len(self.datapureB)):
                     temporalDataB.append(self.datapureB[i]/(10**9))
+                self.dataB=[]
                 self.dataB=temporalDataB
+                self.update_histogram(self.dataB,self.curveB,"B")
                 maxValue=max(self.dataB)
                 self.zoomCodeB=True
                 self.changeZoomMax(maxValue,'B')
@@ -931,6 +938,7 @@ class Canvas():
                 for i in range(len(self.datapureC)):
                     temporalDataC.append(self.datapureC[i]/(10**9))
                 self.dataC=temporalDataC
+                self.update_histogram(self.dataC,self.curveC,"C")
                 maxValue=max(self.dataC)
                 self.zoomCodeC=True
                 self.changeZoomMax(maxValue,'C')
@@ -942,6 +950,7 @@ class Canvas():
                 for i in range(len(self.datapureD)):
                     temporalDataD.append(self.datapureD[i]/(10**9))
                 self.dataD=temporalDataD
+                self.update_histogram(self.dataD,self.curveD,"D")
                 maxValue=max(self.dataD)
                 self.zoomCodeD=True
                 self.changeZoomMax(maxValue,'D')
@@ -1003,6 +1012,7 @@ class Canvas():
             else:
                 if not (self.sentinelZoomChangedD>0):
                     self.zoomCodeD=True
+                    print("Se ejecuta")
                     self.plotD.setXRange(0,newMaxValue)
                 
     #auto range beetween 0 and max of Data the graphic with autorange button
@@ -1131,7 +1141,10 @@ class WorkerThreadStartStopHistogram(QThread):
                                         time.sleep(1)
                                     if self.device.ch1.getMode()==1:
                                         self.dataSignal.emit(new_data1,"A")
-
+                                    else:
+                                        self.outOfRangeA=0
+                                else:
+                                    self.dataSignal.emit(new_data1,"A")
                             else:
                                 self.dataSignal.emit(new_data1,"A")
                                 if 'A' in self.channelsToChange:
@@ -1162,6 +1175,10 @@ class WorkerThreadStartStopHistogram(QThread):
                                         time.sleep(1)
                                     if self.device.ch2.getMode()==1:
                                         self.dataSignal.emit(new_data2,"B")
+                                    else:
+                                        self.outOfRangeB=0
+                                else:
+                                    self.dataSignal.emit(new_data2,"B")
                             else:
                                 self.dataSignal.emit(new_data2,"B")
                                 if 'B' in self.channelsToChange:
@@ -1192,6 +1209,10 @@ class WorkerThreadStartStopHistogram(QThread):
                                         time.sleep(1)
                                     if self.device.ch3.getMode()==1:
                                         self.dataSignal.emit(new_data3,"C")
+                                    else:
+                                        self.outOfRangeC=0
+                                else:
+                                    self.dataSignal.emit(new_data3,"C")
                             else:
                                 self.dataSignal.emit(new_data3,"C")
                                 if 'C' in self.channelsToChange:
@@ -1222,6 +1243,10 @@ class WorkerThreadStartStopHistogram(QThread):
                                         time.sleep(1)
                                     if self.device.ch4.getMode()==1:
                                         self.dataSignal.emit(new_data4,"D")
+                                    else:
+                                        self.outOfRangeD=0
+                                else:
+                                    self.dataSignal.emit(new_data4,"D")
                             else:
                                 self.dataSignal.emit(new_data4,"D")
                                 if 'D' in self.channelsToChange:
@@ -1269,7 +1294,6 @@ class WorkerThreadStartStopHistogram(QThread):
         
         measurements=self.device.measure()
         
-        
         if len(measurements)!=0:
             if len(measurements[0])!=0:
                 number_runs=self.device.getNumberOfRuns()
@@ -1286,7 +1310,7 @@ class WorkerThreadStartStopHistogram(QThread):
                 total_points=0
                 for i in range(number_runs):
                     if measurements[i+index_measurement][3+stopNumber]!=-1:
-                        total_measurement+=measurements[i][3+stopNumber]
+                        total_measurement+=measurements[i+index_measurement][3+stopNumber]
                         total_points+=1
                 if total_points!=0:    
                     average_measurement=total_measurement/total_points
@@ -1326,6 +1350,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         self.totalC+=1    
                     elif channelIndex=='D':
                         self.totalD+=1    
+                    print(average_measurement)
                     self.dataPureSignal.emit(round(average_measurement),channelIndex)
                     return miliseconds_measurement
                 else:
