@@ -198,6 +198,9 @@ class Canvas():
             self.setinelSaveA=True
             self.viewBoxA=self.plotA.getViewBox()
             self.signalConnected =self.plotA.sigRangeChanged.connect(self.zoom_changedA)
+            self.autoRangeButtonA=self.plotA.autoBtn
+            self.autoRangeButtonA.clicked.disconnect()
+            self.autoRangeButtonA.clicked.connect(self.autoRangeA)
             
 
         if self.checkB.isChecked():
@@ -224,6 +227,9 @@ class Canvas():
             self.setinelSaveB=True
             self.viewBoxB=self.plotB.getViewBox()
             self.viewBoxB.sigRangeChanged.connect(self.zoom_changedB)
+            self.autoRangeButtonB=self.plotB.autoBtn
+            self.autoRangeButtonB.clicked.disconnect()
+            self.autoRangeButtonB.clicked.connect(self.autoRangeB)
             
 
         if self.checkC.isChecked():
@@ -250,6 +256,9 @@ class Canvas():
             self.setinelSaveC=True
             self.viewBoxC=self.plotC.getViewBox()
             self.plotC.sigRangeChanged.connect(self.zoom_changedC)
+            self.autoRangeButtonC=self.plotC.autoBtn
+            self.autoRangeButtonC.clicked.disconnect()
+            self.autoRangeButtonC.clicked.connect(self.autoRangeC)
             
 
         if self.checkD.isChecked():
@@ -276,6 +285,9 @@ class Canvas():
             self.setinelSaveD=True
             self.viewBoxD=self.plotD.getViewBox()
             self.plotD.sigRangeChanged.connect(self.zoom_changedD)
+            self.autoRangeButtonD=self.plotD.autoBtn
+            self.autoRangeButtonD.clicked.disconnect()
+            self.autoRangeButtonD.clicked.connect(self.autoRangeD)
             
 
         # Clear the widget
@@ -888,8 +900,9 @@ class Canvas():
         response = message_box.exec_()
         #Change for all modes
         if response == QMessageBox.Yes:
-            self.device.ch1.setMode(2)  
+            
             if channel=='channel A':
+                self.device.ch1.setMode(2)  
                 self.plotA.setLabel('bottom','Start-stop time (ms)')
                 temporalDataA=[]
                 for i in range(len(self.datapureA)):
@@ -898,9 +911,10 @@ class Canvas():
                 maxValue=max(self.dataA)
                 self.zoomCodeA=True
                 self.changeZoomMax(maxValue,'A')
-                self.worker.changeMaxValue('A')
+                self.worker.changeMaxValue('A',maxValue)
 
             elif channel=='channel B':
+                self.device.ch2.setMode(2)  
                 self.plotB.setLabel('bottom','Start-stop time (ms)')
                 temporalDataB=[]
                 for i in range(len(self.datapureB)):
@@ -909,8 +923,9 @@ class Canvas():
                 maxValue=max(self.dataB)
                 self.zoomCodeB=True
                 self.changeZoomMax(maxValue,'B')
-                self.worker.changeMaxValue('B')
+                self.worker.changeMaxValue('B',maxValue)
             elif channel=='channel C':
+                self.device.ch3.setMode(2)  
                 self.plotC.setLabel('bottom','Start-stop time (ms)')
                 temporalDataC=[]
                 for i in range(len(self.datapureC)):
@@ -919,8 +934,9 @@ class Canvas():
                 maxValue=max(self.dataC)
                 self.zoomCodeC=True
                 self.changeZoomMax(maxValue,'C')
-                self.worker.changeMaxValue('C')
+                self.worker.changeMaxValue('C',maxValue)
             elif channel=='channel D':
+                self.device.ch4.setMode(2)  
                 self.plotD.setLabel('bottom','Start-stop time (ms)')
                 temporalDataD=[]
                 for i in range(len(self.datapureD)):
@@ -929,7 +945,7 @@ class Canvas():
                 maxValue=max(self.dataD)
                 self.zoomCodeD=True
                 self.changeZoomMax(maxValue,'D')
-                self.worker.changeMaxValue('D')
+                self.worker.changeMaxValue('D',maxValue)
             self.worker.dialogIsOpen()
         else:
             if channel=='channel A':
@@ -989,9 +1005,39 @@ class Canvas():
                     self.zoomCodeD=True
                     self.plotD.setXRange(0,newMaxValue)
                 
-        
-        
+    #auto range beetween 0 and max of Data the graphic with autorange button
     
+    #AutoRangeA
+    def autoRangeA(self):
+        self.zoomCodeA=True
+        self.sentinelZoomChangedA=0
+        if len(self.dataA)>0:
+            maxValue=max(self.dataA)
+            self.changeZoomMax(maxValue,'A')
+    
+    #AutoRangeB
+    def autoRangeB(self):
+        self.zoomCodeB=True
+        self.sentinelZoomChangedB=0
+        if len(self.dataB)>0:
+            maxValue=max(self.dataB)
+            self.changeZoomMax(maxValue,'B')
+    
+    #AutoRangeC
+    def autoRangeC(self):
+        self.zoomCodeC=True
+        self.sentinelZoomChangedC=0
+        if len(self.dataC)>0:
+            maxValue=max(self.dataC)
+            self.changeZoomMax(maxValue,'C')
+    
+    #AutoRangeD
+    def autoRangeD(self):
+        self.zoomCodeD=True
+        self.sentinelZoomChangedD=0
+        if len(self.dataD)>0:
+            maxValue=max(self.dataD)
+            self.changeZoomMax(maxValue,'D')
     
     
         
@@ -1083,12 +1129,17 @@ class WorkerThreadStartStopHistogram(QThread):
                                     while(self.openDialog):
                                         print("Dialog Open, waiting for close...")
                                         time.sleep(1)
+                                    if self.device.ch1.getMode()==1:
+                                        self.dataSignal.emit(new_data1,"A")
+
                             else:
+                                self.dataSignal.emit(new_data1,"A")
                                 if 'A' in self.channelsToChange:
                                     self.channelsToChange.remove('A')
                         ###############################
+                        else:
                         #Emit data
-                        self.dataSignal.emit(new_data1,"A")
+                            self.dataSignal.emit(new_data1,"A")
                         
                     
             
@@ -1109,12 +1160,16 @@ class WorkerThreadStartStopHistogram(QThread):
                                     while(self.openDialog):
                                         print("Dialog Open, waiting for close...")
                                         time.sleep(1)
+                                    if self.device.ch2.getMode()==1:
+                                        self.dataSignal.emit(new_data2,"B")
                             else:
+                                self.dataSignal.emit(new_data2,"B")
                                 if 'B' in self.channelsToChange:
                                     self.channelsToChange.remove('B')
                         ###############################
                         #Emit data
-                        self.dataSignal.emit(new_data2,"B")
+                        else:
+                            self.dataSignal.emit(new_data2,"B")
 
 
 
@@ -1135,13 +1190,17 @@ class WorkerThreadStartStopHistogram(QThread):
                                     while(self.openDialog):
                                         print("Dialog Open, waiting for close...")
                                         time.sleep(1)
+                                    if self.device.ch3.getMode()==1:
+                                        self.dataSignal.emit(new_data3,"C")
                             else:
+                                self.dataSignal.emit(new_data3,"C")
                                 if 'C' in self.channelsToChange:
                                     self.channelsToChange.remove('C')
                         ###############################
                         
                         #Emit data
-                        self.dataSignal.emit(new_data3,"C")
+                        else:
+                            self.dataSignal.emit(new_data3,"C")
             
             
             #Get the update of graph D
@@ -1161,13 +1220,17 @@ class WorkerThreadStartStopHistogram(QThread):
                                     while(self.openDialog):
                                         print("Dialog Open, waiting for close...")
                                         time.sleep(1)
+                                    if self.device.ch4.getMode()==1:
+                                        self.dataSignal.emit(new_data4,"D")
                             else:
+                                self.dataSignal.emit(new_data4,"D")
                                 if 'D' in self.channelsToChange:
                                     self.channelsToChange.remove('D')
                                 
                         ###############################
                         #Emit data
-                        self.dataSignal.emit(new_data4,"D")
+                        else:
+                            self.dataSignal.emit(new_data4,"D")
             
             if len(self.channelsToChange)>0:
                 stringEmit="Consider changing mode of the channels:"
@@ -1278,15 +1341,15 @@ class WorkerThreadStartStopHistogram(QThread):
         self.openDialog=False 
     
     #Change the max Value if the mode is changed
-    def changeMaxValue(self,channel):
+    def changeMaxValue(self,channel,valueMax):
         if channel=='A':
-            self.currentMaxValueA=0
+            self.currentMaxValueA=valueMax
         elif channel=='B':
-            self.currentMaxValueB=0
+            self.currentMaxValueB=valueMax
         elif channel=='C':
-            self.currentMaxValueC=0
+            self.currentMaxValueC=valueMax
         elif channel=='D':
-            self.currentMaxValueD=0
+            self.currentMaxValueD=valueMax
 
     #Add to the list if the mode is not changed
     def addChannelWarning(self,channel):
