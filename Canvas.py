@@ -139,6 +139,11 @@ class Canvas():
         self.zoomCodeD=False
         #Check if the device take a measurement before
         self.beforeMeasurement=False
+        self.maxYA=0
+        self.maxYB=0
+        self.maxYC=0
+        self.maxYD=0
+        
         
 
 
@@ -200,10 +205,11 @@ class Canvas():
             self.curveA=self.plotA.plot(self.binsA, self.histA, stepMode=True, fillLevel=0, brush=(0, 0, 255, 150),name="ChannelA (Blue)")
             self.setinelSaveA=True
             self.viewBoxA=self.plotA.getViewBox()
-            self.signalConnected =self.plotA.sigRangeChanged.connect(self.zoom_changedA)
+            self.plotA.sigRangeChanged.connect(self.zoom_changedA)
             self.autoRangeButtonA=self.plotA.autoBtn
             self.autoRangeButtonA.clicked.disconnect()
             self.autoRangeButtonA.clicked.connect(self.autoRangeA)
+            
             
 
         if self.checkB.isChecked():
@@ -234,6 +240,7 @@ class Canvas():
             self.autoRangeButtonB.clicked.disconnect()
             self.autoRangeButtonB.clicked.connect(self.autoRangeB)
             
+            
 
         if self.checkC.isChecked():
             #Init zoom variable
@@ -262,6 +269,7 @@ class Canvas():
             self.autoRangeButtonC=self.plotC.autoBtn
             self.autoRangeButtonC.clicked.disconnect()
             self.autoRangeButtonC.clicked.connect(self.autoRangeC)
+            
             
 
         if self.checkD.isChecked():
@@ -483,7 +491,11 @@ class Canvas():
         binsA = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histA, _ = np.histogram(self.dataA, bins=binsA)
         self.curveA.setData(binsA, self.histA)  # Update the graphic
-        self.zoomCodeA=False
+        if max(self.histA)!=self.maxYA:
+            self.maxYA=max(self.histA)
+            self.zoomCodeA=True
+        else:    
+            self.zoomCodeA=False
         
     
     
@@ -504,7 +516,12 @@ class Canvas():
         binsB = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histB, _ = np.histogram(self.dataB, bins=binsB)
         self.curveB.setData(binsB, self.histB)  # Update the graphic
-        self.zoomCodeB=False
+        if max(self.histB)!=self.maxYB:
+            self.maxYB=max(self.histB)
+            self.zoomCodeB=True
+        else:    
+            self.zoomCodeB=False
+        
         
     
     #Change the zoom of the graphic C
@@ -521,7 +538,12 @@ class Canvas():
         binsC = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histC, _ = np.histogram(self.dataC, bins=binsC)
         self.curveC.setData(binsC, self.histC)  # Update the graphic
-        self.zoomCodeC=False
+        if max(self.histC)!=self.maxYC:
+            self.maxYC=max(self.histC)
+            self.zoomCodeC=True
+        else:    
+            self.zoomCodeC=False
+        
         
         
     #Change the zoom of the graphic D
@@ -539,7 +561,12 @@ class Canvas():
         binsD = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
         self.histD, _ = np.histogram(self.dataD, bins=binsD)
         self.curveD.setData(binsD, self.histD)  # Update the graphic
-        self.zoomCodeD=False
+        if max(self.histD)!=self.maxYD:
+            self.maxYD=max(self.histD)
+            self.zoomCodeD=True
+        else:    
+            self.zoomCodeD=False
+
     
     
     ##--------------##
@@ -910,6 +937,8 @@ class Canvas():
                 self.device.ch1.setMode(2)  
                 self.plotA.setLabel('bottom','Start-stop time (ms)')
                 temporalDataA=[]
+                self.beforeMeasurement=True
+                self.sentinelZoomChangedA=0
                 for i in range(len(self.datapureA)):
                     temporalDataA.append(self.datapureA[i]/(10**9))
                 self.dataA=temporalDataA
@@ -923,6 +952,8 @@ class Canvas():
                 self.device.ch2.setMode(2)  
                 self.plotB.setLabel('bottom','Start-stop time (ms)')
                 temporalDataB=[]
+                self.beforeMeasurement=True
+                self.sentinelZoomChangedB=0
                 for i in range(len(self.datapureB)):
                     temporalDataB.append(self.datapureB[i]/(10**9))
                 self.dataB=[]
@@ -936,18 +967,21 @@ class Canvas():
                 self.device.ch3.setMode(2)  
                 self.plotC.setLabel('bottom','Start-stop time (ms)')
                 temporalDataC=[]
+                self.beforeMeasurement=True
+                self.sentinelZoomChangedC=0
                 for i in range(len(self.datapureC)):
                     temporalDataC.append(self.datapureC[i]/(10**9))
                 self.dataC=temporalDataC
                 self.update_histogram(self.dataC,self.curveC,"C")
                 maxValue=max(self.dataC)
-                self.zoomCodeC=True
                 self.changeZoomMax(maxValue,'C')
                 self.worker.changeMaxValue('C',maxValue)
             elif channel=='channel D':
                 self.device.ch4.setMode(2)  
                 self.plotD.setLabel('bottom','Start-stop time (ms)')
                 temporalDataD=[]
+                self.beforeMeasurement=True
+                self.sentinelZoomChangedD=0
                 for i in range(len(self.datapureD)):
                     temporalDataD.append(self.datapureD[i]/(10**9))
                 self.dataD=temporalDataD
@@ -1415,7 +1449,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         self.currentMaxValueC=miliseconds_measurement
                         self.newMaxValueSignal.emit(miliseconds_measurement,'C')
                     elif channelIndex=='D' and miliseconds_measurement>self.currentMaxValueD:
-                        self.currentMaxValueC=miliseconds_measurement
+                        self.currentMaxValueD=miliseconds_measurement
                         self.newMaxValueSignal.emit(miliseconds_measurement,'D')
                         
                     if channelIndex=='A':
