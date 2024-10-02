@@ -15,8 +15,7 @@ class FLIMGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
-                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, tauParameter: QLabel,
-                 i0Parameter: QLabel,thirdParameter: QLabel,fourthParameter: QLabel,MainWindow, timerStatus: QTimer):
+                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, parameterTable: QTableWidget,MainWindow, timerStatus: QTimer):
         super().__init__()
         #Initialize the main window
         self.mainWindow=MainWindow
@@ -42,10 +41,6 @@ class FLIMGraphic():
         self.totalMeasurements=totalMeasurements
         self.totalStart=totalStart
         self.totalTime=totalTime
-        self.tauParameter=tauParameter
-        self.i0Parameter=i0Parameter
-        self.thirdParameter=thirdParameter
-        self.fourthParameter=fourthParameter
         self.timeRange=timeRange
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
@@ -142,7 +137,8 @@ class FLIMGraphic():
         self.initialTau0Doub=0
         self.initialTau1Doub=0
         self.initialAlphaDoub=0
-        
+        #Initialize Paramaters Table for fit
+        self.parametersTable=parameterTable
         #Sentinel to check if there is a initial Parameters change
         self.changeInitialParametersExp=False
         self.changeInitialParametersKol=False
@@ -485,75 +481,136 @@ class FLIMGraphic():
     def changeFunction(self):
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
             if self.FitParameters[0]!="Undefined":
-                #Check the first cov parameter with units
-                if self.FitCov[1]!='nan':
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
-                else:
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
                 ####################
-                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                ####################
+                
             else:
-                self.i0Parameter.setText(str(self.FitParameters[1]))
-                self.tauParameter.setText(str(self.FitParameters[0]))
-        elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
-            if self.FitParameters[0]!="Undefined":
-                #Check the first cov parameter with units
-                if self.FitCov[1]!='nan':
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
-                else:
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),"","")
                 ####################
-                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
-            else:
-                self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1]))
-                self.thirdParameter.setText(str(self.FitParameters[2]))
-        elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
-            if self.FitParameters[0]!="Undefined":
-                #Check the first cov parameter with units
-                if self.FitCov[1]!='nan':
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
-                else:
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
-                ####################
-                self.tauParameter.setText(str(self.FitParameters[0])+" ± "+self.FitCov[0])
-                self.thirdParameter.setText(str(self.FitParameters[2])+" ± "+self.FitCov[2])
-                self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
-            else:
-                self.i0Parameter.setText(str(self.FitParameters[1]))
-                self.tauParameter.setText(str(self.FitParameters[0]))
-                self.thirdParameter.setText(str(self.FitParameters[2]))
-                self.fourthParameter.setText(str(self.FitParameters[3]))
-        elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
-            if self.FitParameters[0]!="Undefined":
-                #Check the first cov parameter with units
-                if self.FitCov[1]!='nan':
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1]+self.units)
-                else:
-                    self.i0Parameter.setText(str(self.FitParameters[1])+self.units+" ± "+self.FitCov[1])
-                ####################
-                self.tauParameter.setText(str(self.FitParameters[0])+" "+" ± "+self.FitCov[0])
-                #Check the second cov parameter with units
-                if self.FitCov[2]!='nan':
-                    self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2]+self.units)
-                else:
-                    self.thirdParameter.setText(str(self.FitParameters[2])+" "+self.units+" ± "+self.FitCov[2])
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
                 ####################
 
-                self.fourthParameter.setText(str(self.FitParameters[3])+" ± "+self.FitCov[3])
+        elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
+            if self.FitParameters[0]!="Undefined":
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                ####################
+                #Change the Beta parameter values
+                self.insertParameters(2,"β",str(self.FitParameters[2]),self.FitCov[2],"")
+                ####################
+
             else:
-                self.i0Parameter.setText(str(self.FitParameters[0]))
-                self.tauParameter.setText(str(self.FitParameters[1]))
-                self.thirdParameter.setText(str(self.FitParameters[2]))
-                self.fourthParameter.setText(str(self.FitParameters[3]))
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
+                ####################
+                #Change the Beta parameter values
+                self.insertParameters(2,"β",str(self.FitParameters[2]),"","")
+                ####################
+
+        elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
+            if self.FitParameters[0]!="Undefined":
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                ####################
+                #Change the alpha parameter values
+                self.insertParameters(2,"α",str(self.FitParameters[2]),self.FitCov[2],"")
+                ####################
+                #Change the b parameter values
+                self.insertParameters(3,"b",str(self.FitParameters[3]),self.FitCov[3],"")
+                ####################
+                
+            else:
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),"","")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
+                ####################
+                #Change the alpha parameter values
+                self.insertParameters(2,"α",str(self.FitParameters[2]),"","")
+                ####################
+                #Change the b parameter values
+                self.insertParameters(3,"b",str(self.FitParameters[3]),"","")
+                ####################
+
+        elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
+            if self.FitParameters[0]!="Undefined":
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                ####################
+                #Change the tau1 parameter values
+                self.insertParameters(2,"τ1",str(self.FitParameters[2]),self.FitCov[2],self.units)
+                ####################
+                #Change the alpha parameter values
+                self.insertParameters(3,"α",str(self.FitParameters[3]),self.FitCov[3],"")
+                ####################
+                
+            else:
+                #Change the I0 parameter values
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),"","")
+                ####################
+                #Change the tau parameter values
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
+                ####################
+                #Change the tau1 parameter values
+                self.insertParameters(2,"τ1",str(self.FitParameters[2]),"","")
+                ####################   
+                #Change the alpha parameter values
+                self.insertParameters(3,"α",str(self.FitParameters[3]),"","")
+                ####################
+
         else:
-            self.i0Parameter.setText("Undefined")
-            self.tauParameter.setText("Undefined")
+            #Change the I0 parameter values
+            self.insertParameters(0,"I0","Undefined","","")
+            ####################
+            #Change the tau parameter values
+            self.insertParameters(1,"τ0","Undefined","","")
+            ####################
             if self.functionComboBox.currentIndex()==1:
-                self.thirdParameter.setText("Undefined")
+                #Change the Beta parameter values
+                self.insertParameters(2,"β","Undefined","","")
+                ####################
             elif self.functionComboBox.currentIndex()==2:
-                self.fourthParameter.setText("Undefined")
+                #Change the alpha parameter values
+                self.insertParameters(2,"α","Undefined","","")
+                ####################
+                #Change the b parameter values
+                self.insertParameters(3,"b","Undefined","","")
+                ####################
+            elif self.functionComboBox.currentIndex()==3:
+                #Change the tau1 parameter values
+                self.insertParameters(2,"τ1","Undefined","","")
+                ####################
+                #Change the alpha parameter values
+                self.insertParameters(3,"α","Undefined","","")
+                ####################
+        
+    def insertParameters(self,index,Parameter,Value,Cov,Units):
+        #Change parameter values
+        self.parametersTable.setItem(index,0,QTableWidgetItem(Parameter))
+        self.parametersTable.setItem(index,1,QTableWidgetItem(Value))
+        self.parametersTable.setItem(index,2,QTableWidgetItem(Cov))
+        self.parametersTable.setItem(index,3,QTableWidgetItem(Units))
+        ####################
              
     #Connection with the ApplyButton
     def applyAction(self):
@@ -618,22 +675,26 @@ class FLIMGraphic():
         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
         self.currentFit=""
         if self.functionComboBox.currentText()=="Double exponential":
-            self.tauParameter.setText("Undefined")
-            self.i0Parameter.setText("Undefined")
-            self.thirdParameter.setText("Undefined")
-            self.fourthParameter.setText("Undefined")
+            self.insertParameters(0,"I0","Undefined","","")
+            self.insertParameters(1,"τ0","Undefined","","")
+            self.insertParameters(2,"τ1","Undefined","","")
+            self.insertParameters(3,"α","Undefined","","")
+            
         elif self.functionComboBox.currentText()=="Shifted exponential":
-            self.tauParameter.setText("Undefined")
-            self.i0Parameter.setText("Undefined")
-            self.thirdParameter.setText("Undefined")
-            self.fourthParameter.setText("Undefined")
+            self.insertParameters(0,"I0","Undefined","","")
+            self.insertParameters(1,"τ0","Undefined","","")
+            self.insertParameters(2,"α","Undefined","","")
+            self.insertParameters(3,"b","Undefined","","")
+            
         elif self.functionComboBox.currentText()=="Kohlrausch":
-            self.tauParameter.setText("Undefined")
-            self.i0Parameter.setText("Undefined")
-            self.thirdParameter.setText("Undefined")
+            self.insertParameters(0,"I0","Undefined","","")
+            self.insertParameters(1,"τ0","Undefined","","")
+            self.insertParameters(2,"β","Undefined","","")
+            
         elif self.functionComboBox.currentText()=="Exponential":
-            self.tauParameter.setText("Undefined")
-            self.i0Parameter.setText("Undefined")
+            self.insertParameters(0,"I0","Undefined","","")
+            self.insertParameters(1,"τ0","Undefined","","")
+            
             
     #fit exponential curver
     def fitExpDecay(self,xData,yData):
@@ -683,11 +744,11 @@ class FLIMGraphic():
             else:
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
-                self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" ± "+I_0CovString)
-                if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
-                else:
-                    self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
+                #Change I0 parameter
+                self.insertParameters(0,"I0",str(round(I0_opt,maxRoundTau0)),I_0CovString,"")
+                #Change tau0 parameter
+                self.insertParameters(1,"τ0",str(round(tau0_opt,maxRoundI0)),tau_0CovString,self.units)
+
             return I0_opt, tau0_opt
         except:
             self.curveFit.setData([],[])
@@ -760,12 +821,12 @@ class FLIMGraphic():
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundBeta=self.maxRound(betaCovString)
-                if I_0CovString=="nan":
-                    self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" "+self.units+" ± "+I_0CovString)
-                else:
-                    self.tauParameter.setText(str(round(I0_opt,maxRoundTau0))+" "+self.units+" ± "+I_0CovString+self.units)
-                self.i0Parameter.setText(str(round(tau0_opt,maxRoundI0))+" ± "+tau_0CovString)
-                self.thirdParameter.setText(str(round(beta_opt,maxRoundBeta))+" ± "+betaCovString)
+                #Change I0 parameter
+                self.insertParameters(0,"I0",str(round(tau0_opt,maxRoundI0)),tau_0CovString,"")
+                #Change tau0 parameter
+                self.insertParameters(1,"τ0",str(round(I0_opt,maxRoundTau0)),I_0CovString,self.units)
+                #Change Beta parameter
+                self.insertParameters(2,"β",str(round(beta_opt,maxRoundBeta)),betaCovString,"")
             return I0_opt, tau0_opt, beta_opt
         except:
             self.curveFit.setData([],[])
@@ -1001,13 +1062,15 @@ class FLIMGraphic():
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundAlpha=self.maxRound(alphaCovString)
                 maxRoundB=self.maxRound(bCovString)
-                self.tauParameter.setText(str(round(I0_opt, maxRoundTau0))+" ± "+I_0CovString)
-                if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
-                else:
-                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
-                self.thirdParameter.setText(str(round(alpha_opt, maxRoundAlpha))+" ± "+alphaCovString)
-                self.fourthParameter.setText(str(round(b_opt, maxRoundB))+" ± "+bCovString)
+                #Change I0 parameter
+                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),I_0CovString,"")
+                #Change tau0 parameter
+                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),tau_0CovString,self.units)
+                #Change alpha parameter
+                self.insertParameters(2,"α",str(round(alpha_opt, maxRoundAlpha)),alphaCovString,"")
+                #Change b parameter
+                self.insertParameters(3,"b",str(round(b_opt, maxRoundB)),bCovString,"")
+
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
             self.curveFit.setData([],[])
@@ -1099,16 +1162,14 @@ class FLIMGraphic():
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundTau1=self.maxRound(tau_1CovString)
                 maxRoundalpha=self.maxRound(alphaCovString)
-                self.tauParameter.setText(str(round(I0_opt, maxRoundTau0))+" ± "+I_0CovString)
-                if tau_0CovString=="nan":
-                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString)
-                else:
-                    self.i0Parameter.setText(str(round(tau0_opt, maxRoundI0))+" "+self.units+" ± "+tau_0CovString+self.units)
-                if tau_1CovString=="nan":
-                    self.thirdParameter.setText(str(round(tau1_opt, maxRoundTau1))+" "+self.units+" ± "+tau_1CovString)
-                else:
-                    self.thirdParameter.setText(str(round(tau1_opt, maxRoundTau1))+" "+self.units+" ± "+tau_1CovString+self.units)
-                self.fourthParameter.setText(str(round(alpha_opt, maxRoundalpha))+" ± "+alphaCovString)
+                #Change I0 parameter
+                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),I_0CovString,"")
+                #Change tau0 parameter
+                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),tau_0CovString,self.units)
+                #Change alpha parameter
+                self.insertParameters(2,"τ1",str(round(tau1_opt, maxRoundTau1)),tau_1CovString,self.units)
+                #Change b parameter
+                self.insertParameters(3,"α",str(round(alpha_opt, maxRoundalpha)),alphaCovString,"")
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             self.curveFit.setData([],[])

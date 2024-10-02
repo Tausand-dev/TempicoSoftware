@@ -275,7 +275,7 @@ class UiFLIM(object):
         self.fitFrame.setObjectName(u"fitFrame")
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(20)
+        sizePolicy4.setVerticalStretch(40)
         sizePolicy4.setHeightForWidth(self.fitFrame.sizePolicy().hasHeightForWidth())
         self.fitFrame.setSizePolicy(sizePolicy4)
         self.fitFrame.setFrameShape(QFrame.Panel)
@@ -357,7 +357,7 @@ class UiFLIM(object):
         self.fitParametersLabelFrame.setObjectName(u"fitParametersLabelFrame")
         sizePolicy9 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(2)
+        sizePolicy9.setVerticalStretch(1)
         sizePolicy9.setHeightForWidth(self.fitParametersLabelFrame.sizePolicy().hasHeightForWidth())
         self.fitParametersLabelFrame.setSizePolicy(sizePolicy9)
         self.fitParametersLabelFrame.setFrameShape(QFrame.StyledPanel)
@@ -371,112 +371,37 @@ class UiFLIM(object):
 
 
         self.verticalLayout_7.addWidget(self.fitParametersLabelFrame)
-
-        self.parametersFrame = QFrame(self.fitParametersFrame)
-        self.parametersFrame.setObjectName(u"parametersFrame")
-        sizePolicy2.setHeightForWidth(self.parametersFrame.sizePolicy().hasHeightForWidth())
-        self.parametersFrame.setSizePolicy(sizePolicy2)
-        self.parametersFrame.setFrameShape(QFrame.StyledPanel)
-        self.parametersFrame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_8 = QVBoxLayout(self.parametersFrame)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.firstParameterFrame = QFrame(self.parametersFrame)
-        self.firstParameterFrame.setObjectName(u"firstParameterFrame")
+        #Begin table for parameters
+        self.sizePolicyTable = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.sizePolicyTable.setHorizontalStretch(0)
+        self.sizePolicyTable.setVerticalStretch(8)
+        self.parametersTable=QTableWidget()
+        self.parametersTable.setRowCount(4)
+        self.parametersTable.setColumnCount(4)
+        self.parametersTable.verticalHeader().setVisible(False)
+        self.parametersTable.setShowGrid(False)
+        self.parametersTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.parametersTable.setStyleSheet("""
+                                            QTableWidget { background-color: rgba(255, 255, 255, 1); }
+                                            QHeaderView::section { 
+                                                background-color: rgba(255, 255, 255, 1); 
+                                                border: none;  /* Elimina los bordes del encabezado */
+                                            }
+                                        """)
+        for column in range(self.parametersTable.columnCount()):
+            self.parametersTable.setColumnWidth(column, 120)
+        
+        
+        
+        #Add the name of every row
+        self.parametersTable.setHorizontalHeaderLabels(['Parameter','Value','Uncertainty','Units'])
+        self.parametersTable.setSizePolicy(self.sizePolicyTable)
+        self.verticalLayout_7.addWidget(self.parametersTable)
+        #Begin Button Change Initial Parameters
         sizePolicy10 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(5)
-        sizePolicy10.setHeightForWidth(self.firstParameterFrame.sizePolicy().hasHeightForWidth())
-        self.firstParameterFrame.setSizePolicy(sizePolicy10)
-        self.firstParameterFrame.setFrameShape(QFrame.StyledPanel)
-        self.firstParameterFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_12 = QHBoxLayout(self.firstParameterFrame)
-        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
-        self.firstParameterLabel = QLabel(self.firstParameterFrame)
-        self.firstParameterLabel.setObjectName(u"firstParameterLabel")
-
-        self.horizontalLayout_12.addWidget(self.firstParameterLabel)
-
-        self.firstParameterValue = QLabel(self.firstParameterFrame)
-        self.firstParameterValue.setObjectName(u"firstParameterValue")
-
-        self.horizontalLayout_12.addWidget(self.firstParameterValue)
-
-
-        self.verticalLayout_8.addWidget(self.firstParameterFrame)
-
-        self.secondParameterFrame = QFrame(self.parametersFrame)
-        self.secondParameterFrame.setObjectName(u"secondParameterFrame")
-        sizePolicy10.setHeightForWidth(self.secondParameterFrame.sizePolicy().hasHeightForWidth())
-        self.secondParameterFrame.setSizePolicy(sizePolicy10)
-        self.secondParameterFrame.setFrameShape(QFrame.StyledPanel)
-        self.secondParameterFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_13 = QHBoxLayout(self.secondParameterFrame)
-        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
-        self.secondParameterLabel = QLabel(self.secondParameterFrame)
-        self.secondParameterLabel.setObjectName(u"secondParameterLabel")
-
-        self.horizontalLayout_13.addWidget(self.secondParameterLabel)
-
-        self.secondParameterValue = QLabel(self.secondParameterFrame)
-        self.secondParameterValue.setObjectName(u"secondParameterValue")
-
-        self.horizontalLayout_13.addWidget(self.secondParameterValue)
-
-
-        self.verticalLayout_8.addWidget(self.secondParameterFrame)
-        
-        #Begin third parameter
-        
-        self.thirdParameterFrame = QFrame(self.parametersFrame)
-        self.thirdParameterFrame.setObjectName(u"secondParameterFrame")
-        sizePolicy10.setHeightForWidth(self.thirdParameterFrame.sizePolicy().hasHeightForWidth())
-        self.thirdParameterFrame.setSizePolicy(sizePolicy10)
-        self.thirdParameterFrame.setFrameShape(QFrame.StyledPanel)
-        self.thirdParameterFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_thirdParameter = QHBoxLayout(self.thirdParameterFrame)
-        self.horizontalLayout_thirdParameter.setObjectName(u"horizontalLayout_thirdParameter")
-        self.thirdParameterLabel = QLabel(self.thirdParameterFrame)
-        self.thirdParameterLabel.setObjectName(u"thirdParameterLabel")
-
-        self.horizontalLayout_thirdParameter.addWidget(self.thirdParameterLabel)
-
-        self.thirdParameterValue = QLabel(self.thirdParameterFrame)
-        self.thirdParameterFrame.setObjectName(u"secondParameterValue")
-
-        self.horizontalLayout_thirdParameter.addWidget(self.thirdParameterValue)
-
-
-        self.verticalLayout_8.addWidget(self.thirdParameterFrame)
-        
-        #End third parameter
-        
-        
-        #Begin fourth parameter
-        self.fourthParameterFrame = QFrame(self.parametersFrame)
-        self.fourthParameterFrame.setObjectName(u"secondParameterFrame")
-        sizePolicy10.setHeightForWidth(self.thirdParameterFrame.sizePolicy().hasHeightForWidth())
-        self.fourthParameterFrame.setSizePolicy(sizePolicy10)
-        self.fourthParameterFrame.setFrameShape(QFrame.StyledPanel)
-        self.fourthParameterFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_fourthParameter = QHBoxLayout(self.fourthParameterFrame)
-        self.horizontalLayout_fourthParameter.setObjectName(u"horizontalLayout_fourthParameter")
-        self.fourthParameterLabel = QLabel(self.fourthParameterFrame)
-        self.fourthParameterLabel.setObjectName(u"fourthParameterLabel")
-
-        self.horizontalLayout_fourthParameter.addWidget(self.fourthParameterLabel)
-
-        self.fourthParameterValue = QLabel(self.fourthParameterFrame)
-        self.fourthParameterFrame.setObjectName(u"secondParameterValue")
-
-        self.horizontalLayout_fourthParameter.addWidget(self.fourthParameterValue)
-
-
-        self.verticalLayout_8.addWidget(self.fourthParameterFrame)
-        
-        #End fourth parameter
-        
-        #Begin Button Change Initial Parameters
-        self.buttonParameterFrame = QFrame(self.parametersFrame)
+        sizePolicy10.setVerticalStretch(1)
+        self.buttonParameterFrame = QFrame(self.fitParametersFrame)
         self.buttonParameterFrame.setObjectName(u"buttonParameterFrame")
         sizePolicy10.setHeightForWidth(self.buttonParameterFrame.sizePolicy().hasHeightForWidth())
         self.buttonParameterFrame.setSizePolicy(sizePolicy10)
@@ -492,11 +417,9 @@ class UiFLIM(object):
         
 
 
-        self.verticalLayout_8.addWidget(self.buttonParameterFrame)
+        self.verticalLayout_7.addWidget(self.buttonParameterFrame)
         
         #End fourth parameter
-
-        self.verticalLayout_7.addWidget(self.parametersFrame)
 
 
         self.horizontalLayout_8.addWidget(self.fitParametersFrame)
@@ -508,7 +431,7 @@ class UiFLIM(object):
         self.graphicFrame.setObjectName(u"graphicFrame")
         sizePolicy11 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy11.setHorizontalStretch(0)
-        sizePolicy11.setVerticalStretch(76)
+        sizePolicy11.setVerticalStretch(56)
         sizePolicy11.setHeightForWidth(self.graphicFrame.sizePolicy().hasHeightForWidth())
         self.graphicFrame.setSizePolicy(sizePolicy11)
         self.graphicFrame.setFrameShape(QFrame.Panel)
@@ -601,13 +524,22 @@ class UiFLIM(object):
         self.totalStopsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.functionLabel.setText(QCoreApplication.translate("Form", u"Function:", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("Form", u"Fit parameters:", None))
-        self.firstParameterLabel.setText(QCoreApplication.translate("Form", u"I<sub>0<\sub>:", None))
-        self.firstParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
-        self.secondParameterLabel.setText(QCoreApplication.translate("Form", u"τ<sub>0<\sub>:", None))
-        self.secondParameterValue.setText(QCoreApplication.translate("Form", u"Undefined", None))
         self.statusLabel.setText(QCoreApplication.translate("Form", u"Status:", None))
         self.statusValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.drawPointLabel.setText("")
+        #First Parameter
+        labelParameter=QLabel()
+        labelParameter.setText("I<sub>0<\sub>")
+        self.parametersTable.setItem(0,0,QTableWidgetItem("I0"))
+        self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(0,2,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(0,3,QTableWidgetItem("Undefined"))
+        #Second Parameter
+        self.parametersTable.setItem(1,0,QTableWidgetItem("τ0"))
+        self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(1,2,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(1,3,QTableWidgetItem("Undefined"))
+
     # retranslateUi
 
     def drawColorPoint(self):
@@ -647,28 +579,41 @@ class UiFLIM(object):
     def functionChange(self):
         if self.functionComboBox.currentText()=="Exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}}$')
-            self.thirdParameterLabel.setText("")
-            self.thirdParameterValue.setText("")
-            self.fourthParameterLabel.setText("")
-            self.fourthParameterValue.setText("")
+            self.parametersTable.setRowCount(2)
         elif self.functionComboBox.currentText()=="Kohlrausch":
             self.set_latex_to_label(r'$I_0 e^{(\frac{-t}{\tau_0})^{\beta}}$')
-            self.thirdParameterLabel.setText("β:")
-            self.thirdParameterValue.setText("Undefined")
-            self.fourthParameterLabel.setText("")
-            self.fourthParameterValue.setText("")
+            self.parametersTable.setRowCount(3)
+            #Third Parameter
+            self.parametersTable.setItem(2,0,QTableWidgetItem("β"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
         elif self.functionComboBox.currentText()=="Shifted exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t+\alpha}{\tau_0}}+b$')
-            self.thirdParameterLabel.setText("α:")
-            self.thirdParameterValue.setText("Undefined")
-            self.fourthParameterLabel.setText("b:")
-            self.fourthParameterValue.setText("Undefined")
+            self.parametersTable.setRowCount(4)
+            #Third Parameter
+            self.parametersTable.setItem(2,0,QTableWidgetItem("α"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
+            #Fourth Parameter
+            self.parametersTable.setItem(3,0,QTableWidgetItem("b"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,3,QTableWidgetItem("Undefined"))
         elif self.functionComboBox.currentText()=="Double exponential":
             self.set_latex_to_label(r'$I_0(\alpha e^{\frac{-t}{\tau_0}}+(1-\alpha)e^{\frac{-t}{\tau_1}})$')
-            self.thirdParameterLabel.setText("τ<sub>1<\sub>:")
-            self.thirdParameterValue.setText("Undefined")
-            self.fourthParameterLabel.setText("α:")
-            self.fourthParameterValue.setText("Undefined")
+            self.parametersTable.setRowCount(4)
+            #Third Parameter
+            self.parametersTable.setItem(2,0,QTableWidgetItem("τ1"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
+            #Fourth Parameter
+            self.parametersTable.setItem(3,0,QTableWidgetItem("α"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,3,QTableWidgetItem("Undefined"))
     
     #Function to get the time range when the numberBins comboBox is changed
     def setTimeRange(self):
@@ -750,9 +695,12 @@ class UiFLIM(object):
             if numericalBin>minimum:
                 valuesToAdd.append(self.numberOfBinsValues[i])
         self.numberBinsComboBox.addItems(valuesToAdd)
+
         
     
-            
+    def resizeEvent(self, event):
+        print("Se hace un cambio de tamano a la ventana")
+        super().resizeEvent(event)
             
             
         
