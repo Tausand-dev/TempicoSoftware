@@ -787,6 +787,7 @@ class FLIMGraphic():
             else:
                 r2Parameter=self.calculateR2(yData,yFit)
                 self.R2=round(r2Parameter,3)
+                print(r2Parameter)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 #Change I0 parameter
@@ -1216,6 +1217,7 @@ class FLIMGraphic():
             else:
                 r2Parameter=self.calculateR2(yData,yFit)
                 self.R2=round(r2Parameter,3)
+                print(r2Parameter)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundTau1=self.maxRound(tau_1CovString)

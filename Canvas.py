@@ -926,7 +926,7 @@ class Canvas():
     def dialogChangeMode(self, channel):
         message_box = QMessageBox(self.parent)
         message_box.setIcon(QMessageBox.Question)  
-        message_box.setText("The data collected in the "+channel+" mostly falls outside the reliable range of mode 1 (12ns to 500ns). Would you like to switch to mode 2(125ns to 4ms)?")  
+        message_box.setText("The data collected in the "+channel+" mostly falls outside the reliable range of mode 1 (12ns to 500ns). Would you like to switch to mode 2 (125ns to 4ms)?")  
         message_box.setWindowTitle("Change Mode")  
         message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No) 
         response = message_box.exec_()
