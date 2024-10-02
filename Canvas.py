@@ -1331,8 +1331,14 @@ class WorkerThreadStartStopHistogram(QThread):
                         elif 'D' in self.channelsNM and self.noMeasurementD==0:
                             self.channelsNM.remove('D')
                     
-            
-            if len(self.channelsToChange)>0:
+            if (self.totalStarts>=2) and ('Start' not in self.channelsNM):
+                self.channelsNM.append('Start')
+            elif (self.totalStarts<2) and 'Start' in self.channelsNM:
+                self.channelsNM.remove('Start')
+
+
+
+            if len(self.channelsToChange)>0 and len(self.channelsNM)==0:
                 stringEmit="Consider changing mode of the channels:"
                 for i in range(len(self.channelsToChange)):
                     if i==0:
@@ -1344,22 +1350,19 @@ class WorkerThreadStartStopHistogram(QThread):
                 self.stringValue.emit(self.currentState)
             
                 
-            if len(self.channelsNM)>0:
-                stringEmit="NM: "
+            elif len(self.channelsNM)>0:
+                stringEmit="No measurements in channels: "
                 for i in range(len(self.channelsNM)):
                     if i==0:
                         stringEmit+=" "+self.channelsNM[i] 
                     else:
                         stringEmit+=", "+self.channelsNM[i] 
                 self.currentNM=stringEmit
-                emitStringProblems=self.currentState+" "+self.currentNM
+                emitStringProblems=self.currentNM
                 self.colorValue.emit(3)
                 self.stringValue.emit(emitStringProblems)
 
-            if len(self.channelsToChange)==0:
-                self.currentState=""
-
-            if len(self.channelsNM)==0 and len(self.channelsToChange)==0:
+            elif len(self.channelsNM)==0 and len(self.channelsToChange)==0:
                 self.colorValue.emit(1)
                 self.stringValue.emit("Measurement running")        
                 
