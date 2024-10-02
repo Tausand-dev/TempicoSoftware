@@ -483,10 +483,10 @@ class FLIMGraphic():
             if self.FitParameters[0]!="Undefined":
 
                 #Change the I0 parameter values
-                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),str(float(self.FitCov[0])),"")
                 ####################
                 #Change the tau parameter values
-                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),str(float(self.FitCov[1])),self.units)
                 ####################
                 
             else:
@@ -500,18 +500,18 @@ class FLIMGraphic():
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
             if self.FitParameters[0]!="Undefined":
                 #Change the I0 parameter values
-                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),str(float(self.FitCov[0])),"")
                 ####################
                 #Change the tau parameter values
-                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),str(float(self.FitCov[1])),self.units)
                 ####################
                 #Change the Beta parameter values
-                self.insertParameters(2,"β",str(self.FitParameters[2]),self.FitCov[2],"")
+                self.insertParameters(2,"β",str(self.FitParameters[2]),str(float(self.FitCov[2])),"")
                 ####################
 
             else:
                 #Change the I0 parameter values
-                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),"","")
                 ####################
                 #Change the tau parameter values
                 self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
@@ -523,16 +523,16 @@ class FLIMGraphic():
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
             if self.FitParameters[0]!="Undefined":
                 #Change the I0 parameter values
-                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),str(float(self.FitCov[0])),"")
                 ####################
                 #Change the tau parameter values
-                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),str(float(self.FitCov[1])),self.units)
                 ####################
                 #Change the alpha parameter values
-                self.insertParameters(2,"α",str(self.FitParameters[2]),self.FitCov[2],"")
+                self.insertParameters(2,"α",str(self.FitParameters[2]),str(float(self.FitCov[2])),"")
                 ####################
                 #Change the b parameter values
-                self.insertParameters(3,"b",str(self.FitParameters[3]),self.FitCov[3],"")
+                self.insertParameters(3,"b",str(self.FitParameters[3]),str(float(self.FitCov[3])),"")
                 ####################
                 
             else:
@@ -552,16 +552,16 @@ class FLIMGraphic():
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
             if self.FitParameters[0]!="Undefined":
                 #Change the I0 parameter values
-                self.insertParameters(0,"I0",str(self.FitParameters[0]),self.FitCov[0],"")
+                self.insertParameters(0,"I0",str(self.FitParameters[0]),str(float(self.FitCov[0])),"")
                 ####################
                 #Change the tau parameter values
-                self.insertParameters(1,"τ0",str(self.FitParameters[1]),self.FitCov[1],self.units)
+                self.insertParameters(1,"τ0",str(self.FitParameters[1]),str(float(self.FitCov[1])),self.units)
                 ####################
                 #Change the tau1 parameter values
-                self.insertParameters(2,"τ1",str(self.FitParameters[2]),self.FitCov[2],self.units)
+                self.insertParameters(2,"τ1",str(self.FitParameters[2]),str(float(self.FitCov[2])),self.units)
                 ####################
                 #Change the alpha parameter values
-                self.insertParameters(3,"α",str(self.FitParameters[3]),self.FitCov[3],"")
+                self.insertParameters(3,"α",str(self.FitParameters[3]),str(float(self.FitCov[3])),"")
                 ####################
                 
             else:
@@ -745,9 +745,9 @@ class FLIMGraphic():
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 #Change I0 parameter
-                self.insertParameters(0,"I0",str(round(I0_opt,maxRoundTau0)),I_0CovString,"")
+                self.insertParameters(0,"I0",str(round(I0_opt,maxRoundTau0)),str(float(I_0CovString)),"")
                 #Change tau0 parameter
-                self.insertParameters(1,"τ0",str(round(tau0_opt,maxRoundI0)),tau_0CovString,self.units)
+                self.insertParameters(1,"τ0",str(round(tau0_opt,maxRoundI0)),str(float(tau_0CovString)),self.units)
 
             return I0_opt, tau0_opt
         except:
@@ -822,11 +822,11 @@ class FLIMGraphic():
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundBeta=self.maxRound(betaCovString)
                 #Change I0 parameter
-                self.insertParameters(0,"I0",str(round(tau0_opt,maxRoundI0)),tau_0CovString,"")
+                self.insertParameters(0,"I0",str(round(tau0_opt,maxRoundI0)),str(float(tau_0CovString)),"")
                 #Change tau0 parameter
-                self.insertParameters(1,"τ0",str(round(I0_opt,maxRoundTau0)),I_0CovString,self.units)
+                self.insertParameters(1,"τ0",str(round(I0_opt,maxRoundTau0)),str(float(I_0CovString)),self.units)
                 #Change Beta parameter
-                self.insertParameters(2,"β",str(round(beta_opt,maxRoundBeta)),betaCovString,"")
+                self.insertParameters(2,"β",str(round(beta_opt,maxRoundBeta)),str(float(betaCovString)),"")
             return I0_opt, tau0_opt, beta_opt
         except:
             self.curveFit.setData([],[])
@@ -1063,13 +1063,13 @@ class FLIMGraphic():
                 maxRoundAlpha=self.maxRound(alphaCovString)
                 maxRoundB=self.maxRound(bCovString)
                 #Change I0 parameter
-                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),I_0CovString,"")
+                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),str(float(I_0CovString)),"")
                 #Change tau0 parameter
-                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),tau_0CovString,self.units)
+                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),str(float(tau_0CovString)),self.units)
                 #Change alpha parameter
-                self.insertParameters(2,"α",str(round(alpha_opt, maxRoundAlpha)),alphaCovString,"")
+                self.insertParameters(2,"α",str(round(alpha_opt, maxRoundAlpha)),str(float(alphaCovString)),"")
                 #Change b parameter
-                self.insertParameters(3,"b",str(round(b_opt, maxRoundB)),bCovString,"")
+                self.insertParameters(3,"b",str(round(b_opt, maxRoundB)),str(float(bCovString)),"")
 
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
@@ -1163,13 +1163,13 @@ class FLIMGraphic():
                 maxRoundTau1=self.maxRound(tau_1CovString)
                 maxRoundalpha=self.maxRound(alphaCovString)
                 #Change I0 parameter
-                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),I_0CovString,"")
+                self.insertParameters(0,"I0",str(round(I0_opt, maxRoundTau0)),str(float(I_0CovString)),"")
                 #Change tau0 parameter
-                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),tau_0CovString,self.units)
+                self.insertParameters(1,"τ0",str(round(tau0_opt, maxRoundI0)),str(float(tau_0CovString)),self.units)
                 #Change alpha parameter
-                self.insertParameters(2,"τ1",str(round(tau1_opt, maxRoundTau1)),tau_1CovString,self.units)
+                self.insertParameters(2,"τ1",str(round(tau1_opt, maxRoundTau1)),str(float(tau_1CovString)),self.units)
                 #Change b parameter
-                self.insertParameters(3,"α",str(round(alpha_opt, maxRoundalpha)),alphaCovString,"")
+                self.insertParameters(3,"α",str(round(alpha_opt, maxRoundalpha)),str(float(alphaCovString)),"")
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             self.curveFit.setData([],[])
