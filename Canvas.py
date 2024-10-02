@@ -1203,8 +1203,8 @@ class WorkerThreadStartStopHistogram(QThread):
                     else:
                         if self.noMeasurementA>2 and ('A' not in self.channelsNM):
                             self.channelsNM.append('A')
-                        elif 'A' in self.channelsNM and self.noMeasurementA==0:
-                            self.channelsNM.remove('A')
+                    if 'A' in self.channelsNM and self.noMeasurementA==0:
+                        self.channelsNM.remove('A')
                         
                     
             
@@ -1243,8 +1243,8 @@ class WorkerThreadStartStopHistogram(QThread):
                     else:
                         if self.noMeasurementB>2 and ('B' not in self.channelsNM):
                             self.channelsNM.append('B')
-                        elif 'B' in self.channelsNM and self.noMeasurementB==0:
-                            self.channelsNM.remove('B')
+                    if 'B' in self.channelsNM and self.noMeasurementB==0:
+                        self.channelsNM.remove('B')
                             
                     
 
@@ -1286,8 +1286,8 @@ class WorkerThreadStartStopHistogram(QThread):
                     else:
                         if self.noMeasurementC>2 and ('C' not in self.channelsNM):
                             self.channelsNM.append('C')
-                        elif 'C' in self.channelsNM and self.noMeasurementC==0:
-                            self.channelsNM.remove('C')
+                    if 'C' in self.channelsNM and self.noMeasurementC==0:
+                        self.channelsNM.remove('C')
                     
                     
             
@@ -1328,8 +1328,8 @@ class WorkerThreadStartStopHistogram(QThread):
                     else:
                         if self.noMeasurementD>2 and ('D' not in self.channelsNM):
                             self.channelsNM.append('D')
-                        elif 'D' in self.channelsNM and self.noMeasurementD==0:
-                            self.channelsNM.remove('D')
+                    if 'D' in self.channelsNM and self.noMeasurementD==0:
+                        self.channelsNM.remove('D')
                     
             if (self.totalStarts>=2) and ('Start' not in self.channelsNM):
                 self.channelsNM.append('Start')
