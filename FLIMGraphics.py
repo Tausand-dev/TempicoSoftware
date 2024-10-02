@@ -153,6 +153,8 @@ class FLIMGraphic():
         #--------Init the the timer to check the connection----#
         self.timerStatus=timerStatus
         self.timerStatus.timeout.connect(self.checkDeviceStatus)
+        #Set the value of R^2
+        self.R2="Undefined"
         if self.device!=None:
             self.startButton.setEnabled(True)
             self.timerStatus.start(500)
@@ -488,6 +490,9 @@ class FLIMGraphic():
                 #Change the tau parameter values
                 self.insertParameters(1,"τ0",str(self.FitParameters[1]),str(float(self.FitCov[1])),self.units)
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(2,"R^2",str(self.R2),"","")
+                ####################
                 
             else:
                 #Change the I0 parameter values
@@ -495,6 +500,9 @@ class FLIMGraphic():
                 ####################
                 #Change the tau parameter values
                 self.insertParameters(1,"τ0",str(self.FitParameters[1]),"","")
+                ####################
+                #Change R^2 parameter
+                self.insertParameters(2,"R^2",str(self.R2),"","")
                 ####################
 
         elif self.currentFit=="Kohlrausch" and self.functionComboBox.currentIndex()==1:
@@ -508,6 +516,9 @@ class FLIMGraphic():
                 #Change the Beta parameter values
                 self.insertParameters(2,"β",str(self.FitParameters[2]),str(float(self.FitCov[2])),"")
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(3,"R^2",str(self.R2),"","")
+                ####################
 
             else:
                 #Change the I0 parameter values
@@ -518,6 +529,9 @@ class FLIMGraphic():
                 ####################
                 #Change the Beta parameter values
                 self.insertParameters(2,"β",str(self.FitParameters[2]),"","")
+                ####################
+                #Change R^2 parameter
+                self.insertParameters(3,"R^2",str(self.R2),"","")
                 ####################
 
         elif self.currentFit=="ShiftedExponential" and self.functionComboBox.currentIndex()==2:
@@ -534,6 +548,9 @@ class FLIMGraphic():
                 #Change the b parameter values
                 self.insertParameters(3,"b",str(self.FitParameters[3]),str(float(self.FitCov[3])),"")
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
+                ####################
                 
             else:
                 #Change the I0 parameter values
@@ -547,6 +564,9 @@ class FLIMGraphic():
                 ####################
                 #Change the b parameter values
                 self.insertParameters(3,"b",str(self.FitParameters[3]),"","")
+                ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
                 ####################
 
         elif self.currentFit=="DoubleExponential" and self.functionComboBox.currentIndex()==3:
@@ -563,6 +583,9 @@ class FLIMGraphic():
                 #Change the alpha parameter values
                 self.insertParameters(3,"α",str(self.FitParameters[3]),str(float(self.FitCov[3])),"")
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
+                ####################
                 
             else:
                 #Change the I0 parameter values
@@ -577,6 +600,9 @@ class FLIMGraphic():
                 #Change the alpha parameter values
                 self.insertParameters(3,"α",str(self.FitParameters[3]),"","")
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
+                ####################
 
         else:
             #Change the I0 parameter values
@@ -585,9 +611,16 @@ class FLIMGraphic():
             #Change the tau parameter values
             self.insertParameters(1,"τ0","Undefined","","")
             ####################
-            if self.functionComboBox.currentIndex()==1:
+            if self.functionComboBox.currentIndex()==0:
+                #Change R^2 parameter
+                self.insertParameters(2,"R^2","Undefined","","")
+                ####################
+            elif self.functionComboBox.currentIndex()==1:
                 #Change the Beta parameter values
                 self.insertParameters(2,"β","Undefined","","")
+                ####################
+                #Change R^2 parameter
+                self.insertParameters(3,"R^2","Undefined","","")
                 ####################
             elif self.functionComboBox.currentIndex()==2:
                 #Change the alpha parameter values
@@ -596,12 +629,18 @@ class FLIMGraphic():
                 #Change the b parameter values
                 self.insertParameters(3,"b","Undefined","","")
                 ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2","Undefined","","")
+                ####################
             elif self.functionComboBox.currentIndex()==3:
                 #Change the tau1 parameter values
                 self.insertParameters(2,"τ1","Undefined","","")
                 ####################
                 #Change the alpha parameter values
                 self.insertParameters(3,"α","Undefined","","")
+                ####################
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2","Undefined","","")
                 ####################
         
     def insertParameters(self,index,Parameter,Value,Cov,Units):
@@ -674,26 +713,32 @@ class FLIMGraphic():
     def resetParametersLabels(self):
         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
         self.currentFit=""
+        self.R2="Undefined"
         if self.functionComboBox.currentText()=="Double exponential":
             self.insertParameters(0,"I0","Undefined","","")
             self.insertParameters(1,"τ0","Undefined","","")
             self.insertParameters(2,"τ1","Undefined","","")
             self.insertParameters(3,"α","Undefined","","")
+            self.insertParameters(4,"R^2","Undefined","","")
+                
             
         elif self.functionComboBox.currentText()=="Shifted exponential":
             self.insertParameters(0,"I0","Undefined","","")
             self.insertParameters(1,"τ0","Undefined","","")
             self.insertParameters(2,"α","Undefined","","")
             self.insertParameters(3,"b","Undefined","","")
+            self.insertParameters(4,"R^2","Undefined","","")
             
         elif self.functionComboBox.currentText()=="Kohlrausch":
             self.insertParameters(0,"I0","Undefined","","")
             self.insertParameters(1,"τ0","Undefined","","")
             self.insertParameters(2,"β","Undefined","","")
+            self.insertParameters(3,"R^2","Undefined","","")
             
         elif self.functionComboBox.currentText()=="Exponential":
             self.insertParameters(0,"I0","Undefined","","")
             self.insertParameters(1,"τ0","Undefined","","")
+            self.insertParameters(2,"R^2","Undefined","","")
             
             
     #fit exponential curver
@@ -729,8 +774,6 @@ class FLIMGraphic():
             except:
                 self.FitCov[0]="nan"
                 self.FitCov[1]="nan"         
-            print(I_0Cov)
-            print(tau_0Cov)
             #Graphic of the fit curve
             self.curveFit.setData(xData,yFit)
             if str(I0_opt)=='nan':
@@ -742,12 +785,17 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
+                r2Parameter=self.calculateR2(yData,yFit)
+                self.R2=round(r2Parameter,3)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 #Change I0 parameter
                 self.insertParameters(0,"I0",str(round(I0_opt,maxRoundTau0)),str(float(I_0CovString)),"")
                 #Change tau0 parameter
                 self.insertParameters(1,"τ0",str(round(tau0_opt,maxRoundI0)),str(float(tau_0CovString)),self.units)
+                #Change R^2 parameter
+                self.insertParameters(2,"R^2",str(self.R2),"","")
+
 
             return I0_opt, tau0_opt
         except:
@@ -818,6 +866,8 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
+                r2Parameter=self.calculateR2(yData,yFit)
+                self.R2=round(r2Parameter,3)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundBeta=self.maxRound(betaCovString)
@@ -827,6 +877,8 @@ class FLIMGraphic():
                 self.insertParameters(1,"τ0",str(round(I0_opt,maxRoundTau0)),str(float(I_0CovString)),self.units)
                 #Change Beta parameter
                 self.insertParameters(2,"β",str(round(beta_opt,maxRoundBeta)),str(float(betaCovString)),"")
+                #Change R^2 parameter
+                self.insertParameters(3,"R^2",str(self.R2),"","")
             return I0_opt, tau0_opt, beta_opt
         except:
             self.curveFit.setData([],[])
@@ -1058,6 +1110,8 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
+                r2Parameter=self.calculateR2(yData,yFit)
+                self.R2=round(r2Parameter,3)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundAlpha=self.maxRound(alphaCovString)
@@ -1070,6 +1124,8 @@ class FLIMGraphic():
                 self.insertParameters(2,"α",str(round(alpha_opt, maxRoundAlpha)),str(float(alphaCovString)),"")
                 #Change b parameter
                 self.insertParameters(3,"b",str(round(b_opt, maxRoundB)),str(float(bCovString)),"")
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
 
             return I0_opt, tau0_opt, alpha_opt, b_opt
         except:
@@ -1158,6 +1214,8 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
             else:
+                r2Parameter=self.calculateR2(yData,yFit)
+                self.R2=round(r2Parameter,3)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundTau1=self.maxRound(tau_1CovString)
@@ -1170,6 +1228,8 @@ class FLIMGraphic():
                 self.insertParameters(2,"τ1",str(round(tau1_opt, maxRoundTau1)),str(float(tau_1CovString)),self.units)
                 #Change b parameter
                 self.insertParameters(3,"α",str(round(alpha_opt, maxRoundalpha)),str(float(alphaCovString)),"")
+                #Change R^2 parameter
+                self.insertParameters(4,"R^2",str(self.R2),"","")
             return I0_opt, tau0_opt, tau1_opt, alpha_opt
         except:
             self.curveFit.setData([],[])
@@ -1239,6 +1299,24 @@ class FLIMGraphic():
             return f"{rounded_number:.2f}e{exponent:+d}"
         else:
             return f"{rounded_number:.2f}"
+    
+    #Function to calculate the parameter R^2
+
+    def calculateR2(self,data,fitData):
+        #Get the array
+        arrayData=np.array(data)
+        arrayFit=np.array(fitData)
+        #Mean data
+        meanData=np.mean(arrayData)
+        #Get the residue
+        ssRes=np.sum((arrayData-arrayFit)**2)
+        #Get the total sum squared
+        ssTot=np.sum((arrayData-meanData)**2)
+        #Get R^2
+        R2=1-(ssRes/ssTot)
+        return R2
+
+        
     
     #Save buttons
     #Save Plot Button

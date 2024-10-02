@@ -532,13 +532,18 @@ class UiFLIM(object):
         labelParameter.setText("I<sub>0<\sub>")
         self.parametersTable.setItem(0,0,QTableWidgetItem("I0"))
         self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
-        self.parametersTable.setItem(0,2,QTableWidgetItem("Undefined"))
-        self.parametersTable.setItem(0,3,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(0,2,QTableWidgetItem(""))
+        self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         #Second Parameter
         self.parametersTable.setItem(1,0,QTableWidgetItem("τ0"))
         self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
-        self.parametersTable.setItem(1,2,QTableWidgetItem("Undefined"))
-        self.parametersTable.setItem(1,3,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+        self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+        #R^2 Parameter
+        self.parametersTable.setItem(2,0,QTableWidgetItem("R^2"))
+        self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+        self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+        self.parametersTable.setItem(2,3,QTableWidgetItem(""))
 
     # retranslateUi
 
@@ -579,41 +584,61 @@ class UiFLIM(object):
     def functionChange(self):
         if self.functionComboBox.currentText()=="Exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t}{\tau_0}}$')
-            self.parametersTable.setRowCount(2)
+            self.parametersTable.setRowCount(3)
+            #R^2 Parameter
+            self.parametersTable.setItem(2,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         elif self.functionComboBox.currentText()=="Kohlrausch":
             self.set_latex_to_label(r'$I_0 e^{(\frac{-t}{\tau_0})^{\beta}}$')
-            self.parametersTable.setRowCount(3)
+            self.parametersTable.setRowCount(4)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("β"))
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(""))
+            #R^2 Parameter
+            self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         elif self.functionComboBox.currentText()=="Shifted exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t+\alpha}{\tau_0}}+b$')
-            self.parametersTable.setRowCount(4)
+            self.parametersTable.setRowCount(5)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("α"))
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(""))
             #Fourth Parameter
             self.parametersTable.setItem(3,0,QTableWidgetItem("b"))
             self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(3,2,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(3,3,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+            #R^2 Parameter
+            self.parametersTable.setItem(4,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(4,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(4,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(4,3,QTableWidgetItem(""))
         elif self.functionComboBox.currentText()=="Double exponential":
             self.set_latex_to_label(r'$I_0(\alpha e^{\frac{-t}{\tau_0}}+(1-\alpha)e^{\frac{-t}{\tau_1}})$')
-            self.parametersTable.setRowCount(4)
+            self.parametersTable.setRowCount(5)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("τ1"))
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,2,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(2,3,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(""))
             #Fourth Parameter
             self.parametersTable.setItem(3,0,QTableWidgetItem("α"))
             self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(3,2,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(3,3,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+            #R^2 Parameter
+            self.parametersTable.setItem(4,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(4,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(4,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(4,3,QTableWidgetItem(""))
     
     #Function to get the time range when the numberBins comboBox is changed
     def setTimeRange(self):
