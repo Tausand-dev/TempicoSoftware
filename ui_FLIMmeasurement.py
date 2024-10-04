@@ -388,13 +388,17 @@ class UiFLIM(object):
                                                 border: none;  /* Elimina los bordes del encabezado */
                                             }
                                         """)
-        for column in range(self.parametersTable.columnCount()):
-            self.parametersTable.setColumnWidth(column, 120)
         
+        self.parametersTable.setColumnWidth(0, 20)
+        self.parametersTable.setColumnWidth(1, 100)
+        self.parametersTable.setColumnWidth(2, 100)
+        self.parametersTable.setColumnWidth(3, 20)
         
+        #Add minimum size
+        self.parametersTable.setMinimumSize(100, 110)
         
         #Add the name of every row
-        self.parametersTable.setHorizontalHeaderLabels(['Parameter','Value','Uncertainty','Units'])
+        self.parametersTable.setHorizontalHeaderLabels(['','Value','Std. Dev.','Units'])
         self.parametersTable.setSizePolicy(self.sizePolicyTable)
         self.verticalLayout_7.addWidget(self.parametersTable)
         #Begin Button Change Initial Parameters
@@ -544,6 +548,10 @@ class UiFLIM(object):
         self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
         self.parametersTable.setItem(2,2,QTableWidgetItem(""))
         self.parametersTable.setItem(2,3,QTableWidgetItem(""))
+        #Set the row Height
+        for row in range(self.parametersTable.rowCount()):
+            self.parametersTable.setRowHeight(row, 15)
+
 
     # retranslateUi
 
@@ -590,6 +598,9 @@ class UiFLIM(object):
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(2,2,QTableWidgetItem(""))
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
+            #Set the row Height
+            for row in range(self.parametersTable.rowCount()):
+                self.parametersTable.setRowHeight(row, 15)
         elif self.functionComboBox.currentText()=="Kohlrausch":
             self.set_latex_to_label(r'$I_0 e^{(\frac{-t}{\tau_0})^{\beta}}$')
             self.parametersTable.setRowCount(4)
@@ -603,6 +614,10 @@ class UiFLIM(object):
             self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+            #Set the row Height
+            for row in range(self.parametersTable.rowCount()):
+                self.parametersTable.setRowHeight(row, 15)
+
         elif self.functionComboBox.currentText()=="Shifted exponential":
             self.set_latex_to_label(r'$I_0 e^{\frac{-t+\alpha}{\tau_0}}+b$')
             self.parametersTable.setRowCount(5)
@@ -621,6 +636,9 @@ class UiFLIM(object):
             self.parametersTable.setItem(4,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(4,2,QTableWidgetItem(""))
             self.parametersTable.setItem(4,3,QTableWidgetItem(""))
+            #Set the row Height
+            for row in range(self.parametersTable.rowCount()):
+                self.parametersTable.setRowHeight(row, 15)
         elif self.functionComboBox.currentText()=="Double exponential":
             self.set_latex_to_label(r'$I_0(\alpha e^{\frac{-t}{\tau_0}}+(1-\alpha)e^{\frac{-t}{\tau_1}})$')
             self.parametersTable.setRowCount(5)
@@ -639,6 +657,9 @@ class UiFLIM(object):
             self.parametersTable.setItem(4,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(4,2,QTableWidgetItem(""))
             self.parametersTable.setItem(4,3,QTableWidgetItem(""))
+            #Set the row Height
+            for row in range(self.parametersTable.rowCount()):
+                self.parametersTable.setRowHeight(row, 15)
     
     #Function to get the time range when the numberBins comboBox is changed
     def setTimeRange(self):
@@ -723,9 +744,6 @@ class UiFLIM(object):
 
         
     
-    def resizeEvent(self, event):
-        print("Se hace un cambio de tamano a la ventana")
-        super().resizeEvent(event)
             
             
         

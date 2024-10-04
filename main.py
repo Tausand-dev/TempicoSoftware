@@ -335,6 +335,7 @@ class MainWindow(QMainWindow):
                   applyButton=self.uiFLIM.applyButtton
                   functionComboBox=self.uiFLIM.functionComboBox
                   parametersTable=self.uiFLIM.parametersTable
+                  self.parametersTable=parametersTable
                   timeRange=self.uiFLIM.timeRangeValue
                   numberBinsComboBox=self.uiFLIM.numberBinsComboBox
                   self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
@@ -502,6 +503,16 @@ class MainWindow(QMainWindow):
             event.accept()  
         else:
             event.ignore() 
+    #Resize the graphics
+    def resizeEvent(self,event):
+        if self.FLIMGraphic!=None:
+            currentValue=self.width()
+            self.parametersTable.setColumnWidth(0, int(round(currentValue*1/50)))
+            self.parametersTable.setColumnWidth(1, int(round(currentValue*1/10)))
+            self.parametersTable.setColumnWidth(2, int(round(currentValue*1/10)))
+            self.parametersTable.setColumnWidth(3, int(round(currentValue*1/50)))
+            
+
         
 
 

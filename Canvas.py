@@ -1388,6 +1388,8 @@ class WorkerThreadStartStopHistogram(QThread):
     def getNewData(self,channel,channelIndex,stopNumber):
         
         measurements=self.device.measure()
+        if measurements==None:
+            return None
         if len(measurements)==0:
             number_runs=self.device.getNumberOfRuns()
             self.totalStarts+=number_runs

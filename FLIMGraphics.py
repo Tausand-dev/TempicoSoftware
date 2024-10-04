@@ -1519,6 +1519,8 @@ class FLIMGraphic():
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
+    
+    
 
 
 
