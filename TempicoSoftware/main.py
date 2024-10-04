@@ -10,15 +10,13 @@ import matplotlib.animation as animation
 import datetime as dt
 import numpy as np
 import pyTempico as tempico
-import pyAbacus as abacus
-from settings import SettingsWindow
-from generalsettings import GeneralSettingsWindow
-from aboutWindow import AboutWindow
-from StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
-from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_lifetime import Ui_Form
-from ui_g2measurement import Ui_G2
-from ui_devicesDialog import Ui_Devices
+from TempicoSoftware.generalsettings import GeneralSettingsWindow
+from TempicoSoftware.aboutWindow import AboutWindow
+from TempicoSoftware.StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
+from TempicoSoftware.ui_StarStopHistogram import Ui_HistogramaStartStop
+from TempicoSoftware.ui_lifetime import Ui_Form
+from TempicoSoftware.ui_g2measurement import Ui_G2
+from TempicoSoftware.ui_devicesDialog import Ui_Devices
 import time
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
@@ -31,11 +29,11 @@ import concurrent.futures
 import time
 #To do eliminate import
 import random
-import createsavefile as savefile
+import TempicoSoftware.createsavefile as savefile
 import datetime
-from ui_settings import Ui_settings
-from Canvas import Canvas
-from constants import *
+from TempicoSoftware.ui_settings import Ui_settings
+from TempicoSoftware.Canvas import Canvas
+from TempicoSoftware.constants import *
 
 
 
@@ -80,7 +78,7 @@ class MainWindow(QMainWindow):
         self.conectedDevice=None
         
 
-        if abacus.CURRENT_OS == 'win32':
+        if sys.platform == 'win32':
             import ctypes
             myappid = APPID  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -362,8 +360,7 @@ class MainWindow(QMainWindow):
 
 #--------Execution Test----------#
 
-
-if __name__ == '__main__':
+def execProgram():
     app = QApplication([])
     splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)  

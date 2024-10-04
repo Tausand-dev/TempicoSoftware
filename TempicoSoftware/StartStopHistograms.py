@@ -10,10 +10,10 @@ import datetime as dt
 import numpy as np
 import pyTempico as tempico
 import pyAbacus as abacus
-from settings import SettingsWindow
-from generalsettings import GeneralSettingsWindow
-from aboutWindow import AboutWindow
-from ui_StarStopHistogram import Ui_HistogramaStartStop
+from TempicoSoftware.settings import SettingsWindow
+from TempicoSoftware.generalsettings import GeneralSettingsWindow
+from TempicoSoftware.aboutWindow import AboutWindow
+from TempicoSoftware.ui_StarStopHistogram import Ui_HistogramaStartStop
 class StartStopHistogramsWindow(QTabWidget):
 
     def init(self, parent: QWidget):

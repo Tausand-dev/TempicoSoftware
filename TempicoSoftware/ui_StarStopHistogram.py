@@ -24,7 +24,7 @@ import matplotlib.animation as animation
 import datetime as dt
 import numpy as np
 import pyTempico as tempico
-import pyAbacus as abacus
+
 
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas

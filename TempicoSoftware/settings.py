@@ -1,3 +1,4 @@
+
 #No utilizado (To do: revisar cosas utiles y posteriormente eliminar)
 
 from PySide2.QtCore import Qt
@@ -11,7 +12,7 @@ import matplotlib.animation as animation
 import datetime as dt
 import numpy as np
 import pyTempico as tempico
-import pyAbacus as abacus
+
 
 
 class SettingsWindow(QDialog):

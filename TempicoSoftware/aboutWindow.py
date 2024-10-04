@@ -1,6 +1,6 @@
 import pyAbacus as pa
 from PySide2 import QtCore, QtGui, QtWidgets
-from about import Ui_Dialog as Ui_Dialog_about
+from TempicoSoftware.about import Ui_Dialog as Ui_Dialog_about
 
 class AboutWindow(QtWidgets.QDialog, Ui_Dialog_about):
     def __init__(self, parent = None):

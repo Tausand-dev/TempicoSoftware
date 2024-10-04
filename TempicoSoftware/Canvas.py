@@ -10,15 +10,14 @@ import matplotlib.animation as animation
 import datetime as dt
 import numpy as np
 import pyTempico as tempico
-import pyAbacus as abacus
-from settings import SettingsWindow
-from generalsettings import GeneralSettingsWindow
-from aboutWindow import AboutWindow
-from StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
-from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_lifetime import Ui_Form
-from ui_g2measurement import Ui_G2
-from ui_devicesDialog import Ui_Devices
+from TempicoSoftware.settings import SettingsWindow
+from TempicoSoftware.generalsettings import GeneralSettingsWindow
+from TempicoSoftware.aboutWindow import AboutWindow
+from TempicoSoftware.StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
+from TempicoSoftware.ui_StarStopHistogram import Ui_HistogramaStartStop
+from TempicoSoftware.ui_lifetime import Ui_Form
+from TempicoSoftware.ui_g2measurement import Ui_G2
+from TempicoSoftware.ui_devicesDialog import Ui_Devices
 import time
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
@@ -31,9 +30,9 @@ import concurrent.futures
 import time
 #To do eliminate import
 import random
-import createsavefile as savefile
+import TempicoSoftware.createsavefile as savefile
 import datetime
-from ui_settings import Ui_settings
+from TempicoSoftware.ui_settings import Ui_settings
 
 #Create graphic design#
 class Canvas():
