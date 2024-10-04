@@ -1,0 +1,11 @@
+Tomar la resolución de PyAbacus no del número
+Repetir lectura en lugar de mandar a 0
+Guardar -1 en lugar de 0 y no gráficar los puntos que queden en 0
+Revisar DelaySweep
+Coincidencias de 12 no estan relacionadas con 1 y con 2
+usar getAllCounters
+Error botón connect cuando no se logra la conexión
+Warning Channels measurement status: No obtiene mediciones en cada canal
+TCSPC (4 Pestaña)
+Reuniones Martes y Jueves
+%appdata%

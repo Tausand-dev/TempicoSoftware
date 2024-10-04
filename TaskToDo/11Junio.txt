@@ -1,0 +1,17 @@
+resolución cambiante
+step size
+solo escoger canal 1 y canal 2, start
+Menos canales
+Sampling time T=50 ms
+step resolución
+coincidence window resolucion
+-100 a 100 ns siempre
+Current accidental
+tabla y current double
+Los que empiezan con 15 2 ns de resolucion
+Los que empiezan con 10 5 ns de resolucion
+los que terminan 02 2 canales
+los que terminan en 04 son de 4 canales
+Ejecutables 22 
+
+Canales y valor correcto coincidencias accidentales

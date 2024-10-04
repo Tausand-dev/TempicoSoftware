@@ -1,0 +1,8 @@
+implementar update para que no se sobrecarguen los datos
+Abacus error ubuntu 
+g2 con coincidencias de canales A y B
+number of stops dinámico si no obtiene información 
+incertidumbre de mitad de la resolución
+(2*(ventana coincidencias)+la mitad de resolucion)
+coincidencias accidentales en dobles (Ver ecuación)
+
