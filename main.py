@@ -67,7 +67,14 @@ class SplashScreen(QMainWindow):
         self.timer.start(3000)  # Tiempo en milisegundos
 
     def show_main_window(self):
-        # Crear la ventana principal y mostrarla
+        """
+        Displays the main window of the application.
+
+        This function creates an instance of the main window (`MainWindow`) and displays it.
+        After showing the main window, it closes the current window.
+
+        It does not take any parameters and does not return a value.
+        """
         self.main_window = MainWindow()
         self.main_window.show()
         self.close()
@@ -175,25 +182,46 @@ class MainWindow(QMainWindow):
         
 
     #-----Functions for construc every Qtab--------#
-    def construct_start_stop_histogram(self,padre):
+    def construct_start_stop_histogram(self,parent):
+        """
+        Constructs the Start/Stop Histogram window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates
+        an instance of the `Ui_HistogramaStartStop` class and sets up the UI using the given parent.
+
+        It does not return a value.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the histogram window.
+        :type parent: QWidget
+        """
         if self.sentinel1==0:
             self.ui = Ui_HistogramaStartStop()
-            self.ui.setupUi(padre)
+            self.ui.setupUi(parent)
             self.sentinel1=1
 
-        # Ajustar la política de tamaño del área de configuración
-        #self.ui.GraphConfigurationArea.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-    def construct_lifetime(self,padre):
+    def construct_lifetime(self,parent):
+        """
+        Constructs the Lifetime Measurements window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates 
+        an instance of the `UiFLIM` class and sets up the UI using the given parent.
+
+        It does not return a value.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
+        :type parent: QWidget
+        """
         if self.sentinel2==0:
             self.uiFLIM = UiFLIM()
-            self.uiFLIM.setupUi(padre)
+            self.uiFLIM.setupUi(parent)
             self.sentinel2=1
     
-    def construct_g2(self,padre):
+    def construct_g2(self,parent):
         if self.sentinel3==0:
             self.uig2 = Ui_G2()
-            self.uig2.setupUi(padre)
+            self.uig2.setupUi(parent)
             self.sentinel3=1
+
     def open_dialog(self):
         self.dialog=QDialog(self)
         self.uidialog = Ui_Devices()
@@ -294,7 +322,16 @@ class MainWindow(QMainWindow):
             self.disconnectButton.setEnabled(False)
        
     def disconnect_button_click(self):
-        if hasattr(self, 'grafico'):  # Verificar si self.grafico está definido
+        """
+        Handles the disconnect button click event.
+
+        This function hides the graphical display, disables the disconnect button, and re-enables the connect button. 
+        It also closes the connected device and resets its reference to `None`. 
+        If additional graphics like `g2Graphic` or `FLIMGraphic` are active, it will disconnect them as well.
+
+        It does not take any parameters and does not return a value.
+        """
+        if hasattr(self, 'grafico'): 
             self.grafico.hide_graphic2()
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
@@ -310,6 +347,17 @@ class MainWindow(QMainWindow):
 
     #-----Functions for settings clicked--------#
     def clicked_tabs(self):
+          """
+          Executes an action when a tab is clicked and creates the corresponding window.
+  
+          This function checks which tab is currently active and constructs the associated window 
+          by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, 
+          it stops the FLIM timer and constructs the Start/Stop Histogram window. If the tab corresponds 
+          to the Lifetime Measurements, it constructs the Lifetime window and sets up the FLIM logic if it 
+          has not been initialized yet.
+  
+          It does not take any parameters and does not return a value.
+          """
           valor_padre=self.tabs.currentIndex()
           padre=self.tab1
           if valor_padre==0:
@@ -377,34 +425,38 @@ class MainWindow(QMainWindow):
         
         
     def Helpg2Button(self):
-        # Crear el QMessageBox
         message_box = QMessageBox(self)
         message_box.setIcon(QMessageBox.Information)
         message_box.setWindowTitle("g2 measurement information")
         message_box.setStandardButtons(QMessageBox.Ok)
-        # Crear un widget personalizado para el contenido del QMessageBox
         custom_widget = QWidget()
         layout = QVBoxLayout(custom_widget)
-        # Crear una etiqueta para mostrar la imagen
         label = QLabel(custom_widget)
         layout.addWidget(label)
-        # Cargar la imagen
         pixmap = QPixmap('Sources/Help.png')
         
-        # Redimensionar la imagen a 500 píxeles de ancho, manteniendo la proporción
         pixmap = pixmap.scaledToWidth(700)
         label.setPixmap(pixmap)
 
-        # Establecer el widget personalizado como el contenido del QMessageBox
         message_box.layout().addWidget(custom_widget)
 
-        # Añadir el botón OK
         
         message_box.exec_()
         
               
                   
     def settings_clicked(self):
+        """
+        Opens the settings window when the settings option is clicked.
+
+        This function checks if a device is connected. If no measurement is currently running, 
+        it displays the settings window for channel configuration. If a measurement is running, 
+        a message box is shown informing the user that changes cannot be made while a measurement 
+        is in progress. If no device is connected, a message box alerts the user that no device 
+        was found.
+
+        It does not take any parameters and does not return a value.
+        """
         if self.conectedDevice!=None:
             if not self.grafico.currentmeasurement:
                 self.dialog_settings=QDialog(self)
