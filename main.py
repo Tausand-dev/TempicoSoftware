@@ -96,7 +96,12 @@ class MainWindow(QMainWindow):
         #help_menu = menu_bar.addMenu("Help")
         about_menu = menu_bar.addMenu("About")
         #Parameters_menu
-        parameters_menu=menu_bar.addMenu("Parameters")
+
+
+
+        #parameters_menu=menu_bar.addMenu("Parameters")
+
+
         #-----Actions for file--------#
         #save_action=QAction("Save",self)
         #new_action=QAction("New",self)
@@ -114,9 +119,9 @@ class MainWindow(QMainWindow):
         about_settings_action=QAction("About Tempico Software",self)
         about_settings_action.triggered.connect(self.about_settings)
         about_menu.addAction(about_settings_action)
-        parameters_settings_action=QAction("Get Count Parameters",self)
-        parameters_settings_action.triggered.connect(self.parameters_action)
-        parameters_menu.addAction(parameters_settings_action)
+        #parameters_settings_action=QAction("Get Count Parameters",self)
+        #parameters_settings_action.triggered.connect(self.parameters_action)
+        #parameters_menu.addAction(parameters_settings_action)
         
         #-----Qtabs for every type of measure--------#
         self.tabs=QTabWidget(self)
