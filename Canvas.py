@@ -348,6 +348,14 @@ class Canvas():
     
     
     def start_graphic(self):
+        """
+        Starts the graphical representation of the measurement based on the selected channels.
+
+        If no channels are selected, it prompts the user to select at least one channel before proceeding. 
+        It also disables certain buttons to prevent interaction during the measurement process.
+
+        :return: None
+        """
         if (not self.checkA.isChecked() and not self.checkB.isChecked() and not self.checkC.isChecked() and not self.checkD.isChecked()):
             message_box = QMessageBox(self.parent)
             message_box.setText("You must select at least one channel before starting a measurement.")
@@ -377,11 +385,24 @@ class Canvas():
             self.savebutton.setEnabled(False)
     
     def hide_graphic2(self):
+        """
+        Disables the start and stop buttons in the graphical interface.
+
+        This function is typically used to prevent user interaction during certain operations.
+
+        :return: None
+        """
         self.startbutton.setEnabled(False)
         self.stopbutton.setEnabled(False)
         
     
     def show_graphic(self, device_new):
+        """
+        Sets the device and its channels, enabling the start button for measurement.
+
+        :param device_new: The new device to be set (DeviceType).
+        :return: None
+        """
         self.device=device_new
         self.channel1=self.device.ch1
         self.channel2=self.device.ch2
@@ -390,6 +411,12 @@ class Canvas():
         self.startbutton.setEnabled(True)
         
     def stop_graphic(self):
+        """
+        Enables the functions to initiate a new measurement while disabling the buttons to clear graphs. 
+        It also updates the status bar text and color.
+
+        :return: None
+        """
         if self.threadCreatedSentinel:
             self.worker.stop()
             time.sleep(1)
@@ -414,6 +441,12 @@ class Canvas():
     
     #Future function if we want to add the option of number of measurements
     def threadComplete(self):
+        """
+        Handles the completion of the measurement thread by enabling the ability to switch between windows. 
+        It also calls the stop_graphic() function to update the UI accordingly.
+
+        :return: None
+        """
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.threadCreated=False
         self.stop_graphic()
@@ -427,23 +460,61 @@ class Canvas():
     ##---------------------------------##  
     
     def clear_a(self):
+        """
+        Clears the lists containing measured data for channel A by resetting them to empty lists.
+
+        :return: None
+        """
         self.dataA=[]
-        #self.datapureA=[]
+        self.datapureA=[]
         
     def clear_b(self):
+        """
+        Clears the lists containing measured data for channel B by resetting them to empty lists.
+
+        :return: None
+        """
         self.dataB=[]
         self.datapureB=[]
     
     def clear_c(self):
+        """
+        Clears the lists containing measured data for channel C by resetting them to empty lists.
+
+        :return: None
+        """
         self.dataC=[]
         self.datapureC=[]
     
     def clear_d(self):
+        """
+        Clears the lists containing measured data for channel D by resetting them to empty lists.
+
+        :return: None
+        """
         self.dataD=[]
         self.datapureD=[]
     
     
     def update_histogram(self, data, curve, indexChannel):
+        """
+        Calculates and updates the histogram for the specified channel based on the measured data.
+
+        The function first checks the selected channel (A, B, C, or D) and retrieves the 
+        current view range from the corresponding view box. It then creates bins for the 
+        histogram based on this range, using a total of 61 bins. 
+
+        Finally, it computes the histogram of the provided data and updates the specified 
+        curve in the plot with the histogram values.
+
+        :param data: The measured data used to calculate the histogram (list).
+        :param curve: The curve item from the plot in PyQt5 with PyQtGraph that corresponds 
+                    to the channel (PlotCurveItem).
+        :param indexChannel: The identifier of the channel for the histogram, which can 
+                            be "A", "B", "C", or "D" (str).
+        :return: None
+        """
+        
         # Calculate the histogram
         if indexChannel=="A":
             self.zoomCodeA=True
@@ -479,6 +550,22 @@ class Canvas():
     
     
     def zoom_changedA(self):
+        """
+        Automatically calculates and updates the histogram for channel A when the user 
+        zooms in on the corresponding graph.
+
+        The function checks if the zoom was triggered by code or user action. If it was 
+        triggered by the user, it increments the sentinel for zoom changes. It then 
+        retrieves the current x-range from the view box for channel A and computes the 
+        bin width for the histogram.
+
+        Next, it creates 61 bins based on the x-range and calculates the histogram 
+        using the measured data. The histogram data is then used to update the curve 
+        item for channel A in the plot.
+
+        :param: None
+        :return: None
+        """
         if self.zoomCodeA:
             print("Zoom de codigo")
         else:
@@ -504,6 +591,22 @@ class Canvas():
         
     #Change the zoom of the graphic B
     def zoom_changedB(self):
+        """
+        Automatically calculates and updates the histogram for channel B when the user 
+        zooms in on the corresponding graph.
+
+        The function checks if the zoom was triggered by code or user action. If it was 
+        triggered by the user, it increments the sentinel for zoom changes. It then 
+        retrieves the current x-range from the view box for channel B and computes the 
+        bin width for the histogram.
+
+        Next, it creates 61 bins based on the x-range and calculates the histogram 
+        using the measured data. The histogram data is then used to update the curve 
+        item for channel B in the plot.
+
+        :param: None
+        :return: None
+        """
         if self.zoomCodeB:
             print("Zoom de codigo")
         else:
@@ -526,6 +629,22 @@ class Canvas():
     
     #Change the zoom of the graphic C
     def zoom_changedC(self):
+        """
+        Automatically calculates and updates the histogram for channel C when the user 
+        zooms in on the corresponding graph.
+
+        The function checks if the zoom was triggered by code or user action. If it was 
+        triggered by the user, it increments the sentinel for zoom changes. It then 
+        retrieves the current x-range from the view box for channel C and computes the 
+        bin width for the histogram.
+
+        Next, it creates 61 bins based on the x-range and calculates the histogram 
+        using the measured data. The histogram data is then used to update the curve 
+        item for channel C in the plot.
+
+        :param: None
+        :return: None
+        """
         if self.zoomCodeC:
             print("Zoom de codigo")
         else:
@@ -548,6 +667,22 @@ class Canvas():
         
     #Change the zoom of the graphic D
     def zoom_changedD(self):
+        """
+        Automatically calculates and updates the histogram for channel D when the user 
+        zooms in on the corresponding graph.
+
+        The function checks if the zoom was triggered by code or user action. If it was 
+        triggered by the user, it increments the sentinel for zoom changes. It then 
+        retrieves the current x-range from the view box for channel D and computes the 
+        bin width for the histogram.
+
+        Next, it creates 61 bins based on the x-range and calculates the histogram 
+        using the measured data. The histogram data is then used to update the curve 
+        item for channel D in the plot.
+
+        :param: None
+        :return: None
+        """
         if self.zoomCodeD:
             print("Zoom de codigo")
         else:
@@ -575,6 +710,32 @@ class Canvas():
     ##--------------##
     ##--------------## 
     def save_graphic(self):
+        """
+        Saves the current data according to the selected format specified in the dialog box.
+
+        The function starts by retrieving the default histogram name and the current 
+        date, which is formatted to create a unique filename. It then initializes lists 
+        to hold filenames, data, settings, and column names for the saved files.
+
+        A dialog box is displayed for the user to select the desired file format 
+        (txt, csv, or dat) for saving the data. Once the user accepts the selection, 
+        the function checks if the selected format has already been saved before.
+
+        If the selected format has not been saved, it collects data from the various 
+        channels (A, B, C, D) if their corresponding sentinel variables indicate 
+        they should be saved. It retrieves the average cycles, mode, number of stops, 
+        stop edge, and stop mask for each channel to include in the settings. The 
+        function then attempts to save the collected data in the specified format.
+
+        If the save operation is successful, a message box is displayed, confirming 
+        the successful save and showing the folder path and file names. If an error 
+        occurs during the save process, an error message box is shown.
+
+        If the selected format has already been saved, a message box is displayed 
+        with the previous save information.
+
+        :return: None
+        """
         
         data_prefix=savefile.read_default_data()['Default Histogram Name']
         current_date=datetime.datetime.now()
@@ -700,6 +861,15 @@ class Canvas():
                 message_box.exec_()
     
     def save_plots(self):
+        """
+        Saves the current plots in the selected image format.
+
+        This method opens a dialog for the user to select an image format (PNG, TIFF, or JPG) 
+        and saves the plots for channels A, B, C, and D if their respective flags are set to True. 
+        The plots are saved with a timestamp in the specified format in the default folder path.
+
+        :return: None
+        """
         try:
             graph_names=[]
             #Open select the format
@@ -814,6 +984,18 @@ class Canvas():
 
     #Function to connect the Thread with update signal
     def updateSignal(self,value,channel):
+        """
+        Updates the normalized data values for the specified channel and refreshes the corresponding histogram.
+
+        This method appends the new value to the list of normalized data for the specified channel 
+        (A, B, C, or D) and calls the update_histogram method to refresh the histogram with the 
+        updated data.
+
+        :param value: The normalized value to append to the data list (float or int).
+        :param channel: The channel identifier for which the value is to be updated (str). 
+                        Accepted values are "A", "B", "C", and "D".
+        :return: None
+        """
         if channel=="A":
             self.dataA.append(value)
             self.update_histogram(self.dataA,self.curveA,"A")
@@ -829,6 +1011,18 @@ class Canvas():
     
     #Update dataPure
     def updateDataPure(self,value,channel):
+        """
+        Updates the raw data values for the specified channel.
+
+        This method appends the new raw value (in picoseconds) to the list of data for the specified 
+        channel (A, B, C, or D).
+
+        :param value: The raw data value to append to the data list (float or int). 
+                    This value is in picoseconds.
+        :param channel: The channel identifier for which the value is to be updated (str). 
+                        Accepted values are "A", "B", "C", and "D".
+        :return: None
+        """
         if channel=="A":
             self.datapureA.append(value)
         elif channel=="B":
@@ -840,12 +1034,31 @@ class Canvas():
     
     #Change the status of sentinel dataThreadCreated
     def threadRunning(self,status):
+        """
+        Updates the thread creation status.
+
+        This method sets the threadCreatedSentinel attribute to indicate whether a thread has been created 
+        based on the provided status value. 
+
+        :param status: The status indicating whether a thread has been created (int). 
+                    Use 0 to indicate that the thread has been created, and 1 to indicate that it has not.
+        :return: None
+        """
         if status==0:
             self.threadCreatedSentinel=True
         elif status==1:
             self.threadCreatedSentinel=False
     
     def createDialog(self):
+        """
+        Creates a dialog box to notify the user when the connection with the device has been lost.
+
+        This method displays a critical error message box indicating that the connection with the device
+        has been lost. It also stops any ongoing graphic updates, hides relevant graphics, 
+        and disables the disconnect button while enabling the connect button.
+
+        :return: None
+        """
         msg_box = QMessageBox(self.parent)
         msg_box.setText("Connection with the device has been lost")
         msg_box.setWindowTitle("Connection Error")
@@ -866,6 +1079,20 @@ class Canvas():
     #Change the color of status Point
     #Function to change the color of point measurement
     def changeStatusColor(self, color):
+        """
+        Changes the color of the status point in the status bar based on the input value.
+
+        This method updates the status point's color by drawing a filled circle with the specified color.
+        The mapping of numerical values to colors is as follows:
+        - 0: Gray
+        - 1: Green
+        - 2: Yellow
+        - 3: Orange
+
+        :param color: A numerical value representing the desired color (int).
+                    0 for gray, 1 for green, 2 for yellow, 3 for orange.
+        :return: None
+        """
         pixmap = QPixmap(self.statusPoint.size())
         pixmap.fill(Qt.transparent)  
         painter = QPainter(pixmap)
@@ -920,10 +1147,30 @@ class Canvas():
         
     
     def changeStatusThread(self, newText):
+        """
+        Updates the text displayed in the status bar.
+
+        This method sets the status value text to the specified new text, 
+        reflecting the current status or information relevant to the user.
+
+        :param newText: The text to display in the status bar (str).
+        :return: None
+        """
         self.statusValue.setText(newText)
     
     #Open a dialog if the mode is not getting measurements in its range
     def dialogChangeMode(self, channel):
+        """
+        Opens a dialog box to ask the user if they want to change the mode for the selected channel.
+
+        The dialog informs the user that the collected data for the specified channel falls 
+        mostly outside the reliable range of mode 1 and prompts them to switch to mode 2. 
+        If the user confirms, the function updates the mode and processes the data accordingly.
+
+        :param channel: The channel for which to change the mode (str). 
+                        Expected values are 'channel A', 'channel B', 'channel C', or 'channel D'.
+        :return: None
+        """
         message_box = QMessageBox(self.parent)
         message_box.setIcon(QMessageBox.Question)  
         message_box.setText("The data collected in the "+channel+" mostly falls outside the reliable range of mode 1 (12ns to 500ns). Would you like to switch to mode 2 (125ns to 4ms)?")  
@@ -1009,6 +1256,18 @@ class Canvas():
     
     #Change the maxValue according to max value in the list
     def changeZoomMax(self, newMaxValue,channel):
+        """
+        Automatically adjusts the zoom level of the plot to the maximum value found.
+
+        The function sets the x-axis range of the specified channel's plot to [0, newMaxValue].
+        It considers whether measurements have been taken and limits the zoom change based on 
+        the sentinel zoom change counters.
+
+        :param newMaxValue: The new maximum value for the zoom range (float).
+        :param channel: The channel to which the zoom change applies (str).
+                        Expected values are 'A', 'B', 'C', or 'D'.
+        :return: None
+        """
         
         if channel=='A':
             if self.beforeMeasurement:
@@ -1053,6 +1312,15 @@ class Canvas():
     
     #AutoRangeA
     def autoRangeA(self):
+        """
+        Automatically adjusts the zoom level of channel A to the maximum value in the data.
+
+        The function sets a sentinel for zoom changes, checks if there are any data points in 
+        channel A, and if so, finds the maximum value. It then calls the changeZoomMax function
+        to adjust the zoom accordingly.
+
+        :return: None
+        """
         self.zoomCodeA=True
         self.sentinelZoomChangedA=0
         if len(self.dataA)>0:
@@ -1061,6 +1329,15 @@ class Canvas():
     
     #AutoRangeB
     def autoRangeB(self):
+        """
+        Automatically adjusts the zoom level of channel B to the maximum value in the data.
+
+        The function sets a sentinel for zoom changes, checks if there are any data points in 
+        channel B, and if so, finds the maximum value. It then calls the changeZoomMax function
+        to adjust the zoom accordingly.
+
+        :return: None
+        """
         self.zoomCodeB=True
         self.sentinelZoomChangedB=0
         if len(self.dataB)>0:
@@ -1069,6 +1346,15 @@ class Canvas():
     
     #AutoRangeC
     def autoRangeC(self):
+        """
+        Automatically adjusts the zoom level of channel C to the maximum value in the data.
+
+        The function sets a sentinel for zoom changes, checks if there are any data points in 
+        channel C, and if so, finds the maximum value. It then calls the changeZoomMax function
+        to adjust the zoom accordingly.
+
+        :return: None
+        """
         self.zoomCodeC=True
         self.sentinelZoomChangedC=0
         if len(self.dataC)>0:
@@ -1077,6 +1363,15 @@ class Canvas():
     
     #AutoRangeD
     def autoRangeD(self):
+        """
+        Automatically adjusts the zoom level of channel D to the maximum value in the data.
+
+        The function sets a sentinel for zoom changes, checks if there are any data points in 
+        channel D, and if so, finds the maximum value. It then calls the changeZoomMax function
+        to adjust the zoom accordingly.
+
+        :return: None
+        """
         self.zoomCodeD=True
         self.sentinelZoomChangedD=0
         if len(self.dataD)>0:
@@ -1150,6 +1445,15 @@ class WorkerThreadStartStopHistogram(QThread):
         
     #Main function
     def run(self):
+        """
+        Executes the thread's main loop to update the graph based on measurements.
+
+        The function emits a signal indicating that the thread has been created. It then enters a 
+        loop that continues as long as the thread is running. Inside the loop, it calls the update 
+        method to refresh the graph and pauses for 0.5 seconds before the next iteration.
+
+        :return: None
+        """
         self.threadCreated.emit(0)
         while self.itsRunning:
              self.update()
@@ -1163,6 +1467,18 @@ class WorkerThreadStartStopHistogram(QThread):
     ##---------------------------------##
     ##---------------------------------## 
     def update(self):
+        
+        """
+        Performs measurements and updates the graph with the new data.
+
+        The function verifies the device connection and retrieves measurements for each channel (A, B, C, D). 
+        It checks if the majority of measurements are out of range when in mode 1. If so, it emits a signal 
+        to open a dialog box asking the user if they want to change the mode. If there are no measurements, 
+        the function prioritizes the alert to change mode. Otherwise, it emits the measurement value to update 
+        the graph.
+
+        :return: None
+        """
         #verify the device connection
         #Get the measure of the device
         
@@ -1366,14 +1682,7 @@ class WorkerThreadStartStopHistogram(QThread):
                 self.colorValue.emit(1)
                 self.stringValue.emit("Measurement running")        
                 
-                
-
-                    
-
-
-
-                        
-                        
+                                  
         except NameError as e:
             print(e)
             self.dialogInit.emit()
@@ -1386,7 +1695,16 @@ class WorkerThreadStartStopHistogram(QThread):
     ##---------------------------------##  
     
     def getNewData(self,channel,channelIndex,stopNumber):
-        
+        """
+        Performs multiple measurements on the device, averages the results, and emits the corresponding data.
+        If no data is available, it emits None. Increments the total number of measurements taken and activates sentinels
+        to indicate whether the device is actively collecting data.
+
+        :param channel: The device channel used for measurements (Channel).
+        :param channelIndex: The index of the channel, which can be 'A', 'B', 'C', or 'D' (str).
+        :param stopNumber: The stop number to obtain the corresponding measurement (int).
+        :return: The average measurement in milliseconds if data is available; otherwise, returns None (float or None).
+        """
         measurements=self.device.measure()
         if measurements==None:
             return None
@@ -1482,6 +1800,13 @@ class WorkerThreadStartStopHistogram(QThread):
     
     #Change the max Value if the mode is changed
     def changeMaxValue(self,channel,valueMax):
+        """
+        Changes the maximum value for the specified channel.
+
+        :param channel: The channel for which the maximum value is to be changed (str).
+        :param valueMax: The new maximum value to be set (float).
+        :return: None
+        """
         if channel=='A':
             self.currentMaxValueA=valueMax
         elif channel=='B':
@@ -1493,6 +1818,12 @@ class WorkerThreadStartStopHistogram(QThread):
 
     #Add to the list if the mode is not changed
     def addChannelWarning(self,channel):
+        """
+        Adds the specified channel to the list of channels that need to change mode.
+
+        :param channel: The channel to be added to the warning list (str).
+        :return: None
+        """
         if channel=='A':
             self.channelsToChange.append('A')
         elif channel=='B':
@@ -1506,6 +1837,14 @@ class WorkerThreadStartStopHistogram(QThread):
 
     @Slot()
     def stop(self):
+        """
+        Stops the measurement process and closes the thread.
+
+        This method emits a signal to indicate that the thread has been stopped
+        and sets the running flag to False.
+
+        :return: None
+        """
         self.threadCreated.emit(1)
         self.itsRunning=False
     
