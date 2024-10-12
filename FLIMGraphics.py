@@ -179,16 +179,31 @@ class FLIMGraphic():
         
     # Functions to verify that start and stop will not be the same channels
     def indexChangeStartChannel(self):
+        """
+        Verifies that the options of the start and stop combo boxes are not the same 
+        when the start combo box is changed. If they are the same, it reverts to 
+        the previously selected option.
+
+        :return: None
+        """
         if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex()+1:
             self.comboBoxStartChannel.setCurrentIndex(self.oldStartChannelIndex)
         else:
             self.oldStartChannelIndex=self.comboBoxStartChannel.currentIndex()
     
     def indexChangeStopChannel(self):
+        """
+        Verifies that the options of the start and stop combo boxes are not the same 
+        when the stop combo box is changed. If they are the same, it reverts to 
+        the previously selected option.
+
+        :return: None
+        """
         if self.comboBoxStartChannel.currentIndex()==self.comboBoxStopChannel.currentIndex()+1:
             self.comboBoxStopChannel.setCurrentIndex(self.oldStopChannelIndex)
         else:
             self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
+            
     #Function to catch the start button action
     def startMeasurement(self):
         #Disable or enable the necessary
@@ -245,6 +260,15 @@ class FLIMGraphic():
         self.worker.start()
         
     def getUnits(self,value):
+        """
+        Receives a numerical value in picoseconds (ps) and returns a list with two values:
+        the appropriate units for the value and a number indicating by how much to divide 
+        the value for conversion.
+
+        :param value: The numerical value in picoseconds to convert.
+        :return: A list containing the appropriate unit as a string and a number indicating 
+                the divisor for conversion.
+        """
         if value < 1e3:
             return ["ps",1]
         elif value < 1e6:
@@ -258,6 +282,12 @@ class FLIMGraphic():
     
     #Function to catch the stop button action
     def stopMeasurement(self):
+        """
+        Stops the measurement thread if it is created and executes the 
+        function enableAfterFinishedThread() if the thread is not created.
+
+        :return: None
+        """
         #Disable or enable the necessary
         if self.threadCreated:
             self.worker.stop()
@@ -266,12 +296,26 @@ class FLIMGraphic():
     
     #Function to clear the graphic
     def clearGraphic(self):
+        """
+        Clears the measured data and time lists when a measurement is in progress 
+        and also clears the graphic by executing the worker's clear function.
+
+        :return: None
+        """  
         self.measuredData=[]
         self.measuredTime=[]
         if self.threadCreated:
             self.worker.clear()
         
     def enableAfterFinisihThread(self):
+        """
+        Executes when a measurement ends, either by pressing the stop button 
+        or when it has naturally finished. Re-enables the buttons, combo boxes, 
+        and fields necessary for a new measurement or for saving data. 
+        Resets the default parameters for the settings.
+
+        :return: None
+        """
         self.numberBins.setEnabled(True)
         self.stopButton.setEnabled(False)
         self.clearButton.setEnabled(False)
@@ -317,10 +361,26 @@ class FLIMGraphic():
     
     #Function to change the status measurement
     def changeStatusLabel(self, textValue):
+        """
+        Changes the text of the status label.
+
+        :param textValue: The text to set for the status label (str).
+        :return: None
+        """
         self.statusLabel.setText(textValue)
         
     #Function to change the color of point measurement
     def changeStatusColor(self, color):
+        """
+        Changes the color of the point in the status bar. Each color is assigned a specific numeric value.
+
+        :param color: The numeric value corresponding to the desired color (int).
+                    - 0: Gray
+                    - 1: Green
+                    - 2: Yellow
+                    - 3: Orange
+        :return: None
+        """
         pixmap = QPixmap(self.pointLabel.size())
         pixmap.fill(Qt.transparent)  
         painter = QPainter(pixmap)
@@ -348,6 +408,13 @@ class FLIMGraphic():
         
     #Function to get the tempico Channel from the comboBoxValue
     def getTempicoChannel(self):
+        """
+        Assigns the Tempico device channels based on the selected values from the combo boxes.
+        The selected start and stop channels are assigned to the variables `currentStartChannel` 
+        and `currentStopChannel`, respectively. It also enables the corresponding channels.
+
+        :return: None
+        """
         startChannelValue=self.comboBoxStartChannel.currentIndex()
         stopChannelValue=self.comboBoxStopChannel.currentIndex()
         #Init with all channels disabled
@@ -389,6 +456,13 @@ class FLIMGraphic():
     
     #Get the mode of the channel to save in a variable before start measurement
     def saveMode(self):
+        """
+        Saves the current modes of the channels before starting a measurement.
+        The modes are stored in the variables `oldChannelA`, `oldChannelB`, 
+        `oldChannelC`, and `oldChannelD`, allowing for restoration to the original settings after the measurement.
+
+        :return: None
+        """
         try:
             self.oldChannelA=self.device.ch1.getMode()
             self.oldChannelB=self.device.ch2.getMode()
@@ -399,6 +473,13 @@ class FLIMGraphic():
     
     #Set the mode before measurement in every channel
     def setOldMode(self):
+        """
+        Restores the modes of the channels after a measurement is completed.
+        The channels are set to their previous modes stored in `oldChannelA`, 
+        `oldChannelB`, `oldChannelC`, and `oldChannelD`.
+
+        :return: None
+        """
         try:
             self.device.ch1.setMode(self.oldChannelA)
             self.device.ch2.setMode(self.oldChannelB)
@@ -414,6 +495,12 @@ class FLIMGraphic():
         
     #Get the value of the time range label
     def timeRangeValue(self):
+        """
+        Converts the value from the timeRange label to picoseconds (ps).
+
+        :return: float
+            The value converted to picoseconds.
+        """
         unitsList=self.timeRange.text().split(" ")
         if unitsList[1]=='ps':
             multiplier=1
@@ -429,21 +516,56 @@ class FLIMGraphic():
             
     #Function to execute when the thread is finished
     def finishedThreadMeasurement(self):
+        """
+        Executes when the measurement thread finishes.
+
+        This function enables the UI components related to new measurements 
+        and resets the settings to default.
+
+        :return: None
+        """
         #To do BORRAR EL PRINT
-        print("Finalizo la ejecución del thread")
+        print("The thread finished")
         self.enableAfterFinisihThread()
         
     #Function to connect the signal with created thread sentinel
     def changeCreatedStatus(self):
+        """
+        Notifies that the measurement thread has been created.
+
+        This function sets the status of thread creation to True.
+
+        :return: None
+        """
         self.threadCreated=True
     
     #Function to update the measured values
     def updateMeasurement(self,listOfNewValues,domainMeasurement):
+        """
+        Updates the measured data and time with new values and refreshes the graph.
+
+        This function receives a new list of values representing counts and their corresponding
+        update times, assigning them to the variables measuredData and measuredTime, and 
+        updates the graph accordingly.
+
+        :param listOfNewValues: The new list of measurement values (list).
+        :param domainMeasurement: The list of times corresponding to the measurement values (list).
+        :return: None
+        """
         self.measuredData=listOfNewValues
         self.measuredTime=domainMeasurement
         self.curve.setData(self.measuredTime,self.measuredData)
+        
     #Function to get the Label with the correct units
     def updateLabel(self,units):
+        """
+        Updates the label of the x-axis in the graph with the correct units for the data.
+
+        This function takes the units as a string and updates the x-axis label accordingly.
+
+        :param units: The units to be displayed on the x-axis label (str).
+        :return: None
+        """
         self.units=units
         self.unitsLabel='Time ('+units+')'
         self.plotFLIM.setLabel('bottom','Time ('+units+')')
@@ -451,6 +573,16 @@ class FLIMGraphic():
     
     
     def updateLabels(self,totalMeasurements,totalStarts):
+        """
+        Updates the labels for total measurements and total starts with the given values.
+
+        This function sets the text of the totalMeasurements and totalStart labels 
+        according to the parameters provided.
+
+        :param totalMeasurements: The text to set for the total measurements label (str).
+        :param totalStarts: The text to set for the total starts label (str).
+        :return: None
+        """
         self.totalMeasurements.setText(totalMeasurements)
         self.totalStart.setText(totalStarts)
     
@@ -470,17 +602,63 @@ class FLIMGraphic():
     
     #Functions to update the totalTime Label
     def update_timer(self):
+        """
+        Updates the timer for the ongoing measurement by adding one second.
+
+        This function increments the time variable by one second and updates the 
+        totalTime label to reflect the new time.
+
+        :return: None
+        """
         self.time = self.time.addSecs(1)
         self.totalTime.setText(self.time.toString('hh:mm:ss'))
     
     def startTimer(self):
+        """
+        Starts the timer that triggers the update_timer function every second.
+
+        This function initiates the timer for the ongoing measurement, allowing
+        the update_timer function to be executed at one-second intervals.
+
+        :return: None
+        """
         self.timerMeasurements.start(1000)
     
     def stopTimer(self):
+        """
+        Stops the timer that triggers the update_timer function.
+
+        This function halts the timer responsible for updating the measurement time
+        and sets the totalTime label to indicate that no measurement is currently running.
+
+        :return: None
+        """
         self.timerMeasurements.stop()
         self.totalTime.setText("No measurement running")
+    
     #Connection with change of comboBox
     def changeFunction(self):
+        """
+        Updates the parameter values in the UI based on the selected function in the functionComboBox.
+
+        This function checks the current fitting function (e.g., "ExpDecay", "Kohlrausch", "ShiftedExponential", or 
+        "DoubleExponential") and updates the parameter labels accordingly. If the parameters have already been calculated,
+        it will display the values along with their uncertainties and units. If the parameters are not available, it sets 
+        the values to "Undefined".
+
+        Variables assignment:
+        - Parameters like "I0", "τ0", "β", "α", "b", "R^2", and their respective uncertainties are assigned using 
+        `insertParameters()` based on the fitting model.
+        - Units are assigned through the `self.units` attribute for certain parameters (e.g., τ0).
+        
+        Behavior by function:
+        - ExpDecay: Updates `I0`, `τ0`, and `R^2`.
+        - Kohlrausch: Updates `I0`, `τ0`, `β`, and `R^2`.
+        - ShiftedExponential: Updates `I0`, `τ0`, `α`, `b`, and `R^2`.
+        - DoubleExponential: Updates `I0`, `τ0`, `τ1`, `α`, and `R^2`.
+
+        :return: None
+        """
         if self.currentFit=="ExpDecay" and self.functionComboBox.currentIndex()==0:
             if self.FitParameters[0]!="Undefined":
 
@@ -644,6 +822,25 @@ class FLIMGraphic():
                 ####################
         
     def insertParameters(self,index,Parameter,Value,Cov,Units):
+        """
+        Inserts the parameter values into the fitting table at the specified row.
+
+        This function updates the table used for displaying the fitted parameters by inserting the parameter name, its 
+        value, the covariance (uncertainty), and the units in the specified row of the table.
+
+        Variables assignment:
+        - The parameter name is assigned to the first column of the specified row (`index`).
+        - The value of the parameter is assigned to the second column.
+        - The covariance of the parameter is assigned to the third column.
+        - The units of the parameter are assigned to the fourth column.
+
+        :param index: The row index where the values will be inserted (int).
+        :param Parameter: The name of the parameter to be displayed (str).
+        :param Value: The value of the parameter to be displayed (str).
+        :param Cov: The covariance (uncertainty) of the parameter (str).
+        :param Units: The units of the parameter (str).
+        :return: None
+        """
         #Change parameter values
         self.parametersTable.setItem(index,0,QTableWidgetItem(Parameter))
         self.parametersTable.setItem(index,1,QTableWidgetItem(Value))
@@ -653,6 +850,20 @@ class FLIMGraphic():
              
     #Connection with the ApplyButton
     def applyAction(self):
+        """
+        Captures the action of the 'apply' button, calculates the selected fit, and stores the resulting parameters.
+
+        This function determines which fitting function is selected from `functionComboBox` and attempts to calculate
+        the fit using the measured time and data. If the parameters can be determined, they are stored in `FitParameters`.
+        If not, a dialog informs the user that the parameters could not be determined.
+
+        Variables assignment:
+        - The parameters `i0`, `tau0`, and other fit-specific variables are calculated using the corresponding fit function.
+        - If the fit is successful, the rounded parameters are stored in `FitParameters`.
+        - If the fit fails or returns "Undefined", a message box is shown to inform the user of the error.
+
+        :return: None
+        """
         if len(self.measuredData)>0:
             try:
                 if self.functionComboBox.currentText()=="Exponential":
@@ -711,6 +922,22 @@ class FLIMGraphic():
                     
     #Reset the labels when a measurement begins
     def resetParametersLabels(self):
+        """
+        Resets all the fit parameters to 'Undefined' and clears the current fit type.
+
+        This function sets the list `FitParameters` to contain "Undefined" values for all parameters and clears `currentFit`.
+        Additionally, it resets the `R2` value to "Undefined". Depending on the selected fit type in `functionComboBox`,
+        the respective parameter labels in the table are updated to reflect "Undefined" values.
+
+        Variables assignment:
+        - `FitParameters` is reset to a list of "Undefined".
+        - `currentFit` is cleared to an empty string.
+        - `R2` is reset to "Undefined".
+        - The `insertParameters` method is used to update the table with "Undefined" values for each parameter
+        based on the selected function in `functionComboBox`.
+
+        :return: None
+        """
         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
         self.currentFit=""
         self.R2="Undefined"
@@ -743,6 +970,26 @@ class FLIMGraphic():
             
     #fit exponential curver
     def fitExpDecay(self,xData,yData):
+        """
+        Calculates the exponential decay fit for the given data.
+
+        This function attempts to fit an exponential decay model to the provided `xData` and `yData`. If successful,
+        the optimal parameters (I0, tau0) are used to update the respective labels in the parameters table along with
+        their uncertainties (covariance), and the fitted curve is plotted. If the fit cannot be performed, it alerts
+        the user via a message box.
+
+        Variables assignment:
+        - `self.FitCov`: Contains the covariance values for I0 and tau0, or "nan" if not calculable.
+        - `self.xDataFitCopy`: Stores a copy of the `xData` for the fitted curve.
+        - `self.yDataFitCopy`: Stores the computed y-values for the fitted curve.
+        - `self.R2`: Stores the calculated R² value for the fit.
+        - `self.curveFit`: Updates the plot with the fitted curve data.
+
+        :param xData: The x-axis data points (array-like).
+        :param yData: The y-axis data points (array-like).
+        :return: Tuple (I0_opt, tau0_opt) containing the fitted values of I0 and tau0, or ("Undefined", "Undefined") if fitting fails.
+        :rtype: tuple(float, float) or tuple(str, str)
+        """
         # Initial guess for the parameters
         try:
             initial_guess = [self.initialI0, self.initialTau0]
@@ -812,6 +1059,26 @@ class FLIMGraphic():
 
     #fit kohlrausch curver
     def fitKohlrauschFit(self,xData,yData):
+        """
+        Calculates the Kohlrausch fit for the given data.
+
+        This function attempts to fit a Kohlrausch (stretched exponential) model to the provided `xData` and `yData`.
+        If successful, the optimal parameters (I0, tau0, β) are used to update the respective labels in the parameters
+        table along with their uncertainties (covariance), and the fitted curve is plotted. If the fit cannot be performed,
+        it alerts the user via a message box.
+
+        Variables assignment:
+        - `self.FitCov`: Contains the covariance values for I0, tau0, and β, or "nan" if not calculable.
+        - `self.xDataFitCopy`: Stores a copy of the `xData` for the fitted curve.
+        - `self.yDataFitCopy`: Stores the computed y-values for the fitted curve.
+        - `self.R2`: Stores the calculated R² value for the fit.
+        - `self.curveFit`: Updates the plot with the fitted curve data.
+
+        :param xData: The x-axis data points (array-like).
+        :param yData: The y-axis data points (array-like).
+        :return: Tuple (I0_opt, tau0_opt, beta_opt) containing the fitted values of I0, tau0, and β, or ("Undefined", "Undefined", "Undefined") if fitting fails.
+        :rtype: tuple(float, float, float) or tuple(str, str, str)
+        """
         try:
             # Initial guess for the parameters
             initial_guess = [self.initialI0Kol, self.initialTau0Kol, self.initialBeta]
@@ -892,6 +1159,25 @@ class FLIMGraphic():
             return "Undefined","Undefined","Undefined"
     #Initial Parameters Dialog
     def initialParametersDialog(self):
+        """
+        Displays a dialog for selecting initial parameters for fitting functions.
+
+        This dialog allows the user to select a type of fitting function and input the corresponding parameters.
+        The parameters that can be set include:
+        - I0 (initial value)
+        - tau0 (decay constant)
+        - beta (for Kohlrausch fit)
+        - alpha (for Shifted Exponential fit)
+        - b (for Shifted Exponential fit)
+        
+        The dialog contains a ComboBox to select the function type, and the input fields dynamically update based on
+        the selected function. It includes "Apply" and "Reset" buttons to apply changes or revert to default values.
+
+        Variables assignment:
+        - The input values from the dialog are assigned to respective attributes, but are not directly returned.
+
+        :return: None
+        """
         self.initialDialog = QDialog(self.mainWindow)
         self.initialDialog.setWindowTitle("Select Function Parameters")
         layout = QVBoxLayout(self.initialDialog)
@@ -976,6 +1262,38 @@ class FLIMGraphic():
     
     #Function to connect the apply button
     def applyInitialDialog(self):
+        """
+        Updates the initial parameters based on user input from the parameter dialog.
+
+        This function is called when the user clicks the "Apply" button in the parameter dialog. 
+        It retrieves the values from the input fields corresponding to the selected fitting function 
+        and assigns them to the appropriate instance variables. 
+
+        The following parameters are updated based on the selected fit type:
+        - For Exponential fit:
+            - I0 (initial value)
+            - tau0 (decay constant)
+        - For Kohlrausch fit:
+            - I0 (initial value)
+            - tau0 (decay constant)
+            - beta (exponent)
+        - For Shifted Exponential fit:
+            - I0 (initial value)
+            - tau0 (decay constant)
+            - alpha (shift parameter)
+            - b (baseline value)
+        - For Double Exponential fit:
+            - I0 (initial value)
+            - tau0 (first decay constant)
+            - tau1 (second decay constant)
+            - alpha (mixing coefficient)
+
+        Variables assignment:
+        - The updated values are assigned to their respective initial parameter variables.
+        - A boolean flag indicating that initial parameters have changed is set to True for the relevant fit type.
+
+        :return: None
+        """
         print("Se ejecuta")
         if self.combo_box.currentText()=="Exponential fit":
             self.initialI0=self.I_0_field.value()
@@ -1001,6 +1319,36 @@ class FLIMGraphic():
         self.initialDialog.accept()
     #Function to connect the reset button
     def resetInitialDialog(self):
+        """
+        Resets the initial parameters in the dialog based on the measured data.
+
+        This function is called when the user clicks the "Default Values" button in the parameter dialog. 
+        It resets the initial parameters to sensible defaults derived from the measured data. 
+        The following resets occur based on the selected fitting function:
+        
+        - For Exponential fit:
+            - I0 is set to the maximum value of measured data.
+            - tau0 is set to the mean of measured time.
+        - For Kohlrausch fit:
+            - I0 is set to the maximum value of measured data.
+            - tau0 is set to the mean of measured time.
+            - beta is set to 1.0 (default value).
+        - For Shifted Exponential fit:
+            - I0 is set to the maximum value of measured data.
+            - tau0 is set to the mean of measured time.
+            - alpha is set to 0 (default value).
+            - b is set to 0 (default value).
+        - For Double Exponential fit:
+            - I0 is set to the maximum value of measured data.
+            - tau0 is set to the mean of measured time.
+            - alpha is set to 0 (default value).
+            - tau1 is set to the mean of measured time.
+
+        The corresponding input fields in the dialog are updated with these new values. 
+        Flags indicating that the initial parameters have not changed are also reset to False for the relevant fit type.
+
+        :return: None
+        """
         if len(self.measuredData)>0:
             if self.combo_box.currentText()=="Exponential fit":
                 self.initialI0=max(self.measuredData)
@@ -1041,6 +1389,26 @@ class FLIMGraphic():
     
     #fit Shifted Exponential
     def fitShiiftedExponential(self, xData, yData):
+        """
+        Fits a shifted exponential decay model to the provided data.
+
+        This function fits a shifted exponential decay model to the given `xData` and `yData` using the initial guesses for 
+        the parameters (I0, tau0, alpha, b). If the fit is successful, it updates the corresponding values for each parameter 
+        and plots the fitted curve. If the fit fails, a warning message is displayed to the user.
+
+        Variables assignment:
+        - `self.FitCov`: Stores the covariance values for I0, tau0, alpha, and b, or "nan" if not calculable.
+        - `self.xDataFitCopy`: Stores a copy of the `xData` for the fitted curve.
+        - `self.yDataFitCopy`: Stores the computed y-values for the fitted curve.
+        - `self.R2`: Stores the calculated R² value for the fit.
+        - `self.curveFit`: Updates the plot with the fitted curve data.
+
+        :param xData: The x-axis data points (array-like).
+        :param yData: The y-axis data points (array-like).
+        :return: Tuple (I0_opt, tau0_opt, alpha_opt, b_opt) containing the fitted values of I0, tau0, alpha, and b, or 
+                ("Undefined", "Undefined", "Undefined", "Undefined") if fitting fails.
+        :rtype: tuple(float, float, float, float) or tuple(str, str, str, str)
+        """
         try:
             # Initial guess for the parameters: I0, tau0, alpha, b
             initial_guess = [self.initialI0Shif, self.initialTau0Shif, self.initialAlpha, self.initialB]
@@ -1142,6 +1510,26 @@ class FLIMGraphic():
     
     #fit Double exponential
     def fitDoubleExponential(self, xData, yData):
+        """
+        Fits a double exponential decay model to the provided data.
+
+        This function fits a double exponential decay model to the given `xData` and `yData` using the initial guesses for 
+        the parameters (I0, tau0, tau1, alpha). If the fit is successful, it updates the corresponding values for each 
+        parameter and plots the fitted curve. If the fit fails, a warning message is displayed to the user.
+
+        Variables assignment:
+        - `self.FitCov`: Stores the covariance values for I0, tau0, tau1, and alpha, or "nan" if not calculable.
+        - `self.xDataFitCopy`: Stores a copy of the `xData` for the fitted curve.
+        - `self.yDataFitCopy`: Stores the computed y-values for the fitted curve.
+        - `self.R2`: Stores the calculated R² value for the fit.
+        - `self.curveFit`: Updates the plot with the fitted curve data.
+
+        :param xData: The x-axis data points (array-like).
+        :param yData: The y-axis data points (array-like).
+        :return: Tuple (I0_opt, tau0_opt, tau1_opt, alpha_opt) containing the fitted values of I0, tau0, tau1, and alpha, 
+                or ("Undefined", "Undefined", "Undefined", "Undefined") if fitting fails.
+        :rtype: tuple(float, float, float, float) or tuple(str, str, str, str)
+        """
         try:
             # Initial guess for the parameters: I0, tau0, alpha, b
             initial_guess = [self.initialI0Doub, self.initialTau0Doub, self.initialTau1Doub, self.initialAlphaDoub]
@@ -1250,23 +1638,94 @@ class FLIMGraphic():
         
     #Exponential Decay Function
     def exp_decay(self,t, I0, tau0):
+        """
+        Computes the value of an exponential decay function.
+
+        This function calculates the value of the exponential decay function using the given parameters for time `t`, 
+        initial value `I0`, and decay constant `tau0`.
+
+        Variables assignment:
+        - The computed value is returned directly and not assigned to any variable within the function.
+
+        :param t: The time at which to evaluate the function (float).
+        :param I0: The initial value of the exponential function (float).
+        :param tau0: The decay constant (float).
+        :return: The value of the exponential decay function at time `t`.
+        :rtype: float
+        """
         return I0 * np.exp(-t / tau0)
 
     #Kohlrausch Decay Function
     def kohl_decay(self,t, I0, tau0,beta):
+        """
+        Computes the value of a Kohlrausch (stretched exponential) decay function.
+
+        This function calculates the value of the stretched exponential (Kohlrausch) decay function using the given parameters: 
+        time `t`, initial value `I0`, decay constant `tau0`, and stretching parameter `beta`.
+
+        Variables assignment:
+        - The computed value is returned directly and not assigned to any variable within the function.
+
+        :param t: The time at which to evaluate the function (float).
+        :param I0: The initial value of the exponential function (float).
+        :param tau0: The decay constant (float).
+        :param beta: The stretching exponent, controlling the deviation from a simple exponential decay (float).
+        :return: The value of the stretched exponential decay function at time `t`.
+        :rtype: float
+        """
         return I0 * np.exp((-t / tau0)**beta)
     
     #Shifted Exponential Function
     def shifted_decay_function(self, t, I0, tau0, alpha, b):
+        """
+        Computes the value of a shifted exponential decay function.
+
+        This function calculates the value of a shifted exponential decay function using the given parameters: 
+        time `t`, initial value `I0`, decay constant `tau0`, shift parameter `alpha`, and constant offset `b`.
+
+        Variables assignment:
+        - The computed value is returned directly and not assigned to any variable within the function.
+
+        :param t: The time at which to evaluate the function (float).
+        :param I0: The initial value of the exponential function (float).
+        :param tau0: The decay constant (float).
+        :param alpha: The shift parameter, determining the horizontal shift of the decay function (float).
+        :param b: The constant offset added to the decay function (float).
+        :return: The value of the shifted exponential decay function at time `t`.
+        :rtype: float
+        """
         # Define the decay function with the new equation
         return I0 * np.exp(-(t - alpha) / tau0) + b
     #Double Exponential Function
     def double_Exponential(self,t, I0, tau0, tau1, alpha): 
+        """
+        Computes the value of a double exponential decay function.
+
+        This function calculates the value of a double exponential decay function using the given parameters: 
+        time `t`, initial value `I0`, decay constants `tau0` and `tau1`, and mixing parameter `alpha`.
+
+        Variables assignment:
+        - The computed value is returned directly and not assigned to any variable within the function.
+
+        :param t: The time at which to evaluate the function (float).
+        :param I0: The initial value of the exponential function (float).
+        :param tau0: The first decay constant (float).
+        :param tau1: The second decay constant (float).
+        :param alpha: The mixing parameter that determines the contribution of the first decay (float).
+        :return: The value of the double exponential decay function at time `t`.
+        :rtype: float
+        """
         return I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))
 
     #Function to get the maximum number of decimal numbers from sd (Standard Deviation)
     
     def maxRound(self,string):
+        """
+        Determines the number of decimal places needed for at least three significant figures.
+
+        :param string: The number as a string (str).
+        :return: Number of decimal places (int).
+        """
         try:
             num = float(string)
             
@@ -1293,6 +1752,12 @@ class FLIMGraphic():
     #Function to get the string of the pcov numbers
     
     def roundStringPCov(self, number):
+        """
+        Converts a number to a string representation in scientific notation with two decimal places.
+
+        :param number: The input number (float).
+        :return: String representation in scientific notation (str).
+        """
         if number == 0:
             return "0.00"
         exponent = int(math.floor(math.log10(abs(number))))
@@ -1305,6 +1770,13 @@ class FLIMGraphic():
     #Function to calculate the parameter R^2
 
     def calculateR2(self,data,fitData):
+        """
+        Calculates the R² value based on the observed and fitted data.
+
+        :param data: The observed data points (array-like).
+        :param fitData: The fitted data points (array-like).
+        :return: The R² value indicating the goodness of fit (float).
+        """
         #Get the array
         arrayData=np.array(data)
         arrayFit=np.array(fitData)
@@ -1323,6 +1795,10 @@ class FLIMGraphic():
     #Save buttons
     #Save Plot Button
     def savePlotFLIM(self):
+        """
+        Saves the graph image in the specified format (PNG, TIFF, or JPG) based on the user's selection.
+        :return: None
+        """
         try:
             graph_names=[]
             #Open select the format
@@ -1413,6 +1889,11 @@ class FLIMGraphic():
             
     #Save Data Button
     def saveFLIMData(self):
+        """
+        Saves the data in the selected format (TXT, CSV, or DAT) based on the user's choice.
+
+        :return: None
+        """
         #Open select the format
         dialog = QDialog(self.mainWindow)
         dialog.setObjectName("TextFormat")
@@ -1562,7 +2043,13 @@ class WorkerThreadFLIM(QThread):
         
     #Main Function
     def run(self):
-        #Prueba: TO DO BORRAR
+        """
+        Runs the measurement thread, continuously taking measurements based on user-selected values
+        and passing them to the graphs.
+
+        :return: None
+        """
+        
         self.createdSignal.emit()
         while self.totalMeasurements<self.numberMeasurements and self._is_running:
             
@@ -1578,6 +2065,15 @@ class WorkerThreadFLIM(QThread):
             
     #Functon to define the mode of the measurement
     def measurementMode(self):
+        """
+        Sets the measurement mode for the device channels based on the specified time range.
+
+        If the time range is less than or equal to 500000 ps , sets all channels to mode 1.
+        Otherwise, sets all channels to mode 2.
+
+        :param self: The instance of the class.
+        :return: None
+        """
         if self.TimeRange<=500000:
             self.device.ch1.setMode(1)
             self.device.ch2.setMode(1)
@@ -1591,6 +2087,15 @@ class WorkerThreadFLIM(QThread):
         
     #Take one measurement function
     def takeMeasurements(self, percentage):
+        """
+        Takes measurements from the device and updates the start-stop differences list.
+
+        Configures the device for measurement runs and checks the input and stop channels for data.
+        If no measurements are detected, emits a status signal to update the main thread about the current measurement state.
+
+        :param percentage: The percentage of measurement completion (float).
+        :return: None
+        """
         #Init the config to take measurement
         self.device.setNumberOfRuns(100)
         if self.deviceStartChannel!=None:
@@ -1674,6 +2179,14 @@ class WorkerThreadFLIM(QThread):
                 
     #Function to created the data to update the histogram graphic
     def createFLIMData(self):
+        """
+        Generates FLIM data from the start-stop differences and emits the calculated results to the main thread.
+
+        Processes the collected data to determine the number of counts within a given time based on the maximum value of start-stop differences.
+        Normalizes the data according to the determined units and calculates the histogram counts.
+
+        :return: None
+        """
         if len(self.startStopDifferences)>0:
             maximumValue=max(self.startStopDifferences)
             unitsDivisionFactor=self.getUnits(maximumValue)
@@ -1699,6 +2212,14 @@ class WorkerThreadFLIM(QThread):
             
     #Function to get the scale in time of the histogram
     def getUnits(self,picosecondsValue):
+        """
+        Determines the appropriate units for a given value in picoseconds.
+
+        Converts a given value in picoseconds to the most suitable time unit (picoseconds, nanoseconds, microseconds, or milliseconds).
+
+        :param picosecondsValue: The value in picoseconds (float).
+        :return: A list containing the unit as a string and the factor by which to divide the value (list).
+        """
         if picosecondsValue < 1e3:
             return ["ps",1]
         elif picosecondsValue < 1e6:
@@ -1707,7 +2228,16 @@ class WorkerThreadFLIM(QThread):
             return ["µs",10**6]
         elif picosecondsValue < 1e12:
             return ["ms",10**9]
+        
     def getBinWidthNumber(self):
+        """
+        Calculates the bin width in picoseconds based on user input in different units.
+
+        Extracts the numerical value and its corresponding unit from the user-provided text,
+        and converts it into picoseconds for further calculations.
+
+        :return: None
+        """
         splitList=self.binwidthText.split(' ')
         number=int(splitList[0])
         units=splitList[1].replace(' ','')
@@ -1721,11 +2251,26 @@ class WorkerThreadFLIM(QThread):
     
     #Function to clear the graphic
     def clear(self):
+        """
+        Clears the recorded start-stop differences and resets the total measurement count.
+
+        This function empties the list that stores the differences between start and stop measurements,
+        and sets the total number of measurements back to zero.
+
+        :return: None
+        """
         self.startStopDifferences=[]
         self.totalMeasurements=0
     
     #Check the connection of the device
     def checkDeviceStatus(self):
+        """
+        Checks the status of the device by attempting to read a parameter.
+
+        If an error occurs during the read operation, the measurement process is stopped.
+
+        :return: None
+        """
         try:
             self.device.readIdnFromDevice()
         except:
@@ -1734,6 +2279,13 @@ class WorkerThreadFLIM(QThread):
     #Stop thread function
     @Slot()
     def stop(self):
+        """
+        Stops the measurement process by setting the running flag to False.
+
+        Emits a status message indicating that the measurement is ending and updates the status bar color to yellow.
+
+        :return: None
+        """
         self._is_running=False
         self.statusSignal.emit("Ending measurement")
         self.pointSignal.emit(2)
