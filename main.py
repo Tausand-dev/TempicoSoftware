@@ -74,6 +74,7 @@ class SplashScreen(QMainWindow):
         After showing the main window, it closes the current window.
 
         It does not take any parameters and does not return a value.
+        :returns: None
         """
         self.main_window = MainWindow()
         self.main_window.show()
@@ -193,6 +194,7 @@ class MainWindow(QMainWindow):
 
         :param parent: The parent widget (typically a `QTabWidget`) for the histogram window.
         :type parent: QWidget
+        :returns: None
         """
         if self.sentinel1==0:
             self.ui = Ui_HistogramaStartStop()
@@ -210,6 +212,7 @@ class MainWindow(QMainWindow):
 
         :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
         :type parent: QWidget
+        :returns: None
         """
         if self.sentinel2==0:
             self.uiFLIM = UiFLIM()
@@ -227,6 +230,7 @@ class MainWindow(QMainWindow):
 
         :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
         :type parent: QWidget
+        :returns: None
         """
         if self.sentinel3==0:
             self.uig2 = Ui_G2()
@@ -341,6 +345,7 @@ class MainWindow(QMainWindow):
         If additional graphics like `g2Graphic` or `FLIMGraphic` are active, it will disconnect them as well.
 
         It does not take any parameters and does not return a value.
+        :returns: None
         """
         if hasattr(self, 'grafico'): 
             self.grafico.hide_graphic2()
@@ -368,6 +373,7 @@ class MainWindow(QMainWindow):
           has not been initialized yet.
   
           It does not take any parameters and does not return a value.
+          :returns: None
           """
           valor_padre=self.tabs.currentIndex()
           padre=self.tab1
@@ -467,6 +473,7 @@ class MainWindow(QMainWindow):
         was found.
 
         It does not take any parameters and does not return a value.
+        :returns: None
         """
         if self.conectedDevice!=None:
             if not self.grafico.currentmeasurement:
@@ -506,6 +513,7 @@ class MainWindow(QMainWindow):
         progress. If no device is connected, a message box is shown indicating that no device was found.
 
         It does not take any parameters and does not return a value.
+        :returns: None
         """
         if self.conectedDevice!=None:
             if not self.grafico.currentmeasurement:
@@ -543,6 +551,7 @@ class MainWindow(QMainWindow):
         displays the About window.
 
         It does not take any parameters and does not return a value.
+        :returns: None
         """
         
         settings_windows=AboutWindow()
@@ -593,6 +602,7 @@ class MainWindow(QMainWindow):
 
         :param event: The close event triggered when attempting to close the window.
         :type event: QCloseEvent
+        :returns: None
         """
         reply = QMessageBox.question(self, 'Exit', 
             "Are you sure you want to close tempico software?", 
@@ -613,6 +623,7 @@ class MainWindow(QMainWindow):
 
         :param event: The resize event triggered when the window is resized.
         :type event: QResizeEvent
+        :returns: None
         """
         if self.FLIMGraphic!=None:
             currentValue=self.width()

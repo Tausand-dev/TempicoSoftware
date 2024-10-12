@@ -37,4 +37,14 @@ class AboutWindow(QtWidgets.QDialog, Ui_Dialog_about):
         self.buttonBox.rejected.connect(self.reject)
 
     def open_link(self, link):
+        """
+        Opens a specified URL in the default web browser.
+
+        This function is triggered when a link is clicked and opens the provided URL 
+        using the system's default web browser.
+
+        :param link: The URL to be opened.
+        :type link: str
+        :returns: None
+        """
         QtGui.QDesktopServices.openUrl(QtCore.QUrl(link))
