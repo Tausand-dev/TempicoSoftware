@@ -35,12 +35,12 @@ class GeneralSettingsWindow(QDialog):
         self.numberofruns=QLabel("Number of runs:",self)
         self.numberofruns.setGeometry(65,40,150,20)
         self.spinboxNumerOfStops = QSpinBox(self)
-        self.spinboxNumerOfStops.setMinimum(1)  # Valor mínimo permitido
-        self.spinboxNumerOfStops.setMaximum(1000)  # Valor máximo permitido
-        self.spinboxNumerOfStops.setSingleStep(1)  # Incremento/decremento en 1
-        self.spinboxNumerOfStops.setWrapping(True)  # Volver al valor mínimo después del valor máximo
-        self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)  # Mostrar botones de más/menos
-        self.spinboxNumerOfStops.setAccelerated(True)  # Acelerar la velocidad del aumento/decremento
+        self.spinboxNumerOfStops.setMinimum(1)  
+        self.spinboxNumerOfStops.setMaximum(1000) 
+        self.spinboxNumerOfStops.setSingleStep(1) 
+        self.spinboxNumerOfStops.setWrapping(True)
+        self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)  
+        self.spinboxNumerOfStops.setAccelerated(True)  
         self.spinboxNumerOfStops.setGeometry(180,40,100,20)
         #------Help button---------#
         
@@ -51,43 +51,36 @@ class GeneralSettingsWindow(QDialog):
         button.setGeometry(110, 80, 140, 40)
         
 
-        # If we use css to the buttons 
-        # TO DO: If we dont use css delete this code
-        # button.setStyleSheet("""
-        #     QPushButton {
-        #         background-color: #f0f0f0;
-        #         border-style: solid;
-        #         border-width: 2px;
-        #         border-color: #b0b0b0;
-        #         border-radius: 5px;
-        #         font-size: 16px;
-        #         font-weight: bold;
-        #         color: #333;
-        #     }
-        #     QPushButton:hover {
-        #         background-color: #e0e0e0;
-        #     }
-        #     QPushButton:pressed {
-        #         background-color: #d0d0d0;
-        #         border-color: #909090;
-        #     }
-        # """)
         self.getsettings()
         button.clicked.connect(self.setsettings)
 
-        #Definimos que cosas se hacen
-        #Cambiar el treshold voltage
-        #Cambiar el number of runs
-        #Resetear
     
     
     def getsettings(self):
+        """
+        Retrieves the device's current settings, such as the number of runs and threshold voltage, 
+        and updates the corresponding values in the graphical interface.
+
+        The function fetches the number of runs and threshold voltage from the connected device, 
+        and then sets these values in the dialog's spinbox and combobox in the user interface.
+
+        :returns: None
+        """
         number_runs=self.device.getNumberOfRuns()
         self.spinboxNumerOfStops.setValue(int(number_runs))
         tresholdVoltage= self.device.getThresholdVoltage()
         self.Comboboxthresholdvoltage.setValue(float(tresholdVoltage))
     
     def setsettings(self):
+        """
+        Applies the settings provided by the user to the connected device.
+
+        The function retrieves the user-defined values for the number of runs and threshold voltage 
+        from the graphical interface and sends these values to the device. After applying the settings, 
+        the function closes the settings dialog.
+
+        :returns: None
+        """
         self.device.setNumberOfRuns(self.spinboxNumerOfStops.value())
         self.device.setThresholdVoltage(self.Comboboxthresholdvoltage.value())
         self.accept()
