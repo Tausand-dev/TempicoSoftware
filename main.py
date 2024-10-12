@@ -217,6 +217,17 @@ class MainWindow(QMainWindow):
             self.sentinel2=1
     
     def construct_g2(self,parent):
+        """
+        Constructs the g2 Measurements window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates 
+        an instance of the `Uig2` class and sets up the UI using the given parent.
+
+        It does not return a value.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
+        :type parent: QWidget
+        """
         if self.sentinel3==0:
             self.uig2 = Ui_G2()
             self.uig2.setupUi(parent)
@@ -485,6 +496,17 @@ class MainWindow(QMainWindow):
             message_box.exec_()
     
     def general_settings_clicked(self):
+        """
+        Opens the general settings window for device-wide configurations.
+
+        This function checks if a device is connected. If no measurement is currently running, 
+        it opens the general settings window where configurations that affect the entire device 
+        (regardless of the channel) can be adjusted. If a measurement is running, a message box 
+        is displayed to inform the user that changes cannot be made while the measurement is in 
+        progress. If no device is connected, a message box is shown indicating that no device was found.
+
+        It does not take any parameters and does not return a value.
+        """
         if self.conectedDevice!=None:
             if not self.grafico.currentmeasurement:
                 settings_windows=GeneralSettingsWindow(self.conectedDevice)
@@ -513,6 +535,15 @@ class MainWindow(QMainWindow):
     
 
     def about_settings(self):
+        """
+        Opens the About window displaying information about the company, version, and repository.
+
+        This function opens a window showing details about the company (Tausand), the software version, 
+        and the location of the repository. It does not perform any checks or validations and directly 
+        displays the About window.
+
+        It does not take any parameters and does not return a value.
+        """
         
         settings_windows=AboutWindow()
         settings_windows.exec_()
@@ -530,7 +561,7 @@ class MainWindow(QMainWindow):
                                                      self.uiParameter.startButton,self.uiParameter.stopButton,self.dialogParameters, self.g2Graphic,self)
                 self.dialogParameters.exec_()
             else:
-                message_box = QMessageBox(self)  # Icono de advertencia
+                message_box = QMessageBox(self)  
                 message_box.setWindowTitle("Running measurement")
                 message_box.setText("It is not possible to make changes when a measurement is running.")
                 pixmap= QPixmap(ICON_LOCATION)
@@ -538,10 +569,9 @@ class MainWindow(QMainWindow):
                 message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
-    
                 
         else:
-            message_box = QMessageBox(self)  # Icono de advertencia
+            message_box = QMessageBox(self)  
             message_box.setWindowTitle("No Connected Device ")
             message_box.setText("No Connected device connected was found")
             pixmap= QPixmap(ICON_LOCATION)
@@ -551,7 +581,19 @@ class MainWindow(QMainWindow):
             message_box.exec_()
         
         pass    
+    
     def closeEvent(self, event):
+        """
+        Handles the close event of the main window and prompts the user for confirmation.
+
+        This function is triggered when the user attempts to close the main window. It displays 
+        a dialog asking if the user is sure about closing the application (Tempico software). 
+        If the user confirms by selecting "Yes", the event is accepted and the application closes. 
+        If the user selects "No", the close event is ignored, and the application remains open.
+
+        :param event: The close event triggered when attempting to close the window.
+        :type event: QCloseEvent
+        """
         reply = QMessageBox.question(self, 'Exit', 
             "Are you sure you want to close tempico software?", 
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -562,6 +604,16 @@ class MainWindow(QMainWindow):
             event.ignore() 
     #Resize the graphics
     def resizeEvent(self,event):
+        """
+        Handles the window resize event and adjusts the column widths of the parameters table.
+
+        This function is triggered when the user resizes the main window. It resizes the columns 
+        of the parameters table in the FLIM tab based on the current window width. The column 
+        widths are scaled proportionally to ensure the table adapts to the new window size.
+
+        :param event: The resize event triggered when the window is resized.
+        :type event: QResizeEvent
+        """
         if self.FLIMGraphic!=None:
             currentValue=self.width()
             self.parametersTable.setColumnWidth(0, int(round(currentValue*1/50)))
