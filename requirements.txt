@@ -1,17 +1,13 @@
 
 pyAbacus
 altgraph==0.17
-auto-py-to-exe==2.43.3
 future==1.0.0
 hidapi==0.14.0.post2
 markdown-it-py==3.0.0
 matplotlib==3.5.3
 numpy==1.22.0
 pyinstaller==6.10.0
-pyinstaller-hooks-contrib==2024.3
-PyQt5==5.15.11
-PyQt5-Qt5==5.15.2
-PyQt5_sip==12.15.0
+pyinstaller-hooks-contrib==2024.8
 pyqtgraph==0.13.3
 pyserial==3.5
 PySide2==5.15.2.1

@@ -1,39 +1,15 @@
-from PySide2.QtCore import *
-from PySide2.QtCore import QObject, Qt
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-import sys
-from PySide2.QtWidgets import QWidget, QTabWidget
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.animation as animation
-import datetime as dt
-import numpy as np
-import pyTempico as tempico
-import pyAbacus as abacus
-from settings import SettingsWindow
-from generalsettings import GeneralSettingsWindow
-from aboutWindow import AboutWindow
-from StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
-from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_lifetime import Ui_Form
-from ui_g2measurement import Ui_G2
-from ui_devicesDialog import Ui_Devices
+from PySide2.QtCore import QTimer, QMetaObject, QThread, Signal, Slot, Qt
+from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QLabel, QComboBox, QPushButton, QGridLayout
+from numpy import histogram, linspace
 import time
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import pyqtgraph as pg
-import pyqtgraph.exporters
 from PySide2.QtCore import QTimer
-import concurrent.futures
 import time
 #To do eliminate import
-import random
 import createsavefile as savefile
 import datetime
-from ui_settings import Ui_settings
+
 
 #Create graphic design#
 class Canvas():
@@ -105,16 +81,16 @@ class Canvas():
         ##---------------------------------##
         ##---------------------------------##
         self.dataA=[]
-        self.histA, self.binsA=np.histogram(self.dataA,bins=60)
+        self.histA, self.binsA=histogram(self.dataA,bins=60)
         #Creating the histogram plot channel B
         self.dataB=[]
-        self.histB, self.binsB=np.histogram(self.dataB,bins=60)
+        self.histB, self.binsB=histogram(self.dataB,bins=60)
         #Creating the histogram plot channel C
         self.dataC=[]
-        self.histC, self.binsC=np.histogram(self.dataC,bins=60)
+        self.histC, self.binsC=histogram(self.dataC,bins=60)
         #Creating the histogram plot channel D
         self.dataD=[]
-        self.histD, self.binsD=np.histogram(self.dataD,bins=60)
+        self.histD, self.binsD=histogram(self.dataD,bins=60)
         
         #Pure data
         self.datapureA=[]
@@ -520,25 +496,25 @@ class Canvas():
             self.zoomCodeA=True
             x_range = self.viewBoxA.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
-            binsU = np.linspace(x_min, x_max, num=61)
+            binsU = linspace(x_min, x_max, num=61)
             
             
         elif indexChannel == "B":
             self.zoomCodeB=True
             x_range = self.viewBoxB.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
-            binsU = np.linspace(x_min, x_max, num=61)
+            binsU = linspace(x_min, x_max, num=61)
         elif indexChannel == "C":
             self.zoomCodeC=True
             x_range = self.viewBoxC.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
-            binsU = np.linspace(x_min, x_max, num=61)
+            binsU = linspace(x_min, x_max, num=61)
         elif indexChannel == "D":
             self.zoomCodeD=True
             x_range = self.viewBoxD.viewRange()[0]
             x_min, x_max = x_range[0], x_range[1]
-            binsU = np.linspace(x_min, x_max, num=61)
-        hist, _ = np.histogram(data, bins=binsU)
+            binsU = linspace(x_min, x_max, num=61)
+        hist, _ = histogram(data, bins=binsU)
         curve.setData(binsU, hist, fillLevel=0)
         
     
@@ -575,8 +551,8 @@ class Canvas():
         x_range = self.viewBoxA.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
         bin_width = (x_max - x_min) / 61  
-        binsA = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
-        self.histA, _ = np.histogram(self.dataA, bins=binsA)
+        binsA = linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
+        self.histA, _ = histogram(self.dataA, bins=binsA)
         self.curveA.setData(binsA, self.histA)  # Update the graphic
         if max(self.histA)!=self.maxYA:
             self.maxYA=max(self.histA)
@@ -616,8 +592,8 @@ class Canvas():
         x_range = self.viewBoxB.viewRange()[0]   # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]    # Get the max and min current range in the view
         bin_width = (x_max - x_min) / 61  
-        binsB = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
-        self.histB, _ = np.histogram(self.dataB, bins=binsB)
+        binsB = linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
+        self.histB, _ = histogram(self.dataB, bins=binsB)
         self.curveB.setData(binsB, self.histB)  # Update the graphic
         if max(self.histB)!=self.maxYB:
             self.maxYB=max(self.histB)
@@ -654,8 +630,8 @@ class Canvas():
         x_range = self.viewBoxC.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
         bin_width = (x_max - x_min) / 61  
-        binsC = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
-        self.histC, _ = np.histogram(self.dataC, bins=binsC)
+        binsC = linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
+        self.histC, _ = histogram(self.dataC, bins=binsC)
         self.curveC.setData(binsC, self.histC)  # Update the graphic
         if max(self.histC)!=self.maxYC:
             self.maxYC=max(self.histC)
@@ -693,8 +669,8 @@ class Canvas():
         x_range = self.viewBoxD.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
         bin_width = (x_max - x_min) / 61  
-        binsD = np.linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
-        self.histD, _ = np.histogram(self.dataD, bins=binsD)
+        binsD = linspace(x_min, x_max, num=61)  # Create 61 points in order to get the boundaries
+        self.histD, _ = histogram(self.dataD, bins=binsD)
         self.curveD.setData(binsD, self.histD)  # Update the graphic
         if max(self.histD)!=self.maxYD:
             self.maxYD=max(self.histD)

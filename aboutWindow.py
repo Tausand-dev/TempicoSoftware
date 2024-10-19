@@ -1,4 +1,3 @@
-import pyAbacus as pa
 from PySide2 import QtCore, QtGui, QtWidgets
 from about import Ui_Dialog as Ui_Dialog_about
 
@@ -15,7 +14,7 @@ class AboutWindow(QtWidgets.QDialog, Ui_Dialog_about):
 
         tausand = '<a href="https://www.tausand.com/"> https://www.tausand.com </a>'
         pages =  '<a href="https://github.com/Tausand-dev/TempicoSoftware"> https://github.com/Tausand-dev/TempicoSoftware </a>'
-        message = "Tempico Software is a suite of tools build to ensure your experience with Tausand's time to digital converter. \n\nSoftware Version: %s\nPyTempico Version: %s\n\n"%("1.0.0", "1.0.0")
+        message = "Tempico Software is a suite of tools build to ensure your experience with Tausand's time to digital converter. \n\nSoftware Version: %s\nPyTempico Version: %s\n\n"%("1.1.0", "1.0.0")
         self.message_label.setText(message)
         self.visit_label = QtWidgets.QLabel()
         self.github_label = QtWidgets.QLabel()

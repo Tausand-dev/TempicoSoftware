@@ -1,9 +1,9 @@
-from PySide2.QtCore import *
-from PySide2.QtCore import QObject
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide2.QtCore import QTimer, Qt, QMetaObject, QThread, Signal, Slot
+from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtWidgets import QComboBox, QPushButton, QLabel, QFrame, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout
 import pyqtgraph as pg
-import numpy as np
+from numpy import arange, histogram
+from numpy import append as appnd
 import bisect
 import createsavefile as savefile
 import datetime
@@ -873,7 +873,7 @@ class WorkerThread(QThread):
                 
         #TO DO: Change binwidth with the combo box value
         self.update_label.emit(units)
-        self.domain_values=np.arange(lower_bound,upper_bound,self.binwidth/division_factor)
+        self.domain_values=arange(lower_bound,upper_bound,self.binwidth/division_factor)
         self.g2_values=[]
         self.data_coincidente.sort()
         new_coincidence=self.data_coincidente.copy()
@@ -890,8 +890,8 @@ class WorkerThread(QThread):
         inverse_ct=N_1*N_2*newTotalTime*newBinWidth
         constant=1/inverse_ct
         #TO DO: Discover error in g2 measurement
-        bin_edges = np.append(self.domain_values - newBinWidth / 2, self.domain_values[-1] + newBinWidth / 2)
-        counts, _ = np.histogram(new_coincidence, bins=bin_edges)
+        bin_edges = appnd(self.domain_values - newBinWidth / 2, self.domain_values[-1] + newBinWidth / 2)
+        counts, _ = histogram(new_coincidence, bins=bin_edges)
         self.g2_values=counts*constant
         self.updateg2.emit(self.g2_values,self.domain_values,len(self.data_coincidente))
             

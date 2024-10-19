@@ -8,10 +8,8 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-import pyTempico as tempico
+from PySide2.QtCore import QMetaObject, QCoreApplication, QEvent
+from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QTabWidget, QWidget, QHBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QDialog, QMessageBox, QWhatsThis
 import math
 
 

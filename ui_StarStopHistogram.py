@@ -8,30 +8,12 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtCore import Qt
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-from PySide2.QtCore import *
-from PySide2.QtCore import Qt
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide2.QtCore import QMetaObject, QCoreApplication, Qt
+from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtWidgets import QSizePolicy, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QCheckBox, QPushButton, QGridLayout, QMainWindow, QApplication
 import sys
-from PySide2.QtWidgets import QWidget, QTabWidget
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.animation as animation
-import datetime as dt
-import numpy as np
-import pyTempico as tempico
-import pyAbacus as abacus
+from PySide2.QtWidgets import QWidget
 
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-import sys
 
 
 

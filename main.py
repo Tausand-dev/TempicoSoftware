@@ -1,46 +1,25 @@
-from PySide2.QtCore import *
-from PySide2.QtCore import Qt
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-import sys
+from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction
+from PySide2.QtGui import QPixmap, QIcon
+from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.animation as animation
-import datetime as dt
-import numpy as np
-import pyTempico as tempico
-import pyAbacus as abacus
-from g2Graphics import g2Graphic
-from settings import SettingsWindow
 from generalsettings import GeneralSettingsWindow
 from aboutWindow import AboutWindow
-from StartStopHistograms import StartStopHistogramsWindow as SSHistogramsWindow
 from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_lifetime import Ui_Form
 from ui_g2measurement import Ui_G2
 from ui_devicesDialog import Ui_Devices
 import time
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-import pyqtgraph as pg
-import pyqtgraph.exporters
 from PySide2.QtCore import QTimer
-import concurrent.futures
 import time
 #To do eliminate import
-import random
 import createsavefile as savefile
 from ui_settings import Ui_settings
-import datetime
 from uiParametersDialog import UiParameters
 from ParametersDialog import CountParameters
 from Canvas import Canvas
 from constants import *
 from ui_FLIMmeasurement import UiFLIM
 from FLIMGraphics import FLIMGraphic
+import sys
 
 
 
@@ -64,7 +43,7 @@ class SplashScreen(QMainWindow):
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.show_main_window)
-        self.timer.start(3000)  # Tiempo en milisegundos
+        self.timer.start(1000)  # Tiempo en milisegundos
 
     def show_main_window(self):
         """
@@ -92,7 +71,7 @@ class MainWindow(QMainWindow):
         self.FLIMTimer=QTimer()
         
 
-        if abacus.CURRENT_OS == 'win32':
+        if sys.platform == 'win32':
             import ctypes
             myappid = APPID  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)

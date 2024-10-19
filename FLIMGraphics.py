@@ -1,14 +1,12 @@
-from PySide2.QtCore import *
-from PySide2.QtCore import QObject
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
+from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox
 import pyqtgraph as pg
-import numpy as np
+from numpy import mean, sqrt, exp, array, sum, arange, histogram
+from numpy import append as appnd
 import createsavefile as savefile
-import time
 import datetime
 from scipy.optimize import curve_fit
-from pyTempico import TempicoDevice
 import math
 import re
 class FLIMGraphic():
@@ -341,20 +339,20 @@ class FLIMGraphic():
             self.initialParametersButton.setEnabled(True)
             if not self.changeInitialParametersExp:
                 self.initialI0=max(self.measuredData)
-                self.initialTau0=np.mean(self.measuredTime)
+                self.initialTau0=mean(self.measuredTime)
             if not self.changeInitialParametersKol:
                 self.initialI0Kol=max(self.measuredData)
-                self.initialTau0Kol=np.mean(self.measuredTime)
+                self.initialTau0Kol=mean(self.measuredTime)
                 self.initialBeta=0
             if not self.changeInitialParametersShif:
                 self.initialI0Shif=max(self.measuredData)
-                self.initialTau0Shif=np.mean(self.measuredTime)
+                self.initialTau0Shif=mean(self.measuredTime)
                 self.initialAlpha=0
                 self.initialB=0
             if not self.changeInitialParametersDoub:
                 self.initialI0Doub=max(self.measuredData)
-                self.initialTau0Doub=np.mean(self.measuredTime)
-                self.initialTau1Doub=np.mean(self.measuredTime)
+                self.initialTau0Doub=mean(self.measuredTime)
+                self.initialTau1Doub=mean(self.measuredTime)
                 self.initialAlphaDoub=0
         self.saveDataButton.setEnabled(True)
         
@@ -1004,8 +1002,8 @@ class FLIMGraphic():
                 yFit.append(value)
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=np.sqrt(pcov[0][0])
-                tau_0Cov=np.sqrt(pcov[1][1])
+                I_0Cov=sqrt(pcov[0][0])
+                tau_0Cov=sqrt(pcov[1][1])
                 if I_0Cov>I0_opt:
                     self.FitCov[0]="nan"
                     I_0CovString="nan"
@@ -1093,9 +1091,9 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=np.sqrt(pcov[0][0])
-                tau_0Cov=np.sqrt(pcov[1][1])
-                betaCov=np.sqrt(pcov[2][2])
+                I_0Cov=sqrt(pcov[0][0])
+                tau_0Cov=sqrt(pcov[1][1])
+                betaCov=sqrt(pcov[2][2])
                 #Try to get the first parameter
                 if I_0Cov>I0_opt:
                     self.FitCov[0]="nan"    
@@ -1352,13 +1350,13 @@ class FLIMGraphic():
         if len(self.measuredData)>0:
             if self.combo_box.currentText()=="Exponential fit":
                 self.initialI0=max(self.measuredData)
-                self.initialTau0=np.mean(self.measuredTime)
+                self.initialTau0=mean(self.measuredTime)
                 self.I_0_field.setValue(self.initialI0)
                 self.Tau_0_field.setValue(self.initialTau0)
                 self.changeInitialParametersExp=False
             elif self.combo_box.currentText()=="Kohlrausch fit":
                 self.initialI0Kol=max(self.measuredData)
-                self.initialTau0Kol=np.mean(self.measuredTime)
+                self.initialTau0Kol=mean(self.measuredTime)
                 self.initialBeta=1.0
                 self.Beta_field.setValue(self.initialBeta)
                 self.I_0_field.setValue(self.initialI0Kol)
@@ -1366,7 +1364,7 @@ class FLIMGraphic():
                 self.changeInitialParametersKol=False
             elif self.combo_box.currentText()=="Shifted Exponential fit":
                 self.initialI0Shif=max(self.measuredData)
-                self.initialTau0Shif=np.mean(self.measuredTime)
+                self.initialTau0Shif=mean(self.measuredTime)
                 self.initialAlpha=0
                 self.initialB=0
                 self.I_0_field.setValue(self.initialI0Shif)
@@ -1376,9 +1374,9 @@ class FLIMGraphic():
                 self.changeInitialParametersShif=False
             elif self.combo_box.currentText()=="Double Exponential fit":
                 self.initialI0Doub=max(self.measuredData)
-                self.initialTau0Doub=np.mean(self.measuredTime)
+                self.initialTau0Doub=mean(self.measuredTime)
                 self.initialAlphaDoub=0
-                self.initialTau1Doub=np.mean(self.measuredTime)
+                self.initialTau1Doub=mean(self.measuredTime)
                 self.I_0_field.setValue(self.initialI0Doub)
                 self.Tau_0_field.setValue(self.initialTau0Doub)
                 self.Alpha_field.setValue(self.initialTau1Doub)
@@ -1424,10 +1422,10 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=np.sqrt(pcov[0][0])
-                tau_0Cov=np.sqrt(pcov[1][1])
-                alphaCov=np.sqrt(pcov[2][2])
-                bCov=np.sqrt(pcov[3][3])
+                I_0Cov=sqrt(pcov[0][0])
+                tau_0Cov=sqrt(pcov[1][1])
+                alphaCov=sqrt(pcov[2][2])
+                bCov=sqrt(pcov[3][3])
                 
                 #Get I0 parameter
                 if I_0Cov>I0_opt:
@@ -1545,10 +1543,10 @@ class FLIMGraphic():
             self.xDataFitCopy=xData
             self.yDataFitCopy=yFit
             try:
-                I_0Cov=np.sqrt(pcov[0][0])
-                tau_0Cov=np.sqrt(pcov[1][1])
-                tau_1Cov=np.sqrt(pcov[2][2])
-                alphaCov=np.sqrt(pcov[3][3])
+                I_0Cov=sqrt(pcov[0][0])
+                tau_0Cov=sqrt(pcov[1][1])
+                tau_1Cov=sqrt(pcov[2][2])
+                alphaCov=sqrt(pcov[3][3])
                 print(I_0Cov)
                 print(tau_0Cov)
                 print(tau_1Cov)
@@ -1653,7 +1651,7 @@ class FLIMGraphic():
         :return: The value of the exponential decay function at time `t`.
         :rtype: float
         """
-        return I0 * np.exp(-t / tau0)
+        return I0 * exp(-t / tau0)
 
     #Kohlrausch Decay Function
     def kohl_decay(self,t, I0, tau0,beta):
@@ -1673,7 +1671,7 @@ class FLIMGraphic():
         :return: The value of the stretched exponential decay function at time `t`.
         :rtype: float
         """
-        return I0 * np.exp((-t / tau0)**beta)
+        return I0 * exp((-t / tau0)**beta)
     
     #Shifted Exponential Function
     def shifted_decay_function(self, t, I0, tau0, alpha, b):
@@ -1695,7 +1693,7 @@ class FLIMGraphic():
         :rtype: float
         """
         # Define the decay function with the new equation
-        return I0 * np.exp(-(t - alpha) / tau0) + b
+        return I0 * exp(-(t - alpha) / tau0) + b
     #Double Exponential Function
     def double_Exponential(self,t, I0, tau0, tau1, alpha): 
         """
@@ -1715,7 +1713,7 @@ class FLIMGraphic():
         :return: The value of the double exponential decay function at time `t`.
         :rtype: float
         """
-        return I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))
+        return I0*(alpha*exp(-t/tau0)+(1-alpha)*exp(-t/tau1))
 
     #Function to get the maximum number of decimal numbers from sd (Standard Deviation)
     
@@ -1778,14 +1776,14 @@ class FLIMGraphic():
         :return: The R² value indicating the goodness of fit (float).
         """
         #Get the array
-        arrayData=np.array(data)
-        arrayFit=np.array(fitData)
+        arrayData=array(data)
+        arrayFit=array(fitData)
         #Mean data
-        meanData=np.mean(arrayData)
+        meanData=mean(arrayData)
         #Get the residue
-        ssRes=np.sum((arrayData-arrayFit)**2)
+        ssRes=sum((arrayData-arrayFit)**2)
         #Get the total sum squared
-        ssTot=np.sum((arrayData-meanData)**2)
+        ssTot=sum((arrayData-meanData)**2)
         #Get R^2
         R2=1-(ssRes/ssTot)
         return R2
@@ -2203,9 +2201,9 @@ class WorkerThreadFLIM(QThread):
                     currentValue=self.startStopDifferences[i]
                     newValue=currentValue/divisionFactor
                     newDifferences.append(newValue)
-            domainValues=np.arange(0,maximumValue/divisionFactor,newBinWidth)
-            bin_edges = np.append(domainValues - newBinWidth / 2, domainValues[-1] + newBinWidth / 2)
-            counts,_ = np.histogram(newDifferences, bins=bin_edges)
+            domainValues=arange(0,maximumValue/divisionFactor,newBinWidth)
+            bin_edges = appnd(domainValues - newBinWidth / 2, domainValues[-1] + newBinWidth / 2)
+            counts,_ = histogram(newDifferences, bins=bin_edges)
             self.updateValues.emit(counts,domainValues)
             self.updateLabel.emit(units)
         self.updateMeasurementsLabel.emit(str(self.totalMeasurements),str(self.totalStarts))

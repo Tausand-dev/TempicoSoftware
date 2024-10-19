@@ -1,15 +1,7 @@
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import *
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import QWidget, QLabel,QComboBox, QTabWidget
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.animation as animation
-import datetime as dt
-import numpy as np
-import pyTempico as tempico
-import pyAbacus as abacus
+from PySide2.QtWidgets import QDialog, QDoubleSpinBox, QSpinBox, QPushButton, QMessageBox, QWhatsThis, QLabel
+from PySide2.QtGui import QIcon
+from PySide2.QtCore import QEvent
+
 
 
 
