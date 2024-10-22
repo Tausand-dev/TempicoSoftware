@@ -11,7 +11,7 @@ class SettingsWindow(QDialog):
         super().__init__()
         self.setWindowTitle("Channels settings")
         self.setFixedSize(400,240)
-        self.setWindowIcon(QIcon('Sources/abacus_small.ico'))
+        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
         #----------construct enable channel----------#
         self.sentinel1=0
         self.sentinel2=0

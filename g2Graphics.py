@@ -299,7 +299,7 @@ class g2Graphic():
         message_box = QMessageBox(self.parent)
         message_box.setWindowTitle("g2 with insufficient data")
         message_box.setText("The obtained g2 does not have sufficient data, as it contains fewer than 5000 time differences. For a more accurate measurement, it is advisable to collect the data again.")
-        pixmap= QPixmap('./Sources/abacus_small.ico')
+        pixmap= QPixmap('./Sources/tausand_small.ico')
         message_box.setIconPixmap(pixmap)
         message_box.setIcon(QMessageBox.Information)
         message_box.setStandardButtons(QMessageBox.Ok)

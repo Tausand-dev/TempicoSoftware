@@ -337,7 +337,7 @@ class Canvas():
             message_box.setText("You must select at least one channel before starting a measurement.")
             message_box.setWindowTitle("Select a channel")
             message_box.setStandardButtons(QMessageBox.Ok)
-            pixmap= QPixmap("/Sources/abacus_small.ico")
+            pixmap= QPixmap("/Sources/tausand_small.ico")
             message_box.setIconPixmap(pixmap)
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
@@ -855,7 +855,7 @@ class Canvas():
             dialog.resize(282, 105)
             dialog.setWindowTitle("Save plots")
             
-            #pixmap = QIcon("./Sources/abacus_small.ico")
+            #pixmap = QIcon("./Sources/tausand_small.ico")
             
             #dialog.setWindowIcon()
             
@@ -1038,7 +1038,7 @@ class Canvas():
         msg_box = QMessageBox(self.parent)
         msg_box.setText("Connection with the device has been lost")
         msg_box.setWindowTitle("Connection Error")
-        pixmap= QPixmap("/Sources/abacus_small.ico")
+        pixmap= QPixmap("/Sources/tausand_small.ico")
         msg_box.setIconPixmap(pixmap)
         msg_box.setIcon(QMessageBox.Critical)
         msg_box.setStandardButtons(QMessageBox.Ok)

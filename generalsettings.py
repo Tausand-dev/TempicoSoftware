@@ -12,7 +12,7 @@ class GeneralSettingsWindow(QDialog):
         super().__init__()
         self.setWindowTitle("General settings")
         self.setFixedSize(350,140)
-        self.setWindowIcon(QIcon('Sources/abacus_small.ico'))
+        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
         #self.setWindowFlags(self.windowFlags() | Qt.WindowContextHelpButtonHint)
         #------Change treshold Voltage---------#
         self.thresholdvotlage=QLabel("Threshold voltage:",self)
