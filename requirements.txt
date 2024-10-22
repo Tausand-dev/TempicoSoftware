@@ -31,7 +31,7 @@ pytz==2024.1
 pywin32-ctypes==0.2.2
 readme-renderer==43.0
 rich==13.9.1
-scipy==1.9.1
+pip install scipy==1.9.1 --only-binary=:all:
 setuptools==65.5.1
 shiboken2==5.15.2.1
 six==1.16.0
