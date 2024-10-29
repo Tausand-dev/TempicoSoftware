@@ -353,6 +353,7 @@ class g2Graphic():
         self.g2Values=g2values
         self.tauValues=tauValues
         self.totalTimeDifferenceValue=lenCoincidences
+        print("Se actualiza")
         self.curve.setData(self.tauValues,self.g2Values)
     
     def CreatedFin(self):
@@ -647,22 +648,12 @@ class WorkerThread(QThread):
                         self.calculate_total_time()
                         self.create_g2_data()
                 j=1 
-                stopmask=-3000
-                while j <601 and self._is_running and self.continueMeasurement:
-                    
-                        
+                while j <601 and self._is_running and self.continueMeasurement:  
                     self.checkStatus()
                     if not self._is_running:
                         break
                     percentage=round(j/6,1)
                     self.statusLabel.setText("Running measurement "+str(percentage)+"%")
-                    if stopmask<0:
-                        self.currentChannel1.setStopMask(abs(stopmask))
-                        self.currentChannel2.setStopMask(0)
-                    else:
-                        self.currentChannel2.setStopMask(abs(stopmask))
-                        self.currentChannel1.setStopMask(0)
-                    stopmask+=10
                     self.g2_measurement()
                     j+=1
                 self.g2Graphic.changeTrheadSentinel()
@@ -813,38 +804,40 @@ class WorkerThread(QThread):
         
     
     def get_g2_measurement(self):
+        numberOfStops=5
         self.currentChannel1.setNumberOfStops(1)
-        self.currentChannel2.setNumberOfStops(1)
+        self.currentChannel2.setNumberOfStops(numberOfStops)
         old_data_coincidence=self.data_coincidente
-        for i in range(20):
-            medicion=self.device.measure()
-            print(self.device.getSettings())
-            print(medicion)
-            data_tuple=[]
-            try:
-                for i in range(100):
-                    dataA=medicion[i]
-                    dataB=medicion[i+100]
-                    tupla=(dataA,dataB)
-                    data_tuple.append(tupla)
-                for i in data_tuple:
-                    if len(i[0])>0 and len(i[1])>0:
-                        if i[0][3]!=-1 and i[1][3]!=-1:
+        medicion=self.device.measure()
+        print(self.device.getSettings())
+        print(medicion)
+        data_tuple=[]
+        try:
+            for i in range(100):
+                dataA=medicion[i]
+                dataB=medicion[i+100]
+                tupla=(dataA,dataB)
+                data_tuple.append(tupla)
+            for i in data_tuple:
+                if len(i[0])>0 and len(i[1])>0:
+                    for j in range(numberOfStops):
+                        if i[0][3]!=-1 and i[1][3+j]!=-1:
                             #cambiar el nombre de coincidencia
                             if self.conditionDifference:
-                                stop_diference= i[1][3]-i[0][3]    
+                                stop_diference= i[1][3+j]-i[0][3]    
                             else:
-                                stop_diference= i[0][3]-i[1][3]    
-                            self.data_coincidente.append(stop_diference)
-                        # if i[0][4]!=-1 and i[1][4]!=-1:
-                        #     #cambiar el nombre de coincidencia
-                        #     if self.conditionDifference:
-                        #         stop_diference= i[1][4]-i[0][4]    
-                        #     else:
-                        #         stop_diference= i[0][4]-i[1][4]    
-                        #     self.data_coincidente.append(stop_diference)
-            except:
-                self.data_coincidente=old_data_coincidence
+                                stop_diference= i[0][3]-i[1][3+j] 
+                            if stop_diference<= 4000000000:    
+                                self.data_coincidente.append(stop_diference)
+                    # if i[0][4]!=-1 and i[1][4]!=-1:
+                    #     #cambiar el nombre de coincidencia
+                    #     if self.conditionDifference:
+                    #         stop_diference= i[1][4]-i[0][4]    
+                    #     else:
+                    #         stop_diference= i[0][4]-i[1][4]    
+                    #     self.data_coincidente.append(stop_diference)
+        except:
+            print("Error")
         
     
     #Count the elements in the array between lower and upper
@@ -905,6 +898,7 @@ class WorkerThread(QThread):
             return ["µs",10**6]
         elif picoseconds < 1e12:
             return ["ms",10**9]
+
             
     
     def determinate_N1_N2(self):
@@ -930,8 +924,8 @@ class WorkerThread(QThread):
             if len(self.data_coincidente)>0:
                 self.calculate_total_time()
                 self.create_g2_data()
-        except:
-            pass
+        except NameError as e:
+            print(e)
     
     def coincidence_normalization(self,array,divisionFactor):
         for i in range(len(array)):
