@@ -631,34 +631,43 @@ class WorkerThread(QThread):
         while self._is_running:
             self.ThrdFin.emit()
             self.take_measurement()
-            if len(self.timeDifferenceChannel1)>=1000 and len(self.timeDifferenceChannel2)>=1000 and self._is_running:
-                self.g2PrepareMeasurement()
-                self.continueMeasurement=True
-                if self.warningBinData:
-                    self.continueMeasurement=False
-                    self.dialogClose=False
-                    self.dialogSignal.emit()
-                    while not self.dialogClose:
-                        time.sleep(0.5)
-                if self.continueMeasurement:        
-                    self.g2Graphic.drawPoint(0)
-                    self.g2Graphic.beging2Measurement()
-                    self.determinate_N1_N2()
-                    if len(self.data_coincidente)>0:
-                        self.calculate_total_time()
-                        self.create_g2_data()
-                j=1 
-                while j <601 and self._is_running and self.continueMeasurement:  
-                    self.checkStatus()
-                    if not self._is_running:
-                        break
-                    percentage=round(j/6,1)
-                    self.statusLabel.setText("Running measurement "+str(percentage)+"%")
-                    self.g2_measurement()
-                    j+=1
-                self.g2Graphic.changeTrheadSentinel()
-                self.stop()
+            
+            #quitar para medidas start stop y poner los parametros de forma manual
+            # if len(self.timeDifferenceChannel1)>=1000 and len(self.timeDifferenceChannel2)>=1000 and self._is_running:
+            #     self.g2PrepareMeasurement()
+            #     self.continueMeasurement=True
+            #     if self.warningBinData:
+            #         self.continueMeasurement=False
+            #         self.dialogClose=False
+            #         self.dialogSignal.emit()
+            #         while not self.dialogClose:
+            #             time.sleep(0.5)
+            #     if self.continueMeasurement:        
+            #         self.g2Graphic.drawPoint(0)
+            #         self.g2Graphic.beging2Measurement()
+            #         self.determinate_N1_N2()
+            #         if len(self.data_coincidente)>0:
+            #             self.calculate_total_time()
+            #             self.create_g2_data()
+            
+            ##Para medir start stop
+            self.determinate_N1_N2()
+            self.continueMeasurement=True
+            ##Fin de mediciones de start stop
+            
+            
+            j=1 
+            while j <601 and self._is_running and self.continueMeasurement:  
+                self.checkStatus()
+                if not self._is_running:
+                    break
+                percentage=round(j/6,1)
+                self.statusLabel.setText("Running measurement "+str(percentage)+"%")
+                self.g2_measurement()
+                j+=1
+            self.g2Graphic.changeTrheadSentinel()
             self.stop()
+        self.stop()
     #Accept and reject buttons for the dialog
     def accepted(self):
         self.continueMeasurement=True
@@ -713,7 +722,7 @@ class WorkerThread(QThread):
         #Init to get the data 
         i=0
         sentinelData=False
-        while i<10 and not sentinelData and self._is_running:
+        while i<1 and not sentinelData and self._is_running:
             percentage=i*10
             if i==0:
                 self.statusLabel.setText("Taking parameters "+"0"+"%")
@@ -805,28 +814,27 @@ class WorkerThread(QThread):
     
     def get_g2_measurement(self):
         numberOfStops=5
-        self.currentChannel1.setNumberOfStops(1)
-        self.currentChannel2.setNumberOfStops(numberOfStops)
+        self.currentChannel1.setNumberOfStops(numberOfStops)
+        self.currentChannel2.disableChannel()
         old_data_coincidence=self.data_coincidente
         medicion=self.device.measure()
-        print(self.device.getSettings())
         print(medicion)
         data_tuple=[]
         try:
             for i in range(100):
                 dataA=medicion[i]
-                dataB=medicion[i+100]
+                dataB=medicion[i]
                 tupla=(dataA,dataB)
                 data_tuple.append(tupla)
             for i in data_tuple:
                 if len(i[0])>0 and len(i[1])>0:
                     for j in range(numberOfStops):
-                        if i[0][3]!=-1 and i[1][3+j]!=-1:
+                        if i[0][3+j]!=-1 and j==1:
                             #cambiar el nombre de coincidencia
                             if self.conditionDifference:
-                                stop_diference= i[1][3+j]-i[0][3]    
+                                stop_diference= i[0][3+j]   
                             else:
-                                stop_diference= i[0][3]-i[1][3+j] 
+                                stop_diference= i[0][3+j] 
                             if stop_diference<= 4000000000:    
                                 self.data_coincidente.append(stop_diference)
                     # if i[0][4]!=-1 and i[1][4]!=-1:
@@ -902,12 +910,18 @@ class WorkerThread(QThread):
             
     
     def determinate_N1_N2(self):
-        lenN1=len(self.timeDifferenceChannel1)
-        lenN2=len(self.timeDifferenceChannel2)
-        sumN1=sum(self.timeDifferenceChannel1)
-        sumN2=sum(self.timeDifferenceChannel2)
-        self.averageTimeN1=sumN1/lenN1
-        self.averageTimeN2=sumN2/lenN2
+        # lenN1=len(self.timeDifferenceChannel1)
+        # lenN2=len(self.timeDifferenceChannel2)
+        # sumN1=sum(self.timeDifferenceChannel1)
+        # sumN2=sum(self.timeDifferenceChannel2)
+        # self.averageTimeN1=sumN1/lenN1
+        # self.averageTimeN2=sumN2/lenN2
+        
+        #Esto es para las medidias de start stop
+        self.averageTimeN1=408680000
+        self.averageTimeN2=249560000
+        #Fin de cambios para las medidas de start stop
+        
         resultsTime1=self.format_time(self.averageTimeN1)
         resultsTime2=self.format_time(self.averageTimeN2)
         units1=resultsTime1[0]
@@ -963,6 +977,7 @@ class WorkerThread(QThread):
 
     @Slot()
     def stop(self):
+        self.currentChannel2.enableChannel()
         self._is_running=False
         self.statusLabel.setText("Ending measurement")
         self.g2Graphic.drawPoint(2)
