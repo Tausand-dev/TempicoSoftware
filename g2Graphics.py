@@ -624,6 +624,8 @@ class WorkerThread(QThread):
         self.data_coincidente=[]
         self.N1dataLabel=N1dataLabel
         self.N2dataLabel=N2dataLabel
+        #List of tuples in order to get the value of 5 stops
+        self.dataWithStops=[]
         
         
     #Thread to take the measurement
@@ -657,11 +659,11 @@ class WorkerThread(QThread):
             
             
             j=1 
-            while j <601 and self._is_running and self.continueMeasurement:  
+            while j <1000 and self._is_running and self.continueMeasurement:  
                 self.checkStatus()
                 if not self._is_running:
                     break
-                percentage=round(j/6,1)
+                percentage=round(j/10,1)
                 self.statusLabel.setText("Running measurement "+str(percentage)+"%")
                 self.g2_measurement()
                 j+=1
@@ -829,14 +831,15 @@ class WorkerThread(QThread):
             for i in data_tuple:
                 if len(i[0])>0 and len(i[1])>0:
                     for j in range(numberOfStops):
-                        if i[0][3+j]!=-1 and j==1:
-                            #cambiar el nombre de coincidencia
+                        #Get the value of the five stops
+                        if i[0][3+j]!=-1:
                             if self.conditionDifference:
                                 stop_diference= i[0][3+j]   
                             else:
                                 stop_diference= i[0][3+j] 
                             if stop_diference<= 4000000000:    
                                 self.data_coincidente.append(stop_diference)
+                                self.dataWithStops.append((stop_diference,j+1))
                     # if i[0][4]!=-1 and i[1][4]!=-1:
                     #     #cambiar el nombre de coincidencia
                     #     if self.conditionDifference:
@@ -918,7 +921,7 @@ class WorkerThread(QThread):
         # self.averageTimeN2=sumN2/lenN2
         
         #Esto es para las medidias de start stop
-        self.averageTimeN1=408680000
+        self.averageTimeN1=249560000
         self.averageTimeN2=249560000
         #Fin de cambios para las medidas de start stop
         
@@ -974,9 +977,17 @@ class WorkerThread(QThread):
         elif units=='µs':
             mult=10**6
         return mult
+    
+    def saveStartStopData(self):
+        with open('g2DataExperiments/histograma.txt', 'w') as archivo:
+            archivo.write("DifferenceValue \t Stop\n")
+            for tupla in self.dataWithStops:
+                archivo.write(f"{tupla[0]}\t{tupla[1]}\n")
+    
 
     @Slot()
     def stop(self):
+        self.saveStartStopData()
         self.currentChannel2.enableChannel()
         self._is_running=False
         self.statusLabel.setText("Ending measurement")
