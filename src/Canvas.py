@@ -12,7 +12,7 @@ import datetime
 
 
 #Create graphic design#
-class Canvas():
+class StartStopLogic():
     def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
         super().__init__()
         #Disconnect button

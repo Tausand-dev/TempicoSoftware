@@ -15,7 +15,7 @@ import createsavefile as savefile
 from ui_settings import Ui_settings
 from uiParametersDialog import UiParameters
 from ParametersDialog import CountParameters
-from Canvas import Canvas
+from Canvas import StartStopLogic
 from constants import *
 from ui_FLIMmeasurement import UiFLIM
 from FLIMGraphics import FLIMGraphic
@@ -260,7 +260,7 @@ class MainWindow(QMainWindow):
                     
                     
                     self.connectsentinel=1
-                    self.grafico=Canvas(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
+                    self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
                     
                 except NameError:
                     print(NameError)
