@@ -1,4 +1,4 @@
-# Tampico Software
+# Tempico Software
 
 Tampico Software is a suite of tools built to ensure your experience with Tausand's time-to-digital converter.
 
