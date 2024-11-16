@@ -80,3 +80,12 @@ After the measurement, the user can decide whether to save the image of the data
 
 ![Fit measurement](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/AfterFit.png)
 
+## For Developers
+
+To test the system, first clone the repository and then set the console path to the `src` folder. Once there, run the following command: `pip install -r requirements.txt`. From the console, in the same path, run `python main.py`. This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 main.py`. 
+
+**Note**: It is recommended to use Python version 3.8.10 (32-bit).
+
+To generate the executable, run the following command: `pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/abacus_small.ico main.py`. This will generate a single file containing the program. To run it correctly, this file must be placed inside the `Sources` folder that contains the images.
+
+
