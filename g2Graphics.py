@@ -635,22 +635,22 @@ class WorkerThread(QThread):
             self.take_measurement()
             
             #quitar para medidas start stop y poner los parametros de forma manual
-            # if len(self.timeDifferenceChannel1)>=1000 and len(self.timeDifferenceChannel2)>=1000 and self._is_running:
-            #     self.g2PrepareMeasurement()
-            #     self.continueMeasurement=True
-            #     if self.warningBinData:
-            #         self.continueMeasurement=False
-            #         self.dialogClose=False
-            #         self.dialogSignal.emit()
-            #         while not self.dialogClose:
-            #             time.sleep(0.5)
-            #     if self.continueMeasurement:        
-            #         self.g2Graphic.drawPoint(0)
-            #         self.g2Graphic.beging2Measurement()
-            #         self.determinate_N1_N2()
-            #         if len(self.data_coincidente)>0:
-            #             self.calculate_total_time()
-            #             self.create_g2_data()
+            if len(self.timeDifferenceChannel1)>=1000 and self._is_running:
+                self.g2PrepareMeasurement()
+                self.continueMeasurement=True
+                if self.warningBinData:
+                    self.continueMeasurement=False
+                    self.dialogClose=False
+                    self.dialogSignal.emit()
+                    while not self.dialogClose:
+                        time.sleep(0.5)
+                if self.continueMeasurement:        
+                    self.g2Graphic.drawPoint(0)
+                    self.g2Graphic.beging2Measurement()
+                    self.determinate_N1_N2()
+                    if len(self.data_coincidente)>0:
+                        self.calculate_total_time()
+                        self.create_g2_data()
             
             ##Para medir start stop
             self.determinate_N1_N2()
@@ -659,11 +659,13 @@ class WorkerThread(QThread):
             
             
             j=1 
-            while j <1000 and self._is_running and self.continueMeasurement:  
+            totalMeasurements=1000
+            factor=totalMeasurements/100
+            while j <totalMeasurements and self._is_running and self.continueMeasurement:  
                 self.checkStatus()
                 if not self._is_running:
                     break
-                percentage=round(j/10,1)
+                percentage=round(j/factor,2)
                 self.statusLabel.setText("Running measurement "+str(percentage)+"%")
                 self.g2_measurement()
                 j+=1
@@ -759,6 +761,9 @@ class WorkerThread(QThread):
         self.device.setNumberOfRuns(100)
         self.currentChannel1.setNumberOfStops(2)
         self.currentChannel2.setNumberOfStops(2)
+        
+        #Disable the channel 2
+        self.currentChannel2.disableChannel()
         countNoStarts=0
         for i in range(10):
             try:
@@ -770,13 +775,13 @@ class WorkerThread(QThread):
                     countNoStarts+=1
                 for i in range(round(len(medicion)/2)):
                     currentMeasurementch1=medicion[i]
-                    currentMeasurementch2=medicion[i+100]
+                    #currentMeasurementch2=medicion[i+100]
                     getMeasurech1=False
                     getMeasurech2=False
                     if len(currentMeasurementch1)==0:
                         countNoStarts+=1
-                    if len(currentMeasurementch2)==0:
-                        countNoStarts+=1
+                    # if len(currentMeasurementch2)==0:
+                    #     countNoStarts+=1
                     if len(currentMeasurementch1)==5:
                         ch1stop_1=currentMeasurementch1[3]
                         ch1stop_2=currentMeasurementch1[4]
@@ -784,19 +789,19 @@ class WorkerThread(QThread):
                             stopDifference=abs(ch1stop_2-ch1stop_1)
                             getMeasurech1=True
                             self.timeDifferenceChannel1.append(stopDifference)
-                    if len(currentMeasurementch2)==5:
-                        ch2stop_1=currentMeasurementch2[3]
-                        ch2stop_2=currentMeasurementch2[4]
-                        if ch2stop_1!=-1 and ch2stop_2!=-1:
-                            stopDifference=abs(ch2stop_2-ch2stop_1)
-                            getMeasurech2=True
-                            self.timeDifferenceChannel2.append(stopDifference)
-                    if getMeasurech1 and getMeasurech2:
-                        if self.conditionDifference:
-                            stopDifference1=ch2stop_1-ch1stop_1
-                        else:    
-                            stopDifference1=ch1stop_1-ch2stop_1
-                        self.data_coincidente.append(stopDifference1)
+                    # if len(currentMeasurementch2)==5:
+                    #     ch2stop_1=currentMeasurementch2[3]
+                    #     ch2stop_2=currentMeasurementch2[4]
+                    #     if ch2stop_1!=-1 and ch2stop_2!=-1:
+                    #         stopDifference=abs(ch2stop_2-ch2stop_1)
+                    #         getMeasurech2=True
+                    #         self.timeDifferenceChannel2.append(stopDifference)
+                    # if getMeasurech1 and getMeasurech2:
+                    #     if self.conditionDifference:
+                    #         stopDifference1=ch2stop_1-ch1stop_1
+                    #     else:    
+                    #         stopDifference1=ch1stop_1-ch2stop_1
+                    #     self.data_coincidente.append(stopDifference1)
             except:
                 pass
         if countNoStarts>=5:
@@ -913,16 +918,16 @@ class WorkerThread(QThread):
             
     
     def determinate_N1_N2(self):
-        # lenN1=len(self.timeDifferenceChannel1)
+        lenN1=len(self.timeDifferenceChannel1)
         # lenN2=len(self.timeDifferenceChannel2)
-        # sumN1=sum(self.timeDifferenceChannel1)
+        sumN1=sum(self.timeDifferenceChannel1)
         # sumN2=sum(self.timeDifferenceChannel2)
-        # self.averageTimeN1=sumN1/lenN1
+        self.averageTimeN1=sumN1/lenN1
         # self.averageTimeN2=sumN2/lenN2
         
         #Esto es para las medidias de start stop
-        self.averageTimeN1=249560000
-        self.averageTimeN2=249560000
+        self.averageTimeN1=sumN1/lenN1
+        self.averageTimeN2=sumN1/lenN1
         #Fin de cambios para las medidas de start stop
         
         resultsTime1=self.format_time(self.averageTimeN1)
