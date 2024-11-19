@@ -136,7 +136,7 @@ To change the icon of the `.app` file follow the instructions here https://apple
 ### Linux
 Run the following command
 ```
-yinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+Pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
 ```
 Two folders will be created: build and dist. Inside dist you'll find the executable file. This file can be run from a console by executing the command
 
