@@ -16,7 +16,7 @@ The software operates via a Graphical User Interface (GUI) which facilitates use
 
 The UML diagram provides a high-level approximation of the application’s design structure.
 
-![UML]([Sources/umlTempico.png](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/umlTempico.png))
+![UML](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/umlTempico.png)
 
 # Functionality
 
