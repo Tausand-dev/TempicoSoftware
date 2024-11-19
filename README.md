@@ -11,14 +11,12 @@ The software operates via a Graphical User Interface (GUI) which facilitates use
 - **PySerial**
 - **PyInstaller**
 - **HID**
-- **Matplotlib**
-- **Scipy**
 
 ## UML Overview
 
 The UML diagram provides a high-level approximation of the application’s design structure.
 
-![UML](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/Tempico1.1ClassDiagram.jpeg)
+![UML]([Sources/umlTempico.png](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/umlTempico.png))
 
 # Functionality
 
