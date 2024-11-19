@@ -87,4 +87,59 @@ To test the system, first clone the repository and then set the console path to 
 
 To generate the executable, run the following command: `pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.ico main.py`. This will generate a single file containing the program. To run it correctly, this file must be placed inside the `Sources` folder that contains the images.
 
+## Step 1: Download and Install Inno Setup Compiler
+First, download the Inno Setup Compiler program and install it on your machine. The download page for the program is available at the following link: [https://jrsoftware.org/isdl.php](https://jrsoftware.org/isdl.php). Download the `.exe` file corresponding to the application installer.
+
+## Step 2: Open Inno Setup Compiler
+Once Inno Setup is installed correctly, open it and follow these steps:
+
+1. First, you will be prompted to either open an existing script or create a new one. Select the option to **Create a New Script Using the Wizard**.
+
+![Step 1](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial1.png)
+
+2. In the next window, leave all options unselected and click **Next**.
+
+![Step 2](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial2.png)
+
+3. You will then be asked to provide the application name, version, publisher, and website (if applicable). For Tempico Software, use the following values for each field.
+
+![Step 3](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial3.png)
+
+4. Next, specify the default folder for the application and the application name. If these values do not carry over from the previous step, use the specified values provided.
+
+![Step 4](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial4.png)
+
+5. In the field **Application Main Executable File**, provide the path to the executable created earlier with PyInstaller. Additionally, click on **Add Folder** to include the images needed by the executable. Locate and select the `Sources` folder containing these image files. Leave all other fields as their default values.
+
+![Step 5](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial5.png)
+
+6. For the next four windows, leave the default values as they are (ensure they match the values shown in the provided screenshots).
+
+![Step 6](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial6.png)
+
+![Step 6](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial7.png)
+
+![Step 6](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial8.png)
+
+![Step 6](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial9.png)
+
+7. You will be prompted to select the installation language. Since Tempico Software only supports English for this version, select **English**.
+
+![Step 7](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial10.png)
+
+8. In the **Custom Compiler Output Folder** field, specify the directory where the installer will be saved once compiled. This path is flexible and should be chosen based on the developer’s preference. In the **Compiler Output Base File Name** field, enter `Tempico Software Setup`. For **Custom Setup Icon File**, locate the `Sources` folder and select the `tausand_small.ico` icon file. Leave the password field empty.
+
+![Step 8](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial11.png)
+
+9. For the following windows, simply click **Next** and then **Finish**, keeping the default values unchanged.
+
+![Step 9](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial12.png)
+
+![Step 9](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial13.png)
+10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
+
+
+![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial14.png)
+
+![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial15.png)
 
