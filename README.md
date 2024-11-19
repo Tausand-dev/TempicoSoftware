@@ -56,27 +56,6 @@ After finishing a measurement, if the user desires, they can save the measured d
 
 If the user is not in the middle of a measurement, they will be able to disconnect the Tempico device and connect another if they desire. The data will not be lost if the device is disconnected; data is only lost if the user begins a new measurement.
 
-## FLIM Window
-## Before Measurement
-
-Before measurement, the user can define the parameters they want to measure. These include selecting which channel will capture the start pulses and which channel will capture the stop pulses. The user is free to choose any channel; however, if they select a start channel different from the Start Channel, they must connect a signal that emits periodic pulses to capture the differences between the stops. Since the measurements are represented as a frequency histogram, the user can also decide the bin width and the number of bins to plot. These two factors will determine the maximum time range to be graphed. Additionally, the user can choose how many measurements to perform. It is important to note that the mode change has no effect, as the mode will adjust automatically according to the maximum time range.
-
-![Before measurement](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/PreMeasurement.png)
-
-## During Measurement
-
-While the measurement is in progress, the user can monitor several parameters. The first is the total number of successful measurements, meaning those in which both a start and a stop were captured within the specified time range. Another parameter is the total number of start pulses, which indicates how many start pulses have been received, regardless of whether a stop was captured. The total measurement time is also displayed, measured by a timer that starts when the measurement begins. The user has a status bar that indicates the percentage of the measurement completed or whether any channel is not receiving pulses.
-
-![During measurement](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/MientrasMedicion.png)
-
-## After Measurement
-
-After the measurement, the user can decide whether to save the image of the data or the raw data, which are saved by default in the Documents/TempicoSoftwareData directory. Additionally, the user can adjust the graph by specifying the fitting parameters. Four types of fitting are available: Exponential, Kohlrausch, Shifted Exponential, and Double Exponential. The fitting parameters are determined along with an R² value to assess the quality of the fit. If a fit was performed, the values are saved both in the graph's footer and alongside the raw data.
-
-![After measurement](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/Postmeasurement.png)
-
-![Fit measurement](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/AfterFit.png)
-
 ## For Developers
 
 To test the system, first clone the repository and then set the console path to the `TempicoSoftware` folder. Once there, run the following command: `pip install -r requirements.txt`. From the console, in the same path, run `python main.py`. This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 main.py`. 
@@ -84,5 +63,26 @@ To test the system, first clone the repository and then set the console path to 
 **Note**: It is recommended to use Python version 3.8.10 (32-bit).
 
 To generate the executable, run the following command: `pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.ico main.py`. This will generate a single file containing the program. To run it correctly, this file must be placed inside the `Sources` folder that contains the images.
+
+##Generate Installer
+
+Once the executable is compiled, we will proceed to create the software installer.
+
+## Step 1: Download and Install Inno Setup Compiler
+First, download the Inno Setup Compiler program and install it on your machine. The download page for the program is available at the following link: [https://jrsoftware.org/isdl.php](https://jrsoftware.org/isdl.php). Download the `.exe` file corresponding to the application installer.
+
+## Step 2: Open Inno Setup Compiler
+Once Inno Setup is installed correctly, open it and follow these steps:
+
+1. First, you will be prompted to either open an existing script or create a new one. Select the option to **Create a New Script Using the Wizard**.
+2. In the next window, leave all options unselected and click **Next**.
+3. You will then be asked to provide the application name, version, publisher, and website (if applicable). For Tempico Software, use the following values for each field.
+4. Next, specify the default folder for the application and the application name. If these values do not carry over from the previous step, use the specified values provided.
+5. In the field **Application Main Executable File**, provide the path to the executable created earlier with PyInstaller. Additionally, click on **Add Folder** to include the images needed by the executable. Locate and select the `Sources` folder containing these image files. Leave all other fields as their default values.
+6. For the next four windows, leave the default values as they are (ensure they match the values shown in the provided screenshots).
+7. You will be prompted to select the installation language. Since Tempico Software only supports English for this version, select **English**.
+8. In the **Custom Compiler Output Folder** field, specify the directory where the installer will be saved once compiled. This path is flexible and should be chosen based on the developer’s preference. In the **Compiler Output Base File Name** field, enter `Tempico Software Setup`. For **Custom Setup Icon File**, locate the `Sources` folder and select the `tausand_small.ico` icon file. Leave the password field empty.
+9. For the following windows, simply click **Next** and then **Finish**, keeping the default values unchanged.
+10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
 
 
