@@ -40,7 +40,7 @@ The third parameter is the number of stops. This parameter determines the number
 The fourth parameter is the edge type. In each channel, you can decide if the measured data is the beginning of the stop pulse (RISE) or the end of the stop pulse (FALL).
 The fifth parameter is the stop mask. It indicates the range of times in which the measurements will be discarded. For example, if the stop mask is 10 µs, the measurements in the range 0 µs - 10 µs will not be considered. The stop mask accepts values between 0 µs and 4000 µs.
 
-![Channel settings](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/generalsettings.png)
+![Channel settings](https://github.com/Tausand-dev/TempicoSoftware/blob/FLIMtest/Sources/settings.png)
 
 ## Main window Start-stop histogram
 
