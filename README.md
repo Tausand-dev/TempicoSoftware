@@ -125,3 +125,60 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 ![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial15.png)
 
 
+### MacOS
+Run the following command
+```
+pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+```
+Two folders will be created: build and dist. Inside `dist` you'll find the `.app` file. This file can be run from a console by executing the command
+To change the icon of the `.app` file follow the instructions here https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos
+
+### Linux
+Run the following command
+```
+yinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+```
+Two folders will be created: build and dist. Inside dist you'll find the executable file. This file can be run from a console by executing the command
+
+```
+./TempicoSoftware
+```
+If it doesn't run, make sure it has execute permissions. In case it doesn't run `chmod +x TempicoSoftware` and then try again. The executable file could be used to create a Desktop entry so it can be lauched as an application (for example in Gnome, an icon could be assigned)
+
+To create an AppImage that can be run from multiple Linux distributions and be launch by double clicking, follow the next steps.
+* Create the following folder path: 
+	TempicoSoftware.AppDir/usr/bin
+* Place the executable inside the bin folder 
+* Place the icon tausand_small.png located at Sources/tausand_small.png inside TempicoSoftware.AppDir
+* Create a file called TempicoSoftware.desktop inside TempicoSoftware.AppDir
+* Edit the `.desktop` file with the following
+
+```
+[Desktop Entry]
+Name=TempicoSoftware
+Exec=TempicoSoftware
+Icon=tausand_small
+Type=Application
+Categories=Utility;
+```
+
+* Give execution permisions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
+* Create a script called `AppRun` with the following contents
+
+```
+#!/bin/bash
+SELF=$(readlink -f "$0")
+HERE=${SELF%/*}
+EXEC="${HERE}/usr/bin/TempicoSoftware"
+exec "${EXEC}"
+```
+
+* Give execution permisions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` on a Terminal.
+* For 64-bit architecture, download appimagetool-x86_64.AppImage from https://github.com/AppImage/AppImageKit/releases/ and give execution permisions to it. 
+* Place appimagetool outside TempicoSoftware.AppDir and run
+```
+ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
+```
+* The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
+
+
