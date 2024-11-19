@@ -117,7 +117,7 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 ![Step 9](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial12.png)
 
 ![Step 9](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial13.png)
-11. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
+10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
 
 
 ![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial14.png)
