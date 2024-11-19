@@ -2,7 +2,6 @@
 
 Tempico Software is a suite of tools built to ensure your experience with Tausand's time-to-digital converter.
 
-## Functionality
 The software operates via a Graphical User Interface (GUI) which facilitates user interaction with the Tausand Tempico hardware.
 
 ## Libraries Used
