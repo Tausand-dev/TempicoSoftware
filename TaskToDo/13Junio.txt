@@ -1,9 +1,0 @@
-Incluir el save (Corregido con error de ,)
-Incluir round (Corregido)
-para el archivo save(Todo lo que tiene: Delay time (ns),Counts A,Counts B,Coincidences AB, g2, sampling time, ventana de coincidencias ) Todos los parametros del calculo(Corregido)
-settings de la g2 como el archivo settings txt
-Ir armando la g2 alrededor del 0 (Corregido)
-A la hora de guardar el archivo si debe estar ordenado por tiempo(Corregido)
-Decir como se esta calculando la g2   (Puede ser en el boton de pregunta)(Corregido, mejor poner imagen)
-Ver que sampling time se demora menos
-

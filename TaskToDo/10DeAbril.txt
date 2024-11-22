@@ -1,8 +1,0 @@
-Tareas jornada dia lunes-martes
-Arreglar el settings de tempico
-General general settings
-Guardar valores en constantes
-No usar pyAbacus
-Histograma canal 1 arriba
-Histograma canal 2 arriba
-Resolución de gráfica

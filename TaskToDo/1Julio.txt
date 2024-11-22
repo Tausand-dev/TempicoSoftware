@@ -1,4 +1,0 @@
-Script con el instalador corregido (Corregido)
-No sumar counts, counts del punto y coincidencias del punto unico para abacus 1.7.0 en g2 no sumar acumulado (Corregido)
-Revisar Ubuntu historical date para revisar si aparecen los datos (Corregido)
-No usar rojo en el  punto(Corregido)

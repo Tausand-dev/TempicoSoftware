@@ -1,6 +1,0 @@
-Reporte de las pruebas con los ajustes en inglés 
-Foto del equipo: incluir en el reporte, foto del frente y de atrás
-buscar en IEEE articulos sobre g2
-Ocultar pestaña de g2
-Pausar g2
-Arreglar cosas pequeñas e iniciar lifetime measurements
