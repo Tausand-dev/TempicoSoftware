@@ -65,10 +65,39 @@ If the user is not in the middle of a measurement, they will be able to disconne
 
 ## For Developers
 
+### Creating a virtual environment
+
+Run the following code to create a virtual environment called `.venv`
+
+```
+python -m venv .venv
+```
+
+#### Activate
+
+- On Unix systems:
+  
+  ```
+  source .venv/bin/activate
+  ```
+- On Windows:
+  
+  ```
+  .venv\Scripts\activate
+  ```
+
+#### Deactivate
+
+```
+deactivate
+```
+
+### Installing packages
+
 To test the system, first clone the repository and then set the console path to the `TempicoSoftware` folder. Once there, run the following command:
 
 ```
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 From the console, in the same path, run `python test.py`. This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 test.py`. 
