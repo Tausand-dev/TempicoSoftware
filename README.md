@@ -117,7 +117,7 @@ To generate the executable, run the following command:
 pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.ico test.py
 ```
 
-This will generate a single file containing the program. To run it correctly, this file must be placed inside the `Sources` folder that contains the images.
+Two folders will be created: build and dist. Inside `dist` you'll find the `.exe` file. To run it correctly, this file must be placed next to the `Sources` folder that contains the images.
 
 ### Generate Installer
 
