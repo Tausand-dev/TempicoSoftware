@@ -65,6 +65,14 @@ If the user is not in the middle of a measurement, they will be able to disconne
 
 ## For Developers
 
+### Updating to a new version
+
+Modify the version number in the following files:
+
+* installer/installer_builder.iss
+
+* TempicoSoftware/constants.py
+
 ### Creating a virtual environment
 
 Run the following code to create a virtual environment called `.venv`
@@ -127,7 +135,15 @@ Once the executable is compiled, we will proceed to create the software installe
 
 First, download the Inno Setup Compiler program and install it on your machine. The download page for the program is available at the following link: [https://jrsoftware.org/isdl.php](https://jrsoftware.org/isdl.php). Download the `.exe` file corresponding to the application installer.
 
-#### Step 2: Open Inno Setup Compiler
+#### Step 2a: Create using iss file at Inno Setup Compiler
+
+Using the File Explorer, go to the folder `installer` and double-click `installer_builder.iss` or open it from Inno Setup if it is already opened. Click on the play icon and then follow the process, which includes the creation of the installer and the installation itself.
+
+The installer will be saved in a folder called `Output`.
+
+If the `.iss` file does not exist, follow step 2b.
+
+#### Step 2b: Create using Inno Setup Compiler Wizard
 
 Once Inno Setup is installed correctly, open it and follow these steps:
 
