@@ -1,6 +1,0 @@
-maximo del valor absoluto para los limites de la g2
-Calculo de ventana de información
-Botón ReadFirst para usar g2
-Quitar get parameters y ponerlos en vivo de acuerdo a como se va actualizando la g2
-Number of runs automatico, no dejar que el usuario lo toque
-Bins en potencias de 2 hasta el orden de 100 microsegundos

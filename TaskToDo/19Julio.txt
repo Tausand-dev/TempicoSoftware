@@ -1,6 +1,0 @@
-Textos botones
-Hacer toma de parametros en modo 2 y luego la g2 en modo 1
-Exportar varios datos con distintas tasas medias de pulsos aleatorios
-Por medio de un ajuste determinar que tipo de función se esta presentando
-Y normalizar la función
-Poner inverso en el Parameters

@@ -1,9 +1,0 @@
-Pulsos distribucón exponencial  (Puede ser para otro momento)
-Diistribución random: que distribución sigue (Puede ser para otro momento)
-totalTime: suma de todos los tb-ta
-bindwidth: resolución
-reolución: ir de 2 en 2 de la resolución
-es un histograma, sacarlo con np.hist
-comparar con histograma
-comentar código
-

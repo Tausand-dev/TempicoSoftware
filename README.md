@@ -5,6 +5,8 @@ Tempico Software is a suite of tools built to ensure your experience with Tausan
 The software operates via a Graphical User Interface (GUI) which facilitates user interaction with the Tausand Tempico hardware.
 
 ## Libraries Used
+
+- **PyTempico**
 - **PyQT5**: Using the API provided by pyside2.
 - **NumPy**
 - **PyQtGraph**
