@@ -80,6 +80,7 @@ python -m venv .venv
   ```
   source .venv/bin/activate
   ```
+
 - On Windows:
   
   ```
@@ -94,13 +95,19 @@ deactivate
 
 ### Installing packages
 
-To test the system, first clone the repository and then set the console path to the `TempicoSoftware` folder. Once there, run the following command:
+After the virtual environment has been activated, install required packages by using:
 
 ```
 python -m pip install -r requirements.txt
 ```
 
-From the console, in the same path, run `python test.py`. This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 test.py`. 
+From the console, in the same path of the cloned project, run 
+
+```
+python test.py
+```
+
+This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 test.py`. 
 
 **Note**: It is recommended to use Python version 3.8.10 (32-bit).
 
@@ -189,7 +196,7 @@ To change the icon of the `.app` file follow the instructions here https://apple
 Run the following command
 
 ```
-Pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
 ```
 
 Two folders will be created: build and dist. Inside dist you'll find the executable file. This file can be run from a console by executing the command
@@ -234,9 +241,9 @@ exec "${EXEC}"
 * For 64-bit architecture, download appimagetool-x86_64.AppImage from https://github.com/AppImage/AppImageKit/releases/ and give execution permisions to it. 
 
 * Place appimagetool outside TempicoSoftware.AppDir and run
-  
-  ```
+
+```
   ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
-  ```
+```
 
 * The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
