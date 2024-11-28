@@ -63,6 +63,17 @@ After finishing a measurement, if the user desires, they can save the measured d
 
 If the user is not in the middle of a measurement, they will be able to disconnect the Tempico device and connect another if they desire. The data will not be lost if the device is disconnected; data is only lost if the user begins a new measurement.
 
+## Grant port access on Linux
+
+Most Linux configurations have a dialout group for full and direct access to serial ports. By adding your user account to this group you will have the necessary permissions for Tempico Software to communicate with the serial ports.
+
+1. Open Terminal.
+
+2. Enter the following command, replacing ```<username>``` with the name of your account.
+      sudo usermod -a -G dialout <username>
+
+3. Sign in and out for the changes to take effect.
+
 ## For Developers
 
 ### Updating to a new version
@@ -201,10 +212,10 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 Run the following command
 
 ```
-pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png test.py
 ```
 
-Two folders will be created: build and dist. Inside `dist` you'll find the `.app` file. This file can be run from a console by executing the command
+Two folders will be created: build and dist. Inside `dist` you'll find the `.app` file. This file can be run from a console by executing the command.
 To change the icon of the `.app` file follow the instructions here https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos
 
 #### Linux
@@ -212,7 +223,7 @@ To change the icon of the `.app` file follow the instructions here https://apple
 Run the following command
 
 ```
-pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png main.py
+pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png test.py
 ```
 
 Two folders will be created: build and dist. Inside dist you'll find the executable file. This file can be run from a console by executing the command
@@ -228,6 +239,7 @@ To create an AppImage that can be run from multiple Linux distributions and be l
 * Create the following folder path: 
     TempicoSoftware.AppDir/usr/bin
 * Place the executable inside the bin folder 
+* Place the Sources folder inside the bin folder
 * Place the icon tausand_small.png located at Sources/tausand_small.png inside TempicoSoftware.AppDir
 * Create a file called TempicoSoftware.desktop inside TempicoSoftware.AppDir
 * Edit the `.desktop` file with the following
