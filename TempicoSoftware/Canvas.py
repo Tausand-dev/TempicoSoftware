@@ -301,6 +301,10 @@ class Canvas():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.datapureA=[]
+            self.datapureB=[]
+            self.datapureC=[]
+            self.datapureD=[]
             self.disconnectButton.setEnabled(False)
             self.currentmeasurement=True
             self.create_graphs()
