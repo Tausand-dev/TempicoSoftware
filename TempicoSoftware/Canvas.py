@@ -350,26 +350,31 @@ class Canvas():
     def get_new_data(self, channel,dataPure,channelIndex,stopnumber):
         
         
-        measurements=self.device.fetch()
+        measurements=self.device.measure()
+        print(measurements)
+        if len(measurements)==0:
+            return None
+        if measurements==None:
+            return None
         if len(measurements[0])!=0:
             number_runs=self.device.getNumberOfRuns()
             if channelIndex=="A":
                 index_measurement=0
                 
             elif channelIndex=="B":
-                index_measurement=number_runs
+                index_measurement=1
                 
             elif channelIndex=="C":
-                index_measurement=number_runs*2
+                index_measurement=2
                 
             elif channelIndex=="D":
-                index_measurement=number_runs*3
+                index_measurement=3
                 
             total_measurement=0
             total_points=0
             for i in range(number_runs):
-                if measurements[i+index_measurement][3+stopnumber]!=-1:
-                    total_measurement+=measurements[i][3+stopnumber]
+                if measurements[number_runs*index_measurement+i][3+stopnumber]!=-1:
+                    total_measurement+=measurements[number_runs*index_measurement+i][3+stopnumber]
                     total_points+=1
             if total_points!=0:    
                 average_measurement=total_measurement/total_points
