@@ -73,6 +73,14 @@ class Ui_Devices(object):
         self.ConnectButton.clicked.connect(self.connectClick)
 
         self.horizontalLayout.addWidget(self.CancelButto)
+        
+        self.UpdateButton = QPushButton(self.ButtoFram)
+        self.UpdateButton.setObjectName(u"UpdateButton")
+        self.UpdateButton.setText(QCoreApplication.translate("Dialog", u"Refresh", None))
+        self.UpdateButton.clicked.connect(self.refreshDevices)
+       
+
+        self.horizontalLayout.addWidget(self.UpdateButton)
 
 
         self.verticalLayout.addWidget(self.ButtoFram)
@@ -107,3 +115,10 @@ class Ui_Devices(object):
         com_value=self.DevicesComboBox.currentText()
         self.deviceConnected=tempico.TempicoDevice(com_value)
         self.Dialog.close()
+    
+    def refreshDevices(self):
+        ManagerDevices=PyTempicoManager()
+        port_list=ManagerDevices.get_pytempico_devices()
+        for i in port_list:
+            self.DevicesComboBox.addItem(i)
+            self.ConnectButton.setEnabled(True)

@@ -183,6 +183,7 @@ class MainWindow(QMainWindow):
             self.ui.setupUi(padre)
             self.sentinel3=1
     def open_dialog(self):
+        self.show()
         self.dialog=QDialog(self)
         self.uidialog = Ui_Devices()
         self.uidialog.setupUi(self.dialog)
