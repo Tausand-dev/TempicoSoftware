@@ -3,6 +3,15 @@ import serial.tools.list_ports
 import serial
 
 class PyTempicoManager:
+    """
+    Class for managing the search and connection of Tempico devices connected to serial ports on the PC.
+
+    This class is responsible for scanning the available serial ports on the system and searching for Tempico devices 
+    connected to those ports. It facilitates interaction with Tempico devices by allowing their identification and connection.
+
+    :param None: No parameters are required for the initialization of the class.
+    :return: None
+    """
     def __init__(self):
         pass
     
