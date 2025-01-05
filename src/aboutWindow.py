@@ -2,6 +2,16 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from about import Ui_Dialog as Ui_Dialog_about
 
 class AboutWindow(QtWidgets.QDialog, Ui_Dialog_about):
+    """
+    This class creates and displays an About dialog window providing information about the Tempico Software, 
+    including the version, and links to the official website and GitHub repository.
+    
+    The dialog shows a splash image, the software version, PyTempico version, and provides clickable links
+    for the user to visit the company's website and the project's GitHub repository.
+    
+    :param parent: The parent widget or window, default is None.
+    :type parent: QtWidgets.QWidget, optional
+    """
     def __init__(self, parent = None):
         super(AboutWindow, self).__init__(parent)
         self.setWindowFlags(QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
