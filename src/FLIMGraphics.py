@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, 
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram
 from numpy import append as appnd
-from .createsavefile import createsavefile as savefile
+from createsavefile import createsavefile as savefile
 import datetime
 from scipy.optimize import curve_fit
 import math
@@ -1351,22 +1351,22 @@ class FLIMGraphic():
 
         The following parameters are updated based on the selected fit type:
         - For Exponential fit:
-            - I0 (initial value)
-            - tau0 (decay constant)
+        - I0 (initial value)
+        - tau0 (decay constant)
         - For Kohlrausch fit:
-            - I0 (initial value)
-            - tau0 (decay constant)
-            - beta (exponent)
+        - I0 (initial value)
+        - tau0 (decay constant)
+        - beta (exponent)
         - For Shifted Exponential fit:
-            - I0 (initial value)
-            - tau0 (decay constant)
-            - alpha (shift parameter)
-            - b (baseline value)
+        - I0 (initial value)
+        - tau0 (decay constant)
+        - alpha (shift parameter)
+        - b (baseline value)
         - For Double Exponential fit:
-            - I0 (initial value)
-            - tau0 (first decay constant)
-            - tau1 (second decay constant)
-            - alpha (mixing coefficient)
+        - I0 (initial value)
+        - tau0 (first decay constant)
+        - tau1 (second decay constant)
+        - alpha (mixing coefficient)
 
         Variables assignment:
         - The updated values are assigned to their respective initial parameter variables.
@@ -1374,7 +1374,6 @@ class FLIMGraphic():
 
         :return: None
         """
-        print("Se ejecuta")
         if self.combo_box.currentText()=="Exponential fit":
             self.initialI0=self.I_0_field.value()
             self.initialTau0=self.Tau_0_field.value()

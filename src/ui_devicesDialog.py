@@ -10,7 +10,7 @@
 
 from PySide2.QtCore import Qt, QMetaObject, QCoreApplication
 from PySide2.QtWidgets import QVBoxLayout, QFrame, QLabel, QHBoxLayout, QComboBox, QPushButton
-from .findDevices import PyTempicoManager 
+from findDevices import PyTempicoManager 
 import pyTempico as tempico
 
 

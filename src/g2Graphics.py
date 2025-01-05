@@ -5,7 +5,7 @@ import pyqtgraph as pg
 from numpy import arange, histogram
 from numpy import append as appnd
 import bisect
-from .createsavefile import createsavefile as savefile
+from createsavefile import createsavefile as savefile
 import datetime
 import time
 class g2Graphic():

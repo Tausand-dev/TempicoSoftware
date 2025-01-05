@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>createsavefile &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=def9ab29"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">createsavefile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for createsavefile</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+
+
+
+
+<span class="c1">#Create the folder</span>
+<div class="viewcode-block" id="createsavefile"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile">[docs]</a><span class="k">class</span> <span class="nc">createsavefile</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="createsavefile.create_folder_and_file"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.create_folder_and_file">[docs]</a>    <span class="k">def</span> <span class="nf">create_folder_and_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a folder named &#39;TempicoSoftwareData&#39; inside the user&#39;s &#39;Documents&#39; directory, </span>
+<span class="sd">        and creates a file named &#39;data_constants.txt&#39; (or &#39;.data_constants.txt&#39; on Unix-based systems) inside that folder. </span>
+<span class="sd">        The file is populated with predefined default values for histogram and data names. </span>
+<span class="sd">        The file is hidden depending on the operating system.</span>
+
+<span class="sd">        The folder and file are created with the following details:</span>
+<span class="sd">        - Folder path: &lt;Documents&gt;/TempicoSoftwareData</span>
+<span class="sd">        - File name: data_constants.txt (or &#39;.data_constants.txt&#39; for Unix-based systems)</span>
+<span class="sd">        - The file contains the following default data:</span>
+<span class="sd">        - Folder Path</span>
+<span class="sd">        - Default Histogram Name</span>
+<span class="sd">        - Default g2 Name</span>
+<span class="sd">        - Default Lifetime Name</span>
+
+<span class="sd">        In case of a Windows system, the file is made hidden using the Windows API. For Unix-based systems (Linux, macOS), </span>
+<span class="sd">        the file is renamed to be hidden by adding a dot (&#39;.&#39;) before the filename.</span>
+
+<span class="sd">        :raises OSError: If an error occurs during folder or file creation, or when accessing the filesystem.</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">documents_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">(),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
+        <span class="n">folder_name</span> <span class="o">=</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_dir</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">)</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder Path: </span><span class="si">{</span><span class="n">folder_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Histogram Name: histogram_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default g2 Name: g2_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Lifetime Name: lifetime_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            
+            <span class="c1"># Ocultar el archivo de manera efectiva según el sistema operativo</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>  <span class="c1"># Windows</span>
+                <span class="kn">import</span> <span class="nn">ctypes</span>
+                <span class="n">FILE_ATTRIBUTE_HIDDEN</span> <span class="o">=</span> <span class="mh">0x02</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">windll</span><span class="o">.</span><span class="n">kernel32</span><span class="o">.</span><span class="n">SetFileAttributesW</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">FILE_ATTRIBUTE_HIDDEN</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The folder &#39;</span><span class="si">{</span><span class="n">folder_name</span><span class="si">}</span><span class="s2">&#39; and the hidden file &#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&#39; have been created in &#39;</span><span class="si">{</span><span class="n">documents_dir</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Unix-based (Linux, macOS)</span>
+                <span class="n">hidden_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">hidden_file_path</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The folder &#39;</span><span class="si">{</span><span class="n">folder_name</span><span class="si">}</span><span class="s2">&#39; and the hidden file &#39;.</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&#39; have been created in &#39;</span><span class="si">{</span><span class="n">documents_dir</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred while creating the folder and/or file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            
+
+    <span class="c1">#Check if the folder already exist </span>
+
+<div class="viewcode-block" id="createsavefile.check_folder_and_file"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.check_folder_and_file">[docs]</a>    <span class="k">def</span> <span class="nf">check_folder_and_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the folder &#39;TempicoSoftwareData&#39; and the file &#39;data_constants.txt&#39; </span>
+<span class="sd">        exist in the user&#39;s &#39;Documents&#39; directory.</span>
+
+<span class="sd">        The function constructs the paths for both the folder and the file, and checks if both exist:</span>
+<span class="sd">        - Folder path: &lt;Documents&gt;/TempicoSoftwareData</span>
+<span class="sd">        - File name: data_constants.txt</span>
+
+<span class="sd">        If both the folder and the file exist, the function returns True. Otherwise, it returns False.</span>
+
+<span class="sd">        :returns: bool: True if the folder and file exist, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">documents_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">(),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
+        <span class="n">folder_name</span> <span class="o">=</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_dir</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">)</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">valor</span><span class="o">=</span><span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="n">valor</span><span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">return</span> <span class="n">valor</span></div>
+
+    <span class="c1">#Create the folder</span>
+
+<div class="viewcode-block" id="createsavefile.create_folder"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.create_folder">[docs]</a>    <span class="k">def</span> <span class="nf">create_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if the specified folder and file already exist. If they do exist, it creates </span>
+<span class="sd">        the folder and file by calling the &#39;create_folder_and_file&#39; function.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">check_folder_and_file</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_folder_and_file</span><span class="p">()</span></div>
+            
+    <span class="c1">#Get the dictionary with the constants</span>
+        
+<div class="viewcode-block" id="createsavefile.read_default_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.read_default_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_default_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the default data from the file &#39;data_constants.txt&#39; located in the </span>
+<span class="sd">        &#39;TempicoSoftwareData&#39; folder inside the user&#39;s &#39;Documents&#39; directory.</span>
+
+<span class="sd">        This function attempts to read the file line by line and extracts key-value pairs </span>
+<span class="sd">        formatted as &quot;key: value&quot;. The first line, which contains the folder path, is </span>
+<span class="sd">        processed separately. The extracted key-value pairs are stored in a dictionary, </span>
+<span class="sd">        which is returned as the output.</span>
+
+<span class="sd">        If the file is not found or an error occurs while reading the file, the function</span>
+<span class="sd">        returns None.</span>
+
+<span class="sd">        :returns: dict or None: A dictionary containing the data from the file, or None if </span>
+<span class="sd">                an error occurred.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the path to the &quot;Documents&quot; directory on the current operating system</span>
+        <span class="n">documents_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">(),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Specify the folder name and file name</span>
+        <span class="n">folder_name</span> <span class="o">=</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
+
+        <span class="c1"># Construct the full path to the file</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_dir</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># Open the file in read mode</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="c1"># Read each line of the file</span>
+                <span class="n">number</span><span class="o">=</span><span class="mi">0</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="c1"># Split the line into key and value (assuming it&#39;s in the format &quot;key: value&quot;)</span>
+                    <span class="k">if</span> <span class="n">number</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="o">=</span> <span class="s1">&#39;Folder path&#39;</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;: &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+                        <span class="n">number</span><span class="o">=</span><span class="mi">1</span>
+                    <span class="n">key_value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">key_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">key_value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">data_dict</span>
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The file &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39; was not found.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while reading the file &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="c1">#Save the files in a txt files in the folder created</span>
+<div class="viewcode-block" id="createsavefile.save_lists_as_columns_txt"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_lists_as_columns_txt">[docs]</a>    <span class="k">def</span> <span class="nf">save_lists_as_columns_txt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_lists</span><span class="p">,</span> <span class="n">file_names</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span><span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves multiple lists of data as separate text files, where each list is written as a </span>
+<span class="sd">        column in the text file. The files are saved in the specified directory with the </span>
+<span class="sd">        provided file names, and the columns are named based on the given column names. </span>
+
+<span class="sd">        This function ensures that the specified directory exists, and raises an error if </span>
+<span class="sd">        the lengths of the input lists do not match.</span>
+
+<span class="sd">        :param data_lists: A list of lists, where each list contains the data to be written to a file (list).</span>
+<span class="sd">        :param file_names: A list of strings specifying the names of the output files (list of str).</span>
+<span class="sd">        :param column_names: A list of strings specifying the names of the columns in the text files (list of str).</span>
+<span class="sd">        :param path: The directory path where the files will be saved (str).</span>
+<span class="sd">        :param settings: A list of settings to be written as the first line in each file (list of str).</span>
+<span class="sd">        :param extension: The file extension for the output files (str).</span>
+<span class="sd">        :raises ValueError: If the lengths of data_lists, file_names, and column_names do not match.</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_lists</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_lists</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data lists, file names, and column names must have the same length.&quot;</span><span class="p">)</span>
+            
+        <span class="k">for</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span><span class="n">setting_channel</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">file_names</span><span class="p">,</span> <span class="n">data_lists</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span><span class="n">settings</span><span class="p">):</span>
+            <span class="n">full_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">extension</span><span class="p">))</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setting_channel</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+                
+<div class="viewcode-block" id="createsavefile.save_g2_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_g2_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_g2_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">textLabel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves g2 data (tau and g2 values) into a text file in a specified folder. The function</span>
+<span class="sd">        ensures that the provided tau and g2 values have the same length and writes them into </span>
+<span class="sd">        a file along with specified settings and a label for the g2 values.</span>
+
+<span class="sd">        The file is saved in the specified folder path, with the provided file name and extension.</span>
+
+<span class="sd">        :param data: A tuple where the first element is a list of tau values and the second </span>
+<span class="sd">                    element is a list of corresponding g2 values (tuple of lists).</span>
+<span class="sd">        :param file_name: The name of the output file (str).</span>
+<span class="sd">        :param folder_path: The path to the folder where the file will be saved (str).</span>
+<span class="sd">        :param settings: A string representing the settings to be written in the first line of the file (str).</span>
+<span class="sd">        :param extension: The file extension for the output file (str).</span>
+<span class="sd">        :param textLabel: A label to be written before the g2 values in the file (str).</span>
+<span class="sd">        :raises ValueError: If the lengths of the tau and g2 value lists do not match.</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Tau and g2 Values must have the same length&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+        
+            <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textLabel</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">g2 Values</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">g2_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">g2_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                    
+<div class="viewcode-block" id="createsavefile.save_FLIM_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_FLIM_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_FLIM_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">textLabel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves FLIM data (time and FLIM values) into a text file in a specified folder. The function</span>
+<span class="sd">        ensures that the provided time and FLIM values have the same length and writes them into </span>
+<span class="sd">        a file along with specified settings and a label for the FLIM values.</span>
+
+<span class="sd">        The file is saved in the specified folder path, with the provided file name and extension.</span>
+
+<span class="sd">        :param data: A tuple where the first element is a list of time values and the second </span>
+<span class="sd">                    element is a list of corresponding FLIM values (tuple of lists).</span>
+<span class="sd">        :param file_name: The name of the output file (str).</span>
+<span class="sd">        :param folder_path: The path to the folder where the file will be saved (str).</span>
+<span class="sd">        :param settings: A string representing the settings to be written in the first line of the file (str).</span>
+<span class="sd">        :param extension: The file extension for the output file (str).</span>
+<span class="sd">        :param textLabel: A label to be written before the FLIM values in the file (str).</span>
+<span class="sd">        :raises ValueError: If the lengths of the time and FLIM value lists do not match.</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Time and FLIM Values must have the same length&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+        
+            <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textLabel</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Counts FLIM</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">flimValue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">flimValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+    
+    
+
+<span class="c1">#create_folder_and_file()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

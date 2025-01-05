@@ -7,7 +7,7 @@ import pyqtgraph as pg
 from PySide2.QtCore import QTimer
 import time
 #To do eliminate import
-from .createsavefile import createsavefile as savefile
+from createsavefile import createsavefile as savefile
 import datetime
 
 

@@ -2,23 +2,23 @@ from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushBut
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget
-from .generalsettings import GeneralSettingsWindow
-from .aboutWindow import AboutWindow
-from .ui_StarStopHistogram import Ui_HistogramaStartStop
-from .ui_g2measurement import Ui_G2
-from .ui_devicesDialog import Ui_Devices
+from generalsettings import GeneralSettingsWindow
+from aboutWindow import AboutWindow
+from ui_StarStopHistogram import Ui_HistogramaStartStop
+from ui_g2measurement import Ui_G2
+from ui_devicesDialog import Ui_Devices
 import time
 from PySide2.QtCore import QTimer
 import time
 #To do eliminate import
-from .createsavefile import createsavefile as savefile
-from .ui_settings import Ui_settings
-from .uiParametersDialog import UiParameters
-from .ParametersDialog import CountParameters
-from .StartStopHist import StartStopLogic
-from .constants import *
-from .ui_FLIMmeasurement import UiFLIM
-from .FLIMGraphics import FLIMGraphic
+from createsavefile import createsavefile as savefile
+from ui_settings import Ui_settings
+from uiParametersDialog import UiParameters
+from ParametersDialog import CountParameters
+from StartStopHist import StartStopLogic
+from constants import *
+from ui_FLIMmeasurement import UiFLIM
+from FLIMGraphics import FLIMGraphic
 import sys
 
 
@@ -694,3 +694,28 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
     app.exec_()
+
+
+def execProgram():
+    app = QApplication([])
+    splash_pix = QPixmap(BANNER)
+    desired_size = QSize(400, 300)  
+    splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
+    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash.setFixedSize(desired_size)
+    opaqueness = 0.0
+    step = 0.1
+    splash.setWindowOpacity(opaqueness)
+    splash.show()
+
+    while opaqueness < 1:
+        splash.setWindowOpacity(opaqueness)
+        time.sleep(step)  
+        opaqueness += step
+
+    time.sleep(1)  
+    splash.close() 
+    window = MainWindow()
+    window.show()
+    app.exec_()
+

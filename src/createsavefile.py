@@ -10,6 +10,27 @@ class createsavefile:
         pass
 
     def create_folder_and_file(self):
+        """
+        Creates a folder named 'TempicoSoftwareData' inside the user's 'Documents' directory, 
+        and creates a file named 'data_constants.txt' (or '.data_constants.txt' on Unix-based systems) inside that folder. 
+        The file is populated with predefined default values for histogram and data names. 
+        The file is hidden depending on the operating system.
+
+        The folder and file are created with the following details:
+        - Folder path: <Documents>/TempicoSoftwareData
+        - File name: data_constants.txt (or '.data_constants.txt' for Unix-based systems)
+        - The file contains the following default data:
+        - Folder Path
+        - Default Histogram Name
+        - Default g2 Name
+        - Default Lifetime Name
+
+        In case of a Windows system, the file is made hidden using the Windows API. For Unix-based systems (Linux, macOS), 
+        the file is renamed to be hidden by adding a dot ('.') before the filename.
+
+        :raises OSError: If an error occurs during folder or file creation, or when accessing the filesystem.
+        :returns: None
+        """
         documents_dir = os.path.join(pathlib.Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         folder_path = os.path.join(documents_dir, folder_name)
@@ -43,7 +64,18 @@ class createsavefile:
     #Check if the folder already exist 
 
     def check_folder_and_file(self):
-        
+        """
+        Checks whether the folder 'TempicoSoftwareData' and the file 'data_constants.txt' 
+        exist in the user's 'Documents' directory.
+
+        The function constructs the paths for both the folder and the file, and checks if both exist:
+        - Folder path: <Documents>/TempicoSoftwareData
+        - File name: data_constants.txt
+
+        If both the folder and the file exist, the function returns True. Otherwise, it returns False.
+
+        :returns: bool: True if the folder and file exist, False otherwise.
+        """
         documents_dir = os.path.join(pathlib.Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         file_name = "data_constants.txt"
@@ -59,6 +91,12 @@ class createsavefile:
     #Create the folder
 
     def create_folder(self):
+        """
+        Checks if the specified folder and file already exist. If they do exist, it creates 
+        the folder and file by calling the 'create_folder_and_file' function.
+
+        :returns: None
+        """
         value=self.check_folder_and_file()
         if value:
             self.create_folder_and_file()
@@ -66,6 +104,21 @@ class createsavefile:
     #Get the dictionary with the constants
         
     def read_default_data(self):
+        """
+        Reads the default data from the file 'data_constants.txt' located in the 
+        'TempicoSoftwareData' folder inside the user's 'Documents' directory.
+
+        This function attempts to read the file line by line and extracts key-value pairs 
+        formatted as "key: value". The first line, which contains the folder path, is 
+        processed separately. The extracted key-value pairs are stored in a dictionary, 
+        which is returned as the output.
+
+        If the file is not found or an error occurs while reading the file, the function
+        returns None.
+
+        :returns: dict or None: A dictionary containing the data from the file, or None if 
+                an error occurred.
+        """
         # Get the path to the "Documents" directory on the current operating system
         documents_dir = os.path.join(pathlib.Path.home(), "Documents")
 
@@ -106,6 +159,23 @@ class createsavefile:
 
     #Save the files in a txt files in the folder created
     def save_lists_as_columns_txt(self,data_lists, file_names, column_names, path,settings, extension):
+        """
+        Saves multiple lists of data as separate text files, where each list is written as a 
+        column in the text file. The files are saved in the specified directory with the 
+        provided file names, and the columns are named based on the given column names. 
+
+        This function ensures that the specified directory exists, and raises an error if 
+        the lengths of the input lists do not match.
+
+        :param data_lists: A list of lists, where each list contains the data to be written to a file (list).
+        :param file_names: A list of strings specifying the names of the output files (list of str).
+        :param column_names: A list of strings specifying the names of the columns in the text files (list of str).
+        :param path: The directory path where the files will be saved (str).
+        :param settings: A list of settings to be written as the first line in each file (list of str).
+        :param extension: The file extension for the output files (str).
+        :raises ValueError: If the lengths of data_lists, file_names, and column_names do not match.
+        :returns: None
+        """
         if not os.path.exists(path):
             os.makedirs(path)
             
@@ -121,7 +191,25 @@ class createsavefile:
                 for element in data_list:
                     file.write(f"{element}\n")
                 file.close()
+                
     def save_g2_data(self,data, file_name, folder_path, settings, extension, textLabel):
+        """
+        Saves g2 data (tau and g2 values) into a text file in a specified folder. The function
+        ensures that the provided tau and g2 values have the same length and writes them into 
+        a file along with specified settings and a label for the g2 values.
+
+        The file is saved in the specified folder path, with the provided file name and extension.
+
+        :param data: A tuple where the first element is a list of tau values and the second 
+                    element is a list of corresponding g2 values (tuple of lists).
+        :param file_name: The name of the output file (str).
+        :param folder_path: The path to the folder where the file will be saved (str).
+        :param settings: A string representing the settings to be written in the first line of the file (str).
+        :param extension: The file extension for the output file (str).
+        :param textLabel: A label to be written before the g2 values in the file (str).
+        :raises ValueError: If the lengths of the tau and g2 value lists do not match.
+        :returns: None
+        """
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
@@ -140,6 +228,23 @@ class createsavefile:
                     file.write(f"{tau}\t{g2_value}\n")
                     
     def save_FLIM_data(self,data, file_name, folder_path, settings, extension, textLabel):
+        """
+        Saves FLIM data (time and FLIM values) into a text file in a specified folder. The function
+        ensures that the provided time and FLIM values have the same length and writes them into 
+        a file along with specified settings and a label for the FLIM values.
+
+        The file is saved in the specified folder path, with the provided file name and extension.
+
+        :param data: A tuple where the first element is a list of time values and the second 
+                    element is a list of corresponding FLIM values (tuple of lists).
+        :param file_name: The name of the output file (str).
+        :param folder_path: The path to the folder where the file will be saved (str).
+        :param settings: A string representing the settings to be written in the first line of the file (str).
+        :param extension: The file extension for the output file (str).
+        :param textLabel: A label to be written before the FLIM values in the file (str).
+        :raises ValueError: If the lengths of the time and FLIM value lists do not match.
+        :returns: None
+        """
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
