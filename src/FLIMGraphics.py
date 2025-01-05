@@ -10,6 +10,42 @@ from scipy.optimize import curve_fit
 import math
 import re
 class FLIMGraphic():
+    """
+    Class responsible for the logic and functionality of the FLIM (Fluorescence Lifetime Measurement) window.
+
+    This class manages the creation and updating of graphical plots related to FLIM, controls user interactions with various 
+    buttons, and ensures that measurements are taken from the specified channels. The class handles:
+    - Initialization of the graphical interface elements.
+    - Starting and stopping of measurements.
+    - Saving of data and plots.
+    - Displaying parameters of the measurements, such as the number of measurements taken, and the percentage of completion.
+
+    :param comboBoxStartChannel: The combo box for selecting the start channel (QComboBox).
+    :param comboBoxStopChannel: The combo box for selecting the stop channel (QComboBox).
+    :param graphicFrame: The frame that holds the graphical plot (QFrame).
+    :param startButton: The button to start the measurements (QPushButton).
+    :param stopButton: The button to stop the measurements (QPushButton).
+    :param initialParametersButton: The button to configure initial parameters (QPushButton).
+    :param clearButton: The button to clear the graphs and data (QPushButton).
+    :param saveDataButton: The button to save the measurement data (QPushButton).
+    :param savePlotButton: The button to save the graph plot (QPushButton).
+    :param statusLabel: The label showing the current status (QLabel).
+    :param pointLabel: The label displaying the current point in the measurement (QLabel).
+    :param binWidthComboBox: The combo box for selecting the bin width (QComboBox).
+    :param numberBins: The combo box for selecting the number of bins (QComboBox).
+    :param functionComboBox: The combo box for selecting a function (QComboBox).
+    :param numberMeasurementsSpinBox: The spin box for specifying the number of measurements (QSpinBox).
+    :param totalMeasurements: The label showing the total number of measurements (QLabel).
+    :param totalStart: The label showing the number of measurements taken from the start channel (QLabel).
+    :param totalTime: The label showing the total time of measurements (QLabel).
+    :param timeRange: The label showing the time range for the measurements (QLabel).
+    :param device: The connected Tempico device used for measurements.
+    :param applyButton: The button for applying selected parameters (QPushButton).
+    :param parameterTable: The table displaying the parameters of the measurements (QTableWidget).
+    :param MainWindow: The main window that holds the application UI elements.
+    :param timerStatus: The timer used for periodic updates (QTimer).
+    :return: None
+    """
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
@@ -160,6 +196,16 @@ class FLIMGraphic():
             
     #Verify the connection of the function
     def checkDeviceStatus(self):
+        """
+        Verifies the device's operational status by attempting to read its identification.
+
+        This function performs the following actions:
+        - Attempts to read the identification from the device to ensure it is functioning correctly.
+        - If the read operation fails, it stops any running worker thread and disconnects the device from the serial port.
+        - Displays an error message indicating that the connection with the device has been lost.
+
+        :return: None
+        """
         try:
             self.device.readIdnFromDevice()
         except:
@@ -204,6 +250,20 @@ class FLIMGraphic():
             
     #Function to catch the start button action
     def startMeasurement(self):
+        """
+        Initiates the measurement process by clearing previous data, resetting the UI, and starting a new measurement thread.
+
+        This function performs several actions to prepare for and start a new measurement:
+        - Stops the status timer and disables/enables relevant buttons.
+        - Clears previous graph data and resets parameter labels.
+        - Saves the current channel modes and resets save parameters.
+        - Updates the status label and color to indicate a running measurement.
+        - Clears previously measured data and time, resetting the plot.
+        - Retrieves the selected channels and initializes a new measurement thread with the selected parameters.
+        - Connects signals from the worker thread to corresponding slots in the main thread for UI updates.
+
+        :return: None
+        """
         #Disable or enable the necessary
         self.timerStatus.stop()
         self.startButton.setEnabled(False)
@@ -586,6 +646,17 @@ class FLIMGraphic():
     
     #Functions created for connect or disconnect the device
     def connectedDevice(self,device):
+        """
+        Configures the UI options when the Tempico device is connected.
+
+        This function enables and disables the appropriate buttons and starts the timer to monitor the device status.
+        - Enables the disconnect button and disables the connect button.
+        - Starts a status timer with a 500 ms interval.
+        - Assigns the connected device to the class attribute and enables the start button.
+
+        :param device: The connected Tempico device.
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
         self.timerStatus.start(500)
@@ -593,6 +664,16 @@ class FLIMGraphic():
         self.startButton.setEnabled(True)
         
     def disconnectedDevice(self):
+        """
+        Configures the UI options when the Tempico device is disconnected.
+
+        This function disables and enables the appropriate buttons and stops the timer that monitors the device status.
+        - Disables the disconnect button and enables the connect button.
+        - Stops the status timer.
+        - Disables the start button.
+
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         self.timerStatus.stop()
@@ -2009,6 +2090,29 @@ class FLIMGraphic():
 #AVOID TO CLOSE THE THREAD WITH PYQT5 METHODS LIKE .CLOSE(), .EXIT(), .QUIT(), .STOP() 
 #TO CLOSE THE THREAD LET RUN THE MAIN FUNCTION UNTIL FINAL
 class WorkerThreadFLIM(QThread):
+    """
+    Worker thread for handling FLIM (Fluorescence Lifetime Measurement) processing in a separate thread 
+    to ensure that the GUI remains responsive during measurements.
+
+    This class performs the measurement tasks in the background, processes the data, and communicates with 
+    the main thread to update the GUI with the measurement status, results, and other relevant information.
+    
+    Signals:
+        - createdSignal: Signal emitted when the worker thread is created.
+        - statusSignal: Signal emitted to update the status message in the GUI.
+        - pointSignal: Signal emitted to update the current measurement point.
+        - updateValues: Signal emitted to update measurement values and corresponding times.
+        - updateLabel: Signal emitted to update a specific label in the GUI.
+        - updateMeasurementsLabel: Signal emitted to update the label showing the number of measurements taken.
+
+    :param deviceStartChannel: The start channel of the Tempico device used for measurement (TempicoChannel).
+    :param deviceStopChannel: The stop channel of the Tempico device used for measurement (TempicoChannel).
+    :param binwidthText: The selected bin width for the measurement (str).
+    :param numberMeasurements: The number of measurements to be taken (int).
+    :param device: The Tempico device used for performing measurements (Tempico).
+    :param TimeRange: The time range for the measurements (int).
+    :return: None
+    """
     createdSignal=Signal()
     statusSignal=Signal(str)
     pointSignal=Signal(int)
