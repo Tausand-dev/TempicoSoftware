@@ -24,6 +24,18 @@ import sys
 
 
 class SplashScreen(QMainWindow):
+    """
+    Splash screen class for the application.
+
+    This class creates a splash screen that displays an image for a brief period before fading out and transitioning to the main application window.
+
+    The key responsibilities of this class include:
+    - Displaying a splash screen with a specified image.
+    - Timing the display duration and handling the transition to the main application window.
+    
+    :param parent: The parent widget (optional).
+    :type parent: QWidget, optional
+    """
     def __init__(self):
         super().__init__()
         savefile.create_folder()
@@ -60,6 +72,22 @@ class SplashScreen(QMainWindow):
         self.close()
 
 class MainWindow(QMainWindow):
+    """
+    Main application window class.
+
+    This class is responsible for creating the main window of the application, including its tabs and graphical user interface (GUI) components. 
+    It serves as a bridge between the UI classes that handle the design elements and the logic classes that manage the application's functionalities.
+
+    The main tasks of this class include:
+    - Initializing the main window and its layout.
+    - Creating and managing tabs for different sections of the application.
+    - Integrating UI design elements with the logical operations for each functionality.
+    
+    :param parent: The parent widget (optional).
+    :param args: Additional arguments.
+    :type parent: QWidget, optional
+    :type args: tuple
+    """
     def __init__(self, parent=None, *args):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
@@ -217,6 +245,23 @@ class MainWindow(QMainWindow):
             self.sentinel3=1
 
     def open_dialog(self):
+        """
+        Opens a dialog window to detect and connect a measurement device.
+
+        This function creates and displays a dialog window that lists available measurement devices and their corresponding ports. 
+        Users can select a device and either connect or cancel the operation. 
+
+        If the 'Connect' button is clicked:
+        - The selected device is connected, and all relevant software options are enabled.
+        - The function tries to open the device and, upon success, interacts with graphical components (if any are present) to reflect the connected status.
+
+        If the 'Cancel' button is clicked:
+        - No options are activated.
+
+        In case of a connection error, a message box is displayed informing the user of the failure.
+
+        :returns: None
+        """  
         self.dialog=QDialog(self)
         self.uidialog = Ui_Devices()
         self.uidialog.setupUi(self.dialog)
@@ -420,6 +465,8 @@ class MainWindow(QMainWindow):
         #Important when g2 is unified with FLIM CHANGE THE INDEX TO 2
         
         
+#The g2 functions are not use for the versions 1.1 comment for future versions
+   
     def Helpg2Button(self):
         message_box = QMessageBox(self)
         message_box.setIcon(QMessageBox.Information)
@@ -535,7 +582,10 @@ class MainWindow(QMainWindow):
         
         settings_windows=AboutWindow()
         settings_windows.exec_()
-    
+  
+ 
+#This function is not use for the Tempico Version 1.1
+#TO DO: Comment the function for a future version    
     def parameters_action(self):
         if self.conectedDevice!=None:
             if not self.grafico.currentmeasurement:
