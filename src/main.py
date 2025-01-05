@@ -15,7 +15,7 @@ import createsavefile as savefile
 from ui_settings import Ui_settings
 from uiParametersDialog import UiParameters
 from ParametersDialog import CountParameters
-from Canvas import StartStopLogic
+from StartStopHist import StartStopLogic
 from constants import *
 from ui_FLIMmeasurement import UiFLIM
 from FLIMGraphics import FLIMGraphic
