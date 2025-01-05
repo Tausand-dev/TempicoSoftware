@@ -6,6 +6,14 @@ from PySide2.QtCore import QEvent
 
 
 class GeneralSettingsWindow(QDialog):
+    """
+    Represents the General Settings window for the Tempico device.
+
+    This class creates a dialog window that allows users to configure general settings that affect all channels (A, B, C, D) and the start settings of the Tempico device. It provides a user interface to adjust various parameters applicable across the entire device.
+
+    :param device: The Tempico device instance that the settings will apply to.
+    :type device: object
+    """
     def __init__(self,device):
         self.device=device
         
@@ -78,6 +86,17 @@ class GeneralSettingsWindow(QDialog):
         self.accept()
     
     def event(self, event): 
+        """
+        Handles the event when the "?" (What's This) help button is clicked.
+
+        This function intercepts the event triggered when the user clicks the "?" button (entering What's This mode). 
+        It exits What's This mode immediately, changes the mouse cursor back to the arrow, and displays a help window with relevant information.
+
+        :param event: The event object representing the triggered event.
+        :type event: QEvent
+        :returns: True if the event is handled; otherwise, it passes the event to the parent class for default processing.
+        :rtype: bool
+        """
         if event.type() == QEvent.EnterWhatsThisMode: #Event called when ? is clicked                
             QWhatsThis.leaveWhatsThisMode() #To change mouse cursor back to arrow
             self.showHelp()
@@ -86,6 +105,17 @@ class GeneralSettingsWindow(QDialog):
     
 
     def showHelp(self):
+        """
+        Displays a help dialog with information about general settings.
+
+        This function is triggered when the "?" (What's This) help button is clicked. It creates and displays a message box containing detailed information about the general settings, including instructions for the threshold voltage and the number of runs.
+
+        The message box provides the following details:
+        - **Threshold voltage**: Specifies the acceptable range for input values (0.60 V to 1.60 V).
+        - **Number of runs**: Describes the number of measurements performed in each channel during one data collection.
+
+        :returns: None
+        """
         QMessageBox.information(self, "Help", "Here is the information about the general settings:\n\n"
                                       "Threshold voltage: Enter a value between 0.60 V and 1.60 V.\n"
                                       "Number of runs: Number of measurements performed in each channel during one data collection.")
