@@ -5,7 +5,7 @@ import pyqtgraph as pg
 from numpy import arange, histogram
 from numpy import append as appnd
 import bisect
-import createsavefile as savefile
+from .createsavefile import createsavefile as savefile
 import datetime
 import time
 class g2Graphic():
@@ -14,6 +14,7 @@ class g2Graphic():
                  init_sentinel,graphicFrame:QFrame, comboBoxBin: QComboBox,*args, **kwargs):
         super().__init__()
         #MainWindow
+        self.savefile=savefile()
         self.parent=parent
         self.comboBoxBin=comboBoxBin
         #InitDevice
@@ -453,7 +454,7 @@ class g2Graphic():
                 exporter=pg.exporters.ImageExporter(self.plotg2)
                 exporter.parameters()['width'] = 800
                 exporter.parameters()['height'] = 600
-                folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 graph_name='g2Measurement'+current_date_str
@@ -510,7 +511,7 @@ class g2Graphic():
             conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
             conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
             total_condition= conditiontxt or conditiondat or conditioncsv
-            folder_path=savefile.read_default_data()['Folder path']
+            folder_path=self.savefile.read_default_data()['Folder path']
             if not total_condition:
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
@@ -541,7 +542,7 @@ class g2Graphic():
                 filename="g2Measurement"+current_date_str
                 data=[self.tauValues, self.g2Values]
                 try:
-                    savefile.save_g2_data(data,filename,folder_path,settings,selected_format, self.unitsLabel)
+                    self.savefile.save_g2_data(data,filename,folder_path,settings,selected_format, self.unitsLabel)
                     if selected_format=="txt":
                         self.oldtxtName=filename
                         self.sentinelsavetxt=1

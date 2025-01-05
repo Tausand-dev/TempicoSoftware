@@ -1,10 +1,10 @@
-.. TempicoSoftware documentation master file, created by
-   sphinx-quickstart on Tue Oct 22 13:46:38 2024.
+.. Tempico Software Documentation documentation master file, created by
+   sphinx-quickstart on Sun Jan  5 14:06:57 2025.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to TempicoSoftware's documentation!
-===========================================
+Welcome to Tempico Software Documentation's documentation!
+==========================================================
 
 .. toctree::
    :maxdepth: 2

@@ -7,7 +7,7 @@ import pyqtgraph as pg
 from PySide2.QtCore import QTimer
 import time
 #To do eliminate import
-import createsavefile as savefile
+from .createsavefile import createsavefile as savefile
 import datetime
 
 
@@ -31,6 +31,7 @@ class StartStopLogic():
     """
     def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
         super().__init__()
+        self.savefile=savefile()
         #Disconnect button
         self.disconnectButton= disconnect
         #Connect button
@@ -738,7 +739,7 @@ class StartStopLogic():
         :return: None
         """
         
-        data_prefix=savefile.read_default_data()['Default Histogram Name']
+        data_prefix=self.savefile.read_default_data()['Default Histogram Name']
         current_date=datetime.datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
         #Init filenames and data list
@@ -811,11 +812,11 @@ class StartStopLogic():
                     filenames.append(filename4)
                     data.append(self.datapureD)
                     column_names.append('channelD_data (ps)')
-                folder_path=savefile.read_default_data()['Folder path']
+                folder_path=self.savefile.read_default_data()['Folder path']
                 
                 try:
                     
-                    savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings,selected_format)
+                    self.savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings,selected_format)
                     message_box = QMessageBox(self.parent)
                     message_box.setIcon(QMessageBox.Information)
                     inital_text="The files have been saved successfully in path folder: "
@@ -921,7 +922,7 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotA)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelA'+current_date_str
@@ -931,7 +932,7 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotB)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelB'+current_date_str
@@ -941,7 +942,7 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotC)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelC'+current_date_str
@@ -951,7 +952,7 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotD)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelD'+current_date_str

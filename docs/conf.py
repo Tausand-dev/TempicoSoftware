@@ -2,22 +2,19 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../../src'))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'TempicoSoftware'
-copyright = '2024, Joan Amaya & David Guzmán'
-author = 'Joan Amaya & David Guzmán'
+project = 'Tempico Software Documentation'
+copyright = '2025, David Guzman, Joan Amaya'
+author = 'David Guzman, Joan Amaya'
 release = '1.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc']
+extensions = []
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

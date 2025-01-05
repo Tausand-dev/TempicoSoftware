@@ -1,5 +1,5 @@
 from PySide2 import QtCore, QtGui, QtWidgets
-from about import Ui_Dialog as Ui_Dialog_about
+from .about import Ui_Dialog as Ui_Dialog_about
 
 class AboutWindow(QtWidgets.QDialog, Ui_Dialog_about):
     """

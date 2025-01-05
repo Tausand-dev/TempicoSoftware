@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, 
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram
 from numpy import append as appnd
-import createsavefile as savefile
+from .createsavefile import createsavefile as savefile
 import datetime
 from scipy.optimize import curve_fit
 import math
@@ -51,6 +51,7 @@ class FLIMGraphic():
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, parameterTable: QTableWidget,MainWindow, timerStatus: QTimer):
         super().__init__()
+        self.savefile=savefile()
         #Initialize the main window
         self.mainWindow=MainWindow
         #Initialize the Tempico Device class
@@ -1943,7 +1944,7 @@ class FLIMGraphic():
                 exporter=pg.exporters.ImageExporter(copyWin.scene())
                 exporter.parameters()['width'] = 1000
                 exporter.parameters()['height'] = 700
-                folder_path=savefile.read_default_data()['Folder path'].replace('\n', '')
+                folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 graph_name='FLIMMeasurement'+current_date_str
@@ -2006,7 +2007,7 @@ class FLIMGraphic():
             conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
             conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
             total_condition= conditiontxt or conditiondat or conditioncsv
-            folder_path=savefile.read_default_data()['Folder path']
+            folder_path=self.savefile.read_default_data()['Folder path']
             if not total_condition:
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
@@ -2036,7 +2037,7 @@ class FLIMGraphic():
                     newMeasuredTime.append(newValue)
                 data=[newMeasuredTime,self.measuredData ]
                 try:
-                    savefile.save_FLIM_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
+                    self.savefile.save_FLIM_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
                     if selected_format=="txt":
                         self.oldtxtName=filename
                         self.sentinelsavetxt=1
