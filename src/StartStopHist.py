@@ -13,6 +13,22 @@ import datetime
 
 #Create graphic design#
 class StartStopLogic():
+    """
+    This class handles the functionality for managing buttons, checkboxes, and graphs for histograms related to the Start-Stop measurements. 
+    It controls which channels are active, manages the display of histograms, and records the data from the Tempico device based on the user's interactions. 
+    It also handles the zooming feature for creating bars according to the time range received from the device.
+
+    :param parent: The parent QWindow for the logic.
+    :param disconnect: The QPushButton used to disconnect.
+    :param device: The Tempico device class that handles the measurements.
+    :param check1, check2, check3, check4: QCheckBoxes that control the visibility of each histogram.
+    :param startbutton, stopbutton: QPushButtons to start and stop the measurement process.
+    :param savebutton, save_graph_1: QPushButtons to save data and save the graph.
+    :param clear_channel_A, clear_channel_B, clear_channel_C, clear_channel_D: QPushButtons to clear data for each respective channel.
+    :param connect: QPushButton to connect to the Tempico device.
+    :param mainWindow: The main window (QWindow) for the GUI.
+    :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
+    """
     def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
         super().__init__()
         #Disconnect button
@@ -133,6 +149,15 @@ class StartStopLogic():
            
         
     def create_graphs(self):
+        """
+        Creates histograms and plots for the selected channels (A, B, C, D) and arranges them on the GUI. 
+
+        This function initializes the graphical components and assigns the appropriate properties to the plots based on the selected channels.
+        It also manages the layout of the graphs, resizing them according to the number of selected channels (1, 2, 3, or 4). 
+        After setting up the graphical components, the function starts a worker thread that handles the measurement process in parallel with the GUI thread, ensuring the UI remains responsive.
+
+        :return: None
+        """
         #Set the timer to update the graphics
         self.timer=QTimer()
         self.dataA=[]
@@ -1358,6 +1383,14 @@ class StartStopLogic():
         
     
 class WorkerThreadStartStopHistogram(QThread):
+    """
+    This class represents a worker thread that processes Start-Stop measurements in a separate thread to avoid blocking the main GUI thread. 
+    It handles data collection from the Tempico device, processes the data, and emits signals to update the GUI with the results.
+    
+    :param parent: The parent QWindow of the thread.
+    :param device: The Tempico device class that handles the measurements.
+    :param sentinelSaveA, sentinelSaveB, sentinelSaveC, sentinelSaveD: Boolean flags that determine if data for each channel should be saved.
+    """
     dataSignal=Signal(float,str)
     dataPureSignal=Signal(float,str)
     threadCreated=Signal(int)
@@ -1772,6 +1805,11 @@ class WorkerThreadStartStopHistogram(QThread):
 
     #Function to know if a dialog is open
     def dialogIsOpen(self):
+        """
+        Sets the 'openDialog' sentinel to False, indicating that no dialog is open.
+
+        :return: None
+        """
         self.openDialog=False 
     
     #Change the max Value if the mode is changed
