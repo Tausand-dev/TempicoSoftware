@@ -13,6 +13,7 @@ from PySide2.QtWidgets import QHBoxLayout, QFrame, QSizePolicy, QVBoxLayout, QLa
 from PySide2.QtGui import QPixmap, QPainter, QColor
 import matplotlib.pyplot as plt
 import io
+import sys
 
 
 class UiFLIM(object):
@@ -125,7 +126,7 @@ class UiFLIM(object):
         self.numberMeasurementsSpinBox = QSpinBox(self.configurationParameters)
         self.numberMeasurementsSpinBox.setObjectName(u"numberMeasurementsSpinBox")
         self.numberMeasurementsSpinBox.setMinimum(1000)
-        self.numberMeasurementsSpinBox.setMaximum(20000)
+        self.numberMeasurementsSpinBox.setMaximum(sys.maxsize)
 
         self.verticalLayout_3.addWidget(self.numberMeasurementsSpinBox)
 

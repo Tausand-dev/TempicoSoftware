@@ -6,7 +6,6 @@ src
 
    FLIMGraphics
    StartStopHist
-   about
    aboutWindow
    createsavefile
    findDevices

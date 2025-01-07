@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         self.tab2=QWidget()
         self.tab3=QWidget()
         self.tabs.addTab(self.tab1,"Start-Stop histogram")
-        self.tabs.addTab(self.tab2,"FLIM")
+        self.tabs.addTab(self.tab2,"Lifetime")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -309,8 +309,7 @@ class MainWindow(QMainWindow):
                     self.connectsentinel=1
                     self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
                     
-                except NameError:
-                    print(NameError)
+                except:
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
