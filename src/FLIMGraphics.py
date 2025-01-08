@@ -9,6 +9,7 @@ import datetime
 from scipy.optimize import curve_fit
 import math
 import re
+from pyqtgraph.exporters import ImageExporter
 class FLIMGraphic():
     """
     Class responsible for the logic and functionality of the FLIM (Fluorescence Lifetime Measurement) window.
@@ -161,7 +162,7 @@ class FLIMGraphic():
         #InitialValuesFor kol Fit
         self.initialI0Kol=0
         self.initialTau0Kol=0
-        self.initialBeta=0
+        self.initialBeta=1
         #InitialValuesFor shifted Exponential
         self.initialI0Shif=0
         self.initialTau0Shif=0
@@ -404,7 +405,7 @@ class FLIMGraphic():
             if not self.changeInitialParametersKol:
                 self.initialI0Kol=max(self.measuredData)
                 self.initialTau0Kol=mean(self.measuredTime)
-                self.initialBeta=0
+                self.initialBeta=1
             if not self.changeInitialParametersShif:
                 self.initialI0Shif=max(self.measuredData)
                 self.initialTau0Shif=mean(self.measuredTime)
@@ -1940,7 +1941,7 @@ class FLIMGraphic():
                 copyWin.addItem(footer, row=2, col=0)
                 copyWin.ci.layout.setRowStretchFactor(0.4, 0.1)
                 copyPlot.getViewBox().setState(self.plotFLIM.getViewBox().getState())
-                exporter=pg.exporters.ImageExporter(copyWin.scene())
+                exporter=ImageExporter(copyWin.scene())
                 exporter.parameters()['width'] = 1000
                 exporter.parameters()['height'] = 700
                 folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
@@ -2187,6 +2188,11 @@ class WorkerThreadFLIM(QThread):
             self.device.ch3.setMode(2)
             self.device.ch4.setMode(2)
         
+        self.device.ch1.setMode(2)
+        self.device.ch2.setMode(2)
+        self.device.ch3.setMode(2)
+        self.device.ch4.setMode(2)
+        
     #Take one measurement function
     def takeMeasurements(self, percentage):
         """
@@ -2206,6 +2212,7 @@ class WorkerThreadFLIM(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
+        print(measurement)
         try:
             if len(measurement)==0:
                 self.totalRuns+=100
