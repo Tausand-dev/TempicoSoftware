@@ -185,6 +185,8 @@ class FLIMGraphic():
         self.oldChannelB=1
         self.oldChannelC=1
         self.oldChannelD=1
+        #Variable to define the old number of runs
+        self.oldNumberRuns=0
         #--------End Define other parameters and sentinels-----#
         #--------Init the the timer to check the connection----#
         self.timerStatus=timerStatus
@@ -524,6 +526,7 @@ class FLIMGraphic():
         :return: None
         """
         try:
+            self.oldNumberRuns=self.device.getNumberOfRuns()
             self.oldChannelA=self.device.ch1.getMode()
             self.oldChannelB=self.device.ch2.getMode()
             self.oldChannelC=self.device.ch3.getMode()
@@ -540,7 +543,8 @@ class FLIMGraphic():
 
         :return: None
         """
-        try:
+        try:     
+            self.device.setNumberOfRuns(self.oldNumberRuns)
             self.device.ch1.setMode(self.oldChannelA)
             self.device.ch2.setMode(self.oldChannelB)
             self.device.ch3.setMode(self.oldChannelC)
