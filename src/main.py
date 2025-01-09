@@ -3,7 +3,7 @@ from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget
 from generalsettings import GeneralSettingsWindow
-from aboutWindow import AboutWindow
+from aboutDialog import Ui_AboutDialog
 from ui_StarStopHistogram import Ui_HistogramaStartStop
 from ui_g2measurement import Ui_G2
 from ui_devicesDialog import Ui_Devices
@@ -581,8 +581,10 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         
-        settings_windows=AboutWindow()
-        settings_windows.exec_()
+        settings_windows_dialog=QDialog(self)
+        settings_windows=Ui_AboutDialog()
+        settings_windows.setupUi(settings_windows_dialog)
+        settings_windows_dialog.exec_()
   
  
 #This function is not use for the Tempico Version 1.1

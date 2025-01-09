@@ -18,7 +18,7 @@ class Ui_Dialog(object):
         self.image_label.setAlignment(QtCore.Qt.AlignCenter)
         self.image_label.setObjectName("image_label")
         self.verticalLayout.addWidget(self.image_label)
-
+        
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
