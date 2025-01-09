@@ -8,12 +8,14 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtGui import QDesktopServices
+# from PySide2.QtCore import *
+# from PySide2.QtGui import *
+# from PySide2.QtWidgets import *
+#from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtGui import QDesktopServices, QPixmap
 from PySide2.QtCore import QUrl
+from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton
+from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
 
 
 class Ui_AboutDialog(object):
@@ -85,8 +87,8 @@ class Ui_AboutDialog(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.imageLabel = QLabel(self.pictureFrame)
         self.imageLabel.setObjectName(u"imageLabel")
-        image = QtGui.QPixmap('Sources/splash.png')
-        image = image.scaled(500, 320, QtCore.Qt.KeepAspectRatio)
+        image = QPixmap('Sources/splash.png')
+        image = image.scaled(500, 320, Qt.KeepAspectRatio)
         self.imageLabel.setPixmap(image)
         self.imageLabel.setFixedSize(300,150)
 

@@ -118,6 +118,7 @@ class Ui_Devices(object):
     def refreshDevices(self):
         ManagerDevices=PyTempicoManager()
         port_list=ManagerDevices.get_pytempico_devices()
+        self.DevicesComboBox.clear()
         for i in port_list:
             self.DevicesComboBox.addItem(i)
             self.ConnectButton.setEnabled(True)
