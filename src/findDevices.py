@@ -123,5 +123,7 @@ class PyTempicoManager:
                         value = self.verify_pyTempico(values_packet)
                         if value == True:
                             ports.append(puerto.name)
+                if "Tempico" in description:
+                    ports.append(puerto.device)
         return ports
 
