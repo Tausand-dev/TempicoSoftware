@@ -126,7 +126,7 @@ class UiFLIM(object):
         self.numberMeasurementsSpinBox = QSpinBox(self.configurationParameters)
         self.numberMeasurementsSpinBox.setObjectName(u"numberMeasurementsSpinBox")
         self.numberMeasurementsSpinBox.setMinimum(1000)
-        self.numberMeasurementsSpinBox.setMaximum(sys.maxsize)
+        self.numberMeasurementsSpinBox.setMaximum(2**28)
 
         self.verticalLayout_3.addWidget(self.numberMeasurementsSpinBox)
 
