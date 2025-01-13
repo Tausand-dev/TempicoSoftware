@@ -143,3 +143,45 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial15.png)
 
+#Generate sphinx documentation
+
+The first thing we need to do is verify that the Sphinx library is installed in our environment. If it is not installed, we can do so with the command:
+
+pip install sphinx
+
+If it doesn't work, we use:
+
+pip3 install sphinx
+
+Next, we need to install the theme used for the documentation; to do this, run the command:
+
+pip install sphinx-rtd-theme
+
+Next, within the `src` folder where the project is located, we will create a new folder called `docs`. To create the base folder for our project, run the `sphinx-quickstart` command on the `docs` folder. The project will be named "Tempico Software", and the version will correspond to the one on which the software documentation is being created. We will leave the language set to English.
+
+Inside the `docs` folder, several files will have been generated, one of which is called `conf.py`. This file contains a list called `extensions`; within it, we will add the following extensions:
+
+"sphinx.ext.todo", "sphinx.ext.autodoc", "sphinx.ext.viewcode"
+
+Now there should be a text variable called `html_theme`; here, we will change the default theme and set it to `sphinx_rtd_theme`.
+
+Outside the `docs` folder (i.e., on `src`), we will execute the following command:
+
+sphinx-apidoc -o docs .
+
+This will create a `.rst` file in the `docs` folder for each of the Python scripts we have for the application. Many of these scripts contain information about graphical interfaces or may even be auxiliary; it is not necessary to document them, so we can delete their `.rst` files. Only the names of the files that have not been deleted should remain in the `modules.rst` file.
+
+Inside `docs`, we will create a folder called `sources` and place the Tempico Software logo there. Then, we will edit the file called `index.rst` and place the logo at the beginning as follows:
+
+.. figure:: sources/image.png
+   :scale: 60 %
+   :alt: Tausand logo
+   :align: center
+
+Under the title, we will add the description of the software, outlining each of the functionalities.
+
+Finally, we will generate the documentation by running the following command in the `docs` folder:
+
+.\make.bat html
+
+The generated HTML file will be found inside the `build` folder.
