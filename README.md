@@ -185,3 +185,22 @@ Finally, we will generate the documentation by running the following command in 
 .\make.bat html
 ```
 The generated HTML file will be found inside the `build` folder.
+
+To generate a PDF file, we first need to download and install MikTeX and Strawberry Perl. This can be done from the following websites: [https://miktex.org/download](https://miktex.org/download) and [https://strawberryperl.com](https://strawberryperl.com). Afterward, we need to add both programs to the environment variables. Once this process is complete, we can verify that everything is working correctly by executing the following command:
+```
+latexmk --version
+```
+
+Next, we need to configure the `index.rst` file. By default, the following block is created:
+```
+.. toctree:: :maxdepth: 1 :caption: Contents:
+```
+
+
+Below this block, leaving a blank line, we need to add all the modules with `.rst` at the end of each one. Then, inside the `docs` folder, we execute the following command:
+```
+.\make.bat latexpdf
+```
+
+This will generate our documentation in PDF format.
+
