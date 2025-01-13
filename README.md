@@ -172,12 +172,12 @@ sphinx-apidoc -o docs .
 This will create a `.rst` file in the `docs` folder for each of the Python scripts we have for the application. Many of these scripts contain information about graphical interfaces or may even be auxiliary; it is not necessary to document them, so we can delete their `.rst` files. Only the names of the files that have not been deleted should remain in the `modules.rst` file.
 
 Inside `docs`, we will create a folder called `sources` and place the Tempico Software logo there. Then, we will edit the file called `index.rst` and place the logo at the beginning as follows:
-
+```
 .. figure:: sources/image.png
    :scale: 60 %
    :alt: Tausand logo
    :align: center
-
+```
 Under the title, we will add the description of the software, outlining each of the functionalities.
 
 Finally, we will generate the documentation by running the following command in the `docs` folder:
