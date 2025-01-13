@@ -143,7 +143,7 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial15.png)
 
-##Generate sphinx documentation
+## Generate sphinx documentation
 
 The first thing we need to do is verify that the Sphinx library is installed in our environment. If it is not installed, we can do so with the command:
 ```
