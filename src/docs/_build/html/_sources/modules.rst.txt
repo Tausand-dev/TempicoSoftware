@@ -6,8 +6,7 @@ src
 
    FLIMGraphics
    StartStopHist
-   about
-   aboutWindow
+   aboutDialog
    createsavefile
    findDevices
    generalsettings

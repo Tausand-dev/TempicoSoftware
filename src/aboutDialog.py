@@ -172,7 +172,6 @@ class Ui_AboutDialog(object):
         :type link: str
         :returns: None
         """
-        print("Se activa")
         
         QDesktopServices.openUrl(QUrl(url))
     

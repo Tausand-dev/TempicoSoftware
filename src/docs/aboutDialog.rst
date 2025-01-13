@@ -1,7 +1,7 @@
-aboutWindow module
+aboutDialog module
 ==================
 
-.. automodule:: aboutWindow
+.. automodule:: aboutDialog
    :members:
    :undoc-members:
    :show-inheritance:

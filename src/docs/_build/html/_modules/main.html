@@ -16,7 +16,6 @@
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -72,7 +71,7 @@
 <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span>
 <span class="kn">from</span> <span class="nn">generalsettings</span> <span class="kn">import</span> <span class="n">GeneralSettingsWindow</span>
-<span class="kn">from</span> <span class="nn">aboutWindow</span> <span class="kn">import</span> <span class="n">AboutWindow</span>
+<span class="kn">from</span> <span class="nn">aboutDialog</span> <span class="kn">import</span> <span class="n">Ui_AboutDialog</span>
 <span class="kn">from</span> <span class="nn">ui_StarStopHistogram</span> <span class="kn">import</span> <span class="n">Ui_HistogramaStartStop</span>
 <span class="kn">from</span> <span class="nn">ui_g2measurement</span> <span class="kn">import</span> <span class="n">Ui_G2</span>
 <span class="kn">from</span> <span class="nn">ui_devicesDialog</span> <span class="kn">import</span> <span class="n">Ui_Devices</span>
@@ -215,7 +214,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab3</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span><span class="p">,</span><span class="s2">&quot;Start-Stop histogram&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="p">,</span><span class="s2">&quot;FLIM&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="p">,</span><span class="s2">&quot;Lifetime&quot;</span><span class="p">)</span>
         <span class="c1">#self.tabs.addTab(self.tab3,&quot;g2 Measurement&quot;)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>
         <span class="c1"># Crear un QVBoxLayout para agregar el QTabWidget</span>
@@ -378,8 +377,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">connectsentinel</span><span class="o">=</span><span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">=</span><span class="n">StartStopLogic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Graph3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="n">checkchannel1</span><span class="p">,</span><span class="n">checkchannel2</span><span class="p">,</span><span class="n">checkchannel3</span><span class="p">,</span><span class="n">checkchannel4</span><span class="p">,</span><span class="n">startbutton</span><span class="p">,</span><span class="n">stopbutton</span><span class="p">,</span><span class="n">savebutton</span><span class="p">,</span><span class="n">save_graph_1</span><span class="p">,</span><span class="n">clear_channel_A</span><span class="p">,</span><span class="n">clear_channel_B</span><span class="p">,</span><span class="n">clear_channel_C</span><span class="p">,</span><span class="n">clear_channel_D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">valueStatusLabel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pointLabel</span><span class="p">)</span>
                     
-                <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="ne">NameError</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
                     <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                     <span class="n">msg_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.&quot;</span><span class="p">)</span>
                     <span class="n">msg_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span>
@@ -651,8 +649,10 @@
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">settings_windows</span><span class="o">=</span><span class="n">AboutWindow</span><span class="p">()</span>
-        <span class="n">settings_windows</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+        <span class="n">settings_windows_dialog</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">settings_windows</span><span class="o">=</span><span class="n">Ui_AboutDialog</span><span class="p">()</span>
+        <span class="n">settings_windows</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">settings_windows_dialog</span><span class="p">)</span>
+        <span class="n">settings_windows_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
   
  
 <span class="c1">#This function is not use for the Tempico Version 1.1</span>

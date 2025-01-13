@@ -16,7 +16,6 @@
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -192,6 +191,8 @@
                         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_pyTempico</span><span class="p">(</span><span class="n">values_packet</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
                             <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">puerto</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;Tempico&quot;</span> <span class="ow">in</span> <span class="n">description</span><span class="p">:</span>
+                    <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">puerto</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ports</span></div></div>
 
 </pre></div>

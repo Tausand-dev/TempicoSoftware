@@ -22,7 +22,20 @@ extensions = ["sphinx.ext.todo", "sphinx.ext.autodoc", "sphinx.ext.viewcode"]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+latex_elements = {
+    'preamble': r'''
+    \usepackage{hyperref}
+    \hypersetup{
+        colorlinks=true,
+        linkcolor=blue,
+        filecolor=magenta,      
+        urlcolor=blue,
+        pdftitle={Título del Proyecto},
+        pdfauthor={Tu Nombre},
+        pdfkeywords={palabras clave, del, proyecto},
+    }
+    ''',
+}
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -30,3 +43,4 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+

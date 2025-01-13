@@ -1,0 +1,166 @@
+\indexentry{module@\spxentry{module}!FLIMGraphics@\spxentry{FLIMGraphics}|hyperpage}{3}
+\indexentry{FLIMGraphics@\spxentry{FLIMGraphics}!module@\spxentry{module}|hyperpage}{3}
+\indexentry{FLIMGraphic (class in FLIMGraphics)@\spxentry{FLIMGraphic}\spxextra{class in FLIMGraphics}|hyperpage}{3}
+\indexentry{applyAction() (FLIMGraphics.FLIMGraphic method)@\spxentry{applyAction()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{4}
+\indexentry{applyInitialDialog() (FLIMGraphics.FLIMGraphic method)@\spxentry{applyInitialDialog()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{4}
+\indexentry{calculateR2() (FLIMGraphics.FLIMGraphic method)@\spxentry{calculateR2()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{4}
+\indexentry{changeCreatedStatus() (FLIMGraphics.FLIMGraphic method)@\spxentry{changeCreatedStatus()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{changeFunction() (FLIMGraphics.FLIMGraphic method)@\spxentry{changeFunction()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{changeStatusColor() (FLIMGraphics.FLIMGraphic method)@\spxentry{changeStatusColor()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{changeStatusLabel() (FLIMGraphics.FLIMGraphic method)@\spxentry{changeStatusLabel()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{checkDeviceStatus() (FLIMGraphics.FLIMGraphic method)@\spxentry{checkDeviceStatus()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{clearGraphic() (FLIMGraphics.FLIMGraphic method)@\spxentry{clearGraphic()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{5}
+\indexentry{connectedDevice() (FLIMGraphics.FLIMGraphic method)@\spxentry{connectedDevice()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{6}
+\indexentry{disconnectedDevice() (FLIMGraphics.FLIMGraphic method)@\spxentry{disconnectedDevice()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{6}
+\indexentry{double\_Exponential() (FLIMGraphics.FLIMGraphic method)@\spxentry{double\_Exponential()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{6}
+\indexentry{enableAfterFinisihThread() (FLIMGraphics.FLIMGraphic method)@\spxentry{enableAfterFinisihThread()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{6}
+\indexentry{exp\_decay() (FLIMGraphics.FLIMGraphic method)@\spxentry{exp\_decay()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{7}
+\indexentry{finishedThreadMeasurement() (FLIMGraphics.FLIMGraphic method)@\spxentry{finishedThreadMeasurement()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{7}
+\indexentry{fitDoubleExponential() (FLIMGraphics.FLIMGraphic method)@\spxentry{fitDoubleExponential()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{7}
+\indexentry{fitExpDecay() (FLIMGraphics.FLIMGraphic method)@\spxentry{fitExpDecay()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{7}
+\indexentry{fitKohlrauschFit() (FLIMGraphics.FLIMGraphic method)@\spxentry{fitKohlrauschFit()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{8}
+\indexentry{fitShiiftedExponential() (FLIMGraphics.FLIMGraphic method)@\spxentry{fitShiiftedExponential()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{8}
+\indexentry{getTempicoChannel() (FLIMGraphics.FLIMGraphic method)@\spxentry{getTempicoChannel()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{getUnits() (FLIMGraphics.FLIMGraphic method)@\spxentry{getUnits()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{indexChangeStartChannel() (FLIMGraphics.FLIMGraphic method)@\spxentry{indexChangeStartChannel()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{indexChangeStopChannel() (FLIMGraphics.FLIMGraphic method)@\spxentry{indexChangeStopChannel()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{initialParametersDialog() (FLIMGraphics.FLIMGraphic method)@\spxentry{initialParametersDialog()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{insertParameters() (FLIMGraphics.FLIMGraphic method)@\spxentry{insertParameters()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{9}
+\indexentry{kohl\_decay() (FLIMGraphics.FLIMGraphic method)@\spxentry{kohl\_decay()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{10}
+\indexentry{maxRound() (FLIMGraphics.FLIMGraphic method)@\spxentry{maxRound()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{10}
+\indexentry{resetInitialDialog() (FLIMGraphics.FLIMGraphic method)@\spxentry{resetInitialDialog()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{10}
+\indexentry{resetParametersLabels() (FLIMGraphics.FLIMGraphic method)@\spxentry{resetParametersLabels()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{11}
+\indexentry{roundStringPCov() (FLIMGraphics.FLIMGraphic method)@\spxentry{roundStringPCov()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{11}
+\indexentry{saveFLIMData() (FLIMGraphics.FLIMGraphic method)@\spxentry{saveFLIMData()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{11}
+\indexentry{saveMode() (FLIMGraphics.FLIMGraphic method)@\spxentry{saveMode()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{12}
+\indexentry{savePlotFLIM() (FLIMGraphics.FLIMGraphic method)@\spxentry{savePlotFLIM()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{12}
+\indexentry{setOldMode() (FLIMGraphics.FLIMGraphic method)@\spxentry{setOldMode()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{12}
+\indexentry{shifted\_decay\_function() (FLIMGraphics.FLIMGraphic method)@\spxentry{shifted\_decay\_function()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{12}
+\indexentry{startMeasurement() (FLIMGraphics.FLIMGraphic method)@\spxentry{startMeasurement()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{12}
+\indexentry{startTimer() (FLIMGraphics.FLIMGraphic method)@\spxentry{startTimer()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{stopMeasurement() (FLIMGraphics.FLIMGraphic method)@\spxentry{stopMeasurement()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{stopTimer() (FLIMGraphics.FLIMGraphic method)@\spxentry{stopTimer()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{timeRangeValue() (FLIMGraphics.FLIMGraphic method)@\spxentry{timeRangeValue()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{updateLabel() (FLIMGraphics.FLIMGraphic method)@\spxentry{updateLabel()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{updateLabels() (FLIMGraphics.FLIMGraphic method)@\spxentry{updateLabels()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{updateMeasurement() (FLIMGraphics.FLIMGraphic method)@\spxentry{updateMeasurement()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{13}
+\indexentry{update\_timer() (FLIMGraphics.FLIMGraphic method)@\spxentry{update\_timer()}\spxextra{FLIMGraphics.FLIMGraphic method}|hyperpage}{14}
+\indexentry{WorkerThreadFLIM (class in FLIMGraphics)@\spxentry{WorkerThreadFLIM}\spxextra{class in FLIMGraphics}|hyperpage}{14}
+\indexentry{checkDeviceStatus() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{checkDeviceStatus()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{clear() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{clear()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{createFLIMData() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{createFLIMData()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{createdSignal (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{createdSignal}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{15}
+\indexentry{getBinWidthNumber() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{getBinWidthNumber()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{getUnits() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{getUnits()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{measurementMode() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{measurementMode()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{15}
+\indexentry{pointSignal (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{pointSignal}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{run() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{run()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{16}
+\indexentry{staticMetaObject (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{staticMetaObject}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{statusSignal (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{statusSignal}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{stop() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{stop()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{16}
+\indexentry{takeMeasurements() (FLIMGraphics.WorkerThreadFLIM method)@\spxentry{takeMeasurements()}\spxextra{FLIMGraphics.WorkerThreadFLIM method}|hyperpage}{16}
+\indexentry{updateLabel (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{updateLabel}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{updateMeasurementsLabel (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{updateMeasurementsLabel}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{updateValues (FLIMGraphics.WorkerThreadFLIM attribute)@\spxentry{updateValues}\spxextra{FLIMGraphics.WorkerThreadFLIM attribute}|hyperpage}{16}
+\indexentry{module@\spxentry{module}!StartStopHist@\spxentry{StartStopHist}|hyperpage}{17}
+\indexentry{StartStopHist@\spxentry{StartStopHist}!module@\spxentry{module}|hyperpage}{17}
+\indexentry{StartStopLogic (class in StartStopHist)@\spxentry{StartStopLogic}\spxextra{class in StartStopHist}|hyperpage}{17}
+\indexentry{autoRangeA() (StartStopHist.StartStopLogic method)@\spxentry{autoRangeA()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{17}
+\indexentry{autoRangeB() (StartStopHist.StartStopLogic method)@\spxentry{autoRangeB()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{17}
+\indexentry{autoRangeC() (StartStopHist.StartStopLogic method)@\spxentry{autoRangeC()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{autoRangeD() (StartStopHist.StartStopLogic method)@\spxentry{autoRangeD()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{changeColorThread() (StartStopHist.StartStopLogic method)@\spxentry{changeColorThread()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{changeStatusColor() (StartStopHist.StartStopLogic method)@\spxentry{changeStatusColor()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{changeStatusThread() (StartStopHist.StartStopLogic method)@\spxentry{changeStatusThread()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{changeZoomMax() (StartStopHist.StartStopLogic method)@\spxentry{changeZoomMax()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{18}
+\indexentry{clear\_a() (StartStopHist.StartStopLogic method)@\spxentry{clear\_a()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{clear\_b() (StartStopHist.StartStopLogic method)@\spxentry{clear\_b()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{clear\_c() (StartStopHist.StartStopLogic method)@\spxentry{clear\_c()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{clear\_d() (StartStopHist.StartStopLogic method)@\spxentry{clear\_d()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{createDialog() (StartStopHist.StartStopLogic method)@\spxentry{createDialog()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{create\_graphs() (StartStopHist.StartStopLogic method)@\spxentry{create\_graphs()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{dialogChangeMode() (StartStopHist.StartStopLogic method)@\spxentry{dialogChangeMode()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{19}
+\indexentry{hide\_graphic2() (StartStopHist.StartStopLogic method)@\spxentry{hide\_graphic2()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{save\_graphic() (StartStopHist.StartStopLogic method)@\spxentry{save\_graphic()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{save\_plots() (StartStopHist.StartStopLogic method)@\spxentry{save\_plots()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{show\_graphic() (StartStopHist.StartStopLogic method)@\spxentry{show\_graphic()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{start\_graphic() (StartStopHist.StartStopLogic method)@\spxentry{start\_graphic()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{stop\_graphic() (StartStopHist.StartStopLogic method)@\spxentry{stop\_graphic()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{20}
+\indexentry{threadComplete() (StartStopHist.StartStopLogic method)@\spxentry{threadComplete()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{21}
+\indexentry{threadRunning() (StartStopHist.StartStopLogic method)@\spxentry{threadRunning()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{21}
+\indexentry{updateDataPure() (StartStopHist.StartStopLogic method)@\spxentry{updateDataPure()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{21}
+\indexentry{updateSignal() (StartStopHist.StartStopLogic method)@\spxentry{updateSignal()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{21}
+\indexentry{update\_histogram() (StartStopHist.StartStopLogic method)@\spxentry{update\_histogram()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{21}
+\indexentry{zoom\_changedA() (StartStopHist.StartStopLogic method)@\spxentry{zoom\_changedA()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{22}
+\indexentry{zoom\_changedB() (StartStopHist.StartStopLogic method)@\spxentry{zoom\_changedB()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{22}
+\indexentry{zoom\_changedC() (StartStopHist.StartStopLogic method)@\spxentry{zoom\_changedC()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{22}
+\indexentry{zoom\_changedD() (StartStopHist.StartStopLogic method)@\spxentry{zoom\_changedD()}\spxextra{StartStopHist.StartStopLogic method}|hyperpage}{23}
+\indexentry{WorkerThreadStartStopHistogram (class in StartStopHist)@\spxentry{WorkerThreadStartStopHistogram}\spxextra{class in StartStopHist}|hyperpage}{23}
+\indexentry{addChannelWarning() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{addChannelWarning()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{23}
+\indexentry{changeMaxValue() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{changeMaxValue()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{23}
+\indexentry{colorValue (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{colorValue}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{23}
+\indexentry{dataPureSignal (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{dataPureSignal}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{dataSignal (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{dataSignal}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{dialogInit (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{dialogInit}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{dialogIsOpen() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{dialogIsOpen()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{24}
+\indexentry{dialogSignal (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{dialogSignal}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{getNewData() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{getNewData()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{24}
+\indexentry{newMaxValueSignal (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{newMaxValueSignal}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{run() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{run()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{24}
+\indexentry{staticMetaObject (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{staticMetaObject}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{stop() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{stop()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{24}
+\indexentry{stringValue (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{stringValue}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{threadCreated (StartStopHist.WorkerThreadStartStopHistogram attribute)@\spxentry{threadCreated}\spxextra{StartStopHist.WorkerThreadStartStopHistogram attribute}|hyperpage}{24}
+\indexentry{update() (StartStopHist.WorkerThreadStartStopHistogram method)@\spxentry{update()}\spxextra{StartStopHist.WorkerThreadStartStopHistogram method}|hyperpage}{24}
+\indexentry{module@\spxentry{module}!aboutDialog@\spxentry{aboutDialog}|hyperpage}{27}
+\indexentry{aboutDialog@\spxentry{aboutDialog}!module@\spxentry{module}|hyperpage}{27}
+\indexentry{Ui\_AboutDialog (class in aboutDialog)@\spxentry{Ui\_AboutDialog}\spxextra{class in aboutDialog}|hyperpage}{27}
+\indexentry{acceptButton() (aboutDialog.Ui\_AboutDialog method)@\spxentry{acceptButton()}\spxextra{aboutDialog.Ui\_AboutDialog method}|hyperpage}{27}
+\indexentry{open\_link() (aboutDialog.Ui\_AboutDialog method)@\spxentry{open\_link()}\spxextra{aboutDialog.Ui\_AboutDialog method}|hyperpage}{27}
+\indexentry{setupUi() (aboutDialog.Ui\_AboutDialog method)@\spxentry{setupUi()}\spxextra{aboutDialog.Ui\_AboutDialog method}|hyperpage}{27}
+\indexentry{module@\spxentry{module}!createsavefile@\spxentry{createsavefile}|hyperpage}{29}
+\indexentry{createsavefile@\spxentry{createsavefile}!module@\spxentry{module}|hyperpage}{29}
+\indexentry{createsavefile (class in createsavefile)@\spxentry{createsavefile}\spxextra{class in createsavefile}|hyperpage}{29}
+\indexentry{check\_folder\_and\_file() (createsavefile.createsavefile method)@\spxentry{check\_folder\_and\_file()}\spxextra{createsavefile.createsavefile method}|hyperpage}{29}
+\indexentry{create\_folder() (createsavefile.createsavefile method)@\spxentry{create\_folder()}\spxextra{createsavefile.createsavefile method}|hyperpage}{29}
+\indexentry{create\_folder\_and\_file() (createsavefile.createsavefile method)@\spxentry{create\_folder\_and\_file()}\spxextra{createsavefile.createsavefile method}|hyperpage}{29}
+\indexentry{read\_default\_data() (createsavefile.createsavefile method)@\spxentry{read\_default\_data()}\spxextra{createsavefile.createsavefile method}|hyperpage}{29}
+\indexentry{save\_FLIM\_data() (createsavefile.createsavefile method)@\spxentry{save\_FLIM\_data()}\spxextra{createsavefile.createsavefile method}|hyperpage}{30}
+\indexentry{save\_g2\_data() (createsavefile.createsavefile method)@\spxentry{save\_g2\_data()}\spxextra{createsavefile.createsavefile method}|hyperpage}{30}
+\indexentry{save\_lists\_as\_columns\_txt() (createsavefile.createsavefile method)@\spxentry{save\_lists\_as\_columns\_txt()}\spxextra{createsavefile.createsavefile method}|hyperpage}{30}
+\indexentry{module@\spxentry{module}!findDevices@\spxentry{findDevices}|hyperpage}{33}
+\indexentry{findDevices@\spxentry{findDevices}!module@\spxentry{module}|hyperpage}{33}
+\indexentry{PyTempicoManager (class in findDevices)@\spxentry{PyTempicoManager}\spxextra{class in findDevices}|hyperpage}{33}
+\indexentry{find\_devices() (findDevices.PyTempicoManager method)@\spxentry{find\_devices()}\spxextra{findDevices.PyTempicoManager method}|hyperpage}{33}
+\indexentry{get\_pytempico\_devices() (findDevices.PyTempicoManager method)@\spxentry{get\_pytempico\_devices()}\spxextra{findDevices.PyTempicoManager method}|hyperpage}{33}
+\indexentry{get\_vid\_pid() (findDevices.PyTempicoManager method)@\spxentry{get\_vid\_pid()}\spxextra{findDevices.PyTempicoManager method}|hyperpage}{33}
+\indexentry{verify\_pyTempico() (findDevices.PyTempicoManager method)@\spxentry{verify\_pyTempico()}\spxextra{findDevices.PyTempicoManager method}|hyperpage}{34}
+\indexentry{module@\spxentry{module}!generalsettings@\spxentry{generalsettings}|hyperpage}{35}
+\indexentry{generalsettings@\spxentry{generalsettings}!module@\spxentry{module}|hyperpage}{35}
+\indexentry{GeneralSettingsWindow (class in generalsettings)@\spxentry{GeneralSettingsWindow}\spxextra{class in generalsettings}|hyperpage}{35}
+\indexentry{event() (generalsettings.GeneralSettingsWindow method)@\spxentry{event()}\spxextra{generalsettings.GeneralSettingsWindow method}|hyperpage}{35}
+\indexentry{getsettings() (generalsettings.GeneralSettingsWindow method)@\spxentry{getsettings()}\spxextra{generalsettings.GeneralSettingsWindow method}|hyperpage}{35}
+\indexentry{setsettings() (generalsettings.GeneralSettingsWindow method)@\spxentry{setsettings()}\spxextra{generalsettings.GeneralSettingsWindow method}|hyperpage}{35}
+\indexentry{showHelp() (generalsettings.GeneralSettingsWindow method)@\spxentry{showHelp()}\spxextra{generalsettings.GeneralSettingsWindow method}|hyperpage}{36}
+\indexentry{staticMetaObject (generalsettings.GeneralSettingsWindow attribute)@\spxentry{staticMetaObject}\spxextra{generalsettings.GeneralSettingsWindow attribute}|hyperpage}{36}
+\indexentry{module@\spxentry{module}!main@\spxentry{main}|hyperpage}{37}
+\indexentry{main@\spxentry{main}!module@\spxentry{module}|hyperpage}{37}
+\indexentry{MainWindow (class in main)@\spxentry{MainWindow}\spxextra{class in main}|hyperpage}{37}
+\indexentry{Helpg2Button() (main.MainWindow method)@\spxentry{Helpg2Button()}\spxextra{main.MainWindow method}|hyperpage}{37}
+\indexentry{about\_settings() (main.MainWindow method)@\spxentry{about\_settings()}\spxextra{main.MainWindow method}|hyperpage}{37}
+\indexentry{clicked\_tabs() (main.MainWindow method)@\spxentry{clicked\_tabs()}\spxextra{main.MainWindow method}|hyperpage}{37}
+\indexentry{closeEvent() (main.MainWindow method)@\spxentry{closeEvent()}\spxextra{main.MainWindow method}|hyperpage}{37}
+\indexentry{construct\_g2() (main.MainWindow method)@\spxentry{construct\_g2()}\spxextra{main.MainWindow method}|hyperpage}{38}
+\indexentry{construct\_lifetime() (main.MainWindow method)@\spxentry{construct\_lifetime()}\spxextra{main.MainWindow method}|hyperpage}{38}
+\indexentry{construct\_start\_stop\_histogram() (main.MainWindow method)@\spxentry{construct\_start\_stop\_histogram()}\spxextra{main.MainWindow method}|hyperpage}{38}
+\indexentry{disconnect\_button\_click() (main.MainWindow method)@\spxentry{disconnect\_button\_click()}\spxextra{main.MainWindow method}|hyperpage}{38}
+\indexentry{general\_settings\_clicked() (main.MainWindow method)@\spxentry{general\_settings\_clicked()}\spxextra{main.MainWindow method}|hyperpage}{38}
+\indexentry{open\_dialog() (main.MainWindow method)@\spxentry{open\_dialog()}\spxextra{main.MainWindow method}|hyperpage}{39}
+\indexentry{parameters\_action() (main.MainWindow method)@\spxentry{parameters\_action()}\spxextra{main.MainWindow method}|hyperpage}{39}
+\indexentry{resizeEvent() (main.MainWindow method)@\spxentry{resizeEvent()}\spxextra{main.MainWindow method}|hyperpage}{39}
+\indexentry{settings\_clicked() (main.MainWindow method)@\spxentry{settings\_clicked()}\spxextra{main.MainWindow method}|hyperpage}{39}
+\indexentry{staticMetaObject (main.MainWindow attribute)@\spxentry{staticMetaObject}\spxextra{main.MainWindow attribute}|hyperpage}{39}
+\indexentry{SplashScreen (class in main)@\spxentry{SplashScreen}\spxextra{class in main}|hyperpage}{39}
+\indexentry{show\_main\_window() (main.SplashScreen method)@\spxentry{show\_main\_window()}\spxextra{main.SplashScreen method}|hyperpage}{40}
+\indexentry{staticMetaObject (main.SplashScreen attribute)@\spxentry{staticMetaObject}\spxextra{main.SplashScreen attribute}|hyperpage}{40}
+\indexentry{execProgram() (in module main)@\spxentry{execProgram()}\spxextra{in module main}|hyperpage}{40}
