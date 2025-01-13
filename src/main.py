@@ -105,6 +105,11 @@ class MainWindow(QMainWindow):
             import ctypes
             myappid = APPID  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        elif sys.platform == 'linux':
+            tray_icon = QSystemTrayIcon(QIcon(ICON_LOCATION), self) 
+            tray_icon.setToolTip("Tempico Software")
+            
+            
 
         #------Menu bar-------------#
         menu_bar = self.menuBar()
