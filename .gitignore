@@ -1,2 +1,15 @@
 #Excluir entorno virtual
 /instalador-env/
+/src/docs/_static
+/src/docs/_templates
+/src/docs/aboutDialog.rst
+/src/docs/createsavefile.rst
+/src/docs/findDevices.rst
+/src/docs/index.rst
+/src/docs/FLIMGraphics.rst
+/src/docs/generalsettings.rst
+/src/docs/main.rst
+/src/docs/make.bat
+/src/docs/Makefile
+/src/docs/modules.rst
+/src/docs/StartStopHist.rst
