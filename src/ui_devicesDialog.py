@@ -92,7 +92,7 @@ class Ui_Devices(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Connect Tempico", None))
         self.DevicesComboBo.setText(QCoreApplication.translate("Dialog", u"Which device would you like to connect?", None))
         self.ConnectButton.setText(QCoreApplication.translate("Dialog", u"Connect", None))
         self.CancelButto.setText(QCoreApplication.translate("Dialog", u"Cancel", None))
