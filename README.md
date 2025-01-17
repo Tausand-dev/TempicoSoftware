@@ -144,6 +144,7 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 ![Step 10](https://github.com/Tausand-dev/TempicoSoftware/blob/main/ReadmeSources/Tutorial15.png)
 
 ## Generate sphinx documentation
+## First time generating
 
 The first thing we need to do is verify that the Sphinx library is installed in our environment. If it is not installed, we can do so with the command:
 ```
@@ -165,7 +166,7 @@ Inside the `docs` folder, several files will have been generated, one of which i
 ```
 Now there should be a text variable called `html_theme`; here, we will change the default theme and set it to `sphinx_rtd_theme`.
 
-Outside the `docs` folder (i.e., on `src`), we will execute the following command:
+After that, we must execute the following command:
 ```
 sphinx-apidoc -o docs .
 ```
@@ -180,7 +181,15 @@ Inside `docs`, we will create a folder called `sources` and place the Tempico So
 ```
 Under the title, we will add the description of the software, outlining each of the functionalities.
 
-Finally, we will generate the documentation by running the following command in the `docs` folder:
+Next, we need to configure the `index.rst` file. By default, the following block is created:
+```
+.. toctree:: :maxdepth: 1 :caption: Contents:
+```
+
+
+Below this block, leaving a blank line, we need to add all the modules with `.rst` at the end of each one.
+
+Once we are sure that all the modules to be documented have a `.rst` file and are included in the `modules.rst` file, we will generate the documentation by running the following command in the `docs` folder:
 ```
 .\make.bat html
 ```
@@ -191,16 +200,29 @@ To generate a PDF file, we first need to download and install MikTeX and Strawbe
 latexmk --version
 ```
 
-Next, we need to configure the `index.rst` file. By default, the following block is created:
-```
-.. toctree:: :maxdepth: 1 :caption: Contents:
-```
-
-
-Below this block, leaving a blank line, we need to add all the modules with `.rst` at the end of each one. Then, inside the `docs` folder, we execute the following command:
+Then, inside the `docs` folder, we execute the following command:
 ```
 .\make.bat latexpdf
 ```
 
 This will generate our documentation in PDF format.
+
+## Generate documentation for a new version
+If we create a new script that has been documented is not necessary to run all steps executed before. However we need to run the following command again:
+```
+sphinx-apidoc -o docs .
+```
+This will regenerate all `.rst` files for all Python scripts inside the `.src` folder. We must again remove the `.rst` files for the modules that were not documented and delete them from `modules.rst`. It is necessary to reconfigure the `index.rst` file as specified in previous steps.
+
+After this, we can run the commands again to generate the documentation according to the required format:
+
+```
+.\make.bat html
+```
+```
+.\make.bat latexpdf
+```
+
+
+
 
