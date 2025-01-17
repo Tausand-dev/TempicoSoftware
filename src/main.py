@@ -1,7 +1,7 @@
 from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
-from PySide2.QtWidgets import QWidget, QTabWidget
+from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
 from generalsettings import GeneralSettingsWindow
 from aboutDialog import Ui_AboutDialog
 from ui_StarStopHistogram import Ui_HistogramaStartStop
@@ -92,6 +92,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None, *args):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
+        print("Se ejecuta la main window")
         self.savefile=savefile()
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
@@ -681,26 +682,34 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication([])
     splash_pix = QPixmap(BANNER)
-    desired_size = QSize(400, 300)  
+    desired_size = QSize(400, 300)
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setFixedSize(desired_size)
-    opaqueness = 0.0
-    step = 0.1
-    splash.setWindowOpacity(opaqueness)
-    splash.show()
-
-    while opaqueness < 1:
+    # Comprobar si estamos en Ubuntu
+    if sys.platform != 'linux':  # Si no estamos en Ubuntu, aplicar opacidad
+        opaqueness = 0.0
+        step = 0.1
         splash.setWindowOpacity(opaqueness)
-        time.sleep(step)  
-        opaqueness += step
 
-    time.sleep(1)  
-    splash.close() 
-    window = MainWindow()
-    window.show()
+        while opaqueness < 1:
+            splash.setWindowOpacity(opaqueness)
+            time.sleep(step)
+            opaqueness += step
+
+        splash.show()
+        time.sleep(1)  # Mostrar splash por 1 segundo
+        splash.close()
+        window = MainWindow()
+        window.show()
+    else:
+        splash.show()
+        time.sleep(1)
+        splash.close()
+        window = MainWindow()
+        window.show()
+        
     app.exec_()
-
 
 def execProgram():
     app = QApplication([])
