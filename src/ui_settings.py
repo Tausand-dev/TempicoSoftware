@@ -543,7 +543,7 @@ class Ui_settings(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Channels settings", None))
 #if QT_CONFIG(tooltip)
         self.tab.setToolTip(QCoreApplication.translate("Dialog", u"<html><head/><body><p>Tapa</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
