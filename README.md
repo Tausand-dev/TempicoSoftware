@@ -208,13 +208,13 @@ Then, inside the `docs` folder, we execute the following command:
 This will generate our documentation in PDF format.
 
 ## Generate documentation for a new version
-If we create a new script that has been documented is not necessary to run all steps executed before. However we need to run the following command again:
+If we create a new script for a new version that has not been documented yet is not necessary to run all steps executed before. However we need to run the following command again:
 ```
 sphinx-apidoc -o docs .
 ```
 This will regenerate all `.rst` files for all Python scripts inside the `.src` folder. We must again remove the `.rst` files for the modules that were not documented and delete them from `modules.rst`. It is necessary to reconfigure the `index.rst` file as specified in previous steps.
 
-After this, we can run the commands again to generate the documentation according to the required format:
+After this , we can run the commands again to generate the documentation according to the required format:
 
 ```
 .\make.bat html
@@ -222,7 +222,7 @@ After this, we can run the commands again to generate the documentation accordin
 ```
 .\make.bat latexpdf
 ```
-
+If the developer did not create a new script, they only need to run the previous commands to update the documentation.
 
 
 
