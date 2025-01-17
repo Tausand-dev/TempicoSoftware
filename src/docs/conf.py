@@ -7,13 +7,14 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os
 import sys
+from .. import constants
 
 sys.path.insert(0, os.path.abspath('..'))   
 
 project = 'Tempico Software'
 copyright = '2025, David Guzman, Joan Amaya'
 author = 'David Guzman, Joan Amaya'
-release = '1.1.0'
+release = constants.VERSION
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
