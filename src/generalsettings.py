@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QDialog, QDoubleSpinBox, QSpinBox, QPushButton, QMessageBox, QWhatsThis, QLabel
+from PySide2.QtWidgets import QDialog, QDoubleSpinBox, QSpinBox, QPushButton, QMessageBox, QWhatsThis, QLabel, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import QEvent
 
@@ -14,43 +14,50 @@ class GeneralSettingsWindow(QDialog):
     :param device: The Tempico device instance that the settings will apply to.
     :type device: object
     """
-    def __init__(self,device):
-        self.device=device
-        
+    def __init__(self, device):
         super().__init__()
+        self.device = device
+
         self.setWindowTitle("General settings")
-        self.setFixedSize(350,140)
+        self.setFixedSize(350, 140)
         self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
-        #self.setWindowFlags(self.windowFlags() | Qt.WindowContextHelpButtonHint)
-        #------Change treshold Voltage---------#
-        self.thresholdvotlage=QLabel("Threshold voltage:",self)
-        self.thresholdvotlage.setGeometry(65,10,150,20)
+
+        # Main Layout
+        main_layout = QVBoxLayout(self)  # Main vertical layout for the window
+
+        # Threshold Voltage Section
+        threshold_layout = QHBoxLayout()  # Horizontal layout for threshold voltage
+        self.thresholdvotlage = QLabel("Threshold voltage:", self)
         self.Comboboxthresholdvoltage = QDoubleSpinBox(self)
-        self.Comboboxthresholdvoltage.setObjectName(u"Spinboxtreshold")
+        self.Comboboxthresholdvoltage.setObjectName("Spinboxtreshold")
         self.Comboboxthresholdvoltage.setMaximum(1.60)
         self.Comboboxthresholdvoltage.setMinimum(0.90)
         self.Comboboxthresholdvoltage.setSingleStep(0.01)
-        self.Comboboxthresholdvoltage.setGeometry(180,10,100,20)
-        #------Change number of runs---------#
-        self.numberofruns=QLabel("Number of runs:",self)
-        self.numberofruns.setGeometry(65,40,150,20)
-        self.spinboxNumerOfStops = QSpinBox(self)
-        self.spinboxNumerOfStops.setMinimum(1)  
-        self.spinboxNumerOfStops.setMaximum(1000) 
-        self.spinboxNumerOfStops.setSingleStep(1) 
-        self.spinboxNumerOfStops.setWrapping(True)
-        self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)  
-        self.spinboxNumerOfStops.setAccelerated(True)  
-        self.spinboxNumerOfStops.setGeometry(180,40,100,20)
-        #------Help button---------#
-        
-        
-        
-        #------Save Button---------#
-        button = QPushButton("Save changes", self)
-        button.setGeometry(110, 80, 140, 40)
-        
+        threshold_layout.addWidget(self.thresholdvotlage)
+        threshold_layout.addWidget(self.Comboboxthresholdvoltage)
+        main_layout.addLayout(threshold_layout)
 
+        # Number of Runs Section
+        runs_layout = QHBoxLayout()  # Horizontal layout for number of runs
+        self.numberofruns = QLabel("Number of runs:", self)
+        self.spinboxNumerOfStops = QSpinBox(self)
+        self.spinboxNumerOfStops.setMinimum(1)
+        self.spinboxNumerOfStops.setMaximum(1000)
+        self.spinboxNumerOfStops.setSingleStep(1)
+        self.spinboxNumerOfStops.setWrapping(True)
+        self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)
+        self.spinboxNumerOfStops.setAccelerated(True)
+        runs_layout.addWidget(self.numberofruns)
+        runs_layout.addWidget(self.spinboxNumerOfStops)
+        main_layout.addLayout(runs_layout)
+
+        # Save Button
+        button_layout = QVBoxLayout()  # Vertical layout for the save button
+        button = QPushButton("Save changes", self)
+        button_layout.addWidget(button)
+        main_layout.addLayout(button_layout)
+
+        # Connect the button
         self.getsettings()
         button.clicked.connect(self.setsettings)
 
