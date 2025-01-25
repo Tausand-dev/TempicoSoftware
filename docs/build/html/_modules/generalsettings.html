@@ -16,7 +16,6 @@
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -40,8 +39,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -67,7 +75,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for generalsettings</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QWhatsThis</span><span class="p">,</span> <span class="n">QLabel</span>
+<span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QWhatsThis</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QEvent</span>
 
@@ -83,43 +91,50 @@
 <span class="sd">    :param device: The Tempico device instance that the settings will apply to.</span>
 <span class="sd">    :type device: object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">device</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">=</span><span class="n">device</span>
-        
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;General settings&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span><span class="mi">140</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">140</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;Sources/tausand_small.ico&#39;</span><span class="p">))</span>
-        <span class="c1">#self.setWindowFlags(self.windowFlags() | Qt.WindowContextHelpButtonHint)</span>
-        <span class="c1">#------Change treshold Voltage---------#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span><span class="o">=</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Threshold voltage:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">65</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="c1"># Main Layout</span>
+        <span class="n">main_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Main vertical layout for the window</span>
+
+        <span class="c1"># Threshold Voltage Section</span>
+        <span class="n">threshold_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>  <span class="c1"># Horizontal layout for threshold voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Threshold voltage:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Spinboxtreshold&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;Spinboxtreshold&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mf">1.60</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mf">0.90</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-        <span class="c1">#------Change number of runs---------#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span><span class="o">=</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Number of runs:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">65</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span> <span class="o">=</span> <span class="n">QSpinBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setWrapping</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setButtonSymbols</span><span class="p">(</span><span class="n">QSpinBox</span><span class="o">.</span><span class="n">PlusMinus</span><span class="p">)</span>  
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setAccelerated</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  
-        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-        <span class="c1">#------Help button---------#</span>
-        
-        
-        
-        <span class="c1">#------Save Button---------#</span>
-        <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save changes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="n">button</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
-        
+        <span class="n">threshold_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span><span class="p">)</span>
+        <span class="n">threshold_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">threshold_layout</span><span class="p">)</span>
 
+        <span class="c1"># Number of Runs Section</span>
+        <span class="n">runs_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>  <span class="c1"># Horizontal layout for number of runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Number of runs:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span> <span class="o">=</span> <span class="n">QSpinBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setWrapping</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setButtonSymbols</span><span class="p">(</span><span class="n">QSpinBox</span><span class="o">.</span><span class="n">PlusMinus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setAccelerated</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">runs_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span><span class="p">)</span>
+        <span class="n">runs_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">runs_layout</span><span class="p">)</span>
+
+        <span class="c1"># Save Button</span>
+        <span class="n">button_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>  <span class="c1"># Vertical layout for the save button</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save changes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">button_layout</span><span class="p">)</span>
+
+        <span class="c1"># Connect the button</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getsettings</span><span class="p">()</span>
         <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setsettings</span><span class="p">)</span>
 

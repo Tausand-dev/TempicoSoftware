@@ -7,9 +7,10 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os
 import sys
-from .. import constants
 
-sys.path.insert(0, os.path.abspath('..'))   
+
+sys.path.insert(0, os.path.abspath('../src'))   
+import constants
 
 project = 'Tempico Software'
 copyright = '2025, David Guzman, Joan Amaya'
@@ -22,7 +23,7 @@ release = constants.VERSION
 extensions = ["sphinx.ext.todo", "sphinx.ext.autodoc", "sphinx.ext.viewcode"]
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
 latex_elements = {
     'preamble': r'''
     \usepackage{hyperref}

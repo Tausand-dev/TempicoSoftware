@@ -39,8 +39,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -69,7 +78,7 @@
 <span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QSplashScreen</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QAction</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QIcon</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span>
+<span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QSystemTrayIcon</span>
 <span class="kn">from</span> <span class="nn">generalsettings</span> <span class="kn">import</span> <span class="n">GeneralSettingsWindow</span>
 <span class="kn">from</span> <span class="nn">aboutDialog</span> <span class="kn">import</span> <span class="n">Ui_AboutDialog</span>
 <span class="kn">from</span> <span class="nn">ui_StarStopHistogram</span> <span class="kn">import</span> <span class="n">Ui_HistogramaStartStop</span>
@@ -106,8 +115,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">.</span><span class="n">create_folder</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Splash Screen&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
         
@@ -161,6 +168,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="c1">#------Window parameters---------#</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">.</span><span class="n">create_folder_and_file</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Tempico Software&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">))</span>
@@ -173,6 +181,11 @@
             <span class="kn">import</span> <span class="nn">ctypes</span>
             <span class="n">myappid</span> <span class="o">=</span> <span class="n">APPID</span>  <span class="c1"># arbitrary string</span>
             <span class="n">ctypes</span><span class="o">.</span><span class="n">windll</span><span class="o">.</span><span class="n">shell32</span><span class="o">.</span><span class="n">SetCurrentProcessExplicitAppUserModelID</span><span class="p">(</span><span class="n">myappid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;linux&#39;</span><span class="p">:</span>
+            <span class="n">tray_icon</span> <span class="o">=</span> <span class="n">QSystemTrayIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span> 
+            <span class="n">tray_icon</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Tempico Software&quot;</span><span class="p">)</span>
+            
+            
 
         <span class="c1">#------Menu bar-------------#</span>
         <span class="n">menu_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menuBar</span><span class="p">()</span>
@@ -627,8 +640,8 @@
                 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Icono de advertencia</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No Connected Device &quot;</span><span class="p">)</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No Connected device connected was found&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No connected device &quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No connected device was found&quot;</span><span class="p">)</span>
             <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
@@ -681,8 +694,8 @@
                 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No Connected Device &quot;</span><span class="p">)</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No Connected device connected was found&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No connected Device &quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No connected device was found&quot;</span><span class="p">)</span>
             <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
@@ -744,26 +757,34 @@
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">BANNER</span><span class="p">)</span>
-    <span class="n">desired_size</span> <span class="o">=</span> <span class="n">QSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  
+    <span class="n">desired_size</span> <span class="o">=</span> <span class="n">QSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">splash_pix</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="n">desired_size</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">)</span>
     <span class="n">splash</span> <span class="o">=</span> <span class="n">QSplashScreen</span><span class="p">(</span><span class="n">splash_pix</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">)</span>
     <span class="n">splash</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">desired_size</span><span class="p">)</span>
-    <span class="n">opaqueness</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>
-    <span class="n">splash</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="n">opaqueness</span><span class="p">)</span>
-    <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-    <span class="k">while</span> <span class="n">opaqueness</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="c1"># Comprobar si estamos en Ubuntu</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">!=</span> <span class="s1">&#39;linux&#39;</span><span class="p">:</span>  <span class="c1"># Si no estamos en Ubuntu, aplicar opacidad</span>
+        <span class="n">opaqueness</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>
         <span class="n">splash</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="n">opaqueness</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>  
-        <span class="n">opaqueness</span> <span class="o">+=</span> <span class="n">step</span>
 
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  
-    <span class="n">splash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> 
-    <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
-    <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">opaqueness</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">splash</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="n">opaqueness</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+            <span class="n">opaqueness</span> <span class="o">+=</span> <span class="n">step</span>
+
+        <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mostrar splash por 1 segundo</span>
+        <span class="n">splash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
+        <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">splash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
+        <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        
     <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
-
 
 <div class="viewcode-block" id="execProgram"><a class="viewcode-back" href="../main.html#main.execProgram">[docs]</a><span class="k">def</span> <span class="nf">execProgram</span><span class="p">():</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>

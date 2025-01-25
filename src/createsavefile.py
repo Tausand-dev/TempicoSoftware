@@ -123,9 +123,9 @@ class createsavefile:
 
         # Specify the folder name and file name
         folder_name = "TempicoSoftwareData"
-        if os.name == 'posix':  # Linux/macOS
+        if os.name == 'posix':  
             file_name = ".data_constants.txt"
-        else:  # Windows u otros
+        else:  
             file_name = "data_constants.txt"
 
         # Construct the full path to the file

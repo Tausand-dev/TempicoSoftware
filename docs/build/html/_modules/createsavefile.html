@@ -16,7 +16,6 @@
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -40,8 +39,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -113,7 +121,6 @@
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Histogram Name: histogram_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default g2 Name: g2_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Lifetime Name: lifetime_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             
             <span class="c1"># Ocultar el archivo de manera efectiva según el sistema operativo</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>  <span class="c1"># Windows</span>
@@ -193,7 +200,10 @@
 
         <span class="c1"># Specify the folder name and file name</span>
         <span class="n">folder_name</span> <span class="o">=</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>  
+            <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;.data_constants.txt&quot;</span>
+        <span class="k">else</span><span class="p">:</span>  
+            <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
 
         <span class="c1"># Construct the full path to the file</span>
         <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_dir</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
@@ -330,10 +340,10 @@
                 
                 <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">flimValue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">flimValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+
     
     
 
-<span class="c1">#create_folder_and_file()</span>
 </pre></div>
 
            </div>

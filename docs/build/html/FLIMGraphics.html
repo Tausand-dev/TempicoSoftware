@@ -18,7 +18,9 @@
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="StartStopHist module" href="StartStopHist.html" />
+    <link rel="prev" title="Welcome to Tempico Software’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,79 +42,85 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">FLIMGraphics module</a><ul>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic</span></code></a><ul>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.applyAction"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.applyAction()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.applyInitialDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.applyInitialDialog()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.calculateR2"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.calculateR2()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeCreatedStatus"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeCreatedStatus()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeFunction"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeFunction()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeStatusColor()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeStatusLabel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeStatusLabel()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.checkDeviceStatus()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.clearGraphic"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.clearGraphic()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.connectedDevice()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.disconnectedDevice()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.double_Exponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.double_Exponential()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.enableAfterFinisihThread"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.enableAfterFinisihThread()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.exp_decay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.exp_decay()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.finishedThreadMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.finishedThreadMeasurement()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitDoubleExponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitDoubleExponential()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitExpDecay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitExpDecay()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitKohlrauschFit"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitKohlrauschFit()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitShiiftedExponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitShiiftedExponential()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.getTempicoChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.getTempicoChannel()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.getUnits"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.getUnits()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.indexChangeStartChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.indexChangeStartChannel()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.indexChangeStopChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.indexChangeStopChannel()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.initialParametersDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.initialParametersDialog()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.insertParameters"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.insertParameters()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.kohl_decay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.kohl_decay()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.maxRound"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.maxRound()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.resetInitialDialog()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.resetParametersLabels()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.roundStringPCov"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.roundStringPCov()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.saveFLIMData"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.saveFLIMData()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.saveMode"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.saveMode()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.savePlotFLIM"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.savePlotFLIM()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.setOldMode"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.setOldMode()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.shifted_decay_function"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.shifted_decay_function()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.startMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.startMeasurement()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.startTimer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.startTimer()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.stopMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.stopMeasurement()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.stopTimer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.stopTimer()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.timeRangeValue"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.timeRangeValue()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateLabel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateLabel()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateLabels"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateLabels()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateMeasurement()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.update_timer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.update_timer()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FLIMGraphics module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.applyAction"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.applyAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.applyInitialDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.applyInitialDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.calculateR2"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.calculateR2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeCreatedStatus"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeCreatedStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeFunction"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeFunction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.changeStatusLabel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.changeStatusLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.clearGraphic"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.clearGraphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.double_Exponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.double_Exponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.enableAfterFinisihThread"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.enableAfterFinisihThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.exp_decay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.exp_decay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.finishedThreadMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.finishedThreadMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitDoubleExponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitDoubleExponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitExpDecay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitExpDecay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitKohlrauschFit"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitKohlrauschFit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.fitShiiftedExponential"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.fitShiiftedExponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.getTempicoChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.getTempicoChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.getUnits"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.indexChangeStartChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.indexChangeStartChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.indexChangeStopChannel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.indexChangeStopChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.initialParametersDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.initialParametersDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.insertParameters"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.insertParameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.kohl_decay"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.kohl_decay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.maxRound"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.maxRound()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.resetInitialDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.resetParametersLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.roundStringPCov"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.roundStringPCov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.saveFLIMData"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.saveFLIMData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.saveMode"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.saveMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.savePlotFLIM"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.savePlotFLIM()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.setOldMode"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.setOldMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.shifted_decay_function"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.shifted_decay_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.startMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.startMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.startTimer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.startTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.stopMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.stopMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.stopTimer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.stopTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.timeRangeValue"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.timeRangeValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateLabel"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateLabels"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.updateMeasurement"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.updateMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.FLIMGraphic.update_timer"><code class="docutils literal notranslate"><span class="pre">FLIMGraphic.update_timer()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM</span></code></a><ul>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.checkDeviceStatus()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.clear()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.createFLIMData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.createFLIMData()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.createdSignal</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.getBinWidthNumber()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.getUnits()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.measurementMode()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.pointSignal</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.run()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.staticMetaObject</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.statusSignal</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.stop()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.takeMeasurements()</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateLabel</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateMeasurementsLabel</span></code></a></li>
-<li><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateValues</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.createFLIMData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.createFLIMData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.createdSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.getBinWidthNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.measurementMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.pointSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.statusSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.takeMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateMeasurementsLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#FLIMGraphics.WorkerThreadFLIM.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFLIM.updateValues</span></code></a></li>
 </ul>
 </li>
 </ul>
-</div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -1221,7 +1229,10 @@ If no measurements are detected, emits a status signal to update the main thread
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Tempico Software’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="StartStopHist.html" class="btn btn-neutral float-right" title="StartStopHist module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
