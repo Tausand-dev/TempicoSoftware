@@ -90,7 +90,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None, *args):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
-        print("Se ejecuta la main window")
         self.savefile=savefile()
         self.savefile.create_folder_and_file()
         self.setWindowTitle("Tempico Software")
@@ -314,8 +313,7 @@ class MainWindow(QMainWindow):
                     self.connectsentinel=1
                     self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
                     
-                except Exception as e:
-                    print(e)
+                except:
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
@@ -343,8 +341,7 @@ class MainWindow(QMainWindow):
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
-                    except Exception as e:
-                        print(e)
+                    except:
                         msg_box = QMessageBox(self)
                         msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                         msg_box.setWindowTitle("Connection Error")

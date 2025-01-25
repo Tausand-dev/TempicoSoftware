@@ -588,8 +588,6 @@ class FLIMGraphic():
 
         :return: None
         """
-        #To do BORRAR EL PRINT
-        print("The thread finished")
         self.enableAfterFinisihThread()
         
     #Function to connect the signal with created thread sentinel
@@ -962,7 +960,6 @@ class FLIMGraphic():
                         self.FitParameters[1]=round(tau0,3)
                 elif self.functionComboBox.currentText()=="Kohlrausch":
                     i0,tau0,beta=self.fitKohlrauschFit(self.measuredTime,self.measuredData)
-                    print(str(i0)=='nan')
                     if i0=="Undefined" or str(i0)=='nan':
                         self.currentFit=""
                         self.FitParameters=["Undefined","Undefined","Undefined","Undefined"]
@@ -1119,7 +1116,6 @@ class FLIMGraphic():
             else:
                 r2Parameter=self.calculateR2(yData,yFit)
                 self.R2=round(r2Parameter,3)
-                print(r2Parameter)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 #Change I0 parameter
@@ -1633,10 +1629,6 @@ class FLIMGraphic():
                 tau_0Cov=sqrt(pcov[1][1])
                 tau_1Cov=sqrt(pcov[2][2])
                 alphaCov=sqrt(pcov[3][3])
-                print(I_0Cov)
-                print(tau_0Cov)
-                print(tau_1Cov)
-                print(alphaCov)
                 
                 #Get I0 parameter
                 if I_0Cov>I0_opt:
@@ -1689,7 +1681,6 @@ class FLIMGraphic():
             else:
                 r2Parameter=self.calculateR2(yData,yFit)
                 self.R2=round(r2Parameter,3)
-                print(r2Parameter)
                 maxRoundTau0=self.maxRound(I_0CovString)
                 maxRoundI0=self.maxRound(tau_0CovString)
                 maxRoundTau1=self.maxRound(tau_1CovString)
@@ -1962,8 +1953,7 @@ class FLIMGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 # show successful save
                 message_box.exec_()            
-        except NameError:
-            print(NameError)
+        except:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The plots could not be saved.")
@@ -2063,8 +2053,7 @@ class FLIMGraphic():
                     message_box.setWindowTitle("Successful save")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()   
-                except NameError:
-                    print(NameError)
+                except:
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Critical)
                     message_box.setText("The changes could not be saved.")
@@ -2216,7 +2205,6 @@ class WorkerThreadFLIM(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
-        print(measurement)
         try:
             if len(measurement)==0:
                 self.totalRuns+=100

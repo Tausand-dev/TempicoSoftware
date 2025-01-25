@@ -569,10 +569,10 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeA:
-            print("Zoom de codigo")
+            print("Zoom Code")
         else:
             self.sentinelZoomChangedA+=1
-            print("Zoom de usuario")
+            print("Zoom user")
         # Function called for graphA zoom 
         x_range = self.viewBoxA.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -610,10 +610,10 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeB:
-            print("Zoom de codigo")
+            print("Zoom code")
         else:
             self.sentinelZoomChangedB+=1
-            print("Zoom de usuario")
+            print("Zoom user")
         # Function called for graphB zoom
         x_range = self.viewBoxB.viewRange()[0]   # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]    # Get the max and min current range in the view
@@ -648,10 +648,10 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeC:
-            print("Zoom de codigo")
+            print("Zoom code")
         else:
             self.sentinelZoomChangedC+=1
-            print("Zoom de usuario")
+            print("Zoom user")
         # Function called for graphC zoom
         x_range = self.viewBoxC.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -686,10 +686,10 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeD:
-            print("Zoom de codigo")
+            print("Zoom code")
         else:
             self.sentinelZoomChangedD+=1
-            print("Zoom de usuario")
+            print("Zoom user")
         # Function called for graphD zoom
           
         x_range = self.viewBoxD.viewRange()[0]  # Get current x range in the view
@@ -1513,7 +1513,6 @@ class WorkerThreadStartStopHistogram(QThread):
                                     self.sentinelDialogA=True
                                     #Active waiting
                                     while(self.openDialog):
-                                        print("Dialog Open, waiting for close...")
                                         time.sleep(1)
                                     if self.device.ch1.getMode()==1:
                                         self.dataSignal.emit(new_data1,"A")
@@ -1552,7 +1551,6 @@ class WorkerThreadStartStopHistogram(QThread):
                                     self.sentinelDialogB=True
                                     #Active waiting
                                     while(self.openDialog):
-                                        print("Dialog Open, waiting for close...")
                                         time.sleep(1)
                                     if self.device.ch2.getMode()==1:
                                         self.dataSignal.emit(new_data2,"B")
@@ -1594,7 +1592,6 @@ class WorkerThreadStartStopHistogram(QThread):
                                     self.sentinelDialogC=True
                                     #Active waiting
                                     while(self.openDialog):
-                                        print("Dialog Open, waiting for close...")
                                         time.sleep(1)
                                     if self.device.ch3.getMode()==1:
                                         self.dataSignal.emit(new_data3,"C")
@@ -1636,7 +1633,6 @@ class WorkerThreadStartStopHistogram(QThread):
                                     self.sentinelDialogD=True
                                     #Active waiting
                                     while(self.openDialog):
-                                        print("Dialog Open, waiting for close...")
                                         time.sleep(1)
                                     if self.device.ch4.getMode()==1:
                                         self.dataSignal.emit(new_data4,"D")
@@ -1696,8 +1692,7 @@ class WorkerThreadStartStopHistogram(QThread):
                 self.stringValue.emit("Measurement running")        
                 
                                   
-        except NameError as e:
-            print(e)
+        except:
             self.dialogInit.emit()
             self.stop()
              
@@ -1796,7 +1791,6 @@ class WorkerThreadStartStopHistogram(QThread):
                         self.totalC+=1    
                     elif channelIndex=='D':
                         self.totalD+=1    
-                    print(average_measurement)
                     self.dataPureSignal.emit(round(average_measurement),channelIndex)
                     return miliseconds_measurement
                 else:
