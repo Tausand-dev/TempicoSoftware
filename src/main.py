@@ -563,8 +563,8 @@ class MainWindow(QMainWindow):
                 
         else:
             message_box = QMessageBox(self)  # Icono de advertencia
-            message_box.setWindowTitle("No Connected Device ")
-            message_box.setText("No Connected device connected was found")
+            message_box.setWindowTitle("No connected device ")
+            message_box.setText("No connected device was found")
             pixmap= QPixmap(ICON_LOCATION)
             message_box.setIconPixmap(pixmap)
             message_box.setIcon(QMessageBox.Information)
@@ -617,8 +617,8 @@ class MainWindow(QMainWindow):
                 
         else:
             message_box = QMessageBox(self)  
-            message_box.setWindowTitle("No Connected Device ")
-            message_box.setText("No Connected device connected was found")
+            message_box.setWindowTitle("No connected Device ")
+            message_box.setText("No connected device was found")
             pixmap= QPixmap(ICON_LOCATION)
             message_box.setIconPixmap(pixmap)
             message_box.setIcon(QMessageBox.Information)
