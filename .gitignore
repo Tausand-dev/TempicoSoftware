@@ -46,3 +46,6 @@
 /src/docs/_build/latex/tempicosoftware.tex
 /src/docs/_build/latex/tempicosoftware.toc
 /src/ubuntuInstaller/
+/src/TestVenv/
+/src/dist/
+/src/build/

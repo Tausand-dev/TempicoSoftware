@@ -44,7 +44,6 @@ class createsavefile:
                 file.write(f"Default Histogram Name: histogram_data\n")
                 file.write(f"Default g2 Name: g2_data\n")
                 file.write(f"Default Lifetime Name: lifetime_data\n")
-                file.close()
             
             # Ocultar el archivo de manera efectiva según el sistema operativo
             if os.name == 'nt':  # Windows
@@ -124,7 +123,10 @@ class createsavefile:
 
         # Specify the folder name and file name
         folder_name = "TempicoSoftwareData"
-        file_name = "data_constants.txt"
+        if os.name == 'posix':  # Linux/macOS
+            file_name = ".data_constants.txt"
+        else:  # Windows u otros
+            file_name = "data_constants.txt"
 
         # Construct the full path to the file
         file_path = os.path.join(documents_dir, folder_name, file_name)
@@ -261,7 +263,7 @@ class createsavefile:
                 
                 for tau, flimValue in zip(data[0], data[1]):
                     file.write(f"{tau}\t{flimValue}\n")
+
     
     
 
-#create_folder_and_file()

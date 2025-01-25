@@ -38,8 +38,6 @@ class SplashScreen(QMainWindow):
     """
     def __init__(self):
         super().__init__()
-        self.savefile=savefile()
-        self.savefile.create_folder()
         self.setWindowTitle("Splash Screen")
         self.setFixedSize(400, 300)
         
@@ -94,6 +92,7 @@ class MainWindow(QMainWindow):
         #------Window parameters---------#
         print("Se ejecuta la main window")
         self.savefile=savefile()
+        self.savefile.create_folder_and_file()
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
@@ -315,7 +314,8 @@ class MainWindow(QMainWindow):
                     self.connectsentinel=1
                     self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
                     
-                except:
+                except Exception as e:
+                    print(e)
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
@@ -343,7 +343,8 @@ class MainWindow(QMainWindow):
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
-                    except:
+                    except Exception as e:
+                        print(e)
                         msg_box = QMessageBox(self)
                         msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                         msg_box.setWindowTitle("Connection Error")
