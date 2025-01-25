@@ -493,6 +493,7 @@ class UiFLIM(object):
         #The initial default value of the label
         self.timeRangeValue.setText("24.0 ns")
         QMetaObject.connectSlotsByName(Form)
+        #self.adjust_label_fonts(Form, 10)
         self.drawColorPoint()
     # setupUi
 
@@ -552,8 +553,13 @@ class UiFLIM(object):
         #Set the row Height
         for row in range(self.parametersTable.rowCount()):
             self.parametersTable.setRowHeight(row, 15)
+    
 
-
+    # def adjust_label_fonts(self, parent, font_size):
+    #     for widget in parent.findChildren(QLabel):
+    #         font = widget.font()
+    #         font.setPointSize(font_size)
+    #         widget.setFont(font)
     # retranslateUi
 
     def drawColorPoint(self):
