@@ -158,17 +158,22 @@ Next, we need to install the theme used for the documentation; to do this, run t
 ```
 pip install sphinx-rtd-theme
 ```
-Next, within the `src` folder where the project is located, we will create a new folder called `docs`. To create the base folder for our project, run the `sphinx-quickstart` command on the `docs` folder. The project will be named "Tempico Software", and the version will correspond to the one on which the software documentation is being created. We will leave the language set to English.
+Next, within the repository folder where the project is located, we will create a new folder called `docs`. To create the base folder for our project, run the `sphinx-quickstart` command on the `docs` folder. The project will be named "Tempico Software", and the version will correspond to the one on which the software documentation is being created. We will leave the language set to English.
 
 Inside the `docs` folder, several files will have been generated, one of which is called `conf.py`. This file contains a list called `extensions`; within it, we will add the following extensions:
 ```
 "sphinx.ext.todo", "sphinx.ext.autodoc", "sphinx.ext.viewcode"
 ```
+We will also change the script's path so that when it runs, it can recognize the scripts inside the `src` folder. To do this, we add the following line of code at the beginning, even before the imports:
+```
+sys.path.insert(0, os.path.abspath('../src'))  
+```
+
 Now there should be a text variable called `html_theme`; here, we will change the default theme and set it to `sphinx_rtd_theme`.
 
 After that, we must execute the following command:
 ```
-sphinx-apidoc -o docs .
+sphinx-apidoc -o docs ./src
 ```
 This will create a `.rst` file in the `docs` folder for each of the Python scripts we have for the application. Many of these scripts contain information about graphical interfaces or may even be auxiliary; it is not necessary to document them, so we can delete their `.rst` files. Only the names of the files that have not been deleted should remain in the `modules.rst` file.
 
@@ -188,6 +193,8 @@ Next, we need to configure the `index.rst` file. By default, the following block
 
 
 Below this block, leaving a blank line, we need to add all the modules with `.rst` at the end of each one.
+
+Finally, what we will do is change the value of `_build` to `build` in the `exclude_patterns` variable in the `conf.py` file. We will also make this change in the `make.bat` file on the line `set BUILDDIR`, and in the `Makefile` under the `BUILDDIR` setting.
 
 Once we are sure that all the modules to be documented have a `.rst` file and are included in the `modules.rst` file, we will generate the documentation by running the following command in the `docs` folder:
 ```
@@ -210,9 +217,11 @@ This will generate our documentation in PDF format.
 ## Generate documentation for a new version
 If we create a new script for a new version that has not been documented yet is not necessary to run all steps executed before. However we need to run the following command again:
 ```
-sphinx-apidoc -o docs .
+sphinx-apidoc -o docs ./src
 ```
 This will regenerate all `.rst` files for all Python scripts inside the `.src` folder. We must again remove the `.rst` files for the modules that were not documented and delete them from `modules.rst`. It is necessary to reconfigure the `index.rst` file as specified in previous steps.
+
+Make sure that in the `make.bat` file, the `BUILDDIR` variable is set to `build` and not `_build`, and do the same in the `Makefile`. If that's the case, simply change them.
 
 After this , we can run the commands again to generate the documentation according to the required format:
 
