@@ -13,8 +13,8 @@ sys.path.insert(0, os.path.abspath('../src'))
 import constants
 
 project = 'Tempico Software'
-copyright = '2025, David Guzman, Joan Amaya'
-author = 'David Guzman, Joan Amaya'
+copyright = '2025,Tausand Electronics'
+author = 'Tausand Electronics'
 release = constants.VERSION
 
 # -- General configuration ---------------------------------------------------

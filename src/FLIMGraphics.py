@@ -730,15 +730,15 @@ class FLIMGraphic():
         the values to "Undefined".
 
         Variables assignment:
-        - Parameters like "I0", "τ0", "β", "α", "b", "R^2", and their respective uncertainties are assigned using 
+        - Parameters like "I0", "tau0", "Beta", "alpha", "b", "R^2", and their respective uncertainties are assigned using 
         `insertParameters()` based on the fitting model.
-        - Units are assigned through the `self.units` attribute for certain parameters (e.g., τ0).
+        - Units are assigned through the `self.units` attribute for certain parameters (e.g., tau0).
         
         Behavior by function:
-        - ExpDecay: Updates `I0`, `τ0`, and `R^2`.
-        - Kohlrausch: Updates `I0`, `τ0`, `β`, and `R^2`.
-        - ShiftedExponential: Updates `I0`, `τ0`, `α`, `b`, and `R^2`.
-        - DoubleExponential: Updates `I0`, `τ0`, `τ1`, `α`, and `R^2`.
+        - ExpDecay: Updates `I0`, `tau0`, and `R^2`.
+        - Kohlrausch: Updates `I0`, `tau0`, `Beta`, and `R^2`.
+        - ShiftedExponential: Updates `I0`, `tau0`, `alpha`, `b`, and `R^2`.
+        - DoubleExponential: Updates `I0`, `tau0`, `tau1`, `alpha`, and `R^2`.
 
         :return: None
         """
@@ -1144,12 +1144,12 @@ class FLIMGraphic():
         Calculates the Kohlrausch fit for the given data.
 
         This function attempts to fit a Kohlrausch (stretched exponential) model to the provided `xData` and `yData`.
-        If successful, the optimal parameters (I0, tau0, β) are used to update the respective labels in the parameters
+        If successful, the optimal parameters (I0, tau0, Beta) are used to update the respective labels in the parameters
         table along with their uncertainties (covariance), and the fitted curve is plotted. If the fit cannot be performed,
         it alerts the user via a message box.
 
         Variables assignment:
-        - `self.FitCov`: Contains the covariance values for I0, tau0, and β, or "nan" if not calculable.
+        - `self.FitCov`: Contains the covariance values for I0, tau0, and Beta, or "nan" if not calculable.
         - `self.xDataFitCopy`: Stores a copy of the `xData` for the fitted curve.
         - `self.yDataFitCopy`: Stores the computed y-values for the fitted curve.
         - `self.R2`: Stores the calculated R² value for the fit.
@@ -1157,7 +1157,7 @@ class FLIMGraphic():
 
         :param xData: The x-axis data points (array-like).
         :param yData: The y-axis data points (array-like).
-        :return: Tuple (I0_opt, tau0_opt, beta_opt) containing the fitted values of I0, tau0, and β, or ("Undefined", "Undefined", "Undefined") if fitting fails.
+        :return: Tuple (I0_opt, tau0_opt, beta_opt) containing the fitted values of I0, tau0, and Beta, or ("Undefined", "Undefined", "Undefined") if fitting fails.
         :rtype: tuple(float, float, float) or tuple(str, str, str)
         """
         try:
