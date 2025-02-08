@@ -11,13 +11,13 @@
 Welcome to Tempico Software's documentation!
 ============================================
 
-Tempico Software is a program that allows the use of Tausand Tempico TP1004 devices to simplify the creation of histograms and FLIM measurements. For more information, visit tausand.com.
+Tempico Software is a program developed by Tausand Electronics, with Joan Amaya and David Guzman as the lead developers. It is implemented in Python, utilizing key libraries such as PyQt5 (integrated with PySide2) for the graphical user interface, HIDAPI for serial communication, and PyGraph for data visualization. The software facilitates the use of Tausand Tempico TP1004 devices, streamlining the creation of histograms and lifetime measurements. For more information, visit tausand.com.
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
-   FLIMGraphics.rst
+   LifeTimeGraphics.rst
    StartStopHist.rst
    aboutDialog.rst
    createsavefile.rst

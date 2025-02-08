@@ -229,29 +229,29 @@ class createsavefile:
                 for tau, g2_value in zip(data[0], data[1]):
                     file.write(f"{tau}\t{g2_value}\n")
                     
-    def save_FLIM_data(self,data, file_name, folder_path, settings, extension, textLabel):
+    def save_LifeTime_data(self,data, file_name, folder_path, settings, extension, textLabel):
         """
-        Saves FLIM data (time and FLIM values) into a text file in a specified folder. The function
-        ensures that the provided time and FLIM values have the same length and writes them into 
-        a file along with specified settings and a label for the FLIM values.
+        Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
+        ensures that the provided time and LifeTime values have the same length and writes them into 
+        a file along with specified settings and a label for the LifeTime values.
 
         The file is saved in the specified folder path, with the provided file name and extension.
 
         :param data: A tuple where the first element is a list of time values and the second 
-                    element is a list of corresponding FLIM values (tuple of lists).
+                    element is a list of corresponding LifeTime values (tuple of lists).
         :param file_name: The name of the output file (str).
         :param folder_path: The path to the folder where the file will be saved (str).
         :param settings: A string representing the settings to be written in the first line of the file (str).
         :param extension: The file extension for the output file (str).
-        :param textLabel: A label to be written before the FLIM values in the file (str).
-        :raises ValueError: If the lengths of the time and FLIM value lists do not match.
+        :param textLabel: A label to be written before the LifeTime values in the file (str).
+        :raises ValueError: If the lengths of the time and LifeTime value lists do not match.
         :returns: None
         """
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
         if len(data[0]) != len(data[1]):
-            raise ValueError("Time and FLIM Values must have the same length")
+            raise ValueError("Time and LifeTime Values must have the same length")
         else:
         
             full_path = os.path.join(folder_path, f"{file_name}.{extension}")
@@ -259,10 +259,10 @@ class createsavefile:
             with open(full_path, 'w') as file:
                 file.write(settings + '\n')
                 
-                file.write(textLabel+"\tCounts FLIM\n")
+                file.write(textLabel+"\tCounts LifeTime\n")
                 
-                for tau, flimValue in zip(data[0], data[1]):
-                    file.write(f"{tau}\t{flimValue}\n")
+                for tau, LifeTimeValue in zip(data[0], data[1]):
+                    file.write(f"{tau}\t{LifeTimeValue}\n")
 
     
     

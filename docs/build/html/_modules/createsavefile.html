@@ -41,7 +41,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
@@ -306,29 +305,29 @@
                 <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">g2_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">g2_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
                     
-<div class="viewcode-block" id="createsavefile.save_FLIM_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_FLIM_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_FLIM_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">textLabel</span><span class="p">):</span>
+<div class="viewcode-block" id="createsavefile.save_LifeTime_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_LifeTime_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_LifeTime_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">textLabel</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves FLIM data (time and FLIM values) into a text file in a specified folder. The function</span>
-<span class="sd">        ensures that the provided time and FLIM values have the same length and writes them into </span>
-<span class="sd">        a file along with specified settings and a label for the FLIM values.</span>
+<span class="sd">        Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function</span>
+<span class="sd">        ensures that the provided time and LifeTime values have the same length and writes them into </span>
+<span class="sd">        a file along with specified settings and a label for the LifeTime values.</span>
 
 <span class="sd">        The file is saved in the specified folder path, with the provided file name and extension.</span>
 
 <span class="sd">        :param data: A tuple where the first element is a list of time values and the second </span>
-<span class="sd">                    element is a list of corresponding FLIM values (tuple of lists).</span>
+<span class="sd">                    element is a list of corresponding LifeTime values (tuple of lists).</span>
 <span class="sd">        :param file_name: The name of the output file (str).</span>
 <span class="sd">        :param folder_path: The path to the folder where the file will be saved (str).</span>
 <span class="sd">        :param settings: A string representing the settings to be written in the first line of the file (str).</span>
 <span class="sd">        :param extension: The file extension for the output file (str).</span>
-<span class="sd">        :param textLabel: A label to be written before the FLIM values in the file (str).</span>
-<span class="sd">        :raises ValueError: If the lengths of the time and FLIM value lists do not match.</span>
+<span class="sd">        :param textLabel: A label to be written before the LifeTime values in the file (str).</span>
+<span class="sd">        :raises ValueError: If the lengths of the time and LifeTime value lists do not match.</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Time and FLIM Values must have the same length&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Time and LifeTime Values must have the same length&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
         
             <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -336,10 +335,10 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textLabel</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Counts FLIM</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textLabel</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Counts LifeTime</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 
-                <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">flimValue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">flimValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+                <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">LifeTimeValue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">LifeTimeValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 
     
     
@@ -353,7 +352,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

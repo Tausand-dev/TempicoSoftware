@@ -41,7 +41,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
@@ -94,8 +93,8 @@
 <span class="kn">from</span> <span class="nn">ParametersDialog</span> <span class="kn">import</span> <span class="n">CountParameters</span>
 <span class="kn">from</span> <span class="nn">StartStopHist</span> <span class="kn">import</span> <span class="n">StartStopLogic</span>
 <span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">ui_FLIMmeasurement</span> <span class="kn">import</span> <span class="n">UiFLIM</span>
-<span class="kn">from</span> <span class="nn">FLIMGraphics</span> <span class="kn">import</span> <span class="n">FLIMGraphic</span>
+<span class="kn">from</span> <span class="nn">ui_LifeTimemeasurement</span> <span class="kn">import</span> <span class="n">UiLifeTime</span>
+<span class="kn">from</span> <span class="nn">LifeTimeGraphics</span> <span class="kn">import</span> <span class="n">LifeTimeGraphic</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
@@ -174,7 +173,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">FLIMTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
         
 
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
@@ -253,12 +252,12 @@
         
         <span class="c1">#------g2 Graphic class---------#</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">=</span><span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g2_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initg2DialogSentinel</span><span class="o">=</span><span class="mi">0</span>
-        <span class="c1">#------FLIM Graphic class---------#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">=</span><span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flim_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#------LifeTime Graphic class---------#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTime_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
         <span class="n">mainLayout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="n">mainWidget</span><span class="p">)</span>
         <span class="n">mainLayout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">buttonLayout</span><span class="p">)</span>  
         <span class="n">mainLayout</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -296,7 +295,7 @@
 <span class="sd">        Constructs the Lifetime Measurements window.</span>
 
 <span class="sd">        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates </span>
-<span class="sd">        an instance of the `UiFLIM` class and sets up the UI using the given parent.</span>
+<span class="sd">        an instance of the `UiLifeTime` class and sets up the UI using the given parent.</span>
 
 <span class="sd">        It does not return a value.</span>
 
@@ -305,8 +304,8 @@
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span> <span class="o">=</span> <span class="n">UiFLIM</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span> <span class="o">=</span> <span class="n">UiLifeTime</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">=</span><span class="mi">1</span></div>
     
 <div class="viewcode-block" id="MainWindow.construct_g2"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_g2">[docs]</a>    <span class="k">def</span> <span class="nf">construct_g2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
@@ -358,8 +357,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         
                 
                     <span class="n">checkchannel1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Channel1Graph1</span>
@@ -413,8 +412,8 @@
                             <span class="k">pass</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">show_graphic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -437,8 +436,8 @@
                 <span class="k">pass</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span> 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
        
@@ -448,7 +447,7 @@
 
 <span class="sd">        This function hides the graphical display, disables the disconnect button, and re-enables the connect button. </span>
 <span class="sd">        It also closes the connected device and resets its reference to `None`. </span>
-<span class="sd">        If additional graphics like `g2Graphic` or `FLIMGraphic` are active, it will disconnect them as well.</span>
+<span class="sd">        If additional graphics like `g2Graphic` or `LifeTimeGraphic` are active, it will disconnect them as well.</span>
 
 <span class="sd">        It does not take any parameters and does not return a value.</span>
 <span class="sd">        :returns: None</span>
@@ -461,8 +460,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">disconnectDevice</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span></div>
             
                     
         
@@ -474,8 +473,8 @@
 <span class="sd">  </span>
 <span class="sd">          This function checks which tab is currently active and constructs the associated window </span>
 <span class="sd">          by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, </span>
-<span class="sd">          it stops the FLIM timer and constructs the Start/Stop Histogram window. If the tab corresponds </span>
-<span class="sd">          to the Lifetime Measurements, it constructs the Lifetime window and sets up the FLIM logic if it </span>
+<span class="sd">          it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds </span>
+<span class="sd">          to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it </span>
 <span class="sd">          has not been initialized yet.</span>
 <span class="sd">  </span>
 <span class="sd">          It does not take any parameters and does not return a value.</span>
@@ -484,42 +483,42 @@
           <span class="n">valor_padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
           <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span>
           <span class="k">if</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">FLIMTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
               <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">construct_start_stop_histogram</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
           <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
               <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">construct_lifetime</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
-              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
-                  <span class="c1">#Get the data to create the logic class for FLIM measurement</span>
-                  <span class="n">comboBoxStartChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">startChannelComboBox</span>
-                  <span class="n">comboBoxStopChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">stopChannelComboBox</span>
-                  <span class="n">graphicsFrame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">graphicFrame</span>
-                  <span class="n">startButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">startButton</span>
-                  <span class="n">stopButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">stopButton</span>
-                  <span class="n">clearButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">clearButton</span>
-                  <span class="n">saveDataButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">saveDataFileButton</span>
-                  <span class="n">savePlotButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">savePlotButton</span>
-                  <span class="n">initialParametersButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">buttonParameterLabel</span>
-                  <span class="n">statusLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">statusValue</span>
-                  <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">drawPointLabel</span>
-                  <span class="n">comboBoxBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">binWidthComboBox</span>
-                  <span class="n">spinBoxNumberMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span>
-                  <span class="n">totalTime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">totalStopsValue</span>
-                  <span class="n">totalMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">totalMeasurementsValue</span>
-                  <span class="n">totalStarts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">totalStartsValue</span>
-                  <span class="n">applyButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">applyButtton</span>
-                  <span class="n">functionComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">functionComboBox</span>
-                  <span class="n">parametersTable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">parametersTable</span>
+              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+                  <span class="c1">#Get the data to create the logic class for LifeTime measurement</span>
+                  <span class="n">comboBoxStartChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startChannelComboBox</span>
+                  <span class="n">comboBoxStopChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopChannelComboBox</span>
+                  <span class="n">graphicsFrame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">graphicFrame</span>
+                  <span class="n">startButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startButton</span>
+                  <span class="n">stopButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopButton</span>
+                  <span class="n">clearButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">clearButton</span>
+                  <span class="n">saveDataButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">saveDataFileButton</span>
+                  <span class="n">savePlotButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">savePlotButton</span>
+                  <span class="n">initialParametersButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">buttonParameterLabel</span>
+                  <span class="n">statusLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">statusValue</span>
+                  <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">drawPointLabel</span>
+                  <span class="n">comboBoxBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">binWidthComboBox</span>
+                  <span class="n">spinBoxNumberMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span>
+                  <span class="n">totalTime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStopsValue</span>
+                  <span class="n">totalMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalMeasurementsValue</span>
+                  <span class="n">totalStarts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStartsValue</span>
+                  <span class="n">applyButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">applyButtton</span>
+                  <span class="n">functionComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">functionComboBox</span>
+                  <span class="n">parametersTable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">parametersTable</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">=</span><span class="n">parametersTable</span>
-                  <span class="n">timeRange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">timeRangeValue</span>
-                  <span class="n">numberBinsComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFLIM</span><span class="o">.</span><span class="n">numberBinsComboBox</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">=</span><span class="n">FLIMGraphic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
+                  <span class="n">timeRange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">timeRangeValue</span>
+                  <span class="n">numberBinsComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberBinsComboBox</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="n">LifeTimeGraphic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
                                                <span class="n">clearButton</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">savePlotButton</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">comboBoxBinWidth</span><span class="p">,</span><span class="n">numberBinsComboBox</span><span class="p">,</span><span class="n">functionComboBox</span><span class="p">,</span>
                                                <span class="n">spinBoxNumberMeasurements</span><span class="p">,</span><span class="n">totalMeasurements</span><span class="p">,</span><span class="n">totalStarts</span><span class="p">,</span><span class="n">totalTime</span><span class="p">,</span><span class="n">timeRange</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
-                                               <span class="n">applyButton</span><span class="p">,</span><span class="n">parametersTable</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">FLIMTimer</span><span class="p">)</span>
+                                               <span class="n">applyButton</span><span class="p">,</span><span class="n">parametersTable</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span>
                   <span class="c1">#If this sentinel dont have any use DELETE</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">flim_init_sentinel</span><span class="o">=</span><span class="mi">1</span></div>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTime_init_sentinel</span><span class="o">=</span><span class="mi">1</span></div>
         <span class="c1">#   elif valor_padre==1:</span>
               
         <span class="c1">#       padre=self.tab3</span>
@@ -544,7 +543,7 @@
         <span class="c1">#       if self.initg2DialogSentinel==0:</span>
         <span class="c1">#         self.Helpg2Button()</span>
         <span class="c1">#         self.initg2DialogSentinel=1</span>
-        <span class="c1">#Important when g2 is unified with FLIM CHANGE THE INDEX TO 2</span>
+        <span class="c1">#Important when g2 is unified with LifeTime CHANGE THE INDEX TO 2</span>
         
         
 <span class="c1">#The g2 functions are not use for the versions 1.1 comment for future versions</span>
@@ -731,14 +730,14 @@
 <span class="sd">        Handles the window resize event and adjusts the column widths of the parameters table.</span>
 
 <span class="sd">        This function is triggered when the user resizes the main window. It resizes the columns </span>
-<span class="sd">        of the parameters table in the FLIM tab based on the current window width. The column </span>
+<span class="sd">        of the parameters table in the LifeTime tab based on the current window width. The column </span>
 <span class="sd">        widths are scaled proportionally to ensure the table adapts to the new window size.</span>
 
 <span class="sd">        :param event: The resize event triggered when the window is resized.</span>
 <span class="sd">        :type event: QResizeEvent</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLIMGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="n">currentValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">currentValue</span><span class="o">*</span><span class="mi">1</span><span class="o">/</span><span class="mi">50</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">currentValue</span><span class="o">*</span><span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">)))</span>
@@ -818,7 +817,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

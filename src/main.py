@@ -17,8 +17,8 @@ from uiParametersDialog import UiParameters
 from ParametersDialog import CountParameters
 from StartStopHist import StartStopLogic
 from constants import *
-from ui_FLIMmeasurement import UiFLIM
-from FLIMGraphics import FLIMGraphic
+from ui_LifeTimemeasurement import UiLifeTime
+from LifeTimeGraphics import LifeTimeGraphic
 import sys
 
 
@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(1000,700)
         self.conectedDevice=None
-        self.FLIMTimer=QTimer()
+        self.LifeTimeTimer=QTimer()
         
 
         if sys.platform == 'win32':
@@ -176,12 +176,12 @@ class MainWindow(QMainWindow):
         
         #------g2 Graphic class---------#
         self.g2Graphic=None
-        self.FLIMGraphic=None
+        self.LifeTimeGraphic=None
         self.g2_init_sentinel=0
         self.initg2DialogSentinel=0
-        #------FLIM Graphic class---------#
-        self.FLIMGraphic=None
-        self.flim_init_sentinel=0
+        #------LifeTime Graphic class---------#
+        self.LifeTimeGraphic=None
+        self.LifeTime_init_sentinel=0
         mainLayout = QVBoxLayout(mainWidget)
         mainLayout.addLayout(buttonLayout)  
         mainLayout.setContentsMargins(10, 10, 10, 10)
@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         Constructs the Lifetime Measurements window.
 
         This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates 
-        an instance of the `UiFLIM` class and sets up the UI using the given parent.
+        an instance of the `UiLifeTime` class and sets up the UI using the given parent.
 
         It does not return a value.
 
@@ -228,8 +228,8 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         if self.sentinel2==0:
-            self.uiFLIM = UiFLIM()
-            self.uiFLIM.setupUi(parent)
+            self.uiLifeTime = UiLifeTime()
+            self.uiLifeTime.setupUi(parent)
             self.sentinel2=1
     
     def construct_g2(self,parent):
@@ -281,8 +281,8 @@ class MainWindow(QMainWindow):
                     self.conectedDevice.open()
                     if self.g2Graphic!=None:
                          self.g2Graphic.connectDevice()
-                    if self.FLIMGraphic!=None:
-                        self.FLIMGraphic.connectedDevice(self.conectedDevice)
+                    if self.LifeTimeGraphic!=None:
+                        self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                         
                 
                     checkchannel1=self.ui.Channel1Graph1
@@ -336,8 +336,8 @@ class MainWindow(QMainWindow):
                             pass
                         if self.g2Graphic!=None and openSentinel:
                              self.g2Graphic.connectDevice()
-                        if self.FLIMGraphic!=None and openSentinel:
-                            self.FLIMGraphic.connectedDevice(self.conectedDevice)
+                        if self.LifeTimeGraphic!=None and openSentinel:
+                            self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -360,8 +360,8 @@ class MainWindow(QMainWindow):
                 pass
             if self.g2Graphic!=None and openSentinel:
                     self.g2Graphic.connectDevice() 
-            if self.FLIMGraphic!=None and openSentinel:
-                    self.FLIMGraphic.connectedDevice(self.conectedDevice)
+            if self.LifeTimeGraphic!=None and openSentinel:
+                    self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
        
@@ -371,7 +371,7 @@ class MainWindow(QMainWindow):
 
         This function hides the graphical display, disables the disconnect button, and re-enables the connect button. 
         It also closes the connected device and resets its reference to `None`. 
-        If additional graphics like `g2Graphic` or `FLIMGraphic` are active, it will disconnect them as well.
+        If additional graphics like `g2Graphic` or `LifeTimeGraphic` are active, it will disconnect them as well.
 
         It does not take any parameters and does not return a value.
         :returns: None
@@ -384,8 +384,8 @@ class MainWindow(QMainWindow):
             self.conectedDevice=None
         if self.g2Graphic!=None:
             self.g2Graphic.disconnectDevice()
-        if self.FLIMGraphic!=None:
-            self.FLIMGraphic.disconnectedDevice()
+        if self.LifeTimeGraphic!=None:
+            self.LifeTimeGraphic.disconnectedDevice()
             
                     
         
@@ -397,8 +397,8 @@ class MainWindow(QMainWindow):
   
           This function checks which tab is currently active and constructs the associated window 
           by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, 
-          it stops the FLIM timer and constructs the Start/Stop Histogram window. If the tab corresponds 
-          to the Lifetime Measurements, it constructs the Lifetime window and sets up the FLIM logic if it 
+          it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds 
+          to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it 
           has not been initialized yet.
   
           It does not take any parameters and does not return a value.
@@ -407,42 +407,42 @@ class MainWindow(QMainWindow):
           valor_padre=self.tabs.currentIndex()
           padre=self.tab1
           if valor_padre==0:
-              self.FLIMTimer.stop()
+              self.LifeTimeTimer.stop()
               padre=self.tab1
               self.construct_start_stop_histogram(padre)
           elif valor_padre==1:
               padre=self.tab2
               self.construct_lifetime(padre)
-              if self.FLIMGraphic==None:
-                  #Get the data to create the logic class for FLIM measurement
-                  comboBoxStartChannel=self.uiFLIM.startChannelComboBox
-                  comboBoxStopChannel=self.uiFLIM.stopChannelComboBox
-                  graphicsFrame=self.uiFLIM.graphicFrame
-                  startButton=self.uiFLIM.startButton
-                  stopButton=self.uiFLIM.stopButton
-                  clearButton=self.uiFLIM.clearButton
-                  saveDataButton=self.uiFLIM.saveDataFileButton
-                  savePlotButton=self.uiFLIM.savePlotButton
-                  initialParametersButton=self.uiFLIM.buttonParameterLabel
-                  statusLabel=self.uiFLIM.statusValue
-                  pointLabel=self.uiFLIM.drawPointLabel
-                  comboBoxBinWidth=self.uiFLIM.binWidthComboBox
-                  spinBoxNumberMeasurements=self.uiFLIM.numberMeasurementsSpinBox
-                  totalTime=self.uiFLIM.totalStopsValue
-                  totalMeasurements=self.uiFLIM.totalMeasurementsValue
-                  totalStarts=self.uiFLIM.totalStartsValue
-                  applyButton=self.uiFLIM.applyButtton
-                  functionComboBox=self.uiFLIM.functionComboBox
-                  parametersTable=self.uiFLIM.parametersTable
+              if self.LifeTimeGraphic==None:
+                  #Get the data to create the logic class for LifeTime measurement
+                  comboBoxStartChannel=self.uiLifeTime.startChannelComboBox
+                  comboBoxStopChannel=self.uiLifeTime.stopChannelComboBox
+                  graphicsFrame=self.uiLifeTime.graphicFrame
+                  startButton=self.uiLifeTime.startButton
+                  stopButton=self.uiLifeTime.stopButton
+                  clearButton=self.uiLifeTime.clearButton
+                  saveDataButton=self.uiLifeTime.saveDataFileButton
+                  savePlotButton=self.uiLifeTime.savePlotButton
+                  initialParametersButton=self.uiLifeTime.buttonParameterLabel
+                  statusLabel=self.uiLifeTime.statusValue
+                  pointLabel=self.uiLifeTime.drawPointLabel
+                  comboBoxBinWidth=self.uiLifeTime.binWidthComboBox
+                  spinBoxNumberMeasurements=self.uiLifeTime.numberMeasurementsSpinBox
+                  totalTime=self.uiLifeTime.totalStopsValue
+                  totalMeasurements=self.uiLifeTime.totalMeasurementsValue
+                  totalStarts=self.uiLifeTime.totalStartsValue
+                  applyButton=self.uiLifeTime.applyButtton
+                  functionComboBox=self.uiLifeTime.functionComboBox
+                  parametersTable=self.uiLifeTime.parametersTable
                   self.parametersTable=parametersTable
-                  timeRange=self.uiFLIM.timeRangeValue
-                  numberBinsComboBox=self.uiFLIM.numberBinsComboBox
-                  self.FLIMGraphic=FLIMGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
+                  timeRange=self.uiLifeTime.timeRangeValue
+                  numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
+                  self.LifeTimeGraphic=LifeTimeGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
-                                               applyButton,parametersTable,self,self.FLIMTimer)
+                                               applyButton,parametersTable,self,self.LifeTimeTimer)
                   #If this sentinel dont have any use DELETE
-                  self.flim_init_sentinel=1
+                  self.LifeTime_init_sentinel=1
         #   elif valor_padre==1:
               
         #       padre=self.tab3
@@ -467,7 +467,7 @@ class MainWindow(QMainWindow):
         #       if self.initg2DialogSentinel==0:
         #         self.Helpg2Button()
         #         self.initg2DialogSentinel=1
-        #Important when g2 is unified with FLIM CHANGE THE INDEX TO 2
+        #Important when g2 is unified with LifeTime CHANGE THE INDEX TO 2
         
         
 #The g2 functions are not use for the versions 1.1 comment for future versions
@@ -654,14 +654,14 @@ class MainWindow(QMainWindow):
         Handles the window resize event and adjusts the column widths of the parameters table.
 
         This function is triggered when the user resizes the main window. It resizes the columns 
-        of the parameters table in the FLIM tab based on the current window width. The column 
+        of the parameters table in the LifeTime tab based on the current window width. The column 
         widths are scaled proportionally to ensure the table adapts to the new window size.
 
         :param event: The resize event triggered when the window is resized.
         :type event: QResizeEvent
         :returns: None
         """
-        if self.FLIMGraphic!=None:
+        if self.LifeTimeGraphic!=None:
             currentValue=self.width()
             self.parametersTable.setColumnWidth(0, int(round(currentValue*1/50)))
             self.parametersTable.setColumnWidth(1, int(round(currentValue*1/10)))

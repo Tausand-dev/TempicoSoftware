@@ -4,7 +4,7 @@ src
 .. toctree::
    :maxdepth: 4
 
-   FLIMGraphics
+   LifeTimeGraphics
    StartStopHist
    aboutDialog
    createsavefile

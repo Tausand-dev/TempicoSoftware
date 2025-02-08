@@ -10,11 +10,11 @@ from scipy.optimize import curve_fit
 import math
 import re
 from pyqtgraph.exporters import ImageExporter
-class FLIMGraphic():
+class LifeTimeGraphic():
     """
-    Class responsible for the logic and functionality of the FLIM (Fluorescence Lifetime Measurement) window.
+    Class responsible for the logic and functionality of the LifeTime (Fluorescence Lifetime Measurement) window.
 
-    This class manages the creation and updating of graphical plots related to FLIM, controls user interactions with various 
+    This class manages the creation and updating of graphical plots related to LifeTime, controls user interactions with various 
     buttons, and ensures that measurements are taken from the specified channels. The class handles:
     - Initialization of the graphical interface elements.
     - Starting and stopping of measurements.
@@ -105,18 +105,18 @@ class FLIMGraphic():
         #-----------------------------------#
         #-----------------------------------#
         self.graphicLayout=QHBoxLayout(graphicFrame)
-        self.winFLIM=pg.GraphicsLayoutWidget()
-        self.winFLIM.setBackground('w')
+        self.winLifeTime=pg.GraphicsLayoutWidget()
+        self.winLifeTime.setBackground('w')
         #Add the plot to the window
-        self.plotFLIM=self.winFLIM.addPlot()
-        self.plotFLIM.showGrid(x=True, y=True)
+        self.plotLifeTime=self.winLifeTime.addPlot()
+        self.plotLifeTime.showGrid(x=True, y=True)
         #Add Labels
-        self.plotFLIM.setLabel('left','Counts')
-        self.plotFLIM.setLabel('bottom','Time')
-        self.plotFLIM.addLegend()
-        self.graphicLayout.addWidget(self.winFLIM)
-        self.curve = self.plotFLIM.plot(pen='b',  name='Data')
-        self.curveFit = self.plotFLIM.plot(pen='r', name='Data fit')
+        self.plotLifeTime.setLabel('left','Counts')
+        self.plotLifeTime.setLabel('bottom','Time')
+        self.plotLifeTime.addLegend()
+        self.graphicLayout.addWidget(self.winLifeTime)
+        self.curve = self.plotLifeTime.plot(pen='b',  name='Data')
+        self.curveFit = self.plotLifeTime.plot(pen='r', name='Data fit')
         #-----------------------------------#
         #-----------------------------------#
         #--------End Graphic Creation-------#
@@ -128,9 +128,9 @@ class FLIMGraphic():
         self.stopButton.clicked.connect(self.stopMeasurement)
         self.clearButton.clicked.connect(self.clearGraphic)
         self.applyButton.clicked.connect(self.applyAction)
-        self.savePlotButton.clicked.connect(self.savePlotFLIM)
+        self.savePlotButton.clicked.connect(self.savePlotLifeTime)
         self.functionComboBox.currentIndexChanged.connect(self.changeFunction)
-        self.saveDataButton.clicked.connect(self.saveFLIMData)
+        self.saveDataButton.clicked.connect(self.saveLifeTimeData)
         self.initialParametersButton.clicked.connect(self.initialParametersDialog)
         #--------End Buttons Connection-----#
         
@@ -281,7 +281,7 @@ class FLIMGraphic():
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
         self.numberMeasurementsSpinBox.setEnabled(False)
-        self.plotFLIM.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
+        self.plotLifeTime.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
         self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
         #Change the parameters labels to undefined
         self.resetParametersLabels()
@@ -307,7 +307,7 @@ class FLIMGraphic():
         self.startTimer()
         self.curveFit.setData([],[])
         #Create the thread object
-        self.worker=WorkerThreadFLIM(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
+        self.worker=WorkerThreadLifeTime(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
                                      self.device,timeRangeps)
         
         #Create connections to main thread 
@@ -630,7 +630,7 @@ class FLIMGraphic():
         """
         self.units=units
         self.unitsLabel='Time ('+units+')'
-        self.plotFLIM.setLabel('bottom','Time ('+units+')')
+        self.plotLifeTime.setLabel('bottom','Time ('+units+')')
         self.xlabel='Time ('+units+')'
     
     
@@ -1869,7 +1869,7 @@ class FLIMGraphic():
     
     #Save buttons
     #Save Plot Button
-    def savePlotFLIM(self):
+    def savePlotLifeTime(self):
         """
         Saves the graph image in the specified format (PNG, TIFF, or JPG) based on the user's selection.
         :return: None
@@ -1935,14 +1935,14 @@ class FLIMGraphic():
                 footer = pg.LabelItem(text=textFooter, justify='left')
                 copyWin.addItem(footer, row=2, col=0)
                 copyWin.ci.layout.setRowStretchFactor(0.4, 0.1)
-                copyPlot.getViewBox().setState(self.plotFLIM.getViewBox().getState())
+                copyPlot.getViewBox().setState(self.plotLifeTime.getViewBox().getState())
                 exporter=ImageExporter(copyWin.scene())
                 exporter.parameters()['width'] = 1000
                 exporter.parameters()['height'] = 700
                 folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                graph_name='FLIMMeasurement'+current_date_str
+                graph_name='LifeTimeMeasurement'+current_date_str
                 exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                 initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
                 text_route="\n"+graph_name+"."+selected_format
@@ -1962,7 +1962,7 @@ class FLIMGraphic():
             message_box.exec_()
             
     #Save Data Button
-    def saveFLIMData(self):
+    def saveLifeTimeData(self):
         """
         Saves the data in the selected format (TXT, CSV, or DAT) based on the user's choice.
 
@@ -2023,7 +2023,7 @@ class FLIMGraphic():
                 
                 
                 #Put the settings and fit
-                filename="FLIMMeasurement"+current_date_str
+                filename="LifeTimeMeasurement"+current_date_str
                 #Round the values in order to get a better txt files
                 newMeasuredTime=[]
                 for i in self.measuredTime:
@@ -2031,7 +2031,7 @@ class FLIMGraphic():
                     newMeasuredTime.append(newValue)
                 data=[newMeasuredTime,self.measuredData ]
                 try:
-                    self.savefile.save_FLIM_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
+                    self.savefile.save_LifeTime_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
                     if selected_format=="txt":
                         self.oldtxtName=filename
                         self.sentinelsavetxt=1
@@ -2083,9 +2083,9 @@ class FLIMGraphic():
 #THREAD IS ONLY TO MANAGE, MEASURE AND CALCULATE DATA
 #AVOID TO CLOSE THE THREAD WITH PYQT5 METHODS LIKE .CLOSE(), .EXIT(), .QUIT(), .STOP() 
 #TO CLOSE THE THREAD LET RUN THE MAIN FUNCTION UNTIL FINAL
-class WorkerThreadFLIM(QThread):
+class WorkerThreadLifeTime(QThread):
     """
-    Worker thread for handling FLIM (Fluorescence Lifetime Measurement) processing in a separate thread 
+    Worker thread for handling LifeTime (Fluorescence Lifetime Measurement) processing in a separate thread 
     to ensure that the GUI remains responsive during measurements.
 
     This class performs the measurement tasks in the background, processes the data, and communicates with 
@@ -2155,7 +2155,7 @@ class WorkerThreadFLIM(QThread):
             self.checkDeviceStatus()
             try:
                 self.takeMeasurements(percentage)
-                self.createFLIMData()
+                self.createLifeTimeData()
             except:
                 pass
             
@@ -2279,9 +2279,9 @@ class WorkerThreadFLIM(QThread):
                 
                 
     #Function to created the data to update the histogram graphic
-    def createFLIMData(self):
+    def createLifeTimeData(self):
         """
-        Generates FLIM data from the start-stop differences and emits the calculated results to the main thread.
+        Generates LifeTime data from the start-stop differences and emits the calculated results to the main thread.
 
         Processes the collected data to determine the number of counts within a given time based on the maximum value of start-stop differences.
         Normalizes the data according to the determined units and calculates the histogram counts.

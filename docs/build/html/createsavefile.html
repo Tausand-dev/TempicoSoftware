@@ -44,7 +44,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="FLIMGraphics.html">FLIMGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">createsavefile module</a><ul>
@@ -53,7 +52,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder_and_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.read_default_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.read_default_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_FLIM_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_FLIM_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_LifeTime_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_LifeTime_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_g2_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_g2_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_lists_as_columns_txt"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_lists_as_columns_txt()</span></code></a></li>
 </ul>
@@ -170,26 +169,26 @@ an error occurred.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createsavefile.createsavefile.save_FLIM_data">
-<span class="sig-name descname"><span class="pre">save_FLIM_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_FLIM_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_FLIM_data" title="Permalink to this definition"></a></dt>
-<dd><p>Saves FLIM data (time and FLIM values) into a text file in a specified folder. The function
-ensures that the provided time and FLIM values have the same length and writes them into 
-a file along with specified settings and a label for the FLIM values.</p>
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_LifeTime_data">
+<span class="sig-name descname"><span class="pre">save_LifeTime_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_LifeTime_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_LifeTime_data" title="Permalink to this definition"></a></dt>
+<dd><p>Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
+ensures that the provided time and LifeTime values have the same length and writes them into 
+a file along with specified settings and a label for the LifeTime values.</p>
 <p>The file is saved in the specified folder path, with the provided file name and extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – A tuple where the first element is a list of time values and the second 
-element is a list of corresponding FLIM values (tuple of lists).</p></li>
+element is a list of corresponding LifeTime values (tuple of lists).</p></li>
 <li><p><strong>file_name</strong> – The name of the output file (str).</p></li>
 <li><p><strong>folder_path</strong> – The path to the folder where the file will be saved (str).</p></li>
 <li><p><strong>settings</strong> – A string representing the settings to be written in the first line of the file (str).</p></li>
 <li><p><strong>extension</strong> – The file extension for the output file (str).</p></li>
-<li><p><strong>textLabel</strong> – A label to be written before the FLIM values in the file (str).</p></li>
+<li><p><strong>textLabel</strong> – A label to be written before the LifeTime values in the file (str).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the time and FLIM value lists do not match.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the time and LifeTime value lists do not match.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -268,7 +267,7 @@ the lengths of the input lists do not match.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -1,7 +1,7 @@
-FLIMGraphics module
+LifeTimeGraphics module
 ===================
 
-.. automodule:: FLIMGraphics
+.. automodule:: LifeTimeGraphics
    :members:
    :undoc-members:
    :show-inheritance:

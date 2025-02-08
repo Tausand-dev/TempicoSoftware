@@ -1,0 +1,1260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeTimeGraphics module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="StartStopHist module" href="StartStopHist.html" />
+    <link rel="prev" title="Welcome to Tempico Software’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LifeTimeGraphics module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.applyAction"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.applyAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.applyInitialDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.applyInitialDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.calculateR2"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.calculateR2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.changeCreatedStatus"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.changeCreatedStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.changeFunction"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.changeFunction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.changeStatusLabel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.changeStatusLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.clearGraphic"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.clearGraphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.double_Exponential"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.double_Exponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.enableAfterFinisihThread"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.enableAfterFinisihThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.exp_decay"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.exp_decay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.finishedThreadMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.finishedThreadMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.fitDoubleExponential"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.fitDoubleExponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.fitExpDecay"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.fitExpDecay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.fitKohlrauschFit"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.fitKohlrauschFit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.fitShiiftedExponential"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.fitShiiftedExponential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.getTempicoChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.getTempicoChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.getUnits"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.indexChangeStartChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.indexChangeStartChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.indexChangeStopChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.indexChangeStopChannel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.initialParametersDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.initialParametersDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.insertParameters"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.insertParameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.kohl_decay"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.kohl_decay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.maxRound"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.maxRound()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.resetInitialDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.resetParametersLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.roundStringPCov"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.roundStringPCov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.saveLifeTimeData"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.saveLifeTimeData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.saveMode"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.saveMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.savePlotLifeTime"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.savePlotLifeTime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.setOldMode"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.setOldMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.shifted_decay_function"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.shifted_decay_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.startMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.startMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.startTimer"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.startTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.stopMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.stopMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimer"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.stopTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.timeRangeValue"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.timeRangeValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.updateLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.updateLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.updateMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.updateMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.update_timer"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.update_timer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.createLifeTimeData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createLifeTimeData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createdSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.pointSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.statusSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.takeMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateMeasurementsLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateValues</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">LifeTimeGraphics module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/LifeTimeGraphics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lifetimegraphics-module">
+<h1>LifeTimeGraphics module<a class="headerlink" href="#lifetimegraphics-module" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-LifeTimeGraphics"></span><dl class="py class">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">LifeTimeGraphics.</span></span><span class="sig-name descname"><span class="pre">LifeTimeGraphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comboBoxStartChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comboBoxStopChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphicFrame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialParametersButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binWidthComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberBins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">functionComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurementsSpinBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalStart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalTime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeRange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applyButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterTable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTableWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class responsible for the logic and functionality of the LifeTime (Fluorescence Lifetime Measurement) window.</p>
+<p>This class manages the creation and updating of graphical plots related to LifeTime, controls user interactions with various 
+buttons, and ensures that measurements are taken from the specified channels. The class handles:
+- Initialization of the graphical interface elements.
+- Starting and stopping of measurements.
+- Saving of data and plots.
+- Displaying parameters of the measurements, such as the number of measurements taken, and the percentage of completion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comboBoxStartChannel</strong> – The combo box for selecting the start channel (QComboBox).</p></li>
+<li><p><strong>comboBoxStopChannel</strong> – The combo box for selecting the stop channel (QComboBox).</p></li>
+<li><p><strong>graphicFrame</strong> – The frame that holds the graphical plot (QFrame).</p></li>
+<li><p><strong>startButton</strong> – The button to start the measurements (QPushButton).</p></li>
+<li><p><strong>stopButton</strong> – The button to stop the measurements (QPushButton).</p></li>
+<li><p><strong>initialParametersButton</strong> – The button to configure initial parameters (QPushButton).</p></li>
+<li><p><strong>clearButton</strong> – The button to clear the graphs and data (QPushButton).</p></li>
+<li><p><strong>saveDataButton</strong> – The button to save the measurement data (QPushButton).</p></li>
+<li><p><strong>savePlotButton</strong> – The button to save the graph plot (QPushButton).</p></li>
+<li><p><strong>statusLabel</strong> – The label showing the current status (QLabel).</p></li>
+<li><p><strong>pointLabel</strong> – The label displaying the current point in the measurement (QLabel).</p></li>
+<li><p><strong>binWidthComboBox</strong> – The combo box for selecting the bin width (QComboBox).</p></li>
+<li><p><strong>numberBins</strong> – The combo box for selecting the number of bins (QComboBox).</p></li>
+<li><p><strong>functionComboBox</strong> – The combo box for selecting a function (QComboBox).</p></li>
+<li><p><strong>numberMeasurementsSpinBox</strong> – The spin box for specifying the number of measurements (QSpinBox).</p></li>
+<li><p><strong>totalMeasurements</strong> – The label showing the total number of measurements (QLabel).</p></li>
+<li><p><strong>totalStart</strong> – The label showing the number of measurements taken from the start channel (QLabel).</p></li>
+<li><p><strong>totalTime</strong> – The label showing the total time of measurements (QLabel).</p></li>
+<li><p><strong>timeRange</strong> – The label showing the time range for the measurements (QLabel).</p></li>
+<li><p><strong>device</strong> – The connected Tempico device used for measurements.</p></li>
+<li><p><strong>applyButton</strong> – The button for applying selected parameters (QPushButton).</p></li>
+<li><p><strong>parameterTable</strong> – The table displaying the parameters of the measurements (QTableWidget).</p></li>
+<li><p><strong>MainWindow</strong> – The main window that holds the application UI elements.</p></li>
+<li><p><strong>timerStatus</strong> – The timer used for periodic updates (QTimer).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.applyAction">
+<span class="sig-name descname"><span class="pre">applyAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.applyAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.applyAction" title="Permalink to this definition"></a></dt>
+<dd><p>Captures the action of the ‘apply’ button, calculates the selected fit, and stores the resulting parameters.</p>
+<p>This function determines which fitting function is selected from <cite>functionComboBox</cite> and attempts to calculate
+the fit using the measured time and data. If the parameters can be determined, they are stored in <cite>FitParameters</cite>.
+If not, a dialog informs the user that the parameters could not be determined.</p>
+<p>Variables assignment:
+- The parameters <cite>i0</cite>, <cite>tau0</cite>, and other fit-specific variables are calculated using the corresponding fit function.
+- If the fit is successful, the rounded parameters are stored in <cite>FitParameters</cite>.
+- If the fit fails or returns “Undefined”, a message box is shown to inform the user of the error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.applyInitialDialog">
+<span class="sig-name descname"><span class="pre">applyInitialDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.applyInitialDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.applyInitialDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the initial parameters based on user input from the parameter dialog.</p>
+<p>This function is called when the user clicks the “Apply” button in the parameter dialog. 
+It retrieves the values from the input fields corresponding to the selected fitting function 
+and assigns them to the appropriate instance variables.</p>
+<p>The following parameters are updated based on the selected fit type:
+- For Exponential fit:
+- I0 (initial value)
+- tau0 (decay constant)
+- For Kohlrausch fit:
+- I0 (initial value)
+- tau0 (decay constant)
+- beta (exponent)
+- For Shifted Exponential fit:
+- I0 (initial value)
+- tau0 (decay constant)
+- alpha (shift parameter)
+- b (baseline value)
+- For Double Exponential fit:
+- I0 (initial value)
+- tau0 (first decay constant)
+- tau1 (second decay constant)
+- alpha (mixing coefficient)</p>
+<p>Variables assignment:
+- The updated values are assigned to their respective initial parameter variables.
+- A boolean flag indicating that initial parameters have changed is set to True for the relevant fit type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.calculateR2">
+<span class="sig-name descname"><span class="pre">calculateR2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.calculateR2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.calculateR2" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the R² value based on the observed and fitted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The observed data points (array-like).</p></li>
+<li><p><strong>fitData</strong> – The fitted data points (array-like).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The R² value indicating the goodness of fit (float).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.changeCreatedStatus">
+<span class="sig-name descname"><span class="pre">changeCreatedStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.changeCreatedStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.changeCreatedStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Notifies that the measurement thread has been created.</p>
+<p>This function sets the status of thread creation to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.changeFunction">
+<span class="sig-name descname"><span class="pre">changeFunction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.changeFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.changeFunction" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the parameter values in the UI based on the selected function in the functionComboBox.</p>
+<p>This function checks the current fitting function (e.g., “ExpDecay”, “Kohlrausch”, “ShiftedExponential”, or 
+“DoubleExponential”) and updates the parameter labels accordingly. If the parameters have already been calculated,
+it will display the values along with their uncertainties and units. If the parameters are not available, it sets 
+the values to “Undefined”.</p>
+<p>Variables assignment:
+- Parameters like “I0”, “tau0”, “Beta”, “alpha”, “b”, “R^2”, and their respective uncertainties are assigned using 
+<cite>insertParameters()</cite> based on the fitting model.
+- Units are assigned through the <cite>self.units</cite> attribute for certain parameters (e.g., tau0).</p>
+<p>Behavior by function:
+- ExpDecay: Updates <cite>I0</cite>, <cite>tau0</cite>, and <cite>R^2</cite>.
+- Kohlrausch: Updates <cite>I0</cite>, <cite>tau0</cite>, <cite>Beta</cite>, and <cite>R^2</cite>.
+- ShiftedExponential: Updates <cite>I0</cite>, <cite>tau0</cite>, <cite>alpha</cite>, <cite>b</cite>, and <cite>R^2</cite>.
+- DoubleExponential: Updates <cite>I0</cite>, <cite>tau0</cite>, <cite>tau1</cite>, <cite>alpha</cite>, and <cite>R^2</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the color of the point in the status bar. Each color is assigned a specific numeric value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – The numeric value corresponding to the desired color (int).
+- 0: Gray
+- 1: Green
+- 2: Yellow
+- 3: Orange</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.changeStatusLabel">
+<span class="sig-name descname"><span class="pre">changeStatusLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">textValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.changeStatusLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.changeStatusLabel" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the text of the status label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>textValue</strong> – The text to set for the status label (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.checkDeviceStatus">
+<span class="sig-name descname"><span class="pre">checkDeviceStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.checkDeviceStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.checkDeviceStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Verifies the device’s operational status by attempting to read its identification.</p>
+<p>This function performs the following actions:
+- Attempts to read the identification from the device to ensure it is functioning correctly.
+- If the read operation fails, it stops any running worker thread and disconnects the device from the serial port.
+- Displays an error message indicating that the connection with the device has been lost.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.clearGraphic">
+<span class="sig-name descname"><span class="pre">clearGraphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.clearGraphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.clearGraphic" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the measured data and time lists when a measurement is in progress 
+and also clears the graphic by executing the worker’s clear function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.connectedDevice">
+<span class="sig-name descname"><span class="pre">connectedDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.connectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.connectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Configures the UI options when the Tempico device is connected.</p>
+<p>This function enables and disables the appropriate buttons and starts the timer to monitor the device status.
+- Enables the disconnect button and disables the connect button.
+- Starts a status timer with a 500 ms interval.
+- Assigns the connected device to the class attribute and enables the start button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device</strong> – The connected Tempico device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Configures the UI options when the Tempico device is disconnected.</p>
+<p>This function disables and enables the appropriate buttons and stops the timer that monitors the device status.
+- Disables the disconnect button and enables the connect button.
+- Stops the status timer.
+- Disables the start button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.double_Exponential">
+<span class="sig-name descname"><span class="pre">double_Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.double_Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.double_Exponential" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the value of a double exponential decay function.</p>
+<p>This function calculates the value of a double exponential decay function using the given parameters: 
+time <cite>t</cite>, initial value <cite>I0</cite>, decay constants <cite>tau0</cite> and <cite>tau1</cite>, and mixing parameter <cite>alpha</cite>.</p>
+<p>Variables assignment:
+- The computed value is returned directly and not assigned to any variable within the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> – The time at which to evaluate the function (float).</p></li>
+<li><p><strong>I0</strong> – The initial value of the exponential function (float).</p></li>
+<li><p><strong>tau0</strong> – The first decay constant (float).</p></li>
+<li><p><strong>tau1</strong> – The second decay constant (float).</p></li>
+<li><p><strong>alpha</strong> – The mixing parameter that determines the contribution of the first decay (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the double exponential decay function at time <cite>t</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.enableAfterFinisihThread">
+<span class="sig-name descname"><span class="pre">enableAfterFinisihThread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.enableAfterFinisihThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.enableAfterFinisihThread" title="Permalink to this definition"></a></dt>
+<dd><p>Executes when a measurement ends, either by pressing the stop button 
+or when it has naturally finished. Re-enables the buttons, combo boxes, 
+and fields necessary for a new measurement or for saving data. 
+Resets the default parameters for the settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.exp_decay">
+<span class="sig-name descname"><span class="pre">exp_decay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.exp_decay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.exp_decay" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the value of an exponential decay function.</p>
+<p>This function calculates the value of the exponential decay function using the given parameters for time <cite>t</cite>, 
+initial value <cite>I0</cite>, and decay constant <cite>tau0</cite>.</p>
+<p>Variables assignment:
+- The computed value is returned directly and not assigned to any variable within the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> – The time at which to evaluate the function (float).</p></li>
+<li><p><strong>I0</strong> – The initial value of the exponential function (float).</p></li>
+<li><p><strong>tau0</strong> – The decay constant (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the exponential decay function at time <cite>t</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.finishedThreadMeasurement">
+<span class="sig-name descname"><span class="pre">finishedThreadMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.finishedThreadMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.finishedThreadMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Executes when the measurement thread finishes.</p>
+<p>This function enables the UI components related to new measurements 
+and resets the settings to default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.fitDoubleExponential">
+<span class="sig-name descname"><span class="pre">fitDoubleExponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.fitDoubleExponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.fitDoubleExponential" title="Permalink to this definition"></a></dt>
+<dd><p>Fits a double exponential decay model to the provided data.</p>
+<p>This function fits a double exponential decay model to the given <cite>xData</cite> and <cite>yData</cite> using the initial guesses for 
+the parameters (I0, tau0, tau1, alpha). If the fit is successful, it updates the corresponding values for each 
+parameter and plots the fitted curve. If the fit fails, a warning message is displayed to the user.</p>
+<p>Variables assignment:
+- <cite>self.FitCov</cite>: Stores the covariance values for I0, tau0, tau1, and alpha, or “nan” if not calculable.
+- <cite>self.xDataFitCopy</cite>: Stores a copy of the <cite>xData</cite> for the fitted curve.
+- <cite>self.yDataFitCopy</cite>: Stores the computed y-values for the fitted curve.
+- <cite>self.R2</cite>: Stores the calculated R² value for the fit.
+- <cite>self.curveFit</cite>: Updates the plot with the fitted curve data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xData</strong> – The x-axis data points (array-like).</p></li>
+<li><p><strong>yData</strong> – The y-axis data points (array-like).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple (I0_opt, tau0_opt, tau1_opt, alpha_opt) containing the fitted values of I0, tau0, tau1, and alpha, 
+or (“Undefined”, “Undefined”, “Undefined”, “Undefined”) if fitting fails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float, float, float) or tuple(str, str, str, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.fitExpDecay">
+<span class="sig-name descname"><span class="pre">fitExpDecay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.fitExpDecay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.fitExpDecay" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the exponential decay fit for the given data.</p>
+<p>This function attempts to fit an exponential decay model to the provided <cite>xData</cite> and <cite>yData</cite>. If successful,
+the optimal parameters (I0, tau0) are used to update the respective labels in the parameters table along with
+their uncertainties (covariance), and the fitted curve is plotted. If the fit cannot be performed, it alerts
+the user via a message box.</p>
+<p>Variables assignment:
+- <cite>self.FitCov</cite>: Contains the covariance values for I0 and tau0, or “nan” if not calculable.
+- <cite>self.xDataFitCopy</cite>: Stores a copy of the <cite>xData</cite> for the fitted curve.
+- <cite>self.yDataFitCopy</cite>: Stores the computed y-values for the fitted curve.
+- <cite>self.R2</cite>: Stores the calculated R² value for the fit.
+- <cite>self.curveFit</cite>: Updates the plot with the fitted curve data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xData</strong> – The x-axis data points (array-like).</p></li>
+<li><p><strong>yData</strong> – The y-axis data points (array-like).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple (I0_opt, tau0_opt) containing the fitted values of I0 and tau0, or (“Undefined”, “Undefined”) if fitting fails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float) or tuple(str, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.fitKohlrauschFit">
+<span class="sig-name descname"><span class="pre">fitKohlrauschFit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.fitKohlrauschFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.fitKohlrauschFit" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the Kohlrausch fit for the given data.</p>
+<p>This function attempts to fit a Kohlrausch (stretched exponential) model to the provided <cite>xData</cite> and <cite>yData</cite>.
+If successful, the optimal parameters (I0, tau0, Beta) are used to update the respective labels in the parameters
+table along with their uncertainties (covariance), and the fitted curve is plotted. If the fit cannot be performed,
+it alerts the user via a message box.</p>
+<p>Variables assignment:
+- <cite>self.FitCov</cite>: Contains the covariance values for I0, tau0, and Beta, or “nan” if not calculable.
+- <cite>self.xDataFitCopy</cite>: Stores a copy of the <cite>xData</cite> for the fitted curve.
+- <cite>self.yDataFitCopy</cite>: Stores the computed y-values for the fitted curve.
+- <cite>self.R2</cite>: Stores the calculated R² value for the fit.
+- <cite>self.curveFit</cite>: Updates the plot with the fitted curve data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xData</strong> – The x-axis data points (array-like).</p></li>
+<li><p><strong>yData</strong> – The y-axis data points (array-like).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple (I0_opt, tau0_opt, beta_opt) containing the fitted values of I0, tau0, and Beta, or (“Undefined”, “Undefined”, “Undefined”) if fitting fails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float, float) or tuple(str, str, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.fitShiiftedExponential">
+<span class="sig-name descname"><span class="pre">fitShiiftedExponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.fitShiiftedExponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.fitShiiftedExponential" title="Permalink to this definition"></a></dt>
+<dd><p>Fits a shifted exponential decay model to the provided data.</p>
+<p>This function fits a shifted exponential decay model to the given <cite>xData</cite> and <cite>yData</cite> using the initial guesses for 
+the parameters (I0, tau0, alpha, b). If the fit is successful, it updates the corresponding values for each parameter 
+and plots the fitted curve. If the fit fails, a warning message is displayed to the user.</p>
+<p>Variables assignment:
+- <cite>self.FitCov</cite>: Stores the covariance values for I0, tau0, alpha, and b, or “nan” if not calculable.
+- <cite>self.xDataFitCopy</cite>: Stores a copy of the <cite>xData</cite> for the fitted curve.
+- <cite>self.yDataFitCopy</cite>: Stores the computed y-values for the fitted curve.
+- <cite>self.R2</cite>: Stores the calculated R² value for the fit.
+- <cite>self.curveFit</cite>: Updates the plot with the fitted curve data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xData</strong> – The x-axis data points (array-like).</p></li>
+<li><p><strong>yData</strong> – The y-axis data points (array-like).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple (I0_opt, tau0_opt, alpha_opt, b_opt) containing the fitted values of I0, tau0, alpha, and b, or 
+(“Undefined”, “Undefined”, “Undefined”, “Undefined”) if fitting fails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(float, float, float, float) or tuple(str, str, str, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.getTempicoChannel">
+<span class="sig-name descname"><span class="pre">getTempicoChannel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.getTempicoChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.getTempicoChannel" title="Permalink to this definition"></a></dt>
+<dd><p>Assigns the Tempico device channels based on the selected values from the combo boxes.
+The selected start and stop channels are assigned to the variables <cite>currentStartChannel</cite> 
+and <cite>currentStopChannel</cite>, respectively. It also enables the corresponding channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.getUnits">
+<span class="sig-name descname"><span class="pre">getUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.getUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.getUnits" title="Permalink to this definition"></a></dt>
+<dd><p>Receives a numerical value in picoseconds (ps) and returns a list with two values:
+the appropriate units for the value and a number indicating by how much to divide 
+the value for conversion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – The numerical value in picoseconds to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing the appropriate unit as a string and a number indicating 
+the divisor for conversion.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.indexChangeStartChannel">
+<span class="sig-name descname"><span class="pre">indexChangeStartChannel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.indexChangeStartChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.indexChangeStartChannel" title="Permalink to this definition"></a></dt>
+<dd><p>Verifies that the options of the start and stop combo boxes are not the same 
+when the start combo box is changed. If they are the same, it reverts to 
+the previously selected option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.indexChangeStopChannel">
+<span class="sig-name descname"><span class="pre">indexChangeStopChannel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.indexChangeStopChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.indexChangeStopChannel" title="Permalink to this definition"></a></dt>
+<dd><p>Verifies that the options of the start and stop combo boxes are not the same 
+when the stop combo box is changed. If they are the same, it reverts to 
+the previously selected option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.initialParametersDialog">
+<span class="sig-name descname"><span class="pre">initialParametersDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.initialParametersDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.initialParametersDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a dialog for selecting initial parameters for fitting functions.</p>
+<p>This dialog allows the user to select a type of fitting function and input the corresponding parameters.
+The parameters that can be set include:
+- I0 (initial value)
+- tau0 (decay constant)
+- beta (for Kohlrausch fit)
+- alpha (for Shifted Exponential fit)
+- b (for Shifted Exponential fit)</p>
+<p>The dialog contains a ComboBox to select the function type, and the input fields dynamically update based on
+the selected function. It includes “Apply” and “Reset” buttons to apply changes or revert to default values.</p>
+<p>Variables assignment:
+- The input values from the dialog are assigned to respective attributes, but are not directly returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.insertParameters">
+<span class="sig-name descname"><span class="pre">insertParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Units</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.insertParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.insertParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Inserts the parameter values into the fitting table at the specified row.</p>
+<p>This function updates the table used for displaying the fitted parameters by inserting the parameter name, its 
+value, the covariance (uncertainty), and the units in the specified row of the table.</p>
+<p>Variables assignment:
+- The parameter name is assigned to the first column of the specified row (<cite>index</cite>).
+- The value of the parameter is assigned to the second column.
+- The covariance of the parameter is assigned to the third column.
+- The units of the parameter are assigned to the fourth column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – The row index where the values will be inserted (int).</p></li>
+<li><p><strong>Parameter</strong> – The name of the parameter to be displayed (str).</p></li>
+<li><p><strong>Value</strong> – The value of the parameter to be displayed (str).</p></li>
+<li><p><strong>Cov</strong> – The covariance (uncertainty) of the parameter (str).</p></li>
+<li><p><strong>Units</strong> – The units of the parameter (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.kohl_decay">
+<span class="sig-name descname"><span class="pre">kohl_decay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.kohl_decay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.kohl_decay" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the value of a Kohlrausch (stretched exponential) decay function.</p>
+<p>This function calculates the value of the stretched exponential (Kohlrausch) decay function using the given parameters: 
+time <cite>t</cite>, initial value <cite>I0</cite>, decay constant <cite>tau0</cite>, and stretching parameter <cite>beta</cite>.</p>
+<p>Variables assignment:
+- The computed value is returned directly and not assigned to any variable within the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> – The time at which to evaluate the function (float).</p></li>
+<li><p><strong>I0</strong> – The initial value of the exponential function (float).</p></li>
+<li><p><strong>tau0</strong> – The decay constant (float).</p></li>
+<li><p><strong>beta</strong> – The stretching exponent, controlling the deviation from a simple exponential decay (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the stretched exponential decay function at time <cite>t</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.maxRound">
+<span class="sig-name descname"><span class="pre">maxRound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.maxRound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.maxRound" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the number of decimal places needed for at least three significant figures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> – The number as a string (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of decimal places (int).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.resetInitialDialog">
+<span class="sig-name descname"><span class="pre">resetInitialDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.resetInitialDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.resetInitialDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the initial parameters in the dialog based on the measured data.</p>
+<p>This function is called when the user clicks the “Default Values” button in the parameter dialog. 
+It resets the initial parameters to sensible defaults derived from the measured data. 
+The following resets occur based on the selected fitting function:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>For Exponential fit:</dt><dd><ul>
+<li><p>I0 is set to the maximum value of measured data.</p></li>
+<li><p>tau0 is set to the mean of measured time.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>For Kohlrausch fit:</dt><dd><ul>
+<li><p>I0 is set to the maximum value of measured data.</p></li>
+<li><p>tau0 is set to the mean of measured time.</p></li>
+<li><p>beta is set to 1.0 (default value).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>For Shifted Exponential fit:</dt><dd><ul>
+<li><p>I0 is set to the maximum value of measured data.</p></li>
+<li><p>tau0 is set to the mean of measured time.</p></li>
+<li><p>alpha is set to 0 (default value).</p></li>
+<li><p>b is set to 0 (default value).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>For Double Exponential fit:</dt><dd><ul>
+<li><p>I0 is set to the maximum value of measured data.</p></li>
+<li><p>tau0 is set to the mean of measured time.</p></li>
+<li><p>alpha is set to 0 (default value).</p></li>
+<li><p>tau1 is set to the mean of measured time.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The corresponding input fields in the dialog are updated with these new values. 
+Flags indicating that the initial parameters have not changed are also reset to False for the relevant fit type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.resetParametersLabels">
+<span class="sig-name descname"><span class="pre">resetParametersLabels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.resetParametersLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.resetParametersLabels" title="Permalink to this definition"></a></dt>
+<dd><p>Resets all the fit parameters to ‘Undefined’ and clears the current fit type.</p>
+<p>This function sets the list <cite>FitParameters</cite> to contain “Undefined” values for all parameters and clears <cite>currentFit</cite>.
+Additionally, it resets the <cite>R2</cite> value to “Undefined”. Depending on the selected fit type in <cite>functionComboBox</cite>,
+the respective parameter labels in the table are updated to reflect “Undefined” values.</p>
+<p>Variables assignment:
+- <cite>FitParameters</cite> is reset to a list of “Undefined”.
+- <cite>currentFit</cite> is cleared to an empty string.
+- <cite>R2</cite> is reset to “Undefined”.
+- The <cite>insertParameters</cite> method is used to update the table with “Undefined” values for each parameter
+based on the selected function in <cite>functionComboBox</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.roundStringPCov">
+<span class="sig-name descname"><span class="pre">roundStringPCov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.roundStringPCov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.roundStringPCov" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a number to a string representation in scientific notation with two decimal places.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> – The input number (float).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String representation in scientific notation (str).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.saveLifeTimeData">
+<span class="sig-name descname"><span class="pre">saveLifeTimeData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.saveLifeTimeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.saveLifeTimeData" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the data in the selected format (TXT, CSV, or DAT) based on the user’s choice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.saveMode">
+<span class="sig-name descname"><span class="pre">saveMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.saveMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.saveMode" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current modes of the channels before starting a measurement.
+The modes are stored in the variables <cite>oldChannelA</cite>, <cite>oldChannelB</cite>, 
+<cite>oldChannelC</cite>, and <cite>oldChannelD</cite>, allowing for restoration to the original settings after the measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.savePlotLifeTime">
+<span class="sig-name descname"><span class="pre">savePlotLifeTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.savePlotLifeTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.savePlotLifeTime" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the graph image in the specified format (PNG, TIFF, or JPG) based on the user’s selection.
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.setOldMode">
+<span class="sig-name descname"><span class="pre">setOldMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.setOldMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.setOldMode" title="Permalink to this definition"></a></dt>
+<dd><p>Restores the modes of the channels after a measurement is completed.
+The channels are set to their previous modes stored in <cite>oldChannelA</cite>, 
+<cite>oldChannelB</cite>, <cite>oldChannelC</cite>, and <cite>oldChannelD</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.shifted_decay_function">
+<span class="sig-name descname"><span class="pre">shifted_decay_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.shifted_decay_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.shifted_decay_function" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the value of a shifted exponential decay function.</p>
+<p>This function calculates the value of a shifted exponential decay function using the given parameters: 
+time <cite>t</cite>, initial value <cite>I0</cite>, decay constant <cite>tau0</cite>, shift parameter <cite>alpha</cite>, and constant offset <cite>b</cite>.</p>
+<p>Variables assignment:
+- The computed value is returned directly and not assigned to any variable within the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> – The time at which to evaluate the function (float).</p></li>
+<li><p><strong>I0</strong> – The initial value of the exponential function (float).</p></li>
+<li><p><strong>tau0</strong> – The decay constant (float).</p></li>
+<li><p><strong>alpha</strong> – The shift parameter, determining the horizontal shift of the decay function (float).</p></li>
+<li><p><strong>b</strong> – The constant offset added to the decay function (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the shifted exponential decay function at time <cite>t</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.startMeasurement">
+<span class="sig-name descname"><span class="pre">startMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.startMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.startMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Initiates the measurement process by clearing previous data, resetting the UI, and starting a new measurement thread.</p>
+<p>This function performs several actions to prepare for and start a new measurement:
+- Stops the status timer and disables/enables relevant buttons.
+- Clears previous graph data and resets parameter labels.
+- Saves the current channel modes and resets save parameters.
+- Updates the status label and color to indicate a running measurement.
+- Clears previously measured data and time, resetting the plot.
+- Retrieves the selected channels and initializes a new measurement thread with the selected parameters.
+- Connects signals from the worker thread to corresponding slots in the main thread for UI updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.startTimer">
+<span class="sig-name descname"><span class="pre">startTimer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.startTimer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.startTimer" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the timer that triggers the update_timer function every second.</p>
+<p>This function initiates the timer for the ongoing measurement, allowing
+the update_timer function to be executed at one-second intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopMeasurement">
+<span class="sig-name descname"><span class="pre">stopMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.stopMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.stopMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the measurement thread if it is created and executes the 
+function enableAfterFinishedThread() if the thread is not created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopTimer">
+<span class="sig-name descname"><span class="pre">stopTimer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.stopTimer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimer" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the timer that triggers the update_timer function.</p>
+<p>This function halts the timer responsible for updating the measurement time
+and sets the totalTime label to indicate that no measurement is currently running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.timeRangeValue">
+<span class="sig-name descname"><span class="pre">timeRangeValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.timeRangeValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.timeRangeValue" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the value from the timeRange label to picoseconds (ps).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float
+The value converted to picoseconds.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.updateLabel">
+<span class="sig-name descname"><span class="pre">updateLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.updateLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabel" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label of the x-axis in the graph with the correct units for the data.</p>
+<p>This function takes the units as a string and updates the x-axis label accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>units</strong> – The units to be displayed on the x-axis label (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.updateLabels">
+<span class="sig-name descname"><span class="pre">updateLabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totalMeasurements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalStarts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.updateLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabels" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the labels for total measurements and total starts with the given values.</p>
+<p>This function sets the text of the totalMeasurements and totalStart labels 
+according to the parameters provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>totalMeasurements</strong> – The text to set for the total measurements label (str).</p></li>
+<li><p><strong>totalStarts</strong> – The text to set for the total starts label (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.updateMeasurement">
+<span class="sig-name descname"><span class="pre">updateMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listOfNewValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domainMeasurement</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.updateMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.updateMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the measured data and time with new values and refreshes the graph.</p>
+<p>This function receives a new list of values representing counts and their corresponding
+update times, assigning them to the variables measuredData and measuredTime, and 
+updates the graph accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>listOfNewValues</strong> – The new list of measurement values (list).</p></li>
+<li><p><strong>domainMeasurement</strong> – The list of times corresponding to the measurement values (list).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.update_timer">
+<span class="sig-name descname"><span class="pre">update_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.update_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.update_timer" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the timer for the ongoing measurement by adding one second.</p>
+<p>This function increments the time variable by one second and updates the 
+totalTime label to reflect the new time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">LifeTimeGraphics.</span></span><span class="sig-name descname"><span class="pre">WorkerThreadLifeTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviceStartChannel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviceStopChannel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binwidthText</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TimeRange</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Worker thread for handling LifeTime (Fluorescence Lifetime Measurement) processing in a separate thread 
+to ensure that the GUI remains responsive during measurements.</p>
+<p>This class performs the measurement tasks in the background, processes the data, and communicates with 
+the main thread to update the GUI with the measurement status, results, and other relevant information.</p>
+<dl class="simple">
+<dt>Signals:</dt><dd><ul class="simple">
+<li><p>createdSignal: Signal emitted when the worker thread is created.</p></li>
+<li><p>statusSignal: Signal emitted to update the status message in the GUI.</p></li>
+<li><p>pointSignal: Signal emitted to update the current measurement point.</p></li>
+<li><p>updateValues: Signal emitted to update measurement values and corresponding times.</p></li>
+<li><p>updateLabel: Signal emitted to update a specific label in the GUI.</p></li>
+<li><p>updateMeasurementsLabel: Signal emitted to update the label showing the number of measurements taken.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deviceStartChannel</strong> – The start channel of the Tempico device used for measurement (TempicoChannel).</p></li>
+<li><p><strong>deviceStopChannel</strong> – The stop channel of the Tempico device used for measurement (TempicoChannel).</p></li>
+<li><p><strong>binwidthText</strong> – The selected bin width for the measurement (str).</p></li>
+<li><p><strong>numberMeasurements</strong> – The number of measurements to be taken (int).</p></li>
+<li><p><strong>device</strong> – The Tempico device used for performing measurements (Tempico).</p></li>
+<li><p><strong>TimeRange</strong> – The time range for the measurements (int).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.checkDeviceStatus">
+<span class="sig-name descname"><span class="pre">checkDeviceStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.checkDeviceStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.checkDeviceStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Checks the status of the device by attempting to read a parameter.</p>
+<p>If an error occurs during the read operation, the measurement process is stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.clear" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the recorded start-stop differences and resets the total measurement count.</p>
+<p>This function empties the list that stores the differences between start and stop measurements,
+and sets the total number of measurements back to zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.createLifeTimeData">
+<span class="sig-name descname"><span class="pre">createLifeTimeData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.createLifeTimeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.createLifeTimeData" title="Permalink to this definition"></a></dt>
+<dd><p>Generates LifeTime data from the start-stop differences and emits the calculated results to the main thread.</p>
+<p>Processes the collected data to determine the number of counts within a given time based on the maximum value of start-stop differences.
+Normalizes the data according to the determined units and calculates the histogram counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.createdSignal">
+<span class="sig-name descname"><span class="pre">createdSignal</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.createdSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.getBinWidthNumber">
+<span class="sig-name descname"><span class="pre">getBinWidthNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.getBinWidthNumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.getBinWidthNumber" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the bin width in picoseconds based on user input in different units.</p>
+<p>Extracts the numerical value and its corresponding unit from the user-provided text,
+and converts it into picoseconds for further calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.getUnits">
+<span class="sig-name descname"><span class="pre">getUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">picosecondsValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.getUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.getUnits" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the appropriate units for a given value in picoseconds.</p>
+<p>Converts a given value in picoseconds to the most suitable time unit (picoseconds, nanoseconds, microseconds, or milliseconds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>picosecondsValue</strong> – The value in picoseconds (float).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing the unit as a string and the factor by which to divide the value (list).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.measurementMode">
+<span class="sig-name descname"><span class="pre">measurementMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.measurementMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.measurementMode" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the measurement mode for the device channels based on the specified time range.</p>
+<p>If the time range is less than or equal to 500000 ps , sets all channels to mode 1.
+Otherwise, sets all channels to mode 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> – The instance of the class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.pointSignal">
+<span class="sig-name descname"><span class="pre">pointSignal</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.pointSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the measurement thread, continuously taking measurements based on user-selected values
+and passing them to the graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.statusSignal">
+<span class="sig-name descname"><span class="pre">statusSignal</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.statusSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the measurement process by setting the running flag to False.</p>
+<p>Emits a status message indicating that the measurement is ending and updates the status bar color to yellow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.takeMeasurements">
+<span class="sig-name descname"><span class="pre">takeMeasurements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percentage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#WorkerThreadLifeTime.takeMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.takeMeasurements" title="Permalink to this definition"></a></dt>
+<dd><p>Takes measurements from the device and updates the start-stop differences list.</p>
+<p>Configures the device for measurement runs and checks the input and stop channels for data.
+If no measurements are detected, emits a status signal to update the main thread about the current measurement state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>percentage</strong> – The percentage of measurement completion (float).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.updateLabel">
+<span class="sig-name descname"><span class="pre">updateLabel</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateLabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.updateMeasurementsLabel">
+<span class="sig-name descname"><span class="pre">updateMeasurementsLabel</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateMeasurementsLabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.updateValues">
+<span class="sig-name descname"><span class="pre">updateValues</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.updateValues" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Tempico Software’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="StartStopHist.html" class="btn btn-neutral float-right" title="StartStopHist module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'FLIMmeasurementLNLkHv.ui'
+## Form generated from reading UI file 'LifeTimemeasurementLNLkHv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -16,7 +16,7 @@ import io
 import sys
 
 
-class UiFLIM(object):
+class UiLifeTime(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")

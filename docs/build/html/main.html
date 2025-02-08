@@ -43,7 +43,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="FLIMGraphics.html">FLIMGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
@@ -144,8 +143,8 @@ displays the About window.</p>
 <dd><p>Executes an action when a tab is clicked and creates the corresponding window.</p>
 <p>This function checks which tab is currently active and constructs the associated window 
 by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, 
-it stops the FLIM timer and constructs the Start/Stop Histogram window. If the tab corresponds 
-to the Lifetime Measurements, it constructs the Lifetime window and sets up the FLIM logic if it 
+it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds 
+to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it 
 has not been initialized yet.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -191,7 +190,7 @@ an instance of the <cite>Uig2</cite> class and sets up the UI using the given pa
 <span class="sig-name descname"><span class="pre">construct_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_lifetime" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs the Lifetime Measurements window.</p>
 <p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates 
-an instance of the <cite>UiFLIM</cite> class and sets up the UI using the given parent.</p>
+an instance of the <cite>UiLifeTime</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -226,7 +225,7 @@ an instance of the <cite>Ui_HistogramaStartStop</cite> class and sets up the UI 
 <dd><p>Handles the disconnect button click event.</p>
 <p>This function hides the graphical display, disables the disconnect button, and re-enables the connect button. 
 It also closes the connected device and resets its reference to <cite>None</cite>. 
-If additional graphics like <cite>g2Graphic</cite> or <cite>FLIMGraphic</cite> are active, it will disconnect them as well.</p>
+If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cite> are active, it will disconnect them as well.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
 </dd></dl>
@@ -273,7 +272,7 @@ Users can select a device and either connect or cancel the operation.</p>
 <span class="sig-name descname"><span class="pre">resizeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.resizeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.resizeEvent" title="Permalink to this definition"></a></dt>
 <dd><p>Handles the window resize event and adjusts the column widths of the parameters table.</p>
 <p>This function is triggered when the user resizes the main window. It resizes the columns 
-of the parameters table in the FLIM tab based on the current window width. The column 
+of the parameters table in the LifeTime tab based on the current window width. The column 
 widths are scaled proportionally to ensure the table adapts to the new window size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -353,7 +352,7 @@ After showing the main window, it closes the current window.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
