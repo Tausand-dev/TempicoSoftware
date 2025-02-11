@@ -2205,6 +2205,7 @@ class WorkerThreadLifeTime(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
+        print(measurement)
         try:
             if len(measurement)==0:
                 self.totalRuns+=100
@@ -2231,16 +2232,15 @@ class WorkerThreadLifeTime(QThread):
                             self.totalStarts+=1
                         if sentinelStart and sentinelStop:
                             differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                            if differenceValue>0:
-                                self.totalMeasurements+=1
-                                self.totalTime+=differenceValue
-                                if differenceValue<=self.TimeRange:
-                                    self.noMeasurementsCounter=0
-                                    self.startStopDifferences.append(differenceValue)
-                                else:
-                                    self.noMeasurementsCounter+=1
+                            print(differenceValue)
+                            self.totalMeasurements+=1
+                            self.totalTime+=differenceValue
+                            if abs(differenceValue)<=self.TimeRange:
+                                self.noMeasurementsCounter=0
+                                self.startStopDifferences.append(differenceValue)
                             else:
                                 self.noMeasurementsCounter+=1
+                            
                         else:
                             self.noMeasurementsCounter+=1
                         
@@ -2290,6 +2290,17 @@ class WorkerThreadLifeTime(QThread):
         """
         if len(self.startStopDifferences)>0:
             maximumValue=max(self.startStopDifferences)
+            minimunValue=min(self.startStopDifferences)
+            if abs(maximumValue)>abs(minimunValue) and minimunValue<0:
+                maximumValue=maximumValue
+                minimunValue=-maximumValue
+            elif abs(maximumValue)<=abs(minimunValue) and minimunValue<0:
+                maximumValue=-minimunValue
+                minimunValue=minimunValue
+            elif minimunValue>0:
+                maximumValue=maximumValue
+                minimunValue=0
+            
             unitsDivisionFactor=self.getUnits(maximumValue)
             units=unitsDivisionFactor[0]
             divisionFactor=unitsDivisionFactor[1]
@@ -2304,7 +2315,7 @@ class WorkerThreadLifeTime(QThread):
                     currentValue=self.startStopDifferences[i]
                     newValue=currentValue/divisionFactor
                     newDifferences.append(newValue)
-            domainValues=arange(0,maximumValue/divisionFactor,newBinWidth)
+            domainValues=arange(minimunValue/divisionFactor,maximumValue/divisionFactor,newBinWidth)
             bin_edges = appnd(domainValues - newBinWidth / 2, domainValues[-1] + newBinWidth / 2)
             counts,_ = histogram(newDifferences, bins=bin_edges)
             self.updateValues.emit(counts,domainValues)

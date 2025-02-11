@@ -58,7 +58,7 @@ class UiLifeTime(object):
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.setObjectName(u"startChannelComboBox")
-        self.startChannelComboBox.currentIndexChanged.connect(self.startChange)
+        #self.startChannelComboBox.currentIndexChanged.connect(self.startChange)
 
         self.verticalLayout_3.addWidget(self.startChannelComboBox)
 
@@ -515,6 +515,7 @@ class UiLifeTime(object):
         self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel B", None))
         self.startChannelComboBox.setItemText(3, QCoreApplication.translate("Form", u"Channel C", None))
         self.startChannelComboBox.setItemText(4, QCoreApplication.translate("Form", u"Channel D", None))
+        
 
         self.stopChannelLabel.setText(QCoreApplication.translate("Form", u"Stop Channel:", None))
         self.stopChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Channel A", None))
@@ -676,6 +677,18 @@ class UiLifeTime(object):
             #Set the row Height
             for row in range(self.parametersTable.rowCount()):
                 self.parametersTable.setRowHeight(row, 15)
+    def startStopChannelChange(self):
+        binWidthValue=self.binWidthComboBox.currentText()
+        numericalValue=self.transformUnits(binWidthValue)
+        currentRange=int(self.numberBinsComboBox.currentText())*numericalValue
+        if self.startChannelComboBox.currentIndex()==0 and currentRange<24000:
+            currentRange=24000
+            minimunBinsNumber=round(24000/numericalValue)
+            self.minimumNumberBins(minimunBinsNumber)
+        units,divisionFactor=self.transformIntoString(currentRange)
+        normalizedValue=round(currentRange/divisionFactor,2)
+        timeRangeString=str(normalizedValue)+" "+units
+        self.timeRangeValue.setText(timeRangeString)
     
     #Function to get the time range when the numberBins comboBox is changed
     def setTimeRange(self):
@@ -735,8 +748,8 @@ class UiLifeTime(object):
         return value
 
     #Function to transform picoseconds float value into a string value
-    def startChange(self):
-        self.setTimeRangeChangeBinWidth()
+    # def startChange(self):
+    #     self.setTimeRangeChangeBinWidth()
         
     
     def transformIntoString(self,value):
