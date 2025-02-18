@@ -281,8 +281,15 @@ class LifeTimeGraphic():
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
         self.numberMeasurementsSpinBox.setEnabled(False)
-        self.plotLifeTime.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
-        self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
+        if 'Start' in self.comboBoxStartChannel.currentText():
+            self.plotLifeTime.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
+            self.ylabel='Counts '+self.comboBoxStopChannel.currentText()
+            
+        else:
+            self.plotLifeTime.setLabel('left','Counts Channels '+self.comboBoxStartChannel.currentText().replace("Channel ","")+'-'+self.comboBoxStopChannel.currentText().replace("Channel ",""))
+            self.ylabel='Counts '+self.comboBoxStartChannel.currentText()+'-'+self.comboBoxStopChannel.currentText()
+            
+            
         #Change the parameters labels to undefined
         self.resetParametersLabels()
         #Save the channels mode before measurement
