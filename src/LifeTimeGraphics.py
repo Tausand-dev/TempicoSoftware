@@ -306,6 +306,8 @@ class LifeTimeGraphic():
         self.time = QTime(0, 0, 0)
         self.startTimer()
         self.curveFit.setData([],[])
+        self.xDataFitCopy=[]
+        self.yDataFitCopy=[]
         #Create the thread object
         self.worker=WorkerThreadLifeTime(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
                                      self.device,timeRangeps)
