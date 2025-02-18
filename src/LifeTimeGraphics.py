@@ -2,7 +2,7 @@ from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
 from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox
 import pyqtgraph as pg
-from numpy import mean, sqrt, exp, array, sum, arange, histogram
+from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace
 from numpy import append as appnd
 from createsavefile import createsavefile as savefile
 import datetime
@@ -2205,7 +2205,6 @@ class WorkerThreadLifeTime(QThread):
         self.deviceStopChannel.setStopMask(0)
         self.deviceStopChannel.setNumberOfStops(1)
         measurement=self.device.measure()
-        print(measurement)
         try:
             if len(measurement)==0:
                 self.totalRuns+=100
@@ -2292,13 +2291,13 @@ class WorkerThreadLifeTime(QThread):
             maximumValue=max(self.startStopDifferences)
             minimunValue=min(self.startStopDifferences)
             if abs(maximumValue)>abs(minimunValue) and minimunValue<0:
-                maximumValue=maximumValue
-                minimunValue=-maximumValue
+                maximumValue=self.TimeRange
+                minimunValue=-self.TimeRange
             elif abs(maximumValue)<=abs(minimunValue) and minimunValue<0:
-                maximumValue=-minimunValue
-                minimunValue=minimunValue
+                maximumValue=-self.TimeRange
+                minimunValue=self.TimeRange
             elif minimunValue>0:
-                maximumValue=maximumValue
+                maximumValue=self.TimeRange
                 minimunValue=0
             
             unitsDivisionFactor=self.getUnits(maximumValue)
@@ -2315,7 +2314,7 @@ class WorkerThreadLifeTime(QThread):
                     currentValue=self.startStopDifferences[i]
                     newValue=currentValue/divisionFactor
                     newDifferences.append(newValue)
-            domainValues=arange(minimunValue/divisionFactor,maximumValue/divisionFactor,newBinWidth)
+            domainValues=arange(minimunValue/divisionFactor,maximumValue/divisionFactor+newBinWidth,newBinWidth)
             bin_edges = appnd(domainValues - newBinWidth / 2, domainValues[-1] + newBinWidth / 2)
             counts,_ = histogram(newDifferences, bins=bin_edges)
             self.updateValues.emit(counts,domainValues)
