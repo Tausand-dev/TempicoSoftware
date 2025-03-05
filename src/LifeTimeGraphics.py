@@ -2240,7 +2240,6 @@ class WorkerThreadLifeTime(QThread):
                             self.totalStarts+=1
                         if sentinelStart and sentinelStop:
                             differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                            print(differenceValue)
                             self.totalMeasurements+=1
                             self.totalTime+=differenceValue
                             if abs(differenceValue)<=self.TimeRange:
