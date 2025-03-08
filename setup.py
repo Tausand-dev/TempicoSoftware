@@ -33,7 +33,7 @@ setup(
                     'pyqtgraph==0.13.3',
                     'pyserial==3.5',
                     'PySide2==5.15.2.1',
-                    'pyTempico==1.0.0',
+                    'pyTempico==1.1.1',
                     'python-dateutil==2.9.0.post0',
                     'pytz==2024.1',
                     'pywin32-ctypes==0.2.2',
