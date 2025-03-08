@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="generalsettings module" href="generalsettings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">main module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnect_button_click"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnect_button_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.general_settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.general_settings_clicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.settings_clicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">MainWindow.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#main.SplashScreen"><code class="docutils literal notranslate"><span class="pre">SplashScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.SplashScreen.show_main_window"><code class="docutils literal notranslate"><span class="pre">SplashScreen.show_main_window()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.SplashScreen.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">SplashScreen.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#main.execProgram"><code class="docutils literal notranslate"><span class="pre">execProgram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">main module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="main.MainWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Main application window class.</p>
+<p>This class is responsible for creating the main window of the application, including its tabs and graphical user interface (GUI) components. 
+It serves as a bridge between the UI classes that handle the design elements and the logic classes that manage the application’s functionalities.</p>
+<p>The main tasks of this class include:
+- Initializing the main window and its layout.
+- Creating and managing tabs for different sections of the application.
+- Integrating UI design elements with the logical operations for each functionality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>QWidget</em><em>, </em><em>optional</em>) – The parent widget (optional).</p></li>
+<li><p><strong>args</strong> (<em>tuple</em>) – Additional arguments.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.Helpg2Button">
+<span class="sig-name descname"><span class="pre">Helpg2Button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.Helpg2Button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.Helpg2Button" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.about_settings">
+<span class="sig-name descname"><span class="pre">about_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.about_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.about_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the About window displaying information about the company, version, and repository.</p>
+<p>This function opens a window showing details about the company (Tausand), the software version, 
+and the location of the repository. It does not perform any checks or validations and directly 
+displays the About window.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.clicked_tabs">
+<span class="sig-name descname"><span class="pre">clicked_tabs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.clicked_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.clicked_tabs" title="Permalink to this definition"></a></dt>
+<dd><p>Executes an action when a tab is clicked and creates the corresponding window.</p>
+<p>This function checks which tab is currently active and constructs the associated window 
+by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, 
+it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds 
+to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it 
+has not been initialized yet.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.closeEvent">
+<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.closeEvent" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the close event of the main window and prompts the user for confirmation.</p>
+<p>This function is triggered when the user attempts to close the main window. It displays 
+a dialog asking if the user is sure about closing the application (Tempico software). 
+If the user confirms by selecting “Yes”, the event is accepted and the application closes. 
+If the user selects “No”, the close event is ignored, and the application remains open.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QCloseEvent</em>) – The close event triggered when attempting to close the window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_g2">
+<span class="sig-name descname"><span class="pre">construct_g2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_g2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_g2" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the g2 Measurements window.</p>
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates 
+an instance of the <cite>Uig2</cite> class and sets up the UI using the given parent.</p>
+<p>It does not return a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the lifetime measurements window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_lifetime">
+<span class="sig-name descname"><span class="pre">construct_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_lifetime" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the Lifetime Measurements window.</p>
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates 
+an instance of the <cite>UiLifeTime</cite> class and sets up the UI using the given parent.</p>
+<p>It does not return a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the lifetime measurements window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_start_stop_histogram">
+<span class="sig-name descname"><span class="pre">construct_start_stop_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_start_stop_histogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_start_stop_histogram" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the Start/Stop Histogram window.</p>
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates
+an instance of the <cite>Ui_HistogramaStartStop</cite> class and sets up the UI using the given parent.</p>
+<p>It does not return a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the histogram window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.disconnect_button_click">
+<span class="sig-name descname"><span class="pre">disconnect_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.disconnect_button_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.disconnect_button_click" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the disconnect button click event.</p>
+<p>This function hides the graphical display, disables the disconnect button, and re-enables the connect button. 
+It also closes the connected device and resets its reference to <cite>None</cite>. 
+If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cite> are active, it will disconnect them as well.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.general_settings_clicked">
+<span class="sig-name descname"><span class="pre">general_settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.general_settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.general_settings_clicked" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the general settings window for device-wide configurations.</p>
+<p>This function checks if a device is connected. If no measurement is currently running, 
+it opens the general settings window where configurations that affect the entire device 
+(regardless of the channel) can be adjusted. If a measurement is running, a message box 
+is displayed to inform the user that changes cannot be made while the measurement is in 
+progress. If no device is connected, a message box is shown indicating that no device was found.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.open_dialog">
+<span class="sig-name descname"><span class="pre">open_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.open_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.open_dialog" title="Permalink to this definition"></a></dt>
+<dd><p>Opens a dialog window to detect and connect a measurement device.</p>
+<p>This function creates and displays a dialog window that lists available measurement devices and their corresponding ports. 
+Users can select a device and either connect or cancel the operation.</p>
+<p>If the ‘Connect’ button is clicked:
+- The selected device is connected, and all relevant software options are enabled.
+- The function tries to open the device and, upon success, interacts with graphical components (if any are present) to reflect the connected status.</p>
+<p>If the ‘Cancel’ button is clicked:
+- No options are activated.</p>
+<p>In case of a connection error, a message box is displayed informing the user of the failure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.parameters_action">
+<span class="sig-name descname"><span class="pre">parameters_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.parameters_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.parameters_action" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.resizeEvent">
+<span class="sig-name descname"><span class="pre">resizeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.resizeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.resizeEvent" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the window resize event and adjusts the column widths of the parameters table.</p>
+<p>This function is triggered when the user resizes the main window. It resizes the columns 
+of the parameters table in the LifeTime tab based on the current window width. The column 
+widths are scaled proportionally to ensure the table adapts to the new window size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QResizeEvent</em>) – The resize event triggered when the window is resized.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.settings_clicked">
+<span class="sig-name descname"><span class="pre">settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.settings_clicked" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the settings window when the settings option is clicked.</p>
+<p>This function checks if a device is connected. If no measurement is currently running, 
+it displays the settings window for channel configuration. If a measurement is running, 
+a message box is shown informing the user that changes cannot be made while a measurement 
+is in progress. If no device is connected, a message box alerts the user that no device 
+was found.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.MainWindow.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.MainWindow.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.SplashScreen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">SplashScreen</span></span><a class="reference internal" href="_modules/main.html#SplashScreen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.SplashScreen" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Splash screen class for the application.</p>
+<p>This class creates a splash screen that displays an image for a brief period before fading out and transitioning to the main application window.</p>
+<p>The key responsibilities of this class include:
+- Displaying a splash screen with a specified image.
+- Timing the display duration and handling the transition to the main application window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em><em>, </em><em>optional</em>) – The parent widget (optional).</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="main.SplashScreen.show_main_window">
+<span class="sig-name descname"><span class="pre">show_main_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#SplashScreen.show_main_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.SplashScreen.show_main_window" title="Permalink to this definition"></a></dt>
+<dd><p>Displays the main window of the application.</p>
+<p>This function creates an instance of the main window (<cite>MainWindow</cite>) and displays it.
+After showing the main window, it closes the current window.</p>
+<p>It does not take any parameters and does not return a value.
+:returns: None</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.SplashScreen.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.SplashScreen.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.execProgram">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">execProgram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#execProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.execProgram" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generalsettings.html" class="btn btn-neutral float-left" title="generalsettings module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

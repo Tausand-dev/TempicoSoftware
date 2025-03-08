@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>findDevices module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="generalsettings module" href="generalsettings.html" />
+    <link rel="prev" title="createsavefile module" href="createsavefile.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">findDevices module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#findDevices.PyTempicoManager"><code class="docutils literal notranslate"><span class="pre">PyTempicoManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#findDevices.PyTempicoManager.find_devices"><code class="docutils literal notranslate"><span class="pre">PyTempicoManager.find_devices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#findDevices.PyTempicoManager.get_pytempico_devices"><code class="docutils literal notranslate"><span class="pre">PyTempicoManager.get_pytempico_devices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#findDevices.PyTempicoManager.get_vid_pid"><code class="docutils literal notranslate"><span class="pre">PyTempicoManager.get_vid_pid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#findDevices.PyTempicoManager.verify_pyTempico"><code class="docutils literal notranslate"><span class="pre">PyTempicoManager.verify_pyTempico()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">findDevices module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/findDevices.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-findDevices">
+<span id="finddevices-module"></span><h1>findDevices module<a class="headerlink" href="#module-findDevices" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="findDevices.PyTempicoManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">findDevices.</span></span><span class="sig-name descname"><span class="pre">PyTempicoManager</span></span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for managing the search and connection of Tempico devices connected to serial ports on the PC.</p>
+<p>This class is responsible for scanning the available serial ports on the system and searching for Tempico devices 
+connected to those ports. It facilitates interaction with Tempico devices by allowing their identification and connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – No parameters are required for the initialization of the class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="findDevices.PyTempicoManager.find_devices">
+<span class="sig-name descname"><span class="pre">find_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.find_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.find_devices" title="Permalink to this definition"></a></dt>
+<dd><p>Finds and verifies whether a device with the given VID and PID is a Tempico device.</p>
+<p>This function takes the Vendor ID (VID) and Product ID (PID) as inputs, converts them to integers, 
+and attempts to open the device using these values. It then checks if the manufacturer and product 
+strings match the expected values for a Tempico device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vid_s</strong> (<em>str</em>) – The Vendor ID (VID) of the device in string format.</p></li>
+<li><p><strong>pid_s</strong> (<em>str</em>) – The Product ID (PID) of the device in string format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>True</cite> if the device is a Tempico, <cite>False</cite> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="findDevices.PyTempicoManager.get_pytempico_devices">
+<span class="sig-name descname"><span class="pre">get_pytempico_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.get_pytempico_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.get_pytempico_devices" title="Permalink to this definition"></a></dt>
+<dd><p>Searches for Tempico devices among the available serial ports and returns a list of their port names.</p>
+<p>This function scans the system’s serial ports, checks if they correspond to a Tempico device by
+retrieving the VID and PID, and verifies if they match the Tempico device specifications.
+Bluetooth devices are excluded from the search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of port names corresponding to Tempico devices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="findDevices.PyTempicoManager.get_vid_pid">
+<span class="sig-name descname"><span class="pre">get_vid_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_pid_information</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.get_vid_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.get_vid_pid" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts the Vendor ID (VID) and Product ID (PID) from a string and returns them as a tuple.</p>
+<p>This function processes a string that contains the VID and PID information in the format 
+‘VID:PID=xxxx:yyyy’. It splits the string and retrieves the VID and PID values, returning 
+them as a tuple of strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vid_pid_information</strong> (<em>str</em>) – A string containing the VID and PID information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the VID and PID as strings (vid, pid).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="findDevices.PyTempicoManager.verify_pyTempico">
+<span class="sig-name descname"><span class="pre">verify_pyTempico</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuple_vid_pid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.verify_pyTempico"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.verify_pyTempico" title="Permalink to this definition"></a></dt>
+<dd><p>Verifies whether the connected device is a Tempico device.</p>
+<p>This function checks if the device’s Vendor ID (VID) and Product ID (PID) match the values 
+corresponding to a Tempico device. It returns <cite>True</cite> if the device is identified as a Tempico, 
+and <cite>False</cite> otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tuple_vid_pid</strong> (<em>tuple</em>) – A tuple containing the VID and PID of the device.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>True</cite> if the device is a Tempico, <cite>False</cite> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="createsavefile.html" class="btn btn-neutral float-left" title="createsavefile module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generalsettings.html" class="btn btn-neutral float-right" title="generalsettings module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
