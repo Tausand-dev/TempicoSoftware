@@ -31,7 +31,7 @@ exe = EXE(
     name='TempicoSoftware',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=True,
+    strip=False,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
@@ -41,5 +41,11 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['Sources\\tausand_small.ico'],
+    icon=['Sources/tausand_small.ico'],
+)
+app = BUNDLE(
+    exe,
+    name='TempicoSoftware.app',
+    icon='Sources/tausand_small.ico',
+    bundle_identifier=None,
 )

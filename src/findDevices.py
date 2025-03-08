@@ -1,7 +1,7 @@
 import hid
 import serial.tools.list_ports
 import serial
-
+import os
 class PyTempicoManager:
     """
     Class for managing the search and connection of Tempico devices connected to serial ports on the PC.
@@ -121,7 +121,7 @@ class PyTempicoManager:
                     values_packet = self.get_vid_pid(vid_pid_string)
                     if len(values_packet) == 2:
                         value = self.verify_pyTempico(values_packet)
-                        if value == True:
+                        if value == True and os.name!="posix":
                             ports.append(puerto.name)
                 if "Tempico" in description:
                     ports.append(puerto.device)

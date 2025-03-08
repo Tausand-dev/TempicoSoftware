@@ -343,7 +343,8 @@ class MainWindow(QMainWindow):
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
-                    except:
+                    except NameError as e:
+                        print(e)
                         msg_box = QMessageBox(self)
                         msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                         msg_box.setWindowTitle("Connection Error")
