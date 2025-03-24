@@ -569,10 +569,11 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeA:
-            print("Zoom Code")
+            #print("Zoom Code")
+            pass
         else:
             self.sentinelZoomChangedA+=1
-            print("Zoom user")
+            #print("Zoom user")
         # Function called for graphA zoom 
         x_range = self.viewBoxA.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -610,10 +611,11 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeB:
-            print("Zoom code")
+            #print("Zoom code")
+            pass
         else:
             self.sentinelZoomChangedB+=1
-            print("Zoom user")
+            #print("Zoom user")
         # Function called for graphB zoom
         x_range = self.viewBoxB.viewRange()[0]   # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]    # Get the max and min current range in the view
@@ -648,10 +650,11 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeC:
-            print("Zoom code")
+            #print("Zoom code")
+            pass
         else:
             self.sentinelZoomChangedC+=1
-            print("Zoom user")
+            #print("Zoom user")
         # Function called for graphC zoom
         x_range = self.viewBoxC.viewRange()[0]  # Get current x range in the view
         x_min, x_max = x_range[0], x_range[1]   # Get the max and min current range in the view
@@ -686,10 +689,11 @@ class StartStopLogic():
         :return: None
         """
         if self.zoomCodeD:
-            print("Zoom code")
+            #print("Zoom code")
+            pass
         else:
             self.sentinelZoomChangedD+=1
-            print("Zoom user")
+            #print("Zoom user")
         # Function called for graphD zoom
           
         x_range = self.viewBoxD.viewRange()[0]  # Get current x range in the view
