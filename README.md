@@ -66,7 +66,7 @@ After finishing a measurement, if the user desires, they can save the measured d
 
 If the user is not in the middle of a measurement, they will be able to disconnect the Tempico device and connect another if they desire. The data will not be lost if the device is disconnected; data is only lost if the user begins a new measurement.
 
-## FLIM Window
+## Lifetime Window
 
 ### Before Measurement
 
