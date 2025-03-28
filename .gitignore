@@ -1,4 +1,17 @@
-TaskToDo
+#Excluir entorno virtual
+/instalador-env/
+/src/__pycache__
+/docs/_static
+/docs/_templates
+/docs/build/doctrees
+/docs/build/latex/*
+!/docs/build/latex/tempicosoftware.pdf
+/src/ubuntuInstaller/
+/src/TestVenv/
+/src/dist/
+/src/build/
+/src/InstallerEnvironment/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

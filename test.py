@@ -1,3 +1,3 @@
-import TempicoSoftware as tempico
+import src as tempico
 
 tempico.execProgram()

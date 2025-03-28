@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>createsavefile module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="findDevices module" href="findDevices.html" />
+    <link rel="prev" title="aboutDialog module" href="aboutDialog.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">createsavefile module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#createsavefile.createsavefile"><code class="docutils literal notranslate"><span class="pre">createsavefile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.check_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.check_folder_and_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder_and_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.read_default_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.read_default_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_LifeTime_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_LifeTime_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_g2_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_g2_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_lists_as_columns_txt"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_lists_as_columns_txt()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">createsavefile module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/createsavefile.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-createsavefile">
+<span id="createsavefile-module"></span><h1>createsavefile module<a class="headerlink" href="#module-createsavefile" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="createsavefile.createsavefile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createsavefile.</span></span><span class="sig-name descname"><span class="pre">createsavefile</span></span><a class="reference internal" href="_modules/createsavefile.html#createsavefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.check_folder_and_file">
+<span class="sig-name descname"><span class="pre">check_folder_and_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.check_folder_and_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.check_folder_and_file" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether the folder ‘TempicoSoftwareData’ and the file ‘data_constants.txt’ 
+exist in the user’s ‘Documents’ directory.</p>
+<p>The function constructs the paths for both the folder and the file, and checks if both exist:
+- Folder path: &lt;Documents&gt;/TempicoSoftwareData
+- File name: data_constants.txt</p>
+<p>If both the folder and the file exist, the function returns True. Otherwise, it returns False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool: True if the folder and file exist, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.create_folder">
+<span class="sig-name descname"><span class="pre">create_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.create_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.create_folder" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if the specified folder and file already exist. If they do exist, it creates 
+the folder and file by calling the ‘create_folder_and_file’ function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.create_folder_and_file">
+<span class="sig-name descname"><span class="pre">create_folder_and_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.create_folder_and_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.create_folder_and_file" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a folder named ‘TempicoSoftwareData’ inside the user’s ‘Documents’ directory, 
+and creates a file named ‘data_constants.txt’ (or ‘.data_constants.txt’ on Unix-based systems) inside that folder. 
+The file is populated with predefined default values for histogram and data names. 
+The file is hidden depending on the operating system.</p>
+<p>The folder and file are created with the following details:
+- Folder path: &lt;Documents&gt;/TempicoSoftwareData
+- File name: data_constants.txt (or ‘.data_constants.txt’ for Unix-based systems)
+- The file contains the following default data:
+- Folder Path
+- Default Histogram Name
+- Default g2 Name
+- Default Lifetime Name</p>
+<p>In case of a Windows system, the file is made hidden using the Windows API. For Unix-based systems (Linux, macOS), 
+the file is renamed to be hidden by adding a dot (‘.’) before the filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>OSError</strong> – If an error occurs during folder or file creation, or when accessing the filesystem.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.read_default_data">
+<span class="sig-name descname"><span class="pre">read_default_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.read_default_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.read_default_data" title="Permalink to this definition"></a></dt>
+<dd><p>Reads the default data from the file ‘data_constants.txt’ located in the 
+‘TempicoSoftwareData’ folder inside the user’s ‘Documents’ directory.</p>
+<p>This function attempts to read the file line by line and extracts key-value pairs 
+formatted as “key: value”. The first line, which contains the folder path, is 
+processed separately. The extracted key-value pairs are stored in a dictionary, 
+which is returned as the output.</p>
+<p>If the file is not found or an error occurs while reading the file, the function
+returns None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None: A dictionary containing the data from the file, or None if 
+an error occurred.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_LifeTime_data">
+<span class="sig-name descname"><span class="pre">save_LifeTime_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_LifeTime_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_LifeTime_data" title="Permalink to this definition"></a></dt>
+<dd><p>Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
+ensures that the provided time and LifeTime values have the same length and writes them into 
+a file along with specified settings and a label for the LifeTime values.</p>
+<p>The file is saved in the specified folder path, with the provided file name and extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A tuple where the first element is a list of time values and the second 
+element is a list of corresponding LifeTime values (tuple of lists).</p></li>
+<li><p><strong>file_name</strong> – The name of the output file (str).</p></li>
+<li><p><strong>folder_path</strong> – The path to the folder where the file will be saved (str).</p></li>
+<li><p><strong>settings</strong> – A string representing the settings to be written in the first line of the file (str).</p></li>
+<li><p><strong>extension</strong> – The file extension for the output file (str).</p></li>
+<li><p><strong>textLabel</strong> – A label to be written before the LifeTime values in the file (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the time and LifeTime value lists do not match.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_g2_data">
+<span class="sig-name descname"><span class="pre">save_g2_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_g2_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_g2_data" title="Permalink to this definition"></a></dt>
+<dd><p>Saves g2 data (tau and g2 values) into a text file in a specified folder. The function
+ensures that the provided tau and g2 values have the same length and writes them into 
+a file along with specified settings and a label for the g2 values.</p>
+<p>The file is saved in the specified folder path, with the provided file name and extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A tuple where the first element is a list of tau values and the second 
+element is a list of corresponding g2 values (tuple of lists).</p></li>
+<li><p><strong>file_name</strong> – The name of the output file (str).</p></li>
+<li><p><strong>folder_path</strong> – The path to the folder where the file will be saved (str).</p></li>
+<li><p><strong>settings</strong> – A string representing the settings to be written in the first line of the file (str).</p></li>
+<li><p><strong>extension</strong> – The file extension for the output file (str).</p></li>
+<li><p><strong>textLabel</strong> – A label to be written before the g2 values in the file (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the tau and g2 value lists do not match.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_lists_as_columns_txt">
+<span class="sig-name descname"><span class="pre">save_lists_as_columns_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_lists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_lists_as_columns_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_lists_as_columns_txt" title="Permalink to this definition"></a></dt>
+<dd><p>Saves multiple lists of data as separate text files, where each list is written as a 
+column in the text file. The files are saved in the specified directory with the 
+provided file names, and the columns are named based on the given column names.</p>
+<p>This function ensures that the specified directory exists, and raises an error if 
+the lengths of the input lists do not match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_lists</strong> – A list of lists, where each list contains the data to be written to a file (list).</p></li>
+<li><p><strong>file_names</strong> – A list of strings specifying the names of the output files (list of str).</p></li>
+<li><p><strong>column_names</strong> – A list of strings specifying the names of the columns in the text files (list of str).</p></li>
+<li><p><strong>path</strong> – The directory path where the files will be saved (str).</p></li>
+<li><p><strong>settings</strong> – A list of settings to be written as the first line in each file (list of str).</p></li>
+<li><p><strong>extension</strong> – The file extension for the output files (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of data_lists, file_names, and column_names do not match.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="aboutDialog.html" class="btn btn-neutral float-left" title="aboutDialog module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="findDevices.html" class="btn btn-neutral float-right" title="findDevices module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

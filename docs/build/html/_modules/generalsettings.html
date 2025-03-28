@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>generalsettings &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=def9ab29"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">generalsettings</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for generalsettings</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span><span class="p">,</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QWhatsThis</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span>
+<span class="kn">from</span> <span class="nn">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QEvent</span>
+
+
+
+
+<div class="viewcode-block" id="GeneralSettingsWindow"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow">[docs]</a><span class="k">class</span> <span class="nc">GeneralSettingsWindow</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the General Settings window for the Tempico device.</span>
+
+<span class="sd">    This class creates a dialog window that allows users to configure general settings that affect all channels (A, B, C, D) and the start settings of the Tempico device. It provides a user interface to adjust various parameters applicable across the entire device.</span>
+
+<span class="sd">    :param device: The Tempico device instance that the settings will apply to.</span>
+<span class="sd">    :type device: object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;General settings&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">140</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;Sources/tausand_small.ico&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Main Layout</span>
+        <span class="n">main_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Main vertical layout for the window</span>
+
+        <span class="c1"># Threshold Voltage Section</span>
+        <span class="n">threshold_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>  <span class="c1"># Horizontal layout for threshold voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Threshold voltage:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;Spinboxtreshold&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mf">1.60</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mf">0.90</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">threshold_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdvotlage</span><span class="p">)</span>
+        <span class="n">threshold_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">threshold_layout</span><span class="p">)</span>
+
+        <span class="c1"># Number of Runs Section</span>
+        <span class="n">runs_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>  <span class="c1"># Horizontal layout for number of runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Number of runs:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span> <span class="o">=</span> <span class="n">QSpinBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMinimum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setSingleStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setWrapping</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setButtonSymbols</span><span class="p">(</span><span class="n">QSpinBox</span><span class="o">.</span><span class="n">PlusMinus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setAccelerated</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">runs_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberofruns</span><span class="p">)</span>
+        <span class="n">runs_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">runs_layout</span><span class="p">)</span>
+
+        <span class="c1"># Save Button</span>
+        <span class="n">button_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>  <span class="c1"># Vertical layout for the save button</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save changes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">button_layout</span><span class="p">)</span>
+
+        <span class="c1"># Connect the button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getsettings</span><span class="p">()</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setsettings</span><span class="p">)</span>
+
+    
+    
+<div class="viewcode-block" id="GeneralSettingsWindow.getsettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.getsettings">[docs]</a>    <span class="k">def</span> <span class="nf">getsettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the device&#39;s current settings, such as the number of runs and threshold voltage, </span>
+<span class="sd">        and updates the corresponding values in the graphical interface.</span>
+
+<span class="sd">        The function fetches the number of runs and threshold voltage from the connected device, </span>
+<span class="sd">        and then sets these values in the dialog&#39;s spinbox and combobox in the user interface.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">number_runs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">number_runs</span><span class="p">))</span>
+        <span class="n">tresholdVoltage</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tresholdVoltage</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="GeneralSettingsWindow.setsettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.setsettings">[docs]</a>    <span class="k">def</span> <span class="nf">setsettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies the settings provided by the user to the connected device.</span>
+
+<span class="sd">        The function retrieves the user-defined values for the number of runs and threshold voltage </span>
+<span class="sd">        from the graphical interface and sends these values to the device. After applying the settings, </span>
+<span class="sd">        the function closes the settings dialog.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setThresholdVoltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="GeneralSettingsWindow.event"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.event">[docs]</a>    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the event when the &quot;?&quot; (What&#39;s This) help button is clicked.</span>
+
+<span class="sd">        This function intercepts the event triggered when the user clicks the &quot;?&quot; button (entering What&#39;s This mode). </span>
+<span class="sd">        It exits What&#39;s This mode immediately, changes the mouse cursor back to the arrow, and displays a help window with relevant information.</span>
+
+<span class="sd">        :param event: The event object representing the triggered event.</span>
+<span class="sd">        :type event: QEvent</span>
+<span class="sd">        :returns: True if the event is handled; otherwise, it passes the event to the parent class for default processing.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">EnterWhatsThisMode</span><span class="p">:</span> <span class="c1">#Event called when ? is clicked                </span>
+            <span class="n">QWhatsThis</span><span class="o">.</span><span class="n">leaveWhatsThisMode</span><span class="p">()</span> <span class="c1">#To change mouse cursor back to arrow</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">showHelp</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="GeneralSettingsWindow.showHelp"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.showHelp">[docs]</a>    <span class="k">def</span> <span class="nf">showHelp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays a help dialog with information about general settings.</span>
+
+<span class="sd">        This function is triggered when the &quot;?&quot; (What&#39;s This) help button is clicked. It creates and displays a message box containing detailed information about the general settings, including instructions for the threshold voltage and the number of runs.</span>
+
+<span class="sd">        The message box provides the following details:</span>
+<span class="sd">        - **Threshold voltage**: Specifies the acceptable range for input values (0.60 V to 1.60 V).</span>
+<span class="sd">        - **Number of runs**: Describes the number of measurements performed in each channel during one data collection.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Help&quot;</span><span class="p">,</span> <span class="s2">&quot;Here is the information about the general settings:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                                      <span class="s2">&quot;Threshold voltage: Enter a value between 0.60 V and 1.60 V.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                      <span class="s2">&quot;Number of runs: Number of measurements performed in each channel during one data collection.&quot;</span><span class="p">)</span></div></div>
+
+    
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
