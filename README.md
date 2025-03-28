@@ -110,7 +110,7 @@ Modify the version number in the following files:
 
 * installer/installer_builder.iss
 
-* TempicoSoftware/constants.py
+* src/constants.py
 
 ### Creating a virtual environment
 
