@@ -10,6 +10,7 @@ from ui_devicesDialog import Ui_Devices
 import time
 from PySide2.QtCore import QTimer
 import time
+from ui_CountsEstimated import Ui_CountsEstimated
 #To do eliminate import
 from createsavefile import createsavefile as savefile
 from ui_settings import Ui_settings
@@ -19,6 +20,7 @@ from StartStopHist import StartStopLogic
 from constants import *
 from ui_LifeTimemeasurement import UiLifeTime
 from LifeTimeGraphics import LifeTimeGraphic
+from CountsEstimatedGraphics import CountEstimatedLogic
 import sys
 
 
@@ -151,6 +153,7 @@ class MainWindow(QMainWindow):
         self.tab3=QWidget()
         self.tabs.addTab(self.tab1,"Start-Stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
+        self.tabs.addTab(self.tab3,"Counts Estimation")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -182,6 +185,11 @@ class MainWindow(QMainWindow):
         #------LifeTime Graphic class---------#
         self.LifeTimeGraphic=None
         self.LifeTime_init_sentinel=0
+        #------Counts Estimated Graphic class---------#
+        self.countsEstimatedGraphic=None
+        self.countsEstimated_init_sentinel=0
+        
+        #------Layout for the main window---------#
         mainLayout = QVBoxLayout(mainWidget)
         mainLayout.addLayout(buttonLayout)  
         mainLayout.setContentsMargins(10, 10, 10, 10)
@@ -233,6 +241,15 @@ class MainWindow(QMainWindow):
             self.uiLifeTime = UiLifeTime()
             self.uiLifeTime.setupUi(parent)
             self.sentinel2=1
+    
+    def construct_counts_estimated(self,parent):
+        #TO DO Build Documentation
+        if self.sentinel3==0:
+            self.uiCountsEstimated = Ui_CountsEstimated()
+            self.uiCountsEstimated.setupUi(parent)
+            self.sentinel3=1
+    
+    
     
     def construct_g2(self,parent):
         """
@@ -446,6 +463,48 @@ class MainWindow(QMainWindow):
                                                applyButton,parametersTable,self,self.LifeTimeTimer)
                   #If this sentinel dont have any use DELETE
                   self.LifeTime_init_sentinel=1
+          elif valor_padre==2:
+            padre=self.tab3
+            self.construct_counts_estimated(padre)
+            self.LifeTimeTimer.stop()
+            if self.countsEstimatedGraphic==None:
+                #Get the data to create the logic class for Counts Estimated measurement
+                channelACheckBox=self.uiCountsEstimated.channelACheckBox
+                channelBCheckBox=self.uiCountsEstimated.channelBCheckBox
+                channelCCheckBox=self.uiCountsEstimated.channelCCheckBox
+                channelDCheckBox=self.uiCountsEstimated.channelDCheckBox
+                startButon=self.uiCountsEstimated.startMeasurementButton
+                stopButon=self.uiCountsEstimated.stopMeasurementButton
+                mergeRadioButton=self.uiCountsEstimated.mergeGraphicFrame
+                separateRadioButton=self.uiCountsEstimated.separateGraphicFrame
+                timeRangeComboBox=self.uiCountsEstimated.comboBoxTimeRange
+                clearButtonChannelA=self.uiCountsEstimated.channelAClearButton
+                clearButtonChannelB=self.uiCountsEstimated.channelBClearButton
+                clearButtonChannelC=self.uiCountsEstimated.channelCClearButton
+                clearButtonChannelD=self.uiCountsEstimated.channelDClearButton
+                saveDataButtonCounts=self.uiCountsEstimated.saveDataButton
+                savePlotButtonCounts=self.uiCountsEstimated.savePlotsButton
+                channelACountValue=self.uiCountsEstimated.channelAValuesCount
+                channelBCountValue=self.uiCountsEstimated.channelBValuesCount
+                channelCCountValue=self.uiCountsEstimated.channelCValuesCount
+                channelDCountValue=self.uiCountsEstimated.channelDValuesCount
+                channelACountUncertainty=self.uiCountsEstimated.channelAUncertaintyCount
+                channelBCountUncertainty=self.uiCountsEstimated.channelBUncertaintyCount
+                channelCCountUncertainty=self.uiCountsEstimated.channelCUncertaintyCount
+                channelDCountUncertainty=self.uiCountsEstimated.channelDUncertaintyCount
+                #Frames for dinamic interface
+                channelAFrameLabel=self.uiCountsEstimated.ChannelACountValues
+                channelBFrameLabel=self.uiCountsEstimated.ChannelBCountValues
+                channelCFrameLabel=self.uiCountsEstimated.ChannelCCountValues
+                channelDFrameLabel=self.uiCountsEstimated.ChannelDCountValues
+                
+                tableCounts=self.uiCountsEstimated.countValuesTable
+                graphicsFrame=self.uiCountsEstimated.GraphicsFrame
+                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
+                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,self.conectedDevice,self)
+                
+                
+                 
         #   elif valor_padre==1:
               
         #       padre=self.tab3
