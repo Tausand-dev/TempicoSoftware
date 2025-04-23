@@ -106,7 +106,6 @@ class CountEstimatedLogic():
         self.updateGraphicsLayout()
     
     def factoryGraphChannels(self, channel):
-        
         winCountsGraph=pg.GraphicsLayoutWidget()
         winCountsGraph.setBackground('w')
         #Add the plot to the window
