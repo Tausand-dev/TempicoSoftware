@@ -302,6 +302,8 @@ class MainWindow(QMainWindow):
                          self.g2Graphic.connectDevice()
                     if self.LifeTimeGraphic!=None:
                         self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                    if self.countsEstimatedGraphic!=None:
+                        self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
                         
                 
                     checkchannel1=self.ui.Channel1Graph1
@@ -357,6 +359,8 @@ class MainWindow(QMainWindow):
                              self.g2Graphic.connectDevice()
                         if self.LifeTimeGraphic!=None and openSentinel:
                             self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                        if self.countsEstimatedGraphic!=None and openSentinel:
+                            self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -382,6 +386,8 @@ class MainWindow(QMainWindow):
                     self.g2Graphic.connectDevice() 
             if self.LifeTimeGraphic!=None and openSentinel:
                     self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+            if self.countsEstimatedGraphic!=None and openSentinel:
+                    self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
        
@@ -406,6 +412,8 @@ class MainWindow(QMainWindow):
             self.g2Graphic.disconnectDevice()
         if self.LifeTimeGraphic!=None:
             self.LifeTimeGraphic.disconnectedDevice()
+        if self.countsEstimatedGraphic!=None:
+            self.countsEstimatedGraphic.disconnectedDevice()
             
                     
         
