@@ -5,13 +5,14 @@ import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
 from createsavefile import createsavefile as savefile
-from datetime import datetime
+from datetime import datetime, date
 from scipy.optimize import curve_fit
 import math
 import re
 from pyqtgraph.exporters import ImageExporter
 import pyTempico as tempico
 import time
+import random
 class CountEstimatedLogic():
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
@@ -75,9 +76,13 @@ class CountEstimatedLogic():
         #Connection for the buttons
         self.startButton.clicked.connect(self.startMeasure)
         self.stopButton.clicked.connect(self.stopMeasure)
-        
-        
-        
+        #Creation data list for measurements
+        #TODO: improve querys with deque, add uncertainties
+        self.timestamps=[]
+        self.channelAValues=[]
+        self.channelBValues=[]
+        self.channelCValues=[]
+        self.channelDValues=[]
         #End connection for the checkbox
         
         
@@ -91,6 +96,7 @@ class CountEstimatedLogic():
             self.clearButtonChannelD.setEnabled(False)
             self.saveDataButton.setEnabled(False)
             self.savePlotButton.setEnabled(False)
+            
         
     
     
@@ -171,25 +177,49 @@ class CountEstimatedLogic():
                     layout.removeItem(item)
 
         selected_graphs = []
-        for channel, label in zip(
+
+        for checkbox, label in zip(
             [self.channelACheckBox, self.channelBCheckBox, self.channelCCheckBox, self.channelDCheckBox],
             ["A", "B", "C", "D"]
         ):
-            if channel.isChecked():
-                graph, _, _ = self.factoryGraphChannels(label)
+            if checkbox.isChecked():
+                graph, plot, curve = self.factoryGraphChannels(label)
                 graph.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
                 selected_graphs.append(graph)
 
-        count = len(selected_graphs)
+                # Copiar los datos antiguos a las nuevas curvas
+                if label == "A":
+                    curve.setData(self.timestamps, self.channelAValues)
+                    self.curveCountsA = curve
+                    self.winCountsGraphA = graph
+                    self.plotCountsA = plot
+                elif label == "B":
+                    curve.setData(self.timestamps, self.channelBValues)
+                    self.curveCountsB = curve
+                    self.winCountsGraphB = graph
+                    self.plotCountsB = plot
+                elif label == "C":
+                    curve.setData(self.timestamps, self.channelCValues)
+                    self.curveCountsC = curve
+                    self.winCountsGraphC = graph
+                    self.plotCountsC = plot
+                elif label == "D":
+                    curve.setData(self.timestamps, self.channelDValues)
+                    self.curveCountsD = curve
+                    self.winCountsGraphD = graph
+                    self.plotCountsD = plot
 
+        count = len(selected_graphs)
         if count == 0:
-            return  # No ocultamos el frame, solo no añadimos nada
+            return
 
         top_row = QHBoxLayout()
         bottom_row = QHBoxLayout()
 
         if count == 1:
+            top_row.addStretch()
             top_row.addWidget(selected_graphs[0])
+            top_row.addStretch()
             layout.addLayout(top_row)
         elif count == 2:
             top_row.addWidget(selected_graphs[0])
@@ -199,7 +229,9 @@ class CountEstimatedLogic():
         elif count == 3:
             top_row.addWidget(selected_graphs[0])
             top_row.addWidget(selected_graphs[1])
+            bottom_row.addStretch()
             bottom_row.addWidget(selected_graphs[2])
+            bottom_row.addStretch()
             layout.addLayout(top_row)
             layout.addLayout(bottom_row)
         elif count == 4:
@@ -295,6 +327,8 @@ class CountEstimatedLogic():
         
     
     def captureMeasurement(self,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
+        
+        #Add values in table
         channelAValue=round(channelAValue,2)
         channelAUncertainty= round(channelAUncertainty,5)
         channelBValue=round(channelBValue,2)
@@ -308,6 +342,7 @@ class CountEstimatedLogic():
         self.tableCounts.insertRow(posRow)
         for col, value in enumerate(newData):
             self.tableCounts.setItem(posRow, col,QTableWidgetItem(str(value)))
+        #Update values to label
         if self.channelACheckBox.isChecked():
             self.updateLabels("A",channelAValue, channelAUncertainty)
         if self.channelBCheckBox.isChecked():
@@ -316,6 +351,22 @@ class CountEstimatedLogic():
             self.updateLabels("C",channelCValue, channelCUncertainty)
         if self.channelDCheckBox.isChecked():
             self.updateLabels("D",channelDValue, channelDUncertainty)
+        #Update graphics value 
+        today_str = date.today().strftime("%Y-%m-%d")
+        full_str = f"{today_str} {dateTime}"  
+        dateObject = datetime.strptime(full_str, "%Y-%m-%d %H:%M:%S")
+        timeStampNumeric = dateObject.timestamp()
+        self.timestamps.append(timeStampNumeric)
+        self.channelAValues.append(channelAValue)
+        self.channelBValues.append(channelBValue)
+        self.channelCValues.append(channelCValue)
+        self.channelDValues.append(channelDValue)
+        print(self.timestamps)
+        print(self.channelAValues)
+        self.curveCountsA.setData(self.timestamps, self.channelAValues)
+        self.curveCountsB.setData(self.timestamps, self.channelBValues)
+        self.curveCountsC.setData(self.timestamps, self.channelCValues)
+        self.curveCountsD.setData(self.timestamps, self.channelDValues)
     
     def updateLabels(self, channel, value, uncertainty):
         roundedValue=round(value,2)
