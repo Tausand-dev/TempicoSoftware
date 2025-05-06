@@ -1,11 +1,11 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem
 import pyqtgraph as pg
-from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace
+from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
 from createsavefile import createsavefile as savefile
-import datetime
+from datetime import datetime
 from scipy.optimize import curve_fit
 import math
 import re
@@ -20,8 +20,8 @@ class CountEstimatedLogic():
                  tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, device, parent):
         #Get the parameters
         self.channelACheckBox = channelACheckBox
-        self.channelBCheckBox = channelBCheckBox
-        self.channelCCheckBox = channelCCheckBox
+        self.channelCCheckBox = channelBCheckBox
+        self.channelBCheckBox = channelCCheckBox
         self.channelDCheckBox = channelDCheckBox
         self.startButton = startButton
         self.stopButton = stopButton
@@ -74,6 +74,7 @@ class CountEstimatedLogic():
         self.countChannelDValue.setText("Channel D: No running")
         #Connection for the buttons
         self.startButton.clicked.connect(self.startMeasure)
+        self.stopButton.clicked.connect(self.stopMeasure)
         
         
         
@@ -95,7 +96,7 @@ class CountEstimatedLogic():
     
     #Funcion to dinamically changes the interface
     def checkBoxListenerChannels(self):
-        
+        self.hideColumns()
         if self.channelACheckBox.isChecked():
             self.channelAFrameLabel.setVisible(True)
         else:
@@ -234,38 +235,104 @@ class CountEstimatedLogic():
         self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
         self.worker.finished.connect(self.finishedThread)
         self.worker.createdSignal.connect(self.getCreatedEvent)
+        self.worker.newMeasurement.connect(self.captureMeasurement)
         self.worker.updateLabel.connect(self.updateLabels)
         self.worker.start()
     
+    def stopMeasure(self):
+        self.resetSentinels()
+    
     def getChannelsMeasure(self):
+        self.selectChannelA=True
+        self.selectChannelB=True
+        self.selectChannelC=True
+        self.selectChannelD=True
+        if not self.channelACheckBox.isChecked():
+            self.selectChannelA=False
+            self.channelACheckBox.setEnabled(False)
+        if not self.channelBCheckBox.isChecked():
+            self.selectChannelB=False
+            self.channelBCheckBox.setEnabled(False)
+        if not self.channelCCheckBox.isChecked():
+            self.selectChannelC=False
+            self.channelCCheckBox.setEnabled(False)
+        if not self.channelDCheckBox.isChecked():
+            self.selectChannelD=False
+            self.channelDCheckBox.setEnabled(False)
+    
+    def resetSentinels(self):
+        #Reset selected sentinels
+        self.selectChannelA=False
+        self.selectChannelB=False
+        self.selectChannelC=False
+        self.selectChannelD=False
+        #Reset enable checkbox
+        self.channelACheckBox.setEnabled(True)
+        self.channelBCheckBox.setEnabled(True)
+        self.channelCCheckBox.setEnabled(True)
+        self.channelDCheckBox.setEnabled(True)
+    
+    
+    #Hide and show column for channels measurement
+    def hideColumns(self):
+        #First show all columns
+        self.tableCounts.showColumn(1);
+        self.tableCounts.showColumn(2);
+        self.tableCounts.showColumn(3);
+        self.tableCounts.showColumn(4);
+        #Hide columns according sentinels
+        if not self.channelACheckBox.isChecked():
+            self.tableCounts.hideColumn(1)
+        if not self.channelBCheckBox.isChecked():
+            self.tableCounts.hideColumn(2)
+        if not self.channelCCheckBox.isChecked():
+            self.tableCounts.hideColumn(3)
+        if not self.channelDCheckBox.isChecked():
+            self.tableCounts.hideColumn(4)
+        
+        
+    
+        
+    
+    def captureMeasurement(self,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
+        channelAValue=round(channelAValue,2)
+        channelAUncertainty= round(channelAUncertainty,5)
+        channelBValue=round(channelBValue,2)
+        channelBUncertainty= round(channelBUncertainty,5)
+        channelCValue=round(channelCValue,2)
+        channelCUncertainty= round(channelCUncertainty,5)
+        channelDValue=round(channelDValue,2)
+        channelDUncertainty= round(channelDUncertainty,5)
+        newData=[dateTime,channelAValue,channelBValue,channelCValue,channelDValue]
+        posRow=self.tableCounts.rowCount()
+        self.tableCounts.insertRow(posRow)
+        for col, value in enumerate(newData):
+            self.tableCounts.setItem(posRow, col,QTableWidgetItem(str(value)))
         if self.channelACheckBox.isChecked():
-            self.selectChannelA=True
+            self.updateLabels("A",channelAValue, channelAUncertainty)
         if self.channelBCheckBox.isChecked():
-            self.selectChannelB=True
+            self.updateLabels("B",channelBValue, channelBUncertainty)
         if self.channelCCheckBox.isChecked():
-            self.selectChannelC=True
+            self.updateLabels("C",channelCValue, channelCUncertainty)
         if self.channelDCheckBox.isChecked():
-            self.selectChannelD=True
-    
-        
-    
-    def captureMeasurement(self):
-        
-        pass
+            self.updateLabels("D",channelDValue, channelDUncertainty)
     
     def updateLabels(self, channel, value, uncertainty):
+        roundedValue=round(value,2)
+        roundedUncertainty=round(uncertainty,5)
         if channel=="A":
-            self.countChannelAValue.setText(f"Channel A: {value}")
-            self.countChannelAUncertainty.setText(f"Uncertainty A: {uncertainty}")
+            
+            self.countChannelAValue.setText(f"Channel A: {roundedValue}")
+            self.countChannelAUncertainty.setText(f"Uncertainty A: {roundedUncertainty}")
         elif channel=="B":
-            self.countChannelBValue.setText(f"Channel B: {value}")
-            self.countChannelBUncertainty.setText(f"Uncertainty B: {uncertainty}")
+            self.countChannelBValue.setText(f"Channel B: {roundedValue}")
+            self.countChannelBUncertainty.setText(f"Uncertainty B: {roundedUncertainty}")
         elif channel=="C":
-            self.countChannelCValue.setText(f"Channel C: {value}")
-            self.countChannelCUncertainty.setText(f"Uncertainty C: {uncertainty}")
+            self.countChannelCValue.setText(f"Channel C: {roundedValue}")
+            self.countChannelCUncertainty.setText(f"Uncertainty C: {roundedUncertainty}")
         elif channel=="D":
-            self.countChannelDValue.setText(f"Channel D: {value}")
-            self.countChannelDUncertainty.setText(f"Uncertainty D: {uncertainty}")
+            self.countChannelDValue.setText(f"Channel D: {roundedValue}")
+            self.countChannelDUncertainty.setText(f"Uncertainty D: {roundedUncertainty}")
     
     def updateTableWidget(self):
         pass
@@ -285,6 +352,8 @@ class CountEstimatedLogic():
         #Start button enabled and stop button disabled
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
+        #actions for stop button
+        self.stopMeasure()
     
 
 
@@ -293,6 +362,8 @@ class WorkerThreadCountsEstimated(QThread):
     createdSignal=Signal()
     newValue=Signal(str,float,float)
     updateLabel= Signal(str,float,float)
+    #Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty
+    newMeasurement=Signal(datetime,float,float,float,float,float,float,float,float)
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device):
         super().__init__()
@@ -329,22 +400,49 @@ class WorkerThreadCountsEstimated(QThread):
                                 values=values+intervalValues
         if len(values)>0:
             meanValue=mean(values)
-            uncertaintyValue=0
+            uncertaintyValue=std(values)
             #Send the signal to the main window
+            #TODO calculate everything for all channels
+            
             if self.channelASentinel:
-                self.updateLabel.emit("A",meanValue,uncertaintyValue)
+                valueChannelA=meanValue
+                uncertaintyChannelA=uncertaintyValue
+            else:
+                valueChannelA=0
+                uncertaintyChannelA=0
+                
+                
             if self.channelBSentinel:
-                self.updateLabel.emit("B",meanValue,uncertaintyValue)
+                valueChannelB=meanValue
+                uncertaintyChannelB=uncertaintyValue
+            else:
+                valueChannelB=0
+                uncertaintyChannelB=0
+            
+            
             if self.channelCSentinel:
-                self.updateLabel.emit("C",meanValue,uncertaintyValue)
+                valueChannelC=meanValue
+                uncertaintyChannelC=uncertaintyValue
+            else:
+                valueChannelC=0
+                uncertaintyChannelC=0
+            
+            
             if self.channelDSentinel:
-                self.updateLabel.emit("D",meanValue,uncertaintyValue)
+                valueChannelD=meanValue
+                uncertaintyChannelD=uncertaintyValue
+            else:
+                valueChannelD=0
+                uncertaintyChannelD=0    
+            
+            currentTime = datetime.now().strftime("%H:%M:%S")
+            self.newMeasurement.emit(currentTime, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
 
-    
+
     def calculateIntervalWithStops(self, currentMeasure):
         #TODO: CHANGE RECALCULATING NUMBER OF STOPS
         tempValues=[]
-   
+        
         for i in range(4):
             if currentMeasure[i+3]!=-1 and currentMeasure[i+4]!=-1:
                 differenceValue=currentMeasure[i+4]-currentMeasure[i+3]

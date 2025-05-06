@@ -450,7 +450,7 @@ class Ui_CountsEstimated(object):
         self.channelDValuesCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         self.channelDUncertaintyCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         ___qtablewidgetitem = self.countValuesTable.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"#", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Date", None));
         ___qtablewidgetitem1 = self.countValuesTable.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"A", None));
         ___qtablewidgetitem2 = self.countValuesTable.horizontalHeaderItem(2)
