@@ -76,9 +76,16 @@ class CountEstimatedLogic():
         #Connection for the buttons
         self.startButton.clicked.connect(self.startMeasure)
         self.stopButton.clicked.connect(self.stopMeasure)
+        self.clearButtonChannelA.clicked.connect(self.clearChannelA)
+        self.clearButtonChannelB.clicked.connect(self.clearChannelB)
+        self.clearButtonChannelC.clicked.connect(self.clearChannelC)
+        self.clearButtonChannelD.clicked.connect(self.clearChannelD)
         #Creation data list for measurements
         #TODO: improve querys with deque, add uncertainties
-        self.timestamps=[]
+        self.timestampsChannelA=[]
+        self.timestampsChannelB=[]
+        self.timestampsChannelC=[]
+        self.timestampsChannelD=[]
         self.channelAValues=[]
         self.channelBValues=[]
         self.channelCValues=[]
@@ -189,22 +196,22 @@ class CountEstimatedLogic():
 
                 # Copiar los datos antiguos a las nuevas curvas
                 if label == "A":
-                    curve.setData(self.timestamps, self.channelAValues)
+                    curve.setData(self.timestampsChannelA, self.channelAValues)
                     self.curveCountsA = curve
                     self.winCountsGraphA = graph
                     self.plotCountsA = plot
                 elif label == "B":
-                    curve.setData(self.timestamps, self.channelBValues)
+                    curve.setData(self.timestampsChannelB, self.channelBValues)
                     self.curveCountsB = curve
                     self.winCountsGraphB = graph
                     self.plotCountsB = plot
                 elif label == "C":
-                    curve.setData(self.timestamps, self.channelCValues)
+                    curve.setData(self.timestampsChannelC, self.channelCValues)
                     self.curveCountsC = curve
                     self.winCountsGraphC = graph
                     self.plotCountsC = plot
                 elif label == "D":
-                    curve.setData(self.timestamps, self.channelDValues)
+                    curve.setData(self.timestampsChannelD, self.channelDValues)
                     self.curveCountsD = curve
                     self.winCountsGraphD = graph
                     self.plotCountsD = plot
@@ -273,6 +280,22 @@ class CountEstimatedLogic():
     
     def stopMeasure(self):
         self.resetSentinels()
+    
+    def clearChannelA(self):
+        self.timestampsChannelA=[]
+        self.channelAValues=[]
+    
+    def clearChannelB(self):
+        self.timestampsChannelB=[]
+        self.channelBValues=[]
+    
+    def clearChannelC(self):
+        self.timestampsChannelC=[]
+        self.channelCValues=[]
+    
+    def clearChannelD(self):
+        self.timestampsChannelD=[]
+        self.channelDValues=[]
     
     def getChannelsMeasure(self):
         self.selectChannelA=True
@@ -356,17 +379,18 @@ class CountEstimatedLogic():
         full_str = f"{today_str} {dateTime}"  
         dateObject = datetime.strptime(full_str, "%Y-%m-%d %H:%M:%S")
         timeStampNumeric = dateObject.timestamp()
-        self.timestamps.append(timeStampNumeric)
+        self.timestampsChannelA.append(timeStampNumeric)
+        self.timestampsChannelB.append(timeStampNumeric)
+        self.timestampsChannelC.append(timeStampNumeric)
+        self.timestampsChannelD.append(timeStampNumeric)
         self.channelAValues.append(channelAValue)
         self.channelBValues.append(channelBValue)
         self.channelCValues.append(channelCValue)
         self.channelDValues.append(channelDValue)
-        print(self.timestamps)
-        print(self.channelAValues)
-        self.curveCountsA.setData(self.timestamps, self.channelAValues)
-        self.curveCountsB.setData(self.timestamps, self.channelBValues)
-        self.curveCountsC.setData(self.timestamps, self.channelCValues)
-        self.curveCountsD.setData(self.timestamps, self.channelDValues)
+        self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
+        self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
+        self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
+        self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
     
     def updateLabels(self, channel, value, uncertainty):
         roundedValue=round(value,2)
