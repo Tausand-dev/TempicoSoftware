@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
@@ -13,6 +13,7 @@ from pyqtgraph.exporters import ImageExporter
 import pyTempico as tempico
 import time
 import random
+import threading
 class CountEstimatedLogic():
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
@@ -276,6 +277,8 @@ class CountEstimatedLogic():
         self.worker.createdSignal.connect(self.getCreatedEvent)
         self.worker.newMeasurement.connect(self.captureMeasurement)
         self.worker.updateLabel.connect(self.updateLabels)
+        self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
+        self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
         self.worker.start()
     
     def stopMeasure(self):
@@ -430,6 +433,51 @@ class CountEstimatedLogic():
         #actions for stop button
         self.stopMeasure()
     
+    #Function to define that no measurements were founded
+    def noMeasurementsFounded(self):
+        QMessageBox.warning(
+            self.mainWindow,  
+            "No Measurements Found",
+            "Unable to determine more than 2 stops in any channel."
+        )
+    
+    #Function to eliminate channels where there is no measurements
+    def eliminateCheckBoxChannels(self, channelList):
+        # Mostrar diálogo de advertencia si hay canales
+        if channelList:
+            channelStr = ", ".join(channelList)
+            message = (
+                "Unable to obtain more than 2 stops to estimate a count number "
+                f"in the following channels:\n\n{channelStr}"
+            )
+
+            QMessageBox.warning(
+                self.mainWindow,                 # Parent
+                "Estimation Error",              
+                message                          
+            )
+
+            self.worker.continueEvent.set()
+
+        # Desmarcar y deshabilitar los canales afectados
+        for channelValue in channelList:
+            if channelValue == "A":
+                self.device.ch1.disableChannel()
+                self.channelACheckBox.setChecked(False)
+                self.channelACheckBox.setEnabled(False)
+            elif channelValue == "B":
+                self.device.ch2.disableChannel()
+                self.channelBCheckBox.setChecked(False)
+                self.channelBCheckBox.setEnabled(False)
+            elif channelValue == "C":
+                self.device.ch3.disableChannel()
+                self.channelCCheckBox.setChecked(False)
+                self.channelCCheckBox.setEnabled(False)
+            elif channelValue == "D":
+                self.device.ch4.disableChannel()
+                self.channelDCheckBox.setChecked(False)
+                self.channelDCheckBox.setEnabled(False)
+        
 
 
 class WorkerThreadCountsEstimated(QThread):
@@ -439,8 +487,12 @@ class WorkerThreadCountsEstimated(QThread):
     updateLabel= Signal(str,float,float)
     #Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty
     newMeasurement=Signal(datetime,float,float,float,float,float,float,float,float)
+    #Signals to manage the total stops values
+    noTotalMeasurements=Signal()
+    noPartialMeasurements=Signal(list)
     
-    def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device):
+    
+    def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device: tempico.TempicoDevice):
         super().__init__()
         #Set the values for the  thread
         self.channelASentinel= channelASentinel
@@ -448,18 +500,37 @@ class WorkerThreadCountsEstimated(QThread):
         self.channelCSentinel= channelCSentinel
         self.channelDSentinel= channelDSentinel
         self.device= device
+        self.channelsMeasure=[]
+        self.channelsWithoutMeasurements=[]
         #Set the settings for the device
         #for the moment the stops number will be set to 5
         self.enableDisableChannels()
         self.device.setNumberOfRuns(25)
+        self.continueEvent=threading.Event()
+        
         
     
     #Main function
     def run(self):
-        self.createdSignal.emit()
-        for i in range(10):
-            self.getMeasurements()
-            time.sleep(1)
+        # self.createdSignal.emit()
+        # for i in range(10):
+        #     self.getMeasurements()
+        #     time.sleep(1)
+        
+        
+        #Test determine stops measurement
+        for channel in self.channelsMeasure:
+            totalStops=self.determineStopsNumber(channel)
+            if totalStops<2:
+                self.channelsWithoutMeasurements.append(channel)
+        if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure):
+            self.noTotalMeasurements.emit()
+            print("No hay ninguna medicion en ningun canal")
+        elif self.channelsWithoutMeasurements:
+            self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
+            self.continueEvent.wait()
+            print("El hilo continua luego de que la pestana se cierra")
+            
             
         
     def getMeasurements(self):
@@ -526,9 +597,54 @@ class WorkerThreadCountsEstimated(QThread):
         
         return tempValues
     
+    
     #TODO: DETERMINE THE NUMBER OF STOPS TO PERFORM THE MEASUREMENTS
-    def determineStopsNumber(self):
-        pass
+    def determineStopsNumber(self, channelTest):
+        #Disable all channels
+        self.device.ch1.disableChannel()
+        self.device.ch2.disableChannel()
+        self.device.ch3.disableChannel()
+        self.device.ch4.disableChannel()
+        ##-------------------
+        ##Enable only the tested channel
+        if channelTest == "A":
+            self.device.ch1.enableChannel()
+            channel=self.device.ch1
+        elif channelTest == "B":
+            self.device.ch2.enableChannel()
+            channel=self.device.ch2
+        elif channelTest == "C":
+            self.device.ch3.enableChannel()
+            channel=self.device.ch3
+        elif channelTest == "D":
+            self.device.ch4.enableChannel()
+            channel=self.device.ch4
+        ##--------------------
+            
+        #Pre settings for determine stop number
+        self.device.setNumberOfRuns(1)
+        channel.setMode(2)
+        ##-------------
+        stopsInMeasure=5
+        stopsFounded=False
+        totalIterations=50
+        #This number is arbitrary in order to determine how many measurements are necessary for determine the stop number
+        while(stopsInMeasure>=2 and (not stopsFounded)):
+            channel.setNumberOfStops(stopsInMeasure)
+            totalMeasurements=0
+            for i in range(totalIterations):
+                measurements=self.device.measure()
+                if measurements:
+                    if measurements[0]:
+                        if measurements[0][3] != -1:
+                            totalMeasurements+=1
+            if totalMeasurements>totalIterations/2:
+                stopsFounded=True
+            else:
+                stopsInMeasure-=1
+        
+        return stopsInMeasure
+        
     
     def enableDisableChannels(self):
         self.device.ch1.disableChannel()
@@ -536,18 +652,22 @@ class WorkerThreadCountsEstimated(QThread):
         self.device.ch3.disableChannel()
         self.device.ch4.disableChannel()
         if self.channelASentinel:
+            self.channelsMeasure.append("A")
             self.device.ch1.enableChannel()
             self.device.ch1.setNumberOfStops(5)
             self.device.ch1.setStopMask(0)
         if self.channelBSentinel:
+            self.channelsMeasure.append("B")
             self.device.ch2.enableChannel()
             self.device.ch2.setNumberOfStops(5)
             self.device.ch2.setStopMask(0)
         if self.channelCSentinel:
+            self.channelsMeasure.append("C")
             self.device.ch3.enableChannel()
             self.device.ch3.setNumberOfStops(5)
             self.device.ch3.setStopMask(0)
         if self.channelDSentinel:
+            self.channelsMeasure.append("D")
             self.device.ch4.enableChannel()
             self.device.ch4.setNumberOfStops(5)
             self.device.ch4.setStopMask(0)
