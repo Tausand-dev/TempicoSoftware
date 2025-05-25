@@ -283,6 +283,8 @@ class CountEstimatedLogic():
     
     def stopMeasure(self):
         self.resetSentinels()
+        self.stopButton.setEnabled(False)
+        self.worker.Stop()
     
     def clearChannelA(self):
         self.timestampsChannelA=[]
@@ -507,6 +509,7 @@ class WorkerThreadCountsEstimated(QThread):
         self.enableDisableChannels()
         self.device.setNumberOfRuns(25)
         self.continueEvent=threading.Event()
+        self.running=True
         
         
     
@@ -522,14 +525,26 @@ class WorkerThreadCountsEstimated(QThread):
         for channel in self.channelsMeasure:
             totalStops=self.determineStopsNumber(channel)
             if totalStops<2:
+                if channel=="A":
+                    self.channelASentinel=False
+                elif channel == "B":
+                    self.channelBSentinel=False
+                elif channel == "C":
+                    self.channelCSentinel=False
+                elif channel == "D":
+                    self.channelDSentinel=False
                 self.channelsWithoutMeasurements.append(channel)
         if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure):
             self.noTotalMeasurements.emit()
+            self.running=False
             print("No hay ninguna medicion en ningun canal")
         elif self.channelsWithoutMeasurements:
             self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
             self.continueEvent.wait()
             print("El hilo continua luego de que la pestana se cierra")
+        while self.running:
+            print("Se ejecuta medicion")
+            time.sleep(1)
             
             
         
@@ -654,25 +669,24 @@ class WorkerThreadCountsEstimated(QThread):
         if self.channelASentinel:
             self.channelsMeasure.append("A")
             self.device.ch1.enableChannel()
-            self.device.ch1.setNumberOfStops(5)
             self.device.ch1.setStopMask(0)
         if self.channelBSentinel:
             self.channelsMeasure.append("B")
             self.device.ch2.enableChannel()
-            self.device.ch2.setNumberOfStops(5)
             self.device.ch2.setStopMask(0)
         if self.channelCSentinel:
             self.channelsMeasure.append("C")
             self.device.ch3.enableChannel()
-            self.device.ch3.setNumberOfStops(5)
             self.device.ch3.setStopMask(0)
         if self.channelDSentinel:
             self.channelsMeasure.append("D")
             self.device.ch4.enableChannel()
-            self.device.ch4.setNumberOfStops(5)
             self.device.ch4.setStopMask(0)
         self.device.ch1.setMode(2)
         self.device.ch2.setMode(2)
         self.device.ch3.setMode(2)
         self.device.ch4.setMode(2)
+    @Slot()   
+    def Stop(self):
+        self.running=False
         
