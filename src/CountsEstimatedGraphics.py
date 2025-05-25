@@ -14,6 +14,7 @@ import pyTempico as tempico
 import time
 import random
 import threading
+from pyqtgraph import mkPen
 class CountEstimatedLogic():
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
@@ -81,6 +82,8 @@ class CountEstimatedLogic():
         self.clearButtonChannelB.clicked.connect(self.clearChannelB)
         self.clearButtonChannelC.clicked.connect(self.clearChannelC)
         self.clearButtonChannelD.clicked.connect(self.clearChannelD)
+        #Connection for the combo Box
+        self.timeRangeComboBox.currentIndexChanged.connect(self.updateGraphic)
         #Creation data list for measurements
         #TODO: improve querys with deque, add uncertainties
         self.timestampsChannelA=[]
@@ -136,18 +139,36 @@ class CountEstimatedLogic():
         self.updateGraphicsLayout()
     
     def factoryGraphChannels(self, channel):
-        winCountsGraph=pg.GraphicsLayoutWidget()
+        colors = {
+            "A": (0, 114, 189),    # azul
+            "B": (217, 83, 25),    # rojo-naranja
+            "C": (237, 177, 32),   # amarillo
+            "D": (126, 47, 142),   # púrpura
+        }
+
+        color = colors.get(channel, "k")
+
+        winCountsGraph = pg.GraphicsLayoutWidget()
         winCountsGraph.setBackground('w')
-        #Add the plot to the window
-        plotCounts=winCountsGraph.addPlot()
+
+        plotCounts = winCountsGraph.addPlot()
         plotCounts.showGrid(x=True, y=True)
-        #Add Labels
-        plotCounts.setLabel('left',f'Counts channel {channel}')
-        plotCounts.setLabel('bottom','Time')
+        plotCounts.setLabel('left', f'Counts channel {channel}')
+        plotCounts.setLabel('bottom', 'Time (s)')
         plotCounts.addLegend()
-        curve = plotCounts.plot(pen='b',  name='Counts Estimated')
+
+        pen = mkPen(color=color, width=2.5)
+
+      
+        curve = plotCounts.plot(
+            pen=pen,
+            symbol='o',                   
+            symbolSize=7,
+            symbolBrush=color,
+            name='Counts Estimated'
+        )
+
         return winCountsGraph, plotCounts, curve
-        
     def constructGraphicA(self):
         self.winCountsGraphA, self.plotCountsA, self.curveCountsA = self.factoryGraphChannels('A')
         
@@ -271,6 +292,7 @@ class CountEstimatedLogic():
     def startMeasure(self):
         self.startButton.setEnabled(False)
         self.stopButton.setEnabled(True)
+        self.resetValues()
         self.getChannelsMeasure()
         self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
         self.worker.finished.connect(self.finishedThread)
@@ -284,7 +306,7 @@ class CountEstimatedLogic():
     def stopMeasure(self):
         self.resetSentinels()
         self.stopButton.setEnabled(False)
-        self.worker.Stop()
+        self.worker.stop()
     
     def clearChannelA(self):
         self.timestampsChannelA=[]
@@ -301,6 +323,19 @@ class CountEstimatedLogic():
     def clearChannelD(self):
         self.timestampsChannelD=[]
         self.channelDValues=[]
+        
+    def updateGraphic(self):
+        if not self.timestampsChannelA:
+            return
+        # Apply seconds filter to the list
+        try:
+            segundosValue= int(self.timeRangeComboBox.currentText().split()[0])
+        except ValueError:
+            segundosValue = 10  # fallback
+        x_max = self.timestampsChannelA[-1]
+        x_min = x_max - segundosValue
+        self.plotCountsA.setXRange(x_min, x_max, padding=0)
+        
     
     def getChannelsMeasure(self):
         self.selectChannelA=True
@@ -331,6 +366,19 @@ class CountEstimatedLogic():
         self.channelBCheckBox.setEnabled(True)
         self.channelCCheckBox.setEnabled(True)
         self.channelDCheckBox.setEnabled(True)
+        
+    def resetValues(self):
+        #Delete the values
+        self.channelAValues=[]
+        self.channelBValues=[]
+        self.channelCValues=[]
+        self.channelDValues=[]
+        #Delete the timestamps
+        self.timestampsChannelA=[]
+        self.timestampsChannelB=[]
+        self.timestampsChannelC=[]
+        self.timestampsChannelD=[]
+        
     
     
     #Hide and show column for channels measurement
@@ -354,7 +402,7 @@ class CountEstimatedLogic():
     
         
     
-    def captureMeasurement(self,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
+    def captureMeasurement(self,secondsTime,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
         
         #Add values in table
         channelAValue=round(channelAValue,2)
@@ -379,15 +427,11 @@ class CountEstimatedLogic():
             self.updateLabels("C",channelCValue, channelCUncertainty)
         if self.channelDCheckBox.isChecked():
             self.updateLabels("D",channelDValue, channelDUncertainty)
-        #Update graphics value 
-        today_str = date.today().strftime("%Y-%m-%d")
-        full_str = f"{today_str} {dateTime}"  
-        dateObject = datetime.strptime(full_str, "%Y-%m-%d %H:%M:%S")
-        timeStampNumeric = dateObject.timestamp()
-        self.timestampsChannelA.append(timeStampNumeric)
-        self.timestampsChannelB.append(timeStampNumeric)
-        self.timestampsChannelC.append(timeStampNumeric)
-        self.timestampsChannelD.append(timeStampNumeric)
+        
+        self.timestampsChannelA.append(secondsTime)
+        self.timestampsChannelB.append(secondsTime)
+        self.timestampsChannelC.append(secondsTime)
+        self.timestampsChannelD.append(secondsTime)
         self.channelAValues.append(channelAValue)
         self.channelBValues.append(channelBValue)
         self.channelCValues.append(channelCValue)
@@ -396,6 +440,7 @@ class CountEstimatedLogic():
         self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
         self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
         self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
+        self.updateGraphic()
     
     def updateLabels(self, channel, value, uncertainty):
         roundedValue=round(value,2)
@@ -445,40 +490,45 @@ class CountEstimatedLogic():
     
     #Function to eliminate channels where there is no measurements
     def eliminateCheckBoxChannels(self, channelList):
-        # Mostrar diálogo de advertencia si hay canales
         if channelList:
             channelStr = ", ".join(channelList)
             message = (
                 "Unable to obtain more than 2 stops to estimate a count number "
-                f"in the following channels:\n\n{channelStr}"
+                f"in the following channels:\n\n{channelStr}\n\n"
+                "Do you want to continue with the measurement?"
             )
 
-            QMessageBox.warning(
-                self.mainWindow,                 # Parent
-                "Estimation Error",              
-                message                          
+            reply = QMessageBox.question(
+                self.mainWindow,                  # Parent
+                "Estimation Warning",             # Title
+                message,                          # Message
+                QMessageBox.Yes | QMessageBox.No, # Buttons
+                QMessageBox.Yes                   # Default
             )
 
+            for channelValue in channelList:
+                if channelValue == "A":
+                    self.device.ch1.disableChannel()
+                    self.channelACheckBox.setChecked(False)
+                    self.channelACheckBox.setEnabled(False)
+                elif channelValue == "B":
+                    self.device.ch2.disableChannel()
+                    self.channelBCheckBox.setChecked(False)
+                    self.channelBCheckBox.setEnabled(False)
+                elif channelValue == "C":
+                    self.device.ch3.disableChannel()
+                    self.channelCCheckBox.setChecked(False)
+                    self.channelCCheckBox.setEnabled(False)
+                elif channelValue == "D":
+                    self.device.ch4.disableChannel()
+                    self.channelDCheckBox.setChecked(False)
+                    self.channelDCheckBox.setEnabled(False)
+
+            # Continuar o parar según respuesta
             self.worker.continueEvent.set()
 
-        # Desmarcar y deshabilitar los canales afectados
-        for channelValue in channelList:
-            if channelValue == "A":
-                self.device.ch1.disableChannel()
-                self.channelACheckBox.setChecked(False)
-                self.channelACheckBox.setEnabled(False)
-            elif channelValue == "B":
-                self.device.ch2.disableChannel()
-                self.channelBCheckBox.setChecked(False)
-                self.channelBCheckBox.setEnabled(False)
-            elif channelValue == "C":
-                self.device.ch3.disableChannel()
-                self.channelCCheckBox.setChecked(False)
-                self.channelCCheckBox.setEnabled(False)
-            elif channelValue == "D":
-                self.device.ch4.disableChannel()
-                self.channelDCheckBox.setChecked(False)
-                self.channelDCheckBox.setEnabled(False)
+            if reply == QMessageBox.No:
+                self.worker.stop()
         
 
 
@@ -488,7 +538,7 @@ class WorkerThreadCountsEstimated(QThread):
     newValue=Signal(str,float,float)
     updateLabel= Signal(str,float,float)
     #Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty
-    newMeasurement=Signal(datetime,float,float,float,float,float,float,float,float)
+    newMeasurement=Signal(float,datetime,float,float,float,float,float,float,float,float)
     #Signals to manage the total stops values
     noTotalMeasurements=Signal()
     noPartialMeasurements=Signal(list)
@@ -542,8 +592,13 @@ class WorkerThreadCountsEstimated(QThread):
             self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
             self.continueEvent.wait()
             print("El hilo continua luego de que la pestana se cierra")
+        self.enableDisableChannels()
+        if self.running:
+            #Get the init time for measurement
+            self.initialMeasurementTime = time.time()
         while self.running:
             print("Se ejecuta medicion")
+            self.getMeasurements()
             time.sleep(1)
             
             
@@ -596,8 +651,9 @@ class WorkerThreadCountsEstimated(QThread):
                 valueChannelD=0
                 uncertaintyChannelD=0    
             
-            currentTime = datetime.now().strftime("%H:%M:%S")
-            self.newMeasurement.emit(currentTime, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
+            currentTime = time.time()-self.initialMeasurementTime
+            currentDate= datetime.now().strftime("%H:%M:%S")
+            self.newMeasurement.emit(currentTime,currentDate, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
 
 
     def calculateIntervalWithStops(self, currentMeasure):
@@ -686,7 +742,8 @@ class WorkerThreadCountsEstimated(QThread):
         self.device.ch2.setMode(2)
         self.device.ch3.setMode(2)
         self.device.ch4.setMode(2)
+        
     @Slot()   
-    def Stop(self):
+    def stop(self):
         self.running=False
         
