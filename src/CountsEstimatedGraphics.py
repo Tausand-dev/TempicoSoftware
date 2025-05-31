@@ -405,14 +405,47 @@ class CountEstimatedLogic():
     def captureMeasurement(self,secondsTime,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
         
         #Add values in table
-        channelAValue=round(channelAValue,2)
-        channelAUncertainty= round(channelAUncertainty,5)
-        channelBValue=round(channelBValue,2)
-        channelBUncertainty= round(channelBUncertainty,5)
-        channelCValue=round(channelCValue,2)
-        channelCUncertainty= round(channelCUncertainty,5)
-        channelDValue=round(channelDValue,2)
-        channelDUncertainty= round(channelDUncertainty,5)
+        #Channel A
+        if channelAValue:
+            channelAValue=round(channelAValue,2)
+            channelAUncertainty= round(channelAUncertainty,5)
+            self.timestampsChannelA.append(secondsTime)
+            self.channelAValues.append(channelAValue)
+            self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
+        else:
+            channelAValue="Low Counts"
+            channelAUncertainty="Low Counts"
+        #Channel B
+        if channelBValue:
+            channelBValue=round(channelBValue,2)
+            channelBUncertainty= round(channelBUncertainty,5)
+            self.timestampsChannelB.append(secondsTime)
+            self.channelBValues.append(channelBValue)
+            self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
+        else:
+            channelBValue="Low Counts"
+            channelBUncertainty="Low Counts"
+        #Channel C
+        if channelCValue:
+            channelCValue=round(channelCValue,2)
+            channelCUncertainty= round(channelCUncertainty,5)
+            self.timestampsChannelC.append(secondsTime)
+            self.channelCValues.append(channelCValue)
+            self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
+        else:
+            channelCValue="Low Counts"
+            channelCUncertainty="Low Counts"
+        #Channel D
+        if channelDValue:
+            channelDValue=round(channelDValue,2)
+            channelDUncertainty= round(channelDUncertainty,5)
+            self.timestampsChannelD.append(secondsTime)
+            self.channelDValues.append(channelDValue)
+            self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
+        else:
+            channelDValue="Low Counts"
+            channelDUncertainty="Low Counts"
+        
         newData=[dateTime,channelAValue,channelBValue,channelCValue,channelDValue]
         posRow=self.tableCounts.rowCount()
         self.tableCounts.insertRow(posRow)
@@ -428,36 +461,29 @@ class CountEstimatedLogic():
         if self.channelDCheckBox.isChecked():
             self.updateLabels("D",channelDValue, channelDUncertainty)
         
-        self.timestampsChannelA.append(secondsTime)
-        self.timestampsChannelB.append(secondsTime)
-        self.timestampsChannelC.append(secondsTime)
-        self.timestampsChannelD.append(secondsTime)
-        self.channelAValues.append(channelAValue)
-        self.channelBValues.append(channelBValue)
-        self.channelCValues.append(channelCValue)
-        self.channelDValues.append(channelDValue)
-        self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
-        self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
-        self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
-        self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
         self.updateGraphic()
+            
+        
     
     def updateLabels(self, channel, value, uncertainty):
-        roundedValue=round(value,2)
-        roundedUncertainty=round(uncertainty,5)
-        if channel=="A":
-            
-            self.countChannelAValue.setText(f"Channel A: {roundedValue}")
-            self.countChannelAUncertainty.setText(f"Uncertainty A: {roundedUncertainty}")
+        if value=="Low Counts":
+            finalValue=value
+            finalUncertainty=uncertainty
+        else:    
+            finalValue=round(value,2)
+            finalUncertainty=round(uncertainty,5)
+        if channel=="A":    
+            self.countChannelAValue.setText(f"Channel A: {finalValue}")
+            self.countChannelAUncertainty.setText(f"Uncertainty A: {finalUncertainty}")
         elif channel=="B":
-            self.countChannelBValue.setText(f"Channel B: {roundedValue}")
-            self.countChannelBUncertainty.setText(f"Uncertainty B: {roundedUncertainty}")
+            self.countChannelBValue.setText(f"Channel B: {finalValue}")
+            self.countChannelBUncertainty.setText(f"Uncertainty B: {finalUncertainty}")
         elif channel=="C":
-            self.countChannelCValue.setText(f"Channel C: {roundedValue}")
-            self.countChannelCUncertainty.setText(f"Uncertainty C: {roundedUncertainty}")
+            self.countChannelCValue.setText(f"Channel C: {finalValue}")
+            self.countChannelCUncertainty.setText(f"Uncertainty C: {finalUncertainty}")
         elif channel=="D":
-            self.countChannelDValue.setText(f"Channel D: {roundedValue}")
-            self.countChannelDUncertainty.setText(f"Uncertainty D: {roundedUncertainty}")
+            self.countChannelDValue.setText(f"Channel D: {finalValue}")
+            self.countChannelDUncertainty.setText(f"Uncertainty D: {finalUncertainty}")
     
     def updateTableWidget(self):
         pass
@@ -650,10 +676,24 @@ class WorkerThreadCountsEstimated(QThread):
             else:
                 valueChannelD=0
                 uncertaintyChannelD=0    
+        else:
+            #Change the logic for all channels
+            valueChannelA=0
+            uncertaintyChannelA=0
             
-            currentTime = time.time()-self.initialMeasurementTime
-            currentDate= datetime.now().strftime("%H:%M:%S")
-            self.newMeasurement.emit(currentTime,currentDate, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
+            valueChannelB=0
+            uncertaintyChannelB=0
+            
+            valueChannelC=0
+            uncertaintyChannelC=0
+            
+            valueChannelD=0
+            uncertaintyChannelD=0
+            
+            
+        currentTime = time.time()-self.initialMeasurementTime
+        currentDate= datetime.now().strftime("%H:%M:%S")
+        self.newMeasurement.emit(currentTime,currentDate, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
 
 
     def calculateIntervalWithStops(self, currentMeasure):
