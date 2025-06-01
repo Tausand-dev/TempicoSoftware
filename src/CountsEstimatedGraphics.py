@@ -742,7 +742,7 @@ class WorkerThreadCountsEstimated(QThread):
         ##-------------
         stopsInMeasure=5
         stopsFounded=False
-        totalIterations=50
+        totalIterations=20
         #This number is arbitrary in order to determine how many measurements are necessary for determine the stop number
         while(stopsInMeasure>=2 and (not stopsFounded)):
             channel.setNumberOfStops(stopsInMeasure)
