@@ -381,6 +381,8 @@ class CountEstimatedLogic():
         self.timestampsChannelB=[]
         self.timestampsChannelC=[]
         self.timestampsChannelD=[]
+        #Reset table rows
+        self.tableCounts.setRowCount(0)
         
     
     
