@@ -335,6 +335,9 @@ class CountEstimatedLogic():
         x_max = self.timestampsChannelA[-1]
         x_min = x_max - segundosValue
         self.plotCountsA.setXRange(x_min, x_max, padding=0)
+        self.plotCountsB.setXRange(x_min, x_max, padding=0)
+        self.plotCountsC.setXRange(x_min, x_max, padding=0)
+        self.plotCountsD.setXRange(x_min, x_max, padding=0)
         
     
     def getChannelsMeasure(self):
@@ -406,45 +409,57 @@ class CountEstimatedLogic():
         
         #Add values in table
         #Channel A
-        if channelAValue:
+        if channelAValue!=0 and channelAValue!=-1:
             channelAValue=round(channelAValue,2)
             channelAUncertainty= round(channelAUncertainty,5)
             self.timestampsChannelA.append(secondsTime)
             self.channelAValues.append(channelAValue)
             self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
-        else:
+        elif channelAValue==0:
             channelAValue="Low Counts"
             channelAUncertainty="Low Counts"
+        elif channelAValue == -1:
+            channelAValue="Not Selected"
+            channelAUncertainty="Not Selected"
         #Channel B
-        if channelBValue:
+        if channelBValue!=0 and channelBValue!=-1:
             channelBValue=round(channelBValue,2)
             channelBUncertainty= round(channelBUncertainty,5)
             self.timestampsChannelB.append(secondsTime)
             self.channelBValues.append(channelBValue)
             self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
-        else:
+        elif channelBValue==0:
             channelBValue="Low Counts"
             channelBUncertainty="Low Counts"
+        elif channelBValue == -1:
+            channelBValue="Not Selected"
+            channelBUncertainty="Not Selected"
         #Channel C
-        if channelCValue:
+        if channelCValue!=0 and channelCValue!=-1:
             channelCValue=round(channelCValue,2)
             channelCUncertainty= round(channelCUncertainty,5)
             self.timestampsChannelC.append(secondsTime)
             self.channelCValues.append(channelCValue)
             self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
-        else:
+        elif channelCValue==0:
             channelCValue="Low Counts"
             channelCUncertainty="Low Counts"
+        elif channelCValue == -1:
+            channelCValue="Not Selected"
+            channelCUncertainty="Not Selected"
         #Channel D
-        if channelDValue:
+        if channelDValue!=0 and channelDValue!=-1:
             channelDValue=round(channelDValue,2)
             channelDUncertainty= round(channelDUncertainty,5)
             self.timestampsChannelD.append(secondsTime)
             self.channelDValues.append(channelDValue)
             self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
-        else:
+        elif channelDValue==0:
             channelDValue="Low Counts"
             channelDUncertainty="Low Counts"
+        elif channelDValue == -1:
+            channelDValue="Not Selected"
+            channelDUncertainty="Not Selected"
         
         
         newData=[dateTime,channelAValue,channelBValue,channelCValue,channelDValue]
@@ -467,6 +482,9 @@ class CountEstimatedLogic():
     
     def updateLabels(self, channel, value, uncertainty):
         if value=="Low Counts":
+            finalValue=value
+            finalUncertainty=uncertainty
+        elif value=="Not Selected":
             finalValue=value
             finalUncertainty=uncertainty
         else:    
@@ -690,11 +708,16 @@ class WorkerThreadCountsEstimated(QThread):
                 valueChannelA=meanValue
                 uncertaintyChannelA=uncertaintyValue
             else:
+                valueChannelA=-1
+                uncertaintyChannelA=-1
+        else:
+            if self.channelASentinel:
                 valueChannelA=0
                 uncertaintyChannelA=0
-        else:
-            valueChannelA=0
-            uncertaintyChannelA=0
+            else:
+                valueChannelA=-1
+                uncertaintyChannelA=-1
+                
             
         
         
@@ -708,11 +731,15 @@ class WorkerThreadCountsEstimated(QThread):
                 valueChannelB=meanValueB
                 uncertaintyChannelB=uncertaintyValueB
             else:
+                valueChannelB=-1
+                uncertaintyChannelB=-1
+        else:
+            if self.channelBSentinel:
                 valueChannelB=0
                 uncertaintyChannelB=0
-        else:
-            valueChannelB=0
-            uncertaintyChannelB=0
+            else:
+                valueChannelB=-1
+                uncertaintyChannelB=-1
 
         if len(valuesC)>0:
             meanValueC=mean(valuesC)
@@ -724,11 +751,15 @@ class WorkerThreadCountsEstimated(QThread):
                 valueChannelC=meanValueC
                 uncertaintyChannelC=uncertaintyValueC
             else:
+                valueChannelC=-1
+                uncertaintyChannelC=-1
+        else:
+            if self.channelCSentinel:
                 valueChannelC=0
                 uncertaintyChannelC=0
-        else:
-            valueChannelC=0
-            uncertaintyChannelC=0
+            else:
+                valueChannelC=-1
+                uncertaintyChannelC=-1
         
         if len(valuesD)>0:
             meanValueD=mean(valuesD)
@@ -740,11 +771,15 @@ class WorkerThreadCountsEstimated(QThread):
                 valueChannelD=meanValueD
                 uncertaintyChannelD=uncertaintyValueD
             else:
+                valueChannelD=-1
+                uncertaintyChannelD=-1
+        else:
+            if self.channelDSentinel:
                 valueChannelD=0
                 uncertaintyChannelD=0
-        else:
-            valueChannelD=0
-            uncertaintyChannelD=0  
+            else:
+                valueChannelD=-1
+                uncertaintyChannelD=-1 
             
         currentTime = time.time()-self.initialMeasurementTime
         currentDate= datetime.now().strftime("%H:%M:%S")
