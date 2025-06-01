@@ -446,11 +446,11 @@ class CountEstimatedLogic():
             channelDValue="Low Counts"
             channelDUncertainty="Low Counts"
         
+        
         newData=[dateTime,channelAValue,channelBValue,channelCValue,channelDValue]
-        posRow=self.tableCounts.rowCount()
-        self.tableCounts.insertRow(posRow)
+        self.tableCounts.insertRow(0)
         for col, value in enumerate(newData):
-            self.tableCounts.setItem(posRow, col,QTableWidgetItem(str(value)))
+            self.tableCounts.setItem(0, col,QTableWidgetItem(str(value)))
         #Update values to label
         if self.channelACheckBox.isChecked():
             self.updateLabels("A",channelAValue, channelAUncertainty)
@@ -511,15 +511,19 @@ class CountEstimatedLogic():
         QMessageBox.warning(
             self.mainWindow,  
             "No Measurements Found",
-            "Unable to determine more than 2 stops in any channel."
+            "Unable to obtain a measurement in any of the selected channels: At least 500 pulses per second are required to estimate the counts in each channel. That is, two consecutive stops are needed after a start within a 4 ms window"
         )
     
     #Function to eliminate channels where there is no measurements
     def eliminateCheckBoxChannels(self, channelList):
-        if channelList:
-            channelStr = ", ".join(channelList)
+        newChannelList=[]
+        for i in channelList:
+            newValues="Channel "+i
+            newChannelList.append(newValues)
+        if newChannelList:
+            channelStr = ", ".join(newChannelList)
             message = (
-                "Unable to obtain more than 2 stops to estimate a count number "
+                "Unable to obtain a measurement: At least 500 pulses per second are required to estimate the counts in each channel. That is, two consecutive stops are needed after a start within a 4 ms window "
                 f"in the following channels:\n\n{channelStr}\n\n"
                 "Do you want to continue with the measurement?"
             )
