@@ -590,6 +590,10 @@ class WorkerThreadCountsEstimated(QThread):
         self.device.setNumberOfRuns(25)
         self.continueEvent=threading.Event()
         self.running=True
+        self.numberStopsChannelA=0
+        self.numberStopsChannelB=0
+        self.numberStopsChannelC=0
+        self.numberStopsChannelD=0
         
         
     
@@ -614,6 +618,16 @@ class WorkerThreadCountsEstimated(QThread):
                 elif channel == "D":
                     self.channelDSentinel=False
                 self.channelsWithoutMeasurements.append(channel)
+            else:
+                if channel=="A":
+                    self.numberStopsChannelA=totalStops
+                elif channel=="B":
+                    self.numberStopsChannelB=totalStops
+                elif channel=="C":
+                    self.numberStopsChannelC=totalStops
+                elif channel=="D":
+                    self.numberStopsChannelD=totalStops
+
         if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure):
             self.noTotalMeasurements.emit()
             self.running=False
@@ -635,15 +649,37 @@ class WorkerThreadCountsEstimated(QThread):
         
     def getMeasurements(self):
         values=[]
+        valuesB=[]
+        valuesC=[]
+        valuesD=[]
         measure=self.device.measure()
+        print(measure)
         if measure:
             if len(measure)!=0:
                 for run in measure:
                     if self.channelASentinel:
                         if run:
                             if run[0]==1 and run[3]!=-1 :
-                                intervalValues=self.calculateIntervalWithStops(run)
+                                intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelA)
+                               
                                 values=values+intervalValues
+                    if self.channelBSentinel:
+                        if run:
+                            if run[0]==2 and run[3]!=-1 :
+                                intervalValues=self.calculateIntervalWithStops(run,self.numberStopsChannelB)
+                                valuesB=valuesB+intervalValues
+                    
+                    if self.channelCSentinel:
+                        if run:
+                            if run[0]==3 and run[3]!=-1 :
+                                intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelC)
+                                valuesC=valuesC+intervalValues
+                    
+                    if self.channelDSentinel:
+                        if run:
+                            if run[0]==4 and run[3]!=-1 :
+                                intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelC)
+                                valuesD=valuesD+intervalValues
         if len(values)>0:
             meanValue=mean(values)
             uncertaintyValue=std(values)
@@ -656,55 +692,69 @@ class WorkerThreadCountsEstimated(QThread):
             else:
                 valueChannelA=0
                 uncertaintyChannelA=0
-                
-                
-            if self.channelBSentinel:
-                valueChannelB=meanValue
-                uncertaintyChannelB=uncertaintyValue
-            else:
-                valueChannelB=0
-                uncertaintyChannelB=0
-            
-            
-            if self.channelCSentinel:
-                valueChannelC=meanValue
-                uncertaintyChannelC=uncertaintyValue
-            else:
-                valueChannelC=0
-                uncertaintyChannelC=0
-            
-            
-            if self.channelDSentinel:
-                valueChannelD=meanValue
-                uncertaintyChannelD=uncertaintyValue
-            else:
-                valueChannelD=0
-                uncertaintyChannelD=0    
         else:
-            #Change the logic for all channels
             valueChannelA=0
             uncertaintyChannelA=0
             
+        
+        
+        if len(valuesB)>0:
+            meanValueB=mean(valuesB)
+            uncertaintyValueB=std(valuesB)
+            #Send the signal to the main window
+            #TODO calculate everything for all channels
+            
+            if self.channelBSentinel:
+                valueChannelB=meanValueB
+                uncertaintyChannelB=uncertaintyValueB
+            else:
+                valueChannelB=0
+                uncertaintyChannelB=0
+        else:
             valueChannelB=0
             uncertaintyChannelB=0
+
+        if len(valuesC)>0:
+            meanValueC=mean(valuesC)
+            uncertaintyValueC=std(valuesC)
+            #Send the signal to the main window
+            #TODO calculate everything for all channels
             
+            if self.channelCSentinel:
+                valueChannelC=meanValueC
+                uncertaintyChannelC=uncertaintyValueC
+            else:
+                valueChannelC=0
+                uncertaintyChannelC=0
+        else:
             valueChannelC=0
             uncertaintyChannelC=0
+        
+        if len(valuesD)>0:
+            meanValueD=mean(valuesD)
+            uncertaintyValueD=std(valuesD)
+            #Send the signal to the main window
+            #TODO calculate everything for all channels
             
+            if self.channelDSentinel:
+                valueChannelD=meanValueD
+                uncertaintyChannelD=uncertaintyValueD
+            else:
+                valueChannelD=0
+                uncertaintyChannelD=0
+        else:
             valueChannelD=0
-            uncertaintyChannelD=0
-            
+            uncertaintyChannelD=0  
             
         currentTime = time.time()-self.initialMeasurementTime
         currentDate= datetime.now().strftime("%H:%M:%S")
         self.newMeasurement.emit(currentTime,currentDate, valueChannelA, uncertaintyChannelA, valueChannelB, uncertaintyChannelB, valueChannelC, uncertaintyChannelC, valueChannelD, uncertaintyChannelD)
 
 
-    def calculateIntervalWithStops(self, currentMeasure):
+    def calculateIntervalWithStops(self, currentMeasure, numberStops):
         #TODO: CHANGE RECALCULATING NUMBER OF STOPS
         tempValues=[]
-        
-        for i in range(4):
+        for i in range(numberStops-1):
             if currentMeasure[i+3]!=-1 and currentMeasure[i+4]!=-1:
                 differenceValue=currentMeasure[i+4]-currentMeasure[i+3]
                 realValueSeconds=(10**12)/(differenceValue)
