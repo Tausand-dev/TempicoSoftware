@@ -55,6 +55,12 @@ class CountEstimatedLogic():
         self.channelDFrameLabel=channelDFrameLabel
         #Init for the buttons
         self.stopButton.setEnabled(False)
+        self.clearButtonChannelA.setEnabled(False)
+        self.clearButtonChannelB.setEnabled(False)
+        self.clearButtonChannelC.setEnabled(False)
+        self.clearButtonChannelD.setEnabled(False)
+        self.saveDataButton.setEnabled(False)
+        self.savePlotButton.setEnabled(False)
         #Construct the graphics
         self.constructGraphicA()
         self.constructGraphicB()
@@ -545,6 +551,8 @@ class CountEstimatedLogic():
         #Start button enabled and stop button disabled
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
+        self.savePlotButton.setEnabled(True)
+        self.saveDataButton.setEnabled(True)
         
         #actions for stop button
         self.stopMeasure()
