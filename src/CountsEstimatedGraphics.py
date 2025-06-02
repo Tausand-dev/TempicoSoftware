@@ -20,7 +20,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, device, parent):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device, parent):
         #Get the parameters
         self.channelACheckBox = channelACheckBox
         self.channelCCheckBox = channelBCheckBox
@@ -56,6 +56,7 @@ class CountEstimatedLogic():
         self.channelDFrameLabel=channelDFrameLabel
         self.statusLabel=statusLabel
         self.pointStatusLabel=pointStatusLabel
+        self.deatachedCheckBox= deatachedCheckBox
         #Init for the buttons
         self.stopButton.setEnabled(False)
         self.clearButtonChannelA.setEnabled(False)
@@ -74,6 +75,7 @@ class CountEstimatedLogic():
         self.channelBCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.channelCCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.channelDCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
+        self.deatachedCheckBox.stateChanged.connect(self.deatachedTable)
         #Connection for the radio button
         self.separateGraphics.toggled.connect(self.updateGraphicsLayout)
         self.mergeGraphics.toggled.connect(self.updateGraphicsLayout)
@@ -87,6 +89,7 @@ class CountEstimatedLogic():
         self.dialogBCreated=None
         self.dialogCCreated=None
         self.dialogDCreated=None
+        self.dialogTableOpen=None
         #Configure labels
         self.countChannelAValue.setText("Channel A: No running")
         self.countChannelBValue.setText("Channel B: No running")
@@ -516,22 +519,25 @@ class CountEstimatedLogic():
         self.startButton.setEnabled(False)
 
     def startMeasure(self):
-        self.startButton.setEnabled(False)
-        self.stopButton.setEnabled(True)
-        self.resetValues()
-        self.getChannelsMeasure()
-        self.enableButtons()
-        self.changeStatusColor(1)
-        self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
-        self.worker.finished.connect(self.finishedThread)
-        self.worker.createdSignal.connect(self.getCreatedEvent)
-        self.worker.newMeasurement.connect(self.captureMeasurement)
-        self.worker.updateLabel.connect(self.updateLabels)
-        self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
-        self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
-        self.worker.changeStatusText.connect(self.changeStatusLabel)
-        self.worker.changeStatusColor.connect(self.changeStatusColor)
-        self.worker.start()
+        if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
+            self.startButton.setEnabled(False)
+            self.stopButton.setEnabled(True)
+            self.resetValues()
+            self.getChannelsMeasure()
+            self.enableButtons()
+            self.changeStatusColor(1)
+            self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
+            self.worker.finished.connect(self.finishedThread)
+            self.worker.createdSignal.connect(self.getCreatedEvent)
+            self.worker.newMeasurement.connect(self.captureMeasurement)
+            self.worker.updateLabel.connect(self.updateLabels)
+            self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
+            self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
+            self.worker.changeStatusText.connect(self.changeStatusLabel)
+            self.worker.changeStatusColor.connect(self.changeStatusColor)
+            self.worker.start()
+        else:
+            self.noChannelsSelected()
     
     def stopMeasure(self):
         self.resetSentinels()
@@ -843,6 +849,15 @@ class CountEstimatedLogic():
         #actions for stop button
         self.stopMeasure()
     
+    #No selected channels function
+    def noChannelsSelected(self):
+        QMessageBox.warning(
+            self.mainWindow,  
+            "Not selected channels",
+            "You must select at least one channel to start measurement"
+        )
+        
+    
     #Function to define that no measurements were founded
     def noMeasurementsFounded(self):
         QMessageBox.warning(
@@ -904,7 +919,28 @@ class CountEstimatedLogic():
 
             if reply == QMessageBox.No:
                 self.worker.stop()
+    
+    def deatachedTable(self):
+        if self.deatachedCheckBox.isChecked():
+            self.dialogTableOpen = QDialog(self.mainWindow)
+            self.dialogTableOpen.setWindowTitle(f"Estimated counts Table")
+            self.dialogTableOpen.resize(400, 300)
+            self.dialogTableOpen.setModal(False)
+            self.dialogTableOpen.show()
+            self.dialogTableOpen.finished.connect(lambda _: self.closeTableDialog())
+        else:
+            if self.dialogTableOpen:
+                self.dialogTableOpen.close()
+                self.dialogTableOpen=None
+                
+            
         
+        
+    def closeTableDialog(self):
+        if self.deatachedCheckBox.isChecked():
+            self.dialogTableOpen=None
+            self.deatachedCheckBox.setChecked(False)
+           
 
     def changeStatusLabel(self,textValue):
         self.statusLabel.setText(textValue)

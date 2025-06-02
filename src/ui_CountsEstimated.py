@@ -123,7 +123,21 @@ class Ui_CountsEstimated(object):
 
 
         self.verticalLayout_2.addWidget(self.SelectGraphFrame)
+        self.tableLabel= QLabel(self.SettingsFrame)
+        self.tableLabel.setText("Table:")
+        self.verticalLayout_2.addWidget(self.tableLabel)
 
+        #FrameDeatached
+        self.tableDeatachedFrame= QFrame(self.SettingsFrame)
+        self.verticalLayout_2.addWidget(self.tableDeatachedFrame)
+        #Horizontallayout
+        self.horizontalLayoutDeatached= QHBoxLayout(self.tableDeatachedFrame)
+        
+        #CheckBoxDeatached
+        self.tableCheckBox= QCheckBox()
+        self.tableCheckBox.setText("Deatached table")
+        self.horizontalLayoutDeatached.addWidget(self.tableCheckBox)
+        ###
         self.timeRangeLabel = QLabel(self.SettingsFrame)
         self.timeRangeLabel.setObjectName(u"timeRangeLabel")
 
@@ -516,6 +530,8 @@ class Ui_CountsEstimated(object):
         painter.drawEllipse(x, y, point_size, point_size)
         painter.end()
         self.labelColor.setPixmap(pixmap)
+    
+
 
         
 
