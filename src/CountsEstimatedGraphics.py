@@ -252,10 +252,10 @@ class CountEstimatedLogic():
         bottom_row = QHBoxLayout()
 
         if count == 1:
-            top_row.addStretch()
+            selected_graphs[0].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             top_row.addWidget(selected_graphs[0])
-            top_row.addStretch()
             layout.addLayout(top_row)
+
         elif count == 2:
             top_row.addWidget(selected_graphs[0])
             bottom_row.addWidget(selected_graphs[1])
@@ -264,9 +264,8 @@ class CountEstimatedLogic():
         elif count == 3:
             top_row.addWidget(selected_graphs[0])
             top_row.addWidget(selected_graphs[1])
-            bottom_row.addStretch()
+            selected_graphs[2].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             bottom_row.addWidget(selected_graphs[2])
-            bottom_row.addStretch()
             layout.addLayout(top_row)
             layout.addLayout(bottom_row)
         elif count == 4:
