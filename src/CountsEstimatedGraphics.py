@@ -294,6 +294,7 @@ class CountEstimatedLogic():
         self.stopButton.setEnabled(True)
         self.resetValues()
         self.getChannelsMeasure()
+        self.enableButtons()
         self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
         self.worker.finished.connect(self.finishedThread)
         self.worker.createdSignal.connect(self.getCreatedEvent)
@@ -383,8 +384,29 @@ class CountEstimatedLogic():
         self.timestampsChannelD=[]
         #Reset table rows
         self.tableCounts.setRowCount(0)
-        
+
     
+    def enableButtons(self):
+        if not self.selectChannelA:
+            self.clearButtonChannelA.setEnabled(False)
+        else:
+            self.clearButtonChannelA.setEnabled(True)
+        
+        if not self.selectChannelB:
+            self.clearButtonChannelB.setEnabled(False)
+        else:
+            self.clearButtonChannelB.setEnabled(True)
+        
+        if not self.selectChannelC:
+            self.clearButtonChannelC.setEnabled(False)
+        else:
+            self.clearButtonChannelC.setEnabled(True)
+        
+        if not self.selectChannelD:
+            self.clearButtonChannelD.setEnabled(False)
+        else:
+            self.clearButtonChannelD.setEnabled(True)
+            
     
     #Hide and show column for channels measurement
     def hideColumns(self):
@@ -523,6 +545,7 @@ class CountEstimatedLogic():
         #Start button enabled and stop button disabled
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
+        
         #actions for stop button
         self.stopMeasure()
     
@@ -533,6 +556,10 @@ class CountEstimatedLogic():
             "No Measurements Found",
             "Unable to obtain a measurement in any of the selected channels: At least 500 pulses per second are required to estimate the counts in each channel. That is, two consecutive stops are needed after a start within a 4 ms window"
         )
+        self.clearButtonChannelA.setEnabled(False)
+        self.clearButtonChannelB.setEnabled(False)
+        self.clearButtonChannelC.setEnabled(False)
+        self.clearButtonChannelD.setEnabled(False)
     
     #Function to eliminate channels where there is no measurements
     def eliminateCheckBoxChannels(self, channelList):
@@ -561,18 +588,22 @@ class CountEstimatedLogic():
                     self.device.ch1.disableChannel()
                     self.channelACheckBox.setChecked(False)
                     self.channelACheckBox.setEnabled(False)
+                    self.clearButtonChannelA.setEnabled(False)
                 elif channelValue == "B":
                     self.device.ch2.disableChannel()
                     self.channelBCheckBox.setChecked(False)
                     self.channelBCheckBox.setEnabled(False)
+                    self.clearButtonChannelB.setEnabled(False)
                 elif channelValue == "C":
                     self.device.ch3.disableChannel()
                     self.channelCCheckBox.setChecked(False)
                     self.channelCCheckBox.setEnabled(False)
+                    self.clearButtonChannelC.setEnabled(False)
                 elif channelValue == "D":
                     self.device.ch4.disableChannel()
                     self.channelDCheckBox.setChecked(False)
                     self.channelDCheckBox.setEnabled(False)
+                    self.clearButtonChannelD.setEnabled(False)
 
             # Continuar o parar según respuesta
             self.worker.continueEvent.set()
