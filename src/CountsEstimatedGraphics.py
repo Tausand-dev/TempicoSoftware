@@ -20,7 +20,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, device, parent):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, device, parent):
         #Get the parameters
         self.channelACheckBox = channelACheckBox
         self.channelCCheckBox = channelBCheckBox
@@ -54,6 +54,8 @@ class CountEstimatedLogic():
         self.channelBFrameLabel=channelBFrameLabel
         self.channelCFrameLabel=channelCFrameLabel
         self.channelDFrameLabel=channelDFrameLabel
+        self.statusLabel=statusLabel
+        self.pointStatusLabel=pointStatusLabel
         #Init for the buttons
         self.stopButton.setEnabled(False)
         self.clearButtonChannelA.setEnabled(False)
@@ -519,6 +521,7 @@ class CountEstimatedLogic():
         self.resetValues()
         self.getChannelsMeasure()
         self.enableButtons()
+        self.changeStatusColor(1)
         self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
         self.worker.finished.connect(self.finishedThread)
         self.worker.createdSignal.connect(self.getCreatedEvent)
@@ -526,6 +529,8 @@ class CountEstimatedLogic():
         self.worker.updateLabel.connect(self.updateLabels)
         self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
         self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
+        self.worker.changeStatusText.connect(self.changeStatusLabel)
+        self.worker.changeStatusColor.connect(self.changeStatusColor)
         self.worker.start()
     
     def stopMeasure(self):
@@ -679,9 +684,33 @@ class CountEstimatedLogic():
         
     
     def captureMeasurement(self,secondsTime,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
+        channelsWithoutMeasurements=[]
+        #Manage status
+        if channelAValue==0:
+            channelsWithoutMeasurements.append("A")
+        if channelBValue==0:
+            channelsWithoutMeasurements.append("B")
+        if channelCValue==0:
+            channelsWithoutMeasurements.append("C")
+        if channelDValue==0:
+            channelsWithoutMeasurements.append("D")
         
+        if len(channelsWithoutMeasurements)==0:
+            self.changeStatusColor(1)
+            self.changeStatusLabel("Running measurement")
+        else:
+            channelString=', '.join(channelsWithoutMeasurements)
+            self.changeStatusColor(3)
+            if len(channelsWithoutMeasurements)==1:
+                self.changeStatusLabel(f"The channnel {channelString} is not taking measurements")
+            else:
+                self.changeStatusLabel(f"The channnels {channelString} are not taking measurements")
+                
+            
+            
         #Add values in table
         #Channel A
+        
         if channelAValue!=0 and channelAValue!=-1:
             channelAValue=round(channelAValue,2)
             channelAUncertainty= round(channelAUncertainty,5)
@@ -808,6 +837,8 @@ class CountEstimatedLogic():
         self.stopButton.setEnabled(False)
         self.savePlotButton.setEnabled(True)
         self.saveDataButton.setEnabled(True)
+        self.changeStatusColor(0)
+        self.changeStatusLabel("No running")
         
         #actions for stop button
         self.stopMeasure()
@@ -875,6 +906,47 @@ class CountEstimatedLogic():
                 self.worker.stop()
         
 
+    def changeStatusLabel(self,textValue):
+        self.statusLabel.setText(textValue)
+    
+
+    
+        #Function to change the color of point measurement
+    def changeStatusColor(self, color):
+        """
+        Changes the color of the point in the status bar. Each color is assigned a specific numeric value.
+
+        :param color: The numeric value corresponding to the desired color (int).
+                    - 0: Gray
+                    - 1: Green
+                    - 2: Yellow
+                    - 3: Orange
+        :return: None
+        """
+        pixmap = QPixmap(self.pointStatusLabel.size())
+        pixmap.fill(Qt.transparent)  
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.Antialiasing) 
+        #Define the colors
+        #Number 0 is for gray
+        #Number 1 is for green
+        #Number 2 is for yellow
+        #Number 3 is for orange
+        if color==0:
+            painter.setBrush(QColor(128, 128, 128))  
+        elif color==1:
+            painter.setBrush(QColor(0, 255, 0))  
+        elif color==2:
+            painter.setBrush(QColor(255, 255, 0))  
+        elif color==3:
+            painter.setBrush(QColor(255, 165, 0))  
+        painter.setPen(Qt.NoPen)
+        point_size = min(self.pointStatusLabel.width(), self.pointStatusLabel.height()) // 2
+        x = (self.pointStatusLabel.width() - point_size) // 2
+        y = (self.pointStatusLabel.height() - point_size) // 2
+        painter.drawEllipse(x, y, point_size, point_size)
+        painter.end()
+        self.pointStatusLabel.setPixmap(pixmap)
 
 class WorkerThreadCountsEstimated(QThread):
     #One value is for the count estimated and the other is for the uncertainty
@@ -886,6 +958,8 @@ class WorkerThreadCountsEstimated(QThread):
     #Signals to manage the total stops values
     noTotalMeasurements=Signal()
     noPartialMeasurements=Signal(list)
+    changeStatusText=Signal(str)
+    changeStatusColor=Signal(int)
     
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device: tempico.TempicoDevice):
@@ -910,6 +984,7 @@ class WorkerThreadCountsEstimated(QThread):
         self.numberStopsChannelD=0
         
         
+        
     
     #Main function
     def run(self):
@@ -921,6 +996,8 @@ class WorkerThreadCountsEstimated(QThread):
         
         #Test determine stops measurement
         for channel in self.channelsMeasure:
+            self.changeStatusText.emit(f"Estimating number stops in channel {channel} 0%")
+            self.changeStatusColor.emit(3)
             totalStops=self.determineStopsNumber(channel)
             if totalStops<2:
                 if channel=="A":
@@ -955,6 +1032,7 @@ class WorkerThreadCountsEstimated(QThread):
             #Get the init time for measurement
             self.initialMeasurementTime = time.time()
         while self.running:
+            
             print("Se ejecuta medicion")
             self.getMeasurements()
             time.sleep(1)
@@ -967,6 +1045,7 @@ class WorkerThreadCountsEstimated(QThread):
         valuesC=[]
         valuesD=[]
         measure=self.device.measure()
+        
         print(measure)
         if measure:
             if len(measure)!=0:
@@ -1121,14 +1200,19 @@ class WorkerThreadCountsEstimated(QThread):
         self.device.setNumberOfRuns(1)
         channel.setMode(2)
         ##-------------
+        valuePercent=round(100/80,2)
         stopsInMeasure=5
         stopsFounded=False
         totalIterations=20
         #This number is arbitrary in order to determine how many measurements are necessary for determine the stop number
         while(stopsInMeasure>=2 and (not stopsFounded)):
+            
             channel.setNumberOfStops(stopsInMeasure)
             totalMeasurements=0
             for i in range(totalIterations):
+                self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} {valuePercent}%")
+                valuePercent+=100/80
+                valuePercent=round(valuePercent,2)    
                 measurements=self.device.measure()
                 if measurements:
                     if measurements[0]:
@@ -1138,6 +1222,9 @@ class WorkerThreadCountsEstimated(QThread):
                 stopsFounded=True
             else:
                 stopsInMeasure-=1
+        
+        self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} 100%")
+        time.sleep(2)
         
         return stopsInMeasure
         
