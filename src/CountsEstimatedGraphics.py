@@ -28,7 +28,7 @@ class CountEstimatedLogic():
         self.channelDCheckBox = channelDCheckBox
         self.startButton = startButton
         self.stopButton = stopButton
-        self.mergeRadio = mergeRadio
+        self.mergeGraphics = mergeRadio
         self.separateGraphics = separateGraphics
         self.timeRangeComboBox = timeRangeComboBox
         self.clearButtonChannelA = clearButtonChannelA
@@ -71,6 +71,9 @@ class CountEstimatedLogic():
         self.channelBCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.channelCCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.channelDCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
+        #Connection for the radio button
+        self.separateGraphics.toggled.connect(self.updateGraphicsLayout)
+        self.mergeGraphics.toggled.connect(self.updateGraphicsLayout)
         #Activate sentinels
         self.selectChannelA=False
         self.selectChannelB=False
@@ -175,6 +178,70 @@ class CountEstimatedLogic():
         )
 
         return winCountsGraph, plotCounts, curve
+
+    def factoryGraphsAllChannels(self):
+        colors = {
+            "A": (0, 114, 189),    # azul
+            "B": (217, 83, 25),    # rojo-naranja
+            "C": (237, 177, 32),   # amarillo
+            "D": (126, 47, 142),   # púrpura
+        }
+
+        colorA = colors.get("A", "k")
+        colorB = colors.get("B", "k")
+        colorC = colors.get("C", "k")
+        colorD = colors.get("D", "k")
+
+        winCountsGraph = pg.GraphicsLayoutWidget()
+        winCountsGraph.setBackground('w')
+
+        plotCounts = winCountsGraph.addPlot()
+        plotCounts.showGrid(x=True, y=True)
+        plotCounts.setLabel('left', f'Counts channels')
+        plotCounts.setLabel('bottom', 'Time (s)')
+        plotCounts.addLegend()
+
+        penA = mkPen(color=colorA, width=2.5)
+        penB = mkPen(color=colorB, width=2.5)
+        penC = mkPen(color=colorC, width=2.5)
+        penD = mkPen(color=colorD, width=2.5)
+
+      
+        curveA = plotCounts.plot(
+            pen=penA,
+            symbol='o',                   
+            symbolSize=7,
+            symbolBrush=colorA,
+            name='Counts Estimated A'  if self.channelACheckBox.isChecked() else None
+        )
+        
+        curveB = plotCounts.plot(
+            pen=penB,
+            symbol='o',                   
+            symbolSize=7,
+            symbolBrush=colorB,
+            name='Counts Estimated B' if self.channelBCheckBox.isChecked() else None
+        )
+        
+        curveC = plotCounts.plot(
+            pen=penC,
+            symbol='o',                   
+            symbolSize=7,
+            symbolBrush=colorC,
+            name='Counts Estimated C' if self.channelCCheckBox.isChecked() else None
+        )
+        
+        curveD = plotCounts.plot(
+            pen=penD,
+            symbol='o',                   
+            symbolSize=7,
+            symbolBrush=colorD,
+            name='Counts Estimated D' if self.channelDCheckBox.isChecked() else None
+        )
+
+        return winCountsGraph, plotCounts, curveA, curveB, curveC, curveD
+    
+
     def constructGraphicA(self):
         self.winCountsGraphA, self.plotCountsA, self.curveCountsA = self.factoryGraphChannels('A')
         
@@ -189,92 +256,146 @@ class CountEstimatedLogic():
     
     def constructGraphicD(self):
         self.winCountsGraphD, self.plotCountsD, self.curveCountsD = self.factoryGraphChannels('D')
+    
+    def constructAllGraphics(self):
+        self.winCountsAllGraph, self.plotCountsAllC, self.cuveCountsAllA, self.cuveCountsAllB, self.cuveCountsAllC,self.cuveCountsAllD =self.factoryGraphsAllChannels()
         
 
 
     #Function to update wich graphics are shown
     def updateGraphicsLayout(self):
-        from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
+        if self.separateGraphics.isChecked():
+            from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
-        layout = self.graphicsFrame.layout()
-        if layout is None or not isinstance(layout, QVBoxLayout):
-            layout = QVBoxLayout()
-            self.graphicsFrame.setLayout(layout)
+            layout = self.graphicsFrame.layout()
+            if layout is None or not isinstance(layout, QVBoxLayout):
+                layout = QVBoxLayout()
+                self.graphicsFrame.setLayout(layout)
+            else:
+                while layout.count():
+                    item = layout.takeAt(0)
+                    if item.layout():
+                        sublayout = item.layout()
+                        while sublayout.count():
+                            subitem = sublayout.takeAt(0)
+                            if subitem.widget():
+                                subitem.widget().setParent(None)
+                        layout.removeItem(item)
+
+            selected_graphs = []
+
+            for checkbox, label in zip(
+                [self.channelACheckBox, self.channelBCheckBox, self.channelCCheckBox, self.channelDCheckBox],
+                ["A", "B", "C", "D"]
+            ):
+                if checkbox.isChecked():
+                    graph, plot, curve = self.factoryGraphChannels(label)
+                    graph.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                    selected_graphs.append(graph)
+
+                    # Copiar los datos antiguos a las nuevas curvas
+                    if label == "A":
+                        curve.setData(self.timestampsChannelA, self.channelAValues)
+                        self.curveCountsA = curve
+                        self.winCountsGraphA = graph
+                        self.plotCountsA = plot
+                    elif label == "B":
+                        curve.setData(self.timestampsChannelB, self.channelBValues)
+                        self.curveCountsB = curve
+                        self.winCountsGraphB = graph
+                        self.plotCountsB = plot
+                    elif label == "C":
+                        curve.setData(self.timestampsChannelC, self.channelCValues)
+                        self.curveCountsC = curve
+                        self.winCountsGraphC = graph
+                        self.plotCountsC = plot
+                    elif label == "D":
+                        curve.setData(self.timestampsChannelD, self.channelDValues)
+                        self.curveCountsD = curve
+                        self.winCountsGraphD = graph
+                        self.plotCountsD = plot
+
+            count = len(selected_graphs)
+            if count == 0:
+                return
+
+            top_row = QHBoxLayout()
+            bottom_row = QHBoxLayout()
+
+            if count == 1:
+                selected_graphs[0].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                top_row.addWidget(selected_graphs[0])
+                layout.addLayout(top_row)
+
+            elif count == 2:
+                top_row.addWidget(selected_graphs[0])
+                bottom_row.addWidget(selected_graphs[1])
+                layout.addLayout(top_row)
+                layout.addLayout(bottom_row)
+            elif count == 3:
+                top_row.addWidget(selected_graphs[0])
+                top_row.addWidget(selected_graphs[1])
+                selected_graphs[2].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                bottom_row.addWidget(selected_graphs[2])
+                layout.addLayout(top_row)
+                layout.addLayout(bottom_row)
+            elif count == 4:
+                top_row.addWidget(selected_graphs[0])
+                top_row.addWidget(selected_graphs[1])
+                bottom_row.addWidget(selected_graphs[2])
+                bottom_row.addWidget(selected_graphs[3])
+                layout.addLayout(top_row)
+                layout.addLayout(bottom_row)
         else:
-            while layout.count():
-                item = layout.takeAt(0)
-                if item.layout():
-                    sublayout = item.layout()
-                    while sublayout.count():
-                        subitem = sublayout.takeAt(0)
-                        if subitem.widget():
-                            subitem.widget().setParent(None)
-                    layout.removeItem(item)
+            
+            from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
-        selected_graphs = []
-
-        for checkbox, label in zip(
-            [self.channelACheckBox, self.channelBCheckBox, self.channelCCheckBox, self.channelDCheckBox],
-            ["A", "B", "C", "D"]
-        ):
-            if checkbox.isChecked():
-                graph, plot, curve = self.factoryGraphChannels(label)
-                graph.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-                selected_graphs.append(graph)
-
-                # Copiar los datos antiguos a las nuevas curvas
-                if label == "A":
-                    curve.setData(self.timestampsChannelA, self.channelAValues)
-                    self.curveCountsA = curve
-                    self.winCountsGraphA = graph
-                    self.plotCountsA = plot
-                elif label == "B":
-                    curve.setData(self.timestampsChannelB, self.channelBValues)
-                    self.curveCountsB = curve
-                    self.winCountsGraphB = graph
-                    self.plotCountsB = plot
-                elif label == "C":
-                    curve.setData(self.timestampsChannelC, self.channelCValues)
-                    self.curveCountsC = curve
-                    self.winCountsGraphC = graph
-                    self.plotCountsC = plot
-                elif label == "D":
-                    curve.setData(self.timestampsChannelD, self.channelDValues)
-                    self.curveCountsD = curve
-                    self.winCountsGraphD = graph
-                    self.plotCountsD = plot
-
-        count = len(selected_graphs)
-        if count == 0:
-            return
-
-        top_row = QHBoxLayout()
-        bottom_row = QHBoxLayout()
-
-        if count == 1:
-            selected_graphs[0].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            top_row.addWidget(selected_graphs[0])
-            layout.addLayout(top_row)
-
-        elif count == 2:
-            top_row.addWidget(selected_graphs[0])
-            bottom_row.addWidget(selected_graphs[1])
-            layout.addLayout(top_row)
-            layout.addLayout(bottom_row)
-        elif count == 3:
-            top_row.addWidget(selected_graphs[0])
-            top_row.addWidget(selected_graphs[1])
-            selected_graphs[2].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            bottom_row.addWidget(selected_graphs[2])
-            layout.addLayout(top_row)
-            layout.addLayout(bottom_row)
-        elif count == 4:
-            top_row.addWidget(selected_graphs[0])
-            top_row.addWidget(selected_graphs[1])
-            bottom_row.addWidget(selected_graphs[2])
-            bottom_row.addWidget(selected_graphs[3])
-            layout.addLayout(top_row)
-            layout.addLayout(bottom_row)
+            layout = self.graphicsFrame.layout()
+            if layout is None or not isinstance(layout, QVBoxLayout):
+                layout = QVBoxLayout()
+                self.graphicsFrame.setLayout(layout)
+            else:
+                while layout.count():
+                    item = layout.takeAt(0)
+                    if item.layout():
+                        sublayout = item.layout()
+                        while sublayout.count():
+                            subitem = sublayout.takeAt(0)
+                            if subitem.widget():
+                                subitem.widget().setParent(None)
+                        layout.removeItem(item)
+            
+            graph, plot, curveA, curveB, curveC,curveD = self.factoryGraphsAllChannels()
+            graph.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            curveA.setData(self.timestampsChannelA, self.channelAValues)
+            curveB.setData(self.timestampsChannelB, self.channelBValues)
+            curveC.setData(self.timestampsChannelC, self.channelCValues)
+            curveD.setData(self.timestampsChannelD, self.channelDValues)
+            self.curveCountsA= curveA
+            self.curveCountsB= curveB
+            self.curveCountsC= curveC
+            self.curveCountsD= curveD
+            self.winCountsGraphA = graph
+            self.winCountsGraphB = graph
+            self.winCountsGraphC = graph
+            self.winCountsGraphD = graph
+            self.plotCountsA = plot
+            self.plotCountsB = plot
+            self.plotCountsC = plot
+            self.plotCountsD = plot
+            top_row = QHBoxLayout()
+            if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
+                top_row.addWidget(graph)
+                layout.addLayout(top_row)
+            if not self.channelACheckBox.isChecked():
+                self.curveCountsA.hide()
+            if not self.channelBCheckBox.isChecked():
+                self.curveCountsB.hide()
+            if not self.channelCCheckBox.isChecked():
+                self.curveCountsC.hide()
+            if not self.channelDCheckBox.isChecked():
+                self.curveCountsD.hide()
+        self.updateGraphic()
     
     
     def connectedDevice(self,device):

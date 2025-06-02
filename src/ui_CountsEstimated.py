@@ -107,15 +107,15 @@ class Ui_CountsEstimated(object):
         self.SelectGraphFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.SelectGraphFrame)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.mergeGraphicFrame = QRadioButton(self.SelectGraphFrame)
-        self.mergeGraphicFrame.setObjectName(u"mergeGraphicFrame")
+        self.mergeGraphicButton = QRadioButton(self.SelectGraphFrame)
+        self.mergeGraphicButton.setObjectName(u"mergeGraphicButton")
 
-        self.horizontalLayout_5.addWidget(self.mergeGraphicFrame)
+        self.horizontalLayout_5.addWidget(self.mergeGraphicButton)
 
-        self.separateGraphicFrame = QRadioButton(self.SelectGraphFrame)
-        self.separateGraphicFrame.setObjectName(u"separateGraphicFrame")
+        self.separateGraphicButton = QRadioButton(self.SelectGraphFrame)
+        self.separateGraphicButton.setObjectName(u"separateGraphicButton")
 
-        self.horizontalLayout_5.addWidget(self.separateGraphicFrame)
+        self.horizontalLayout_5.addWidget(self.separateGraphicButton)
 
 
         self.verticalLayout_2.addWidget(self.SelectGraphFrame)
@@ -421,8 +421,8 @@ class Ui_CountsEstimated(object):
         self.startMeasurementButton.setText(QCoreApplication.translate("Form", u"Start Measurement", None))
         self.stopMeasurementButton.setText(QCoreApplication.translate("Form", u"Stop Measurement", None))
         self.grapLabel.setText(QCoreApplication.translate("Form", u"Graph:", None))
-        self.mergeGraphicFrame.setText(QCoreApplication.translate("Form", u"Merge graphics", None))
-        self.separateGraphicFrame.setText(QCoreApplication.translate("Form", u"Separate graphics", None))
+        self.mergeGraphicButton.setText(QCoreApplication.translate("Form", u"Merge graphics", None))
+        self.separateGraphicButton.setText(QCoreApplication.translate("Form", u"Separate graphics", None))
         self.timeRangeLabel.setText(QCoreApplication.translate("Form", u"Time range:", None))
         self.comboBoxTimeRange.setItemText(0, QCoreApplication.translate("Form", u"10 seconds", None))
         self.comboBoxTimeRange.setItemText(1, QCoreApplication.translate("Form", u"20 seconds", None))
@@ -459,7 +459,11 @@ class Ui_CountsEstimated(object):
         ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", u"C", None));
         ___qtablewidgetitem4 = self.countValuesTable.horizontalHeaderItem(4)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"D", None));
+        self.separateGraphicButton.setChecked(True)
+        self.mergeGraphicButton.setChecked(False)
     # retranslateUi
+
+        
 
 
 #Listener to dinamically change the interface according the selection of the checkbox

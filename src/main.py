@@ -483,8 +483,8 @@ class MainWindow(QMainWindow):
                 channelDCheckBox=self.uiCountsEstimated.channelDCheckBox
                 startButon=self.uiCountsEstimated.startMeasurementButton
                 stopButon=self.uiCountsEstimated.stopMeasurementButton
-                mergeRadioButton=self.uiCountsEstimated.mergeGraphicFrame
-                separateRadioButton=self.uiCountsEstimated.separateGraphicFrame
+                mergeRadioButton=self.uiCountsEstimated.mergeGraphicButton
+                separateRadioButton=self.uiCountsEstimated.separateGraphicButton
                 timeRangeComboBox=self.uiCountsEstimated.comboBoxTimeRange
                 clearButtonChannelA=self.uiCountsEstimated.channelAClearButton
                 clearButtonChannelB=self.uiCountsEstimated.channelBClearButton
