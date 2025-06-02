@@ -536,18 +536,22 @@ class CountEstimatedLogic():
     def clearChannelA(self):
         self.timestampsChannelA=[]
         self.channelAValues=[]
+        self.curveCountsA.setData(self.timestampsChannelA,self.channelAValues)
     
     def clearChannelB(self):
         self.timestampsChannelB=[]
         self.channelBValues=[]
+        self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
     
     def clearChannelC(self):
         self.timestampsChannelC=[]
         self.channelCValues=[]
+        self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
     
     def clearChannelD(self):
         self.timestampsChannelD=[]
         self.channelDValues=[]
+        self.curveCountsD.setData(self.timestampsChannelD,self.channelDValues)
         
     #Functions to create all the dialogs for each graphic
     def createDialogFactory(self, channel):
