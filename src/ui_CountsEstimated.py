@@ -351,12 +351,12 @@ class Ui_CountsEstimated(object):
         self.TableFrame.setObjectName(u"TableFrame")
         sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy6.setHorizontalStretch(6)
-        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setVerticalStretch(9)
         sizePolicy6.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
         self.TableFrame.setSizePolicy(sizePolicy6)
         self.TableFrame.setFrameShape(QFrame.Panel)
         self.TableFrame.setFrameShadow(QFrame.Sunken)
-        self.horizontalLayout_15 = QHBoxLayout(self.TableFrame)
+        self.horizontalLayout_15 = QVBoxLayout(self.TableFrame)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.countValuesTable = QTableWidget(self.TableFrame)
         if (self.countValuesTable.columnCount() < 5):
@@ -383,10 +383,39 @@ class Ui_CountsEstimated(object):
         self.countValuesTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 
+       
+        self.statusFrame=QFrame(self.TableFrame)
+        self.statusFrame.setFrameShape(QFrame.Panel)
+        self.statusFrame.setFrameShadow(QFrame.Sunken)
+        self.statusLayout = QHBoxLayout(self.statusFrame)
+        sizePolicyStatus = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicyStatus.setHorizontalStretch(6)
+        sizePolicyStatus.setVerticalStretch(1)
+        sizePolicyStatus.setHeightForWidth(self.statusFrame.sizePolicy().hasHeightForWidth())
+        self.statusFrame.setSizePolicy(sizePolicyStatus)
+
+        # Crear los labels
+        self.labelStatus = QLabel("Status:", self.statusFrame)
+        self.labelState = QLabel("No running", self.statusFrame)
+        self.labelColor = QLabel("N", self.statusFrame)
+
+        # Opcional: puedes ajustar estilos si quieres negrita, tamaño, etc.
+
+        # Añadir elementos alineados a la izquierda
+        self.statusLayout.addWidget(self.labelStatus)
+        self.statusLayout.addWidget(self.labelState)
+
+        # Espaciador para empujar el siguiente label hacia la derecha
+        self.statusLayout.addStretch()
+
+        # Añadir el label alineado a la derecha
+        self.statusLayout.addWidget(self.labelColor)
         self.horizontalLayout_15.addWidget(self.countValuesTable)
+        self.horizontalLayout_15.addWidget(self.statusFrame)
 
 
         self.horizontalLayout_2.addWidget(self.TableFrame)
+        
 
 
         self.verticalLayout.addWidget(self.CountTableFrame)
@@ -413,6 +442,7 @@ class Ui_CountsEstimated(object):
         self.ChannelDCountValues.setVisible(False)
 
         QMetaObject.connectSlotsByName(Form)
+        self.drawColorPoint()
     # setupUi
 
     def retranslateUi(self, Form):
@@ -467,6 +497,25 @@ class Ui_CountsEstimated(object):
         self.separateGraphicButton.setChecked(True)
         self.mergeGraphicButton.setChecked(False)
     # retranslateUi
+    def drawColorPoint(self):
+        pixmap = QPixmap(self.labelColor.size())
+        pixmap.fill(Qt.transparent)  
+
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.Antialiasing) 
+        painter.setBrush(QColor(128, 128, 128))  
+        painter.setPen(Qt.NoPen)
+
+        # Definir el tamaño del punto (círculo)
+        point_size = min(self.labelColor.width(), self.labelColor.height()) // 2
+
+        # Calcular la posición del círculo para que quede centrado
+        x = (self.labelColor.width() - point_size) // 2
+        y = (self.labelColor.height() - point_size) // 2
+
+        painter.drawEllipse(x, y, point_size, point_size)
+        painter.end()
+        self.labelColor.setPixmap(pixmap)
 
         
 
