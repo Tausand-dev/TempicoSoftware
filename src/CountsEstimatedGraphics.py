@@ -274,15 +274,19 @@ class CountEstimatedLogic():
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
+                self.channelACheckBox.setChecked(True)
             if self.dialogBCreated:
                 self.dialogBCreated.close()
                 self.dialogBCreated=None
+                self.channelBCheckBox.setChecked(True)
             if self.dialogCCreated:
                 self.dialogCCreated.close()
                 self.dialogCCreated=None
+                self.channelCCheckBox.setChecked(True)
             if self.dialogDCreated:
                 self.dialogDCreated.close()
                 self.dialogDCreated=None
+                self.channelDCheckBox.setChecked(True)
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
             layout = self.graphicsFrame.layout()
@@ -368,15 +372,19 @@ class CountEstimatedLogic():
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
+                self.channelACheckBox.setChecked(True)
             if self.dialogBCreated:
                 self.dialogBCreated.close()
                 self.dialogBCreated=None
+                self.channelBCheckBox.setChecked(True)
             if self.dialogCCreated:
                 self.dialogCCreated.close()
                 self.dialogCCreated=None
+                self.channelCCheckBox.setChecked(True)
             if self.dialogDCreated:
                 self.dialogDCreated.close()
                 self.dialogDCreated=None
+                self.channelDCheckBox.setChecked(True)
             
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
@@ -445,24 +453,40 @@ class CountEstimatedLogic():
             #Check the selected graphics
             if not self.dialogACreated and self.channelACheckBox.isChecked():
                 self.dialogACreated= self.createDialogFactory("A")
+                self.winCountsGraphA, self.plotCountsA, self.curveCountsA= self.factoryGraphChannels("A")
+                layoutChannelA=QVBoxLayout(self.dialogACreated)
+                layoutChannelA.addWidget(self.winCountsGraphA)
+                self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
                 self.dialogACreated.show()
             elif self.dialogACreated and not self.channelACheckBox.isChecked():
                 self.dialogACreated.close()
                 self.dialogACreated=None
             if not self.dialogBCreated and self.channelBCheckBox.isChecked():
                 self.dialogBCreated= self.createDialogFactory("B")
+                self.winCountsGraphB, self.plotCountsB, self.curveCountsB= self.factoryGraphChannels("B")
+                layoutChannelB=QVBoxLayout(self.dialogBCreated)
+                layoutChannelB.addWidget(self.winCountsGraphB)
+                self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
                 self.dialogBCreated.show()
             elif self.dialogBCreated and not self.channelBCheckBox.isChecked():
                 self.dialogBCreated.close()
                 self.dialogBCreated=None
             if not self.dialogCCreated and self.channelCCheckBox.isChecked():
                 self.dialogCCreated= self.createDialogFactory("C")
+                self.winCountsGraphC, self.plotCountsC, self.curveCountsC= self.factoryGraphChannels("C")
+                layoutChannelC=QVBoxLayout(self.dialogCCreated)
+                layoutChannelC.addWidget(self.winCountsGraphC)
+                self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
                 self.dialogCCreated.show()
             elif self.dialogCCreated and not self.channelCCheckBox.isChecked():
                 self.dialogCCreated.close()
                 self.dialogCCreated=None
             if not self.dialogDCreated and self.channelDCheckBox.isChecked():
                 self.dialogDCreated= self.createDialogFactory("D")
+                self.winCountsGraphD, self.plotCountsD, self.curveCountsD= self.factoryGraphChannels("D")
+                layoutChannelD=QVBoxLayout(self.dialogDCreated)
+                layoutChannelD.addWidget(self.winCountsGraphD)
+                self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
                 self.dialogDCreated.show()
             elif self.dialogDCreated and not self.channelDCheckBox.isChecked():
                 self.dialogDCreated.close()
@@ -529,9 +553,21 @@ class CountEstimatedLogic():
     def createDialogFactory(self, channel):
         dialog = QDialog(self.mainWindow)
         dialog.setWindowTitle(f"Detached Graphics {channel}")
-        dialog.resize(500, 400)
-        dialog.setModal(False)  # Cambia a True si quieres bloquear la ventana principal
+        dialog.resize(400, 300)
+        dialog.setModal(False)
         dialog.finished.connect(lambda _: self.closeDialogChannels(channel))
+
+        # Asignar posición para evitar superposición
+        offsets = {
+            "A": (100, 100),
+            "B": (550, 100),
+            "C": (100, 450),
+            "D": (550, 450)
+        }
+        if channel in offsets:
+            x, y = offsets[channel]
+            dialog.move(x, y)
+
         return dialog
         
     def updateGraphic(self):
