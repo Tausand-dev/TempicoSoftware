@@ -485,6 +485,7 @@ class MainWindow(QMainWindow):
                 stopButon=self.uiCountsEstimated.stopMeasurementButton
                 mergeRadioButton=self.uiCountsEstimated.mergeGraphicButton
                 separateRadioButton=self.uiCountsEstimated.separateGraphicButton
+                deatachedRadioButton=self.uiCountsEstimated.apartDialogGraphicButton
                 timeRangeComboBox=self.uiCountsEstimated.comboBoxTimeRange
                 clearButtonChannelA=self.uiCountsEstimated.channelAClearButton
                 clearButtonChannelB=self.uiCountsEstimated.channelBClearButton
@@ -508,7 +509,7 @@ class MainWindow(QMainWindow):
                 
                 tableCounts=self.uiCountsEstimated.countValuesTable
                 graphicsFrame=self.uiCountsEstimated.GraphicsFrame
-                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
+                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,self.conectedDevice,self)
                 
                 

@@ -116,6 +116,10 @@ class Ui_CountsEstimated(object):
         self.separateGraphicButton.setObjectName(u"separateGraphicButton")
 
         self.horizontalLayout_5.addWidget(self.separateGraphicButton)
+        
+        self.apartDialogGraphicButton = QRadioButton(self.SelectGraphFrame)
+        self.apartDialogGraphicButton.setObjectName(u"apartDialogGraphicButton")
+        self.horizontalLayout_5.addWidget(self.apartDialogGraphicButton)
 
 
         self.verticalLayout_2.addWidget(self.SelectGraphFrame)
@@ -423,6 +427,7 @@ class Ui_CountsEstimated(object):
         self.grapLabel.setText(QCoreApplication.translate("Form", u"Graph:", None))
         self.mergeGraphicButton.setText(QCoreApplication.translate("Form", u"Merge graphics", None))
         self.separateGraphicButton.setText(QCoreApplication.translate("Form", u"Separate graphics", None))
+        self.apartDialogGraphicButton.setText(QCoreApplication.translate("Form", u"Detached Graphics", None))
         self.timeRangeLabel.setText(QCoreApplication.translate("Form", u"Time range:", None))
         self.comboBoxTimeRange.setItemText(0, QCoreApplication.translate("Form", u"10 seconds", None))
         self.comboBoxTimeRange.setItemText(1, QCoreApplication.translate("Form", u"20 seconds", None))

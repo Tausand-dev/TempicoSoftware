@@ -17,7 +17,7 @@ import threading
 from pyqtgraph import mkPen
 class CountEstimatedLogic():
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
-                 mergeRadio: QRadioButton, separateGraphics: QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
+                 mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
                  tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, device, parent):
@@ -29,6 +29,7 @@ class CountEstimatedLogic():
         self.startButton = startButton
         self.stopButton = stopButton
         self.mergeGraphics = mergeRadio
+        self.deatachedGraphics = deatachedGraphics
         self.separateGraphics = separateGraphics
         self.timeRangeComboBox = timeRangeComboBox
         self.clearButtonChannelA = clearButtonChannelA
@@ -79,6 +80,11 @@ class CountEstimatedLogic():
         self.selectChannelB=False
         self.selectChannelC=False
         self.selectChannelD=False
+        #variables for dialogs
+        self.dialogACreated=None
+        self.dialogBCreated=None
+        self.dialogCCreated=None
+        self.dialogDCreated=None
         #Configure labels
         self.countChannelAValue.setText("Channel A: No running")
         self.countChannelBValue.setText("Channel B: No running")
@@ -265,6 +271,18 @@ class CountEstimatedLogic():
     #Function to update wich graphics are shown
     def updateGraphicsLayout(self):
         if self.separateGraphics.isChecked():
+            if self.dialogACreated:
+                self.dialogACreated.close()
+                self.dialogACreated=None
+            if self.dialogBCreated:
+                self.dialogBCreated.close()
+                self.dialogBCreated=None
+            if self.dialogCCreated:
+                self.dialogCCreated.close()
+                self.dialogCCreated=None
+            if self.dialogDCreated:
+                self.dialogDCreated.close()
+                self.dialogDCreated=None
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
             layout = self.graphicsFrame.layout()
@@ -346,7 +364,19 @@ class CountEstimatedLogic():
                 bottom_row.addWidget(selected_graphs[3])
                 layout.addLayout(top_row)
                 layout.addLayout(bottom_row)
-        else:
+        elif self.mergeGraphics.isChecked():
+            if self.dialogACreated:
+                self.dialogACreated.close()
+                self.dialogACreated=None
+            if self.dialogBCreated:
+                self.dialogBCreated.close()
+                self.dialogBCreated=None
+            if self.dialogCCreated:
+                self.dialogCCreated.close()
+                self.dialogCCreated=None
+            if self.dialogDCreated:
+                self.dialogDCreated.close()
+                self.dialogDCreated=None
             
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
 
@@ -395,6 +425,49 @@ class CountEstimatedLogic():
                 self.curveCountsC.hide()
             if not self.channelDCheckBox.isChecked():
                 self.curveCountsD.hide()
+        elif self.deatachedGraphics.isChecked():  
+            from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
+            #Delete layout
+            layout = self.graphicsFrame.layout()
+            if layout is None or not isinstance(layout, QVBoxLayout):
+                layout = QVBoxLayout()
+                self.graphicsFrame.setLayout(layout)
+            else:
+                while layout.count():
+                    item = layout.takeAt(0)
+                    if item.layout():
+                        sublayout = item.layout()
+                        while sublayout.count():
+                            subitem = sublayout.takeAt(0)
+                            if subitem.widget():
+                                subitem.widget().setParent(None)
+                        layout.removeItem(item)
+            #Check the selected graphics
+            if not self.dialogACreated and self.channelACheckBox.isChecked():
+                self.dialogACreated= self.createDialogFactory("A")
+                self.dialogACreated.show()
+            elif self.dialogACreated and not self.channelACheckBox.isChecked():
+                self.dialogACreated.close()
+                self.dialogACreated=None
+            if not self.dialogBCreated and self.channelBCheckBox.isChecked():
+                self.dialogBCreated= self.createDialogFactory("B")
+                self.dialogBCreated.show()
+            elif self.dialogBCreated and not self.channelBCheckBox.isChecked():
+                self.dialogBCreated.close()
+                self.dialogBCreated=None
+            if not self.dialogCCreated and self.channelCCheckBox.isChecked():
+                self.dialogCCreated= self.createDialogFactory("C")
+                self.dialogCCreated.show()
+            elif self.dialogCCreated and not self.channelCCheckBox.isChecked():
+                self.dialogCCreated.close()
+                self.dialogCCreated=None
+            if not self.dialogDCreated and self.channelDCheckBox.isChecked():
+                self.dialogDCreated= self.createDialogFactory("D")
+                self.dialogDCreated.show()
+            elif self.dialogDCreated and not self.channelDCheckBox.isChecked():
+                self.dialogDCreated.close()
+                self.dialogDCreated=None
+                
         self.updateGraphic()
     
     
@@ -405,6 +478,7 @@ class CountEstimatedLogic():
         #self.timerStatus.start(500)
         self.device=device
         self.startButton.setEnabled(True)
+    
     
     
     
@@ -450,6 +524,15 @@ class CountEstimatedLogic():
     def clearChannelD(self):
         self.timestampsChannelD=[]
         self.channelDValues=[]
+        
+    #Functions to create all the dialogs for each graphic
+    def createDialogFactory(self, channel):
+        dialog = QDialog(self.mainWindow)
+        dialog.setWindowTitle(f"Detached Graphics {channel}")
+        dialog.resize(500, 400)
+        dialog.setModal(False)  # Cambia a True si quieres bloquear la ventana principal
+        dialog.finished.connect(lambda _: self.closeDialogChannels(channel))
+        return dialog
         
     def updateGraphic(self):
         if not self.timestampsChannelA:
@@ -660,7 +743,19 @@ class CountEstimatedLogic():
         print("Thread created")
     
     
-    
+    def closeDialogChannels(self, channel):
+        if channel == "A":
+            self.dialogACreated=None
+            self.channelACheckBox.setChecked(False)
+        elif channel == "B":
+            self.dialogBCreated=None
+            self.channelBCheckBox.setChecked(False)
+        elif channel == "C":
+            self.dialogCCreated=None
+            self.channelCCheckBox.setChecked(False)
+        elif channel == "D":
+            self.dialogDCreated=None
+            self.channelDCheckBox.setChecked(False)
     
     def finishedThread(self):
         #Restart the sentinels
