@@ -252,15 +252,22 @@ class Ui_CountsEstimated(object):
         self.CountTableFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.CountTableFrame)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.CountsFrame = QFrame(self.CountTableFrame)
+        self.scrollArea= QScrollArea(self.CountTableFrame)
+        sizePolicyScrollArea= QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicyScrollArea.setHorizontalStretch(4)
+        sizePolicyScrollArea.setVerticalStretch(3)
+        sizePolicyScrollArea.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setSizePolicy(sizePolicyScrollArea)
+        self.scrollArea.setFrameShape(QFrame.Panel)
+        self.scrollArea.setFrameShadow(QFrame.Sunken)
+        self.CountsFrame = QFrame(self.scrollArea)
         self.CountsFrame.setObjectName(u"CountsFrame")
         sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy5.setHorizontalStretch(4)
-        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setVerticalStretch(3)
         sizePolicy5.setHeightForWidth(self.CountsFrame.sizePolicy().hasHeightForWidth())
         self.CountsFrame.setSizePolicy(sizePolicy5)
-        self.CountsFrame.setFrameShape(QFrame.Panel)
-        self.CountsFrame.setFrameShadow(QFrame.Sunken)
         self.verticalLayout_3 = QVBoxLayout(self.CountsFrame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.TitleCountsFrame = QFrame(self.CountsFrame)
@@ -359,7 +366,8 @@ class Ui_CountsEstimated(object):
         self.verticalLayout_3.addWidget(self.ChannelDCountValues)
 
 
-        self.horizontalLayout_2.addWidget(self.CountsFrame)
+        self.horizontalLayout_2.addWidget(self.scrollArea)
+        self.scrollArea.setWidget(self.CountsFrame)
 
         self.TableFrame = QFrame(self.CountTableFrame)
         self.TableFrame.setObjectName(u"TableFrame")
@@ -395,6 +403,7 @@ class Ui_CountsEstimated(object):
         self.countValuesTable.horizontalHeader().setProperty("showSortIndicator", False)
         self.countValuesTable.horizontalHeader().setStretchLastSection(True)
         self.countValuesTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.countValuesTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 
        

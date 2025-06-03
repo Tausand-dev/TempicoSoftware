@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
@@ -280,6 +280,7 @@ class CountEstimatedLogic():
         self.cloneTable.setColumnCount(5)
         self.cloneTable.setHorizontalHeaderLabels(['Date','A','B','C','D'])
         self.cloneTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.cloneTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
         
         
@@ -1066,7 +1067,7 @@ class WorkerThreadCountsEstimated(QThread):
             self.changeStatusText.emit(f"Estimating number stops in channel {channel} 0%")
             self.changeStatusColor.emit(3)
             totalStops=self.determineStopsNumber(channel)
-            if totalStops<2:
+            if totalStops<2 and self.running:
                 if channel=="A":
                     self.channelASentinel=False
                 elif channel == "B":
@@ -1077,20 +1078,21 @@ class WorkerThreadCountsEstimated(QThread):
                     self.channelDSentinel=False
                 self.channelsWithoutMeasurements.append(channel)
             else:
-                if channel=="A":
-                    self.numberStopsChannelA=totalStops
-                elif channel=="B":
-                    self.numberStopsChannelB=totalStops
-                elif channel=="C":
-                    self.numberStopsChannelC=totalStops
-                elif channel=="D":
-                    self.numberStopsChannelD=totalStops
+                if self.running:
+                    if channel=="A":
+                        self.numberStopsChannelA=totalStops
+                    elif channel=="B":
+                        self.numberStopsChannelB=totalStops
+                    elif channel=="C":
+                        self.numberStopsChannelC=totalStops
+                    elif channel=="D":
+                        self.numberStopsChannelD=totalStops
 
-        if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure):
+        if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure) and self.running:
             self.noTotalMeasurements.emit()
             self.running=False
             print("No hay ninguna medicion en ningun canal")
-        elif self.channelsWithoutMeasurements:
+        elif self.channelsWithoutMeasurements and self.running:
             self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
             self.continueEvent.wait()
             print("El hilo continua luego de que la pestana se cierra")
@@ -1272,11 +1274,13 @@ class WorkerThreadCountsEstimated(QThread):
         stopsFounded=False
         totalIterations=20
         #This number is arbitrary in order to determine how many measurements are necessary for determine the stop number
-        while(stopsInMeasure>=2 and (not stopsFounded)):
+        while(stopsInMeasure>=2 and (not stopsFounded) and self.running):
             
             channel.setNumberOfStops(stopsInMeasure)
             totalMeasurements=0
             for i in range(totalIterations):
+                if not self.running:
+                    break
                 self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} {valuePercent}%")
                 valuePercent+=100/80
                 valuePercent=round(valuePercent,2)    
@@ -1289,9 +1293,9 @@ class WorkerThreadCountsEstimated(QThread):
                 stopsFounded=True
             else:
                 stopsInMeasure-=1
-        
-        self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} 100%")
-        time.sleep(2)
+        if self.running:
+            self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} 100%")
+            time.sleep(2)
         
         return stopsInMeasure
         
