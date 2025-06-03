@@ -15,6 +15,7 @@ import time
 import random
 import threading
 from pyqtgraph import mkPen
+import os
 class CountEstimatedLogic():
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
@@ -22,6 +23,7 @@ class CountEstimatedLogic():
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
                  tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device, parent):
         #Get the parameters
+        self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
         self.channelCCheckBox = channelBCheckBox
         self.channelBCheckBox = channelCCheckBox
@@ -84,6 +86,11 @@ class CountEstimatedLogic():
         self.selectChannelB=False
         self.selectChannelC=False
         self.selectChannelD=False
+        #Sentinels to know wich graphic was selected in measurement
+        self.measurementChannelA=False
+        self.measurementChannelB=False
+        self.measurementChannelC=False
+        self.measurementChannelD=False
         #variables for dialogs
         self.dialogACreated=None
         self.dialogBCreated=None
@@ -102,6 +109,7 @@ class CountEstimatedLogic():
         self.clearButtonChannelB.clicked.connect(self.clearChannelB)
         self.clearButtonChannelC.clicked.connect(self.clearChannelC)
         self.clearButtonChannelD.clicked.connect(self.clearChannelD)
+        self.savePlotButton.clicked.connect(self.savePlots)
         #Connection for the combo Box
         self.timeRangeComboBox.currentIndexChanged.connect(self.updateGraphic)
         #Creation data list for measurements
@@ -618,17 +626,25 @@ class CountEstimatedLogic():
         self.selectChannelB=True
         self.selectChannelC=True
         self.selectChannelD=True
+        self.measurementChannelA=True
+        self.measurementChannelB=True
+        self.measurementChannelC=True
+        self.measurementChannelD=True
         if not self.channelACheckBox.isChecked():
             self.selectChannelA=False
+            self.measurementChannelA=False
             self.channelACheckBox.setEnabled(False)
         if not self.channelBCheckBox.isChecked():
             self.selectChannelB=False
+            self.measurementChannelB=False
             self.channelBCheckBox.setEnabled(False)
         if not self.channelCCheckBox.isChecked():
             self.selectChannelC=False
+            self.measurementChannelC=False
             self.channelCCheckBox.setEnabled(False)
         if not self.channelDCheckBox.isChecked():
             self.selectChannelD=False
+            self.measurementChannelD=False
             self.channelDCheckBox.setEnabled(False)
     
     def resetSentinels(self):
@@ -927,21 +943,25 @@ class CountEstimatedLogic():
                     self.device.ch1.disableChannel()
                     self.channelACheckBox.setChecked(False)
                     self.channelACheckBox.setEnabled(False)
+                    self.measurementChannelA=False
                     self.clearButtonChannelA.setEnabled(False)
                 elif channelValue == "B":
                     self.device.ch2.disableChannel()
                     self.channelBCheckBox.setChecked(False)
                     self.channelBCheckBox.setEnabled(False)
+                    self.measurementChannelB=False
                     self.clearButtonChannelB.setEnabled(False)
                 elif channelValue == "C":
                     self.device.ch3.disableChannel()
                     self.channelCCheckBox.setChecked(False)
                     self.channelCCheckBox.setEnabled(False)
+                    self.measurementChannelC=False
                     self.clearButtonChannelC.setEnabled(False)
                 elif channelValue == "D":
                     self.device.ch4.disableChannel()
                     self.channelDCheckBox.setChecked(False)
                     self.channelDCheckBox.setEnabled(False)
+                    self.measurementChannelD=False
                     self.clearButtonChannelD.setEnabled(False)
 
             # Continuar o parar según respuesta
@@ -1015,6 +1035,164 @@ class CountEstimatedLogic():
         painter.drawEllipse(x, y, point_size, point_size)
         painter.end()
         self.pointStatusLabel.setPixmap(pixmap)
+
+
+
+
+#Save plots
+    def savePlots(self):
+        """
+        Saves the current plots in the selected image format.
+
+        This method opens a dialog for the user to select an image format (PNG, TIFF, or JPG) 
+        and saves the plots for channels A, B, C, and D if their respective flags are set to True. 
+        The plots are saved with a timestamp in the specified format in the default folder path.
+
+        :return: None
+        """
+        try:
+            graph_names=[]
+            #Open select the format
+            dialog = QDialog(self.mainWindow)
+    
+            dialog.setObjectName("ImageFormat")
+            dialog.resize(282, 105)
+            dialog.setWindowTitle("Save plots")
+            
+            #pixmap = QIcon("./Sources/tausand_small.ico")
+            
+            #dialog.setWindowIcon()
+            
+            verticalLayout_2 = QVBoxLayout(dialog)
+            verticalLayout_2.setObjectName("verticalLayout_2")
+            
+            VerticalImage = QVBoxLayout()
+            VerticalImage.setObjectName("VerticalImage")
+            
+            graphicsToSaveLabel=QLabel("Only the current plots with the current view will be saved.")
+
+            VerticalImage.addWidget(graphicsToSaveLabel)
+            
+            SelectLabel = QLabel(dialog)
+            SelectLabel.setObjectName("SelectLabel")
+            SelectLabel.setText("Select the image format:")
+            VerticalImage.addWidget(SelectLabel)
+            
+            FormatBox = QComboBox(dialog)
+            FormatBox.addItem("png")
+            FormatBox.addItem("tiff")
+            FormatBox.addItem("jpg")
+            FormatBox.setObjectName("FormatBox")
+            VerticalImage.addWidget(FormatBox)
+           
+
+            
+            
+            verticalLayout_2.addLayout(VerticalImage)
+            
+            accepButton = QPushButton(dialog)
+            accepButton.setObjectName("accepButton")
+            accepButton.setText("Accept")
+            verticalLayout_2.addWidget(accepButton)
+            
+            QMetaObject.connectSlotsByName(dialog)
+            
+            # Conectar el botón "Accept" al método accept del diálogo
+            accepButton.clicked.connect(dialog.accept)
+            
+            # Mostrar el diálogo y esperar a que se cierre
+            if dialog.exec_() == QDialog.Accepted:
+                selected_format = FormatBox.currentText()
+                
+                if self.channelACheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                    exporter= pg.exporters.ImageExporter(self.plotCountsA)
+                    exporter.parameters()['width'] = 800
+                    exporter.parameters()['height'] = 600
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date=datetime.now()
+                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name='Counts_ChannelA'+current_date_str
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    graph_names.append(graph_name)
+                if self.channelBCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                    exporter= pg.exporters.ImageExporter(self.plotCountsB)
+                    exporter.parameters()['width'] = 800
+                    exporter.parameters()['height'] = 600
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date=datetime.now()
+                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name='Counts_ChannelB'+current_date_str
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    graph_names.append(graph_name)
+                if self.channelCCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                    exporter= pg.exporters.ImageExporter(self.plotCountsC)
+                    exporter.parameters()['width'] = 800
+                    exporter.parameters()['height'] = 600
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date=datetime.now()
+                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name='Counts_ChannelC'+current_date_str
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    graph_names.append(graph_name)
+                if self.channelDCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                    self.separateGraphics.setChecked(True)
+                    exporter= pg.exporters.ImageExporter(self.plotCountsD)
+                    exporter.parameters()['width'] = 800
+                    exporter.parameters()['height'] = 600
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date=datetime.now()
+                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name='Counts_ChannelD'+current_date_str
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    graph_names.append(graph_name)
+                if self.mergeGraphics.isChecked():
+                    exporter= pg.exporters.ImageExporter(self.plotCountsA)
+                    exporter.parameters()['width'] = 800
+                    exporter.parameters()['height'] = 600
+                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date=datetime.now()
+                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name='Counts_MergeChannels'+current_date_str
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    graph_names.append(graph_name)
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
+                initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
+                text_route=""
+                index=1
+                for i in graph_names:
+                    text_route+="\n"+"File"+str(index)+": "+i+"."+selected_format
+                    index+=1
+                message_box.setText(initial_text+text_route)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                # show successful save
+                message_box.exec_()
+                
+            
+        except NameError as e:
+            print(e)
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The graphics could not be saved, check the folder path or system files")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
 
 class WorkerThreadCountsEstimated(QThread):
     #One value is for the count estimated and the other is for the uncertainty

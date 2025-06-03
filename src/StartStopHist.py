@@ -943,7 +943,10 @@ class StartStopLogic():
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelB'+current_date_str
-                    exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                 if self.setinelSaveC:
                     exporter= pg.exporters.ImageExporter(self.plotC)
@@ -953,7 +956,10 @@ class StartStopLogic():
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelC'+current_date_str
-                    exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                 if self.setinelSaveD:
                     exporter= pg.exporters.ImageExporter(self.plotD)
@@ -983,13 +989,12 @@ class StartStopLogic():
             
         except:
             message_box = QMessageBox(self.parent)
-            message_box.setIcon(QMessageBox.Question)  # Cambiar a un icono de pregunta
-            message_box.setText("Do you want to change the mode?")  # Texto del mensaje
-            message_box.setWindowTitle("Change Mode")  # Título de la ventana
-            message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)  # Botones "Yes" y "No"
-
-            # Ejecutar el cuadro de diálogo y obtener la respuesta
-            response = message_box.exec_()
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The graphics could not be saved, check the folder path or system files")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            
 
     #Function to connect the Thread with update signal
     def updateSignal(self,value,channel):
