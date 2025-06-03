@@ -263,6 +263,20 @@ class createsavefile:
                 
                 for tau, LifeTimeValue in zip(data[0], data[1]):
                     file.write(f"{tau}\t{LifeTimeValue}\n")
+    def save_counts_data(self,time_stamp,data,filenames,folder_path,settings, extension):
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        if len(time_stamp)!= len(data):
+            raise ValueError("Time stamps and measurement must have the same lenght")
+        else:
+            for file_name,timeStamp, data_list,setting_channel in zip(filenames,time_stamp, data,settings):
+                full_path=os.path.join(folder_path, f"{file_name}.{extension}")
+                
+                with open(full_path, 'w') as file:
+                    file.write(setting_channel + '\n')
+                    file.write("Hour (HH:MM:SS) \t Counts Channel A(counts/sec) \n")
+                    for timeStamp, countValue in zip(timeStamp,data_list):
+                        file.write(f"{timeStamp}\t{countValue}\n")
 
     
     

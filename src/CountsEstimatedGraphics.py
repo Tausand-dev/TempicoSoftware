@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
@@ -110,6 +110,7 @@ class CountEstimatedLogic():
         self.clearButtonChannelC.clicked.connect(self.clearChannelC)
         self.clearButtonChannelD.clicked.connect(self.clearChannelD)
         self.savePlotButton.clicked.connect(self.savePlots)
+        self.saveDataButton.clicked.connect(self.saveData)
         #Connection for the combo Box
         self.timeRangeComboBox.currentIndexChanged.connect(self.updateGraphic)
         #Creation data list for measurements
@@ -123,6 +124,11 @@ class CountEstimatedLogic():
         self.channelCValues=[]
         self.channelDValues=[]
         #End connection for the checkbox
+        
+        #Create the sentinels for connection
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0
         #Create Clone Table
         self.createCloneTable()
         
@@ -370,6 +376,7 @@ class CountEstimatedLogic():
             bottom_row = QHBoxLayout()
 
             if count == 1:
+                
                 selected_graphs[0].setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
                 top_row.addWidget(selected_graphs[0])
                 layout.addLayout(top_row)
@@ -678,6 +685,10 @@ class CountEstimatedLogic():
         self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
         self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
         self.curveCountsD.setData(self.timestampsChannelD,self.channelDValues)
+        #Reset sentinels to save data
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0
         
 
     
@@ -942,24 +953,28 @@ class CountEstimatedLogic():
                 if channelValue == "A":
                     self.device.ch1.disableChannel()
                     self.channelACheckBox.setChecked(False)
+                    QApplication.processEvents()
                     self.channelACheckBox.setEnabled(False)
                     self.measurementChannelA=False
                     self.clearButtonChannelA.setEnabled(False)
                 elif channelValue == "B":
                     self.device.ch2.disableChannel()
                     self.channelBCheckBox.setChecked(False)
+                    QApplication.processEvents()
                     self.channelBCheckBox.setEnabled(False)
                     self.measurementChannelB=False
                     self.clearButtonChannelB.setEnabled(False)
                 elif channelValue == "C":
                     self.device.ch3.disableChannel()
                     self.channelCCheckBox.setChecked(False)
+                    QApplication.processEvents()
                     self.channelCCheckBox.setEnabled(False)
                     self.measurementChannelC=False
                     self.clearButtonChannelC.setEnabled(False)
                 elif channelValue == "D":
                     self.device.ch4.disableChannel()
                     self.channelDCheckBox.setChecked(False)
+                    QApplication.processEvents()
                     self.channelDCheckBox.setEnabled(False)
                     self.measurementChannelD=False
                     self.clearButtonChannelD.setEnabled(False)
@@ -1105,7 +1120,8 @@ class CountEstimatedLogic():
                 selected_format = FormatBox.currentText()
                 
                 if self.channelACheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
-                    exporter= pg.exporters.ImageExporter(self.plotCountsA)
+                    self.plotCountsA.setAspectLocked(False)
+                    exporter= pg.exporters.ImageExporter(self.winCountsGraphA.scene())
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
                     folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
@@ -1193,6 +1209,165 @@ class CountEstimatedLogic():
             message_box.setWindowTitle("Error saving")
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+    
+    
+    def saveData(self):
+        """
+        Saves the current data according to the selected format specified in the dialog box.
+
+        The function starts by retrieving the default histogram name and the current 
+        date, which is formatted to create a unique filename. It then initializes lists 
+        to hold filenames, data, settings, and column names for the saved files.
+
+        A dialog box is displayed for the user to select the desired file format 
+        (txt, csv, or dat) for saving the data. Once the user accepts the selection, 
+        the function checks if the selected format has already been saved before.
+
+        If the selected format has not been saved, it collects data from the various 
+        channels (A, B, C, D) if their corresponding sentinel variables indicate 
+        they should be saved. It retrieves the average cycles, mode, number of stops, 
+        stop edge, and stop mask for each channel to include in the settings. The 
+        function then attempts to save the collected data in the specified format.
+
+        If the save operation is successful, a message box is displayed, confirming 
+        the successful save and showing the folder path and file names. If an error 
+        occurs during the save process, an error message box is shown.
+
+        If the selected format has already been saved, a message box is displayed 
+        with the previous save information.
+
+        :return: None
+        """
+        
+        data_prefix=self.savefile.read_default_data()['Default Histogram Name']
+        current_date=datetime.now()
+        current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        #Init filenames and data list
+        filenames=[]
+        data=[]
+        timeStamps=[]
+        settings=[]
+        
+        #Open select the format
+        dialog = QDialog(self.mainWindow)
+        dialog.setObjectName("TextFormat")
+        dialog.resize(282, 105)
+        dialog.setWindowTitle("Save")
+        verticalLayout_2 = QVBoxLayout(dialog)
+        verticalLayout_2.setObjectName("verticalLayout_2")
+        VerticalImage = QVBoxLayout()
+        VerticalImage.setObjectName("VerticalImage")
+        SelectLabel = QLabel(dialog)
+        SelectLabel.setObjectName("SelectLabel")
+        SelectLabel.setText("Select the text format:")
+        VerticalImage.addWidget(SelectLabel)
+        FormatBox = QComboBox(dialog)
+        FormatBox.addItem("txt")
+        FormatBox.addItem("csv")
+        FormatBox.addItem("dat")
+        FormatBox.setObjectName("FormatBox")
+        VerticalImage.addWidget(FormatBox)
+        verticalLayout_2.addLayout(VerticalImage)
+        accepButton = QPushButton(dialog)
+        accepButton.setObjectName("accepButton")
+        accepButton.setText("Accept")
+        verticalLayout_2.addWidget(accepButton)
+        QMetaObject.connectSlotsByName(dialog)
+        
+        # Connect the accept button with real accept
+        accepButton.clicked.connect(dialog.accept)
+        
+        
+        if dialog.exec_() == QDialog.Accepted:
+            selected_format = FormatBox.currentText()
+            conditiontxt= FormatBox.currentText()=="txt" and self.sentinelsavetxt==1
+            conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
+            conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
+            total_condition= conditiontxt or conditioncsv or conditiondat
+            if not total_condition:
+                if self.measurementChannelA:
+                    filename1=data_prefix+current_date_str+'channelA'
+                    setting_A=""
+                    settings.append(setting_A)
+                    filenames.append(filename1)
+                    timeStamps.append(self.timestampsChannelA)
+                    data.append(self.channelAValues)
+                if self.measurementChannelB:
+                    filename2=data_prefix+current_date_str+'channelB'
+                    setting_B=""
+                    settings.append(setting_B)
+                    filenames.append(filename2)
+                    timeStamps.append(self.timestampsChannelB)
+                    data.append(self.channelBValues)
+                if self.measurementChannelC:
+                    filename3=data_prefix+current_date_str+'channelC'
+                    setting_C=""
+                    settings.append(setting_C)
+                    filenames.append(filename3)
+                    timeStamps.append(self.timestampsChannelC)
+                    data.append(self.channelCValues)
+                if self.measurementChannelD:
+                    filename4=data_prefix+current_date_str+'channelD'
+                    setting_D=""
+                    settings.append(setting_D)
+                    filenames.append(filename4)
+                    timeStamps.append(self.timestampsChannelD)
+                    data.append(self.channelDValues)
+                folder_path=self.savefile.read_default_data()['Folder path']
+                
+                try:
+                    
+                    self.savefile.save_counts_data(timeStamps,data,filenames,folder_path,settings,selected_format)
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Information)
+                    inital_text="The files have been saved successfully in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    index=1
+                    for i in filenames:
+                        filenumber="File" + str(index)+": "
+                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        index+=1
+                    message_box.setText(inital_text+text_route)
+                    if selected_format=="txt":
+                        self.oldroutetxt="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavetxt=1
+                    elif selected_format=="csv":
+                        self.oldroutecsv="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavecsv=1
+                    elif selected_format=="dat":
+                        self.oldroutedat="The files have already been saved in path folder: "+ text_route
+                        self.sentinelsavedat=1
+                    message_box.setWindowTitle("Successful save")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                    self.savebutton.setEnabled(True)
+                except NameError as e:
+                    #If an error occurs, an error message box will be displayed.
+                    print(e)
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Critical)
+                    message_box.setText("The changes could not be saved.")
+                    message_box.setWindowTitle("Error saving")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                
+            else:
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
+                if conditiontxt:
+                    message_box.setText(self.oldroutetxt)
+                elif conditioncsv:
+                    message_box.setText(self.oldroutecsv)
+                elif conditiondat:
+                    message_box.setText(self.oldroutedat)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+    
+    
+    
+    
+    
 
 class WorkerThreadCountsEstimated(QThread):
     #One value is for the count estimated and the other is for the uncertainty
