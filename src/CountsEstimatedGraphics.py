@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
@@ -115,6 +115,9 @@ class CountEstimatedLogic():
         self.channelCValues=[]
         self.channelDValues=[]
         #End connection for the checkbox
+        #Create Clone Table
+        self.createCloneTable()
+        
         
         
         if device==None:
@@ -272,6 +275,14 @@ class CountEstimatedLogic():
         self.winCountsAllGraph, self.plotCountsAllC, self.cuveCountsAllA, self.cuveCountsAllB, self.cuveCountsAllC,self.cuveCountsAllD =self.factoryGraphsAllChannels()
         
 
+    def createCloneTable(self):
+        self.cloneTable=QTableWidget()
+        self.cloneTable.setColumnCount(5)
+        self.cloneTable.setHorizontalHeaderLabels(['Date','A','B','C','D'])
+        self.cloneTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        
+        
+        
 
     #Function to update wich graphics are shown
     def updateGraphicsLayout(self):
@@ -644,6 +655,13 @@ class CountEstimatedLogic():
         self.timestampsChannelD=[]
         #Reset table rows
         self.tableCounts.setRowCount(0)
+        self.cloneTable.setRowCount(0)
+        #Reset graphics
+        self.curveCountsA.setData(self.timestampsChannelA,self.channelAValues)
+        self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
+        self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
+        self.curveCountsD.setData(self.timestampsChannelD,self.channelDValues)
+        
 
     
     def enableButtons(self):
@@ -675,15 +693,24 @@ class CountEstimatedLogic():
         self.tableCounts.showColumn(2);
         self.tableCounts.showColumn(3);
         self.tableCounts.showColumn(4);
+        #Show all columns for clone table
+        self.cloneTable.showColumn(1);
+        self.cloneTable.showColumn(2);
+        self.cloneTable.showColumn(3);
+        self.cloneTable.showColumn(4);
         #Hide columns according sentinels
         if not self.channelACheckBox.isChecked():
             self.tableCounts.hideColumn(1)
+            self.cloneTable.hideColumn(1)
         if not self.channelBCheckBox.isChecked():
             self.tableCounts.hideColumn(2)
+            self.cloneTable.hideColumn(2)
         if not self.channelCCheckBox.isChecked():
             self.tableCounts.hideColumn(3)
+            self.cloneTable.hideColumn(3)
         if not self.channelDCheckBox.isChecked():
             self.tableCounts.hideColumn(4)
+            self.cloneTable.hideColumn(4)
         
         
     
@@ -772,8 +799,10 @@ class CountEstimatedLogic():
         
         newData=[dateTime,channelAValue,channelBValue,channelCValue,channelDValue]
         self.tableCounts.insertRow(0)
+        self.cloneTable.insertRow(0)
         for col, value in enumerate(newData):
             self.tableCounts.setItem(0, col,QTableWidgetItem(str(value)))
+            self.cloneTable.setItem(0, col,QTableWidgetItem(str(value)))
         #Update values to label
         if self.channelACheckBox.isChecked():
             self.updateLabels("A",channelAValue, channelAUncertainty)
@@ -924,8 +953,10 @@ class CountEstimatedLogic():
         if self.deatachedCheckBox.isChecked():
             self.dialogTableOpen = QDialog(self.mainWindow)
             self.dialogTableOpen.setWindowTitle(f"Estimated counts Table")
-            self.dialogTableOpen.resize(400, 300)
+            self.dialogTableOpen.resize(530, 400)
             self.dialogTableOpen.setModal(False)
+            layoutDialogTable= QVBoxLayout(self.dialogTableOpen)
+            layoutDialogTable.addWidget(self.cloneTable)
             self.dialogTableOpen.show()
             self.dialogTableOpen.finished.connect(lambda _: self.closeTableDialog())
         else:
