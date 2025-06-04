@@ -50,7 +50,7 @@ class LifeTimeGraphic():
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,
                  clearButton: QPushButton,saveDataButton:QPushButton,savePlotButton:QPushButton,statusLabel: QLabel, pointLabel: QLabel,binWidthComboBox: QComboBox,numberBins:QComboBox,functionComboBox:QComboBox,
-                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, parameterTable: QTableWidget,MainWindow, timerStatus: QTimer):
+                 numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, parameterTable: QTableWidget,MainWindow, timerConnection: QTimer):
         super().__init__()
         self.savefile=savefile()
         #Initialize the main window
@@ -187,15 +187,13 @@ class LifeTimeGraphic():
         self.oldChannelD=1
         #Variable to define the old number of runs
         self.oldNumberRuns=0
+        self.timerConnection=timerConnection
         #--------End Define other parameters and sentinels-----#
         #--------Init the the timer to check the connection----#
-        self.timerStatus=timerStatus
-        self.timerStatus.timeout.connect(self.checkDeviceStatus)
         #Set the value of R^2
         self.R2="Undefined"
         if self.device!=None:
             self.startButton.setEnabled(True)
-            self.timerStatus.start(500)
             
             
     #Verify the connection of the function
@@ -269,7 +267,6 @@ class LifeTimeGraphic():
         :return: None
         """
         #Disable or enable the necessary
-        self.timerStatus.stop()
         self.startButton.setEnabled(False)
         self.stopButton.setEnabled(True)
         self.clearButton.setEnabled(True)
@@ -280,6 +277,7 @@ class LifeTimeGraphic():
         self.binWidthComboBox.setEnabled(False)
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
+        self.stopTimerConnection()
         self.numberMeasurementsSpinBox.setEnabled(False)
         if 'Start' in self.comboBoxStartChannel.currentText():
             self.plotLifeTime.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
@@ -326,6 +324,7 @@ class LifeTimeGraphic():
         self.worker.pointSignal.connect(self.changeStatusColor)
         self.worker.updateValues.connect(self.updateMeasurement)
         self.worker.updateLabel.connect(self.updateLabel)
+        self.worker.disconectedSignal.connect(self.lostConnection)
         self.worker.updateMeasurementsLabel.connect(self.updateLabels)
         #Start the thread
         self.worker.start()
@@ -387,6 +386,8 @@ class LifeTimeGraphic():
 
         :return: None
         """
+        print("Se ejecuta")
+        self.startTimerConnection()
         self.numberBins.setEnabled(True)
         self.stopButton.setEnabled(False)
         self.clearButton.setEnabled(False)
@@ -401,12 +402,14 @@ class LifeTimeGraphic():
         self.changeStatusColor(0)
         self.threadCreated=False
         self.stopTimer()
-        self.timerStatus.start(500)
         self.setOldMode()
-        self.device.ch1.enableChannel()
-        self.device.ch2.enableChannel()
-        self.device.ch3.enableChannel()
-        self.device.ch4.enableChannel()
+        try:
+            self.device.ch1.enableChannel()
+            self.device.ch2.enableChannel()
+            self.device.ch3.enableChannel()
+            self.device.ch4.enableChannel()
+        except:
+            pass
         if len(self.measuredTime)>0:
             self.applyButton.setEnabled(True)
             self.initialParametersButton.setEnabled(True)
@@ -672,9 +675,15 @@ class LifeTimeGraphic():
         """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
-        self.timerStatus.start(500)
         self.device=device
         self.startButton.setEnabled(True)
+    
+    def stopTimerConnection(self):
+        self.timerConnection.stop()
+    
+    def startTimerConnection(self):
+        self.timerConnection.start(500)
+        
         
     def disconnectedDevice(self):
         """
@@ -689,7 +698,6 @@ class LifeTimeGraphic():
         """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
-        self.timerStatus.stop()
         self.startButton.setEnabled(False)
     
     #Functions to update the totalTime Label
@@ -2083,6 +2091,14 @@ class LifeTimeGraphic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
     
+    def lostConnection(self):
+        msg_box = QMessageBox(self.mainWindow)
+        msg_box.setText("Connection with the device has been lost")
+        msg_box.setWindowTitle("Connection Error")
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+    
     
 
 
@@ -2122,6 +2138,7 @@ class WorkerThreadLifeTime(QThread):
     updateValues=Signal(list,list)
     updateLabel=Signal(str)
     updateMeasurementsLabel=Signal(str,str)
+    disconectedSignal=Signal()
     def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device,TimeRange):
         super().__init__()
         #Parameters of the measurement
@@ -2161,7 +2178,6 @@ class WorkerThreadLifeTime(QThread):
             percentage=round((self.totalMeasurements*100)/self.numberMeasurements,2)
             self.checkDeviceStatus()
             #Try in order to avoid the errors related to suddenly disconnect the device
-            self.checkDeviceStatus()
             try:
                 self.takeMeasurements(percentage)
                 self.createLifeTimeData()

@@ -21,7 +21,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device, parent):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device, parent, timerConnection):
         #Get the parameters
         self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
@@ -52,6 +52,7 @@ class CountEstimatedLogic():
         self.graphicsFrame= graphicsFrame
         self.device = device
         self.mainWindow = parent
+        self.timerConnection=timerConnection
         self.channelAFrameLabel=channelAFrameLabel
         self.channelBFrameLabel=channelBFrameLabel
         self.channelCFrameLabel=channelCFrameLabel
@@ -91,6 +92,8 @@ class CountEstimatedLogic():
         self.measurementChannelB=False
         self.measurementChannelC=False
         self.measurementChannelD=False
+        #Sentinel to know if the device was disconnected in measurement
+        self.disconnectedMeasurement=False
         #Sentinel to detect that a measurement begin was created
         self.treadCreated=False
         #variables for dialogs
@@ -153,7 +156,9 @@ class CountEstimatedLogic():
             self.savePlotButton.setEnabled(False)
             
         
-    
+    def verifyConnection(self):
+        
+        pass
     
     #Funcion to dinamically changes the interface
     def checkBoxListenerChannels(self):
@@ -537,6 +542,7 @@ class CountEstimatedLogic():
     def connectedDevice(self,device):
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
+        self.disconnectedMeasurement=False
         #TODO: SET THE TIMER OF MEASUREMENTS
         #self.timerStatus.start(500)
         self.device=device
@@ -560,6 +566,7 @@ class CountEstimatedLogic():
             self.saveDataButton.setEnabled(False)
             self.savePlotButton.setEnabled(False)
             ##
+            self.stopTimerConnection()
             self.resetValues()
             self.getChannelsMeasure()
             self.enableButtons()
@@ -573,6 +580,7 @@ class CountEstimatedLogic():
             self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
             self.worker.changeStatusText.connect(self.changeStatusLabel)
             self.worker.changeStatusColor.connect(self.changeStatusColor)
+            self.worker.disconnectedDevice.connect(self.lostConnection)
             self.worker.start()
         else:
             self.noChannelsSelected()
@@ -581,6 +589,18 @@ class CountEstimatedLogic():
         self.resetSentinels()
         self.stopButton.setEnabled(False)
         self.worker.stop()
+        if not self.disconnectedMeasurement:
+            self.startTimerConnection()
+        else:
+            self.mainWindow.disconnectedDevice()
+    
+    def stopTimerConnection(self):
+        #Stop timer when a measurement begins
+        self.timerConnection.stop()
+    
+    def startTimerConnection(self):
+        #Start timer when a measurement begins
+        self.timerConnection.start(500)
     
     def clearChannelA(self):
         self.timestampsChannelA=[]
@@ -932,6 +952,7 @@ class CountEstimatedLogic():
         self.clearButtonChannelD.setEnabled(False)
         self.changeStatusColor(0)
         self.changeStatusLabel("No running")
+        
         
         #actions for stop button
         self.stopMeasure()
@@ -1405,6 +1426,16 @@ class CountEstimatedLogic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
     
+    def lostConnection(self):
+        self.disconnectedMeasurement=True
+        msg_box = QMessageBox(self.mainWindow)
+        msg_box.setText("Connection with the device has been lost")
+        msg_box.setWindowTitle("Connection Error")
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+        
+    
     
     
     
@@ -1422,6 +1453,7 @@ class WorkerThreadCountsEstimated(QThread):
     noPartialMeasurements=Signal(list)
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
+    disconnectedDevice=Signal()
     
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device: tempico.TempicoDevice):
@@ -1490,15 +1522,21 @@ class WorkerThreadCountsEstimated(QThread):
             self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
             self.continueEvent.wait()
             print("El hilo continua luego de que la pestana se cierra")
-        self.enableDisableChannels()
+        if self.running:
+            self.enableDisableChannels()
         if self.running:
             #Get the init time for measurement
             self.initialMeasurementTime = time.time()
         while self.running:
-            
-            print("Se ejecuta medicion")
-            self.getMeasurements()
-            time.sleep(1)
+            try:
+                self.device.readIdnFromDevice()
+            except:
+                self.running=False
+                self.disconnectedDevice.emit()
+            if self.running:
+                print("Se ejecuta medicion")
+                self.getMeasurements()
+                time.sleep(1)
             
             
         
@@ -1673,6 +1711,11 @@ class WorkerThreadCountsEstimated(QThread):
             channel.setNumberOfStops(stopsInMeasure)
             totalMeasurements=0
             for i in range(totalIterations):
+                try:
+                    self.device.readIdnFromDevice()
+                except:
+                    self.running=False
+                    self.disconnectedDevice.emit()
                 if not self.running:
                     break
                 self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} {valuePercent}%")

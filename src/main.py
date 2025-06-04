@@ -100,6 +100,7 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1000,700)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
+        self.LifeTimeTimer.timeout.connect(self.manageConection)
         
 
         if sys.platform == 'win32':
@@ -298,6 +299,7 @@ class MainWindow(QMainWindow):
                 self.disconnectButton.setEnabled(True)
                 try:
                     self.conectedDevice.open()
+                    self.LifeTimeTimer.start(500)
                     if self.g2Graphic!=None:
                          self.g2Graphic.connectDevice()
                     if self.LifeTimeGraphic!=None:
@@ -335,6 +337,7 @@ class MainWindow(QMainWindow):
                     self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel)
                     
                 except:
+                    self.LifeTimeTimer.stop()
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
@@ -352,9 +355,10 @@ class MainWindow(QMainWindow):
                         openSentinel=False
                         try:
                             self.conectedDevice.open()
+                            self.LifeTimeTimer.start(500)
                             openSentinel=True
                         except:
-                            pass
+                            self.LifeTimeTimer.stop()
                         if self.g2Graphic!=None and openSentinel:
                              self.g2Graphic.connectDevice()
                         if self.LifeTimeGraphic!=None and openSentinel:
@@ -379,9 +383,10 @@ class MainWindow(QMainWindow):
             openSentinel=False
             try:
                 self.conectedDevice.open()
+                self.LifeTimeTimer.start(500)
                 openSentinel=True
             except:
-                pass
+                self.LifeTimeTimer.stop()
             if self.g2Graphic!=None and openSentinel:
                     self.g2Graphic.connectDevice() 
             if self.LifeTimeGraphic!=None and openSentinel:
@@ -435,7 +440,6 @@ class MainWindow(QMainWindow):
           valor_padre=self.tabs.currentIndex()
           padre=self.tab1
           if valor_padre==0:
-              self.LifeTimeTimer.stop()
               padre=self.tab1
               self.construct_start_stop_histogram(padre)
           elif valor_padre==1:
@@ -474,7 +478,6 @@ class MainWindow(QMainWindow):
           elif valor_padre==2:
             padre=self.tab3
             self.construct_counts_estimated(padre)
-            self.LifeTimeTimer.stop()
             if self.countsEstimatedGraphic==None:
                 #Get the data to create the logic class for Counts Estimated measurement
                 channelACheckBox=self.uiCountsEstimated.channelACheckBox
@@ -513,7 +516,7 @@ class MainWindow(QMainWindow):
                 pointLabel=self.uiCountsEstimated.labelColor
                 deatachedCheckBox=self.uiCountsEstimated.tableCheckBox
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
-                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,self.conectedDevice,self)
+                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,self.conectedDevice,self, self.LifeTimeTimer)
                 
                 
                  
@@ -741,6 +744,33 @@ class MainWindow(QMainWindow):
             self.parametersTable.setColumnWidth(1, int(round(currentValue*1/10)))
             self.parametersTable.setColumnWidth(2, int(round(currentValue*1/10)))
             self.parametersTable.setColumnWidth(3, int(round(currentValue*1/50)))
+    
+    def manageConection(self):
+        if self.conectedDevice:
+            try:
+                self.conectedDevice.readIdnFromDevice()
+            except:
+                if self.countsEstimatedGraphic:
+                    self.countsEstimatedGraphic.disconnectedDevice()
+                if self.LifeTimeGraphic:
+                    self.LifeTimeGraphic.disconnectedDevice()
+                self.LifeTimeTimer.stop()
+                self.conectedDevice=None
+                msg_box = QMessageBox(self)
+                msg_box.setText("Connection with the device has been lost")
+                msg_box.setWindowTitle("Connection Error")
+                msg_box.setIcon(QMessageBox.Critical)
+                msg_box.setStandardButtons(QMessageBox.Ok)
+                msg_box.exec_()
+    
+    def disconnectedDevice(self):
+        print("Se ejecuta")
+        if self.countsEstimatedGraphic:
+            self.countsEstimatedGraphic.disconnectedDevice()
+        if self.LifeTimeGraphic:
+            self.LifeTimeGraphic.disconnectedDevice()
+        self.conectedDevice=None
+        
             
 
         
