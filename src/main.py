@@ -754,6 +754,8 @@ class MainWindow(QMainWindow):
                     self.countsEstimatedGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
+                if self.grafico:
+                    self.grafico.disconnectedDevice()
                 self.LifeTimeTimer.stop()
                 self.conectedDevice=None
                 msg_box = QMessageBox(self)
@@ -769,6 +771,8 @@ class MainWindow(QMainWindow):
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
+        if self.grafico:
+            self.grafico.disconnectedDevice()
         self.conectedDevice=None
         
             

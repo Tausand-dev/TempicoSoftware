@@ -277,6 +277,7 @@ class LifeTimeGraphic():
         self.binWidthComboBox.setEnabled(False)
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
+        self.mainWindow.tabs.setTabEnabled(2,False)
         self.stopTimerConnection()
         self.numberMeasurementsSpinBox.setEnabled(False)
         if 'Start' in self.comboBoxStartChannel.currentText():
@@ -398,6 +399,7 @@ class LifeTimeGraphic():
         self.binWidthComboBox.setEnabled(True)
         self.numberMeasurementsSpinBox.setEnabled(True)
         self.mainWindow.tabs.setTabEnabled(0,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.changeStatusLabel("No measurement running")
         self.changeStatusColor(0)
         self.threadCreated=False

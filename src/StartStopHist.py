@@ -1393,6 +1393,12 @@ class StartStopLogic():
             self.changeZoomMax(maxValue,'D')
     
     
+    def disconnectedDevice(self):
+        self.mainWindow.disconnectButton.setEnabled(False)
+        self.mainWindow.connectButton.setEnabled(True)
+        self.startbutton.setEnabled(False)
+    
+    
         
     
 class WorkerThreadStartStopHistogram(QThread):

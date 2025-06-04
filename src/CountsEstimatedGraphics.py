@@ -565,7 +565,9 @@ class CountEstimatedLogic():
             #Disable save buttons
             self.saveDataButton.setEnabled(False)
             self.savePlotButton.setEnabled(False)
-            ##
+            #Disable other tabs while the software is taking measurements
+            self.mainWindow.tabs.setTabEnabled(0,False)
+            self.mainWindow.tabs.setTabEnabled(1,False)
             self.stopTimerConnection()
             self.resetValues()
             self.getChannelsMeasure()
@@ -586,6 +588,8 @@ class CountEstimatedLogic():
             self.noChannelsSelected()
     
     def stopMeasure(self):
+        self.mainWindow.tabs.setTabEnabled(0,True)
+        self.mainWindow.tabs.setTabEnabled(1,True)
         self.resetSentinels()
         self.stopButton.setEnabled(False)
         self.worker.stop()
