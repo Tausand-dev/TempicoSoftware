@@ -91,6 +91,8 @@ class CountEstimatedLogic():
         self.measurementChannelB=False
         self.measurementChannelC=False
         self.measurementChannelD=False
+        #Sentinel to detect that a measurement begin was created
+        self.treadCreated=False
         #variables for dialogs
         self.dialogACreated=None
         self.dialogBCreated=None
@@ -123,6 +125,11 @@ class CountEstimatedLogic():
         self.channelBValues=[]
         self.channelCValues=[]
         self.channelDValues=[]
+        #Values for save data
+        self.timestampsDateChannelA=[]
+        self.timestampsDateChannelB=[]
+        self.timestampsDateChannelC=[]
+        self.timestampsDateChannelD=[]
         #End connection for the checkbox
         
         #Create the sentinels for connection
@@ -549,6 +556,10 @@ class CountEstimatedLogic():
         if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
             self.startButton.setEnabled(False)
             self.stopButton.setEnabled(True)
+            #Disable save buttons
+            self.saveDataButton.setEnabled(False)
+            self.savePlotButton.setEnabled(False)
+            ##
             self.resetValues()
             self.getChannelsMeasure()
             self.enableButtons()
@@ -573,21 +584,25 @@ class CountEstimatedLogic():
     
     def clearChannelA(self):
         self.timestampsChannelA=[]
+        self.timestampsDateChannelA=[]
         self.channelAValues=[]
         self.curveCountsA.setData(self.timestampsChannelA,self.channelAValues)
     
     def clearChannelB(self):
         self.timestampsChannelB=[]
+        self.timestampsDateChannelB=[]
         self.channelBValues=[]
         self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
     
     def clearChannelC(self):
         self.timestampsChannelC=[]
+        self.timestampsDateChannelC=[]
         self.channelCValues=[]
         self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
     
     def clearChannelD(self):
         self.timestampsChannelD=[]
+        self.timestampsDateChannelD=[]
         self.channelDValues=[]
         self.curveCountsD.setData(self.timestampsChannelD,self.channelDValues)
         
@@ -677,6 +692,11 @@ class CountEstimatedLogic():
         self.timestampsChannelB=[]
         self.timestampsChannelC=[]
         self.timestampsChannelD=[]
+        #Delete date time stamps
+        self.timestampsDateChannelA=[]
+        self.timestampsDateChannelB=[]
+        self.timestampsDateChannelC=[]
+        self.timestampsDateChannelD=[]
         #Reset table rows
         self.tableCounts.setRowCount(0)
         self.cloneTable.setRowCount(0)
@@ -776,6 +796,7 @@ class CountEstimatedLogic():
             channelAValue=round(channelAValue,2)
             channelAUncertainty= round(channelAUncertainty,5)
             self.timestampsChannelA.append(secondsTime)
+            self.timestampsDateChannelA.append(dateTime)
             self.channelAValues.append(channelAValue)
             self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
         elif channelAValue==0:
@@ -789,6 +810,7 @@ class CountEstimatedLogic():
             channelBValue=round(channelBValue,2)
             channelBUncertainty= round(channelBUncertainty,5)
             self.timestampsChannelB.append(secondsTime)
+            self.timestampsDateChannelB.append(dateTime)
             self.channelBValues.append(channelBValue)
             self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
         elif channelBValue==0:
@@ -802,6 +824,7 @@ class CountEstimatedLogic():
             channelCValue=round(channelCValue,2)
             channelCUncertainty= round(channelCUncertainty,5)
             self.timestampsChannelC.append(secondsTime)
+            self.timestampsDateChannelC.append(dateTime)
             self.channelCValues.append(channelCValue)
             self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
         elif channelCValue==0:
@@ -815,6 +838,7 @@ class CountEstimatedLogic():
             channelDValue=round(channelDValue,2)
             channelDUncertainty= round(channelDUncertainty,5)
             self.timestampsChannelD.append(secondsTime)
+            self.timestampsDateChannelD.append(dateTime)
             self.channelDValues.append(channelDValue)
             self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
         elif channelDValue==0:
@@ -898,8 +922,14 @@ class CountEstimatedLogic():
         #Start button enabled and stop button disabled
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
-        self.savePlotButton.setEnabled(True)
-        self.saveDataButton.setEnabled(True)
+        if self.timestampsChannelA or self.timestampsChannelB or self.timestampsChannelC or self.timestampsChannelD:
+            self.saveDataButton.setEnabled(True)
+            self.savePlotButton.setEnabled(True)
+        #Disable clear channels
+        self.clearButtonChannelA.setEnabled(False)
+        self.clearButtonChannelB.setEnabled(False)
+        self.clearButtonChannelC.setEnabled(False)
+        self.clearButtonChannelD.setEnabled(False)
         self.changeStatusColor(0)
         self.changeStatusLabel("No running")
         
@@ -914,6 +944,7 @@ class CountEstimatedLogic():
             "You must select at least one channel to start measurement"
         )
         
+        
     
     #Function to define that no measurements were founded
     def noMeasurementsFounded(self):
@@ -926,6 +957,11 @@ class CountEstimatedLogic():
         self.clearButtonChannelB.setEnabled(False)
         self.clearButtonChannelC.setEnabled(False)
         self.clearButtonChannelD.setEnabled(False)
+        #Reset measurements
+        self.measurementChannelA=False
+        self.measurementChannelB=False
+        self.measurementChannelC=False
+        self.measurementChannelD=False
     
     #Function to eliminate channels where there is no measurements
     def eliminateCheckBoxChannels(self, channelList):
@@ -1239,7 +1275,7 @@ class CountEstimatedLogic():
         :return: None
         """
         
-        data_prefix=self.savefile.read_default_data()['Default Histogram Name']
+        data_prefix="CountsEstimated"
         current_date=datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
         #Init filenames and data list
@@ -1247,6 +1283,7 @@ class CountEstimatedLogic():
         data=[]
         timeStamps=[]
         settings=[]
+        channels=[]
         
         #Open select the format
         dialog = QDialog(self.mainWindow)
@@ -1290,34 +1327,38 @@ class CountEstimatedLogic():
                     setting_A=""
                     settings.append(setting_A)
                     filenames.append(filename1)
-                    timeStamps.append(self.timestampsChannelA)
+                    timeStamps.append(self.timestampsDateChannelA)
+                    channels.append("A")
                     data.append(self.channelAValues)
                 if self.measurementChannelB:
                     filename2=data_prefix+current_date_str+'channelB'
                     setting_B=""
                     settings.append(setting_B)
                     filenames.append(filename2)
-                    timeStamps.append(self.timestampsChannelB)
+                    timeStamps.append(self.timestampsDateChannelB)
+                    channels.append("B")
                     data.append(self.channelBValues)
                 if self.measurementChannelC:
                     filename3=data_prefix+current_date_str+'channelC'
                     setting_C=""
                     settings.append(setting_C)
                     filenames.append(filename3)
-                    timeStamps.append(self.timestampsChannelC)
+                    timeStamps.append(self.timestampsDateChannelC)
+                    channels.append("C")
                     data.append(self.channelCValues)
                 if self.measurementChannelD:
                     filename4=data_prefix+current_date_str+'channelD'
                     setting_D=""
                     settings.append(setting_D)
                     filenames.append(filename4)
-                    timeStamps.append(self.timestampsChannelD)
+                    timeStamps.append(self.timestampsDateChannelD)
+                    channels.append("D")
                     data.append(self.channelDValues)
                 folder_path=self.savefile.read_default_data()['Folder path']
                 
                 try:
                     
-                    self.savefile.save_counts_data(timeStamps,data,filenames,folder_path,settings,selected_format)
+                    self.savefile.save_counts_data(timeStamps,data,filenames,folder_path,settings,selected_format,channels)
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Information)
                     inital_text="The files have been saved successfully in path folder: "
