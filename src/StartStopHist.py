@@ -29,9 +29,11 @@ class StartStopLogic():
     :param mainWindow: The main window (QWindow) for the GUI.
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
+    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
         super().__init__()
         self.savefile=savefile()
+        #timer to manage disconnection
+        self.timerConnection=timerStatus
         #Disconnect button
         self.disconnectButton= disconnect
         #Connect button
@@ -74,6 +76,7 @@ class StartStopLogic():
         self.setinelSaveB=False
         self.setinelSaveC=False
         self.setinelSaveD=False
+        self.withoutMeasurement=False
 
         ##---------------------------------##
         ##---------------------------------##
@@ -368,11 +371,14 @@ class StartStopLogic():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.withoutMeasurement=False
+            self.stopTimerConnection()
             self.sentinelZoomChangedA=0
             self.sentinelZoomChangedB=0
             self.sentinelZoomChangedC=0
             self.sentinelZoomChangedD=0
             self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.tabs.setTabEnabled(2,False)
             self.disconnectButton.setEnabled(False)
             self.currentmeasurement=True
             self.create_graphs()
@@ -385,6 +391,16 @@ class StartStopLogic():
             self.checkC.setEnabled(False)
             self.checkD.setEnabled(False)
             self.savebutton.setEnabled(False)
+    
+    
+    
+    def stopTimerConnection(self):
+        #Stop timer when a measurement begins
+        self.timerConnection.stop()
+    
+    def startTimerConnection(self):
+        #Start timer when a measurement begins
+        self.timerConnection.start(500)
     
     def hide_graphic2(self):
         """
@@ -419,6 +435,8 @@ class StartStopLogic():
 
         :return: None
         """
+        if not self.withoutMeasurement:
+            self.startTimerConnection()
         if self.threadCreatedSentinel:
             self.worker.stop()
             time.sleep(1)
@@ -426,10 +444,12 @@ class StartStopLogic():
         self.statusValue.setText("No measurement running")
         self.changeStatusColor(0)
         self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.disconnectButton.setEnabled(True)
         self.currentmeasurement=False
         self.stopbutton.setEnabled(False)
-        self.startbutton.setEnabled(True)
+        if not self.withoutMeasurement:
+            self.startbutton.setEnabled(True)
         self.savebutton.setEnabled(True)
         self.save_graphs.setEnabled(True)
         self.clear_channel_A.setEnabled(False)
@@ -441,6 +461,7 @@ class StartStopLogic():
         self.checkC.setEnabled(True)
         self.checkD.setEnabled(True)
     
+    
     #Future function if we want to add the option of number of measurements
     def threadComplete(self):
         """
@@ -450,6 +471,7 @@ class StartStopLogic():
         :return: None
         """
         self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.threadCreated=False
         self.stop_graphic()
     
@@ -1073,11 +1095,11 @@ class StartStopLogic():
 
         :return: None
         """
-        msg_box = QMessageBox(self.parent)
+        self.withoutMeasurement=True
+        self.disconnectedDevice()
+        msg_box = QMessageBox(self.mainWindow)
         msg_box.setText("Connection with the device has been lost")
         msg_box.setWindowTitle("Connection Error")
-        pixmap= QPixmap("/Sources/tausand_small.ico")
-        msg_box.setIconPixmap(pixmap)
         msg_box.setIcon(QMessageBox.Critical)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
@@ -1089,6 +1111,7 @@ class StartStopLogic():
                 self.device.close()
         except:
             pass
+        self.mainWindow.disconnectedDevice()
     
     #Change the color of status Point
     #Function to change the color of point measurement
