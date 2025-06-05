@@ -278,6 +278,7 @@ class LifeTimeGraphic():
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
         self.mainWindow.tabs.setTabEnabled(2,False)
+        self.mainWindow.disconnectButton.setEnabled(False)
         self.stopTimerConnection()
         self.numberMeasurementsSpinBox.setEnabled(False)
         if 'Start' in self.comboBoxStartChannel.currentText():
@@ -412,6 +413,7 @@ class LifeTimeGraphic():
             self.device.ch2.enableChannel()
             self.device.ch3.enableChannel()
             self.device.ch4.enableChannel()
+            self.mainWindow.disconnectButton.setEnabled(True)
         except:
             pass
         if len(self.measuredTime)>0:

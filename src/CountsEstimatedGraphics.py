@@ -598,10 +598,12 @@ class CountEstimatedLogic():
         
         if not self.disconnectedMeasurement:
             self.startTimerConnection()
+            self.mainWindow.disconnectButton.setEnabled(True)        
         else:
             self.mainWindow.disconnectedDevice()
         self.mainWindow.noMeasurement()
         self.returnSettings()
+        
         
     
     def stopTimerConnection(self):
@@ -820,6 +822,7 @@ class CountEstimatedLogic():
             self.clearButtonChannelD.setEnabled(False)
         else:
             self.clearButtonChannelD.setEnabled(True)
+        self.mainWindow.disconnectButton.setEnabled(False)
             
     
     #Hide and show column for channels measurement
