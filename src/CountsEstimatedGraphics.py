@@ -1564,27 +1564,31 @@ class WorkerThreadCountsEstimated(QThread):
         for channel in self.channelsMeasure:
             self.changeStatusText.emit(f"Estimating number stops in channel {channel} 0%")
             self.changeStatusColor.emit(3)
-            totalStops=self.determineStopsNumber(channel)
-            if totalStops<2 and self.running:
-                if channel=="A":
-                    self.channelASentinel=False
-                elif channel == "B":
-                    self.channelBSentinel=False
-                elif channel == "C":
-                    self.channelCSentinel=False
-                elif channel == "D":
-                    self.channelDSentinel=False
-                self.channelsWithoutMeasurements.append(channel)
-            else:
-                if self.running:
+            try:
+                totalStops=self.determineStopsNumber(channel)
+                if totalStops<2 and self.running:
                     if channel=="A":
-                        self.numberStopsChannelA=totalStops
-                    elif channel=="B":
-                        self.numberStopsChannelB=totalStops
-                    elif channel=="C":
-                        self.numberStopsChannelC=totalStops
-                    elif channel=="D":
-                        self.numberStopsChannelD=totalStops
+                        self.channelASentinel=False
+                    elif channel == "B":
+                        self.channelBSentinel=False
+                    elif channel == "C":
+                        self.channelCSentinel=False
+                    elif channel == "D":
+                        self.channelDSentinel=False
+                    self.channelsWithoutMeasurements.append(channel)
+                else:
+                    if self.running:
+                        if channel=="A":
+                            self.numberStopsChannelA=totalStops
+                        elif channel=="B":
+                            self.numberStopsChannelB=totalStops
+                        elif channel=="C":
+                            self.numberStopsChannelC=totalStops
+                        elif channel=="D":
+                            self.numberStopsChannelD=totalStops
+            except:
+                self.running=False
+                
 
         if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure) and self.running:
             self.noTotalMeasurements.emit()
