@@ -1058,13 +1058,13 @@ class StartStopLogic():
         :return: None
         """
         if channel=="A":
-            self.datapureA.append(value)
+            self.datapureA.append(value*(10**9))
         elif channel=="B":
-            self.datapureB.append(value)
+            self.datapureB.append(value*(10**9))
         elif channel=="C":
-            self.datapureC.append(value)
+            self.datapureC.append(value*(10**9))
         elif channel=="D":
-            self.datapureD.append(value)
+            self.datapureD.append(value*(10**9))
     
     #Change the status of sentinel dataThreadCreated
     def threadRunning(self,status):
@@ -1826,8 +1826,9 @@ class WorkerThreadStartStopHistogram(QThread):
                     elif channelIndex=='C':
                         self.totalC+=1    
                     elif channelIndex=='D':
-                        self.totalD+=1    
-                    self.dataPureSignal.emit(round(average_measurement),channelIndex)
+                        self.totalD+=1   
+                    average_measurement=average_measurement/(10**9)
+                    self.dataPureSignal.emit(average_measurement,channelIndex)
                     return miliseconds_measurement
                 else:
                     return None
