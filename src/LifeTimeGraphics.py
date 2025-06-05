@@ -314,6 +314,7 @@ class LifeTimeGraphic():
         self.curveFit.setData([],[])
         self.xDataFitCopy=[]
         self.yDataFitCopy=[]
+        self.mainWindow.activeMeasurement()
         #Create the thread object
         self.worker=WorkerThreadLifeTime(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
                                      self.device,timeRangeps)
@@ -364,6 +365,7 @@ class LifeTimeGraphic():
             self.worker.stop()
         else:
             self.enableAfterFinisihThread()
+        self.mainWindow.noMeasurement()
     
     #Function to clear the graphic
     def clearGraphic(self):
@@ -433,6 +435,7 @@ class LifeTimeGraphic():
                 self.initialTau1Doub=mean(self.measuredTime)
                 self.initialAlphaDoub=0
         self.saveDataButton.setEnabled(True)
+        self.mainWindow.noMeasurement()
         
     
     #Function to change the status measurement

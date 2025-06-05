@@ -574,6 +574,7 @@ class CountEstimatedLogic():
             self.getChannelsMeasure()
             self.enableButtons()
             self.changeStatusColor(1)
+            self.mainWindow.activeMeasurement()
             self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
             self.worker.finished.connect(self.finishedThread)
             self.worker.createdSignal.connect(self.getCreatedEvent)
@@ -599,6 +600,9 @@ class CountEstimatedLogic():
             self.startTimerConnection()
         else:
             self.mainWindow.disconnectedDevice()
+        self.mainWindow.noMeasurement()
+        self.returnSettings()
+        
     
     def stopTimerConnection(self):
         #Stop timer when a measurement begins
@@ -722,7 +726,6 @@ class CountEstimatedLogic():
             self.modeChannelDSetting=self.device.ch4.getMode()
             #AverageCycles
             self.averageCyclesChannelASetting=self.device.ch1.getAverageCycles()
-            print(self.averageCyclesChannelASetting)
             self.averageCyclesChannelBSetting=self.device.ch2.getAverageCycles()
             self.averageCyclesChannelCSetting=self.device.ch3.getAverageCycles()
             self.averageCyclesChannelDSetting=self.device.ch4.getAverageCycles()
@@ -734,11 +737,19 @@ class CountEstimatedLogic():
         except:
             pass
         
-
+    
+    
     
     def returnSettings(self):
         try:
+            
+            #Return number of runs
             self.device.setNumberOfRuns(self.numberRunsSetting)
+            #Return average cycles
+            self.device.ch1.setAverageCycles(self.averageCyclesChannelASetting)
+            self.device.ch2.setAverageCycles(self.averageCyclesChannelBSetting)
+            self.device.ch1.setAverageCycles(self.averageCyclesChannelCSetting)
+            self.device.ch1.setAverageCycles(self.averageCyclesChannelDSetting)
             #Return number of stops
             self.device.ch1.setNumberOfStops(self.numberStopsChannelASetting)
             self.device.ch2.setNumberOfStops(self.numberStopsChannelBSetting)
@@ -749,13 +760,7 @@ class CountEstimatedLogic():
             self.device.ch2.setMode(self.modeChannelBSetting)
             self.device.ch3.setMode(self.modeChannelCSetting)
             self.device.ch4.setMode(self.modeChannelDSetting)
-            #Return average cycles
-            print("Configuracion averageChannel Setting")
-            print(self.averageCyclesChannelASetting)
-            self.device.ch1.setAverageCycles(int(self.averageCyclesChannelASetting))
-            self.device.ch2.setAverageCycles(int(self.averageCyclesChannelBSetting))
-            self.device.ch1.setAverageCycles(int(self.averageCyclesChannelCSetting))
-            self.device.ch1.setAverageCycles(int(self.averageCyclesChannelDSetting))
+            
             #Return stop mask
             self.device.ch1.setStopMask(self.stopMaskChannelASetting)
             self.device.ch2.setStopMask(self.stopMaskChannelBSetting)
@@ -998,7 +1003,7 @@ class CountEstimatedLogic():
     
     def finishedThread(self):
         #Restart the sentinels
-        self.returnSettings()
+        
         self.selectChannelA=False
         self.selectChannelB=False
         self.selectChannelC=False
@@ -1815,7 +1820,7 @@ class WorkerThreadCountsEstimated(QThread):
             self.channelsMeasure.append("B")
             self.device.ch2.enableChannel()
             self.device.ch2.setStopMask(0)
-            self.device.ch2.setAverageCycles(1)
+            self.device.ch2.setAverageCycles(1)            
         if self.channelCSentinel:
             self.channelsMeasure.append("C")
             self.device.ch3.enableChannel()

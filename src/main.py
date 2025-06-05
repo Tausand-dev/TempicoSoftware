@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
+        self.currentMeasurement=False
         
 
         if sys.platform == 'win32':
@@ -584,7 +585,7 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         if self.conectedDevice!=None:
-            if not self.grafico.currentmeasurement:
+            if not self.currentMeasurement:
                 self.dialog_settings=QDialog(self)
                 self.settings_channels = Ui_settings()
                 self.settings_channels.setupUi(self.dialog_settings, self.conectedDevice)
@@ -624,7 +625,7 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         if self.conectedDevice!=None:
-            if not self.grafico.currentmeasurement:
+            if not self.currentMeasurement:
                 settings_windows=GeneralSettingsWindow(self.conectedDevice)
                 settings_windows.exec_()
             else:
@@ -672,7 +673,7 @@ class MainWindow(QMainWindow):
 #TO DO: Comment the function for a future version    
     def parameters_action(self):
         if self.conectedDevice!=None:
-            if not self.grafico.currentmeasurement:
+            if not self.currentMeasurement:
                 self.dialogParameters=QDialog(self)
                 self.uiParameter = UiParameters()
                 self.uiParameter.setupUi(self.dialogParameters)
@@ -774,8 +775,14 @@ class MainWindow(QMainWindow):
         if self.grafico:
             self.grafico.disconnectedDevice()
         self.conectedDevice=None
-        
-            
+    
+    #Function to advise that a measurement is active
+    def activeMeasurement(self):
+        self.currentMeasurement=True
+    
+    #Function to advise that a measurement is finished
+    def noMeasurement(self):
+        self.currentMeasurement=False
 
         
 

@@ -38,8 +38,6 @@ class StartStopLogic():
         self.disconnectButton= disconnect
         #Connect button
         self.connectButton= connect
-        #Current measurement
-        self.currentmeasurement=False
         ##----------------##
         self.startbutton=startbutton
         self.stopbutton=stopbutton
@@ -380,7 +378,7 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
             self.disconnectButton.setEnabled(False)
-            self.currentmeasurement=True
+            self.mainWindow.activeMeasurement()
             self.create_graphs()
             self.statusValue.setText("Measurement running")
             self.changeStatusColor(1)
@@ -446,7 +444,7 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.disconnectButton.setEnabled(True)
-        self.currentmeasurement=False
+        self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
         if not self.withoutMeasurement:
             self.startbutton.setEnabled(True)
