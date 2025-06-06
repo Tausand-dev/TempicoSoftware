@@ -1409,8 +1409,8 @@ class CountEstimatedLogic():
         self.tableCounts.insertRow(0)
         self.cloneTable.insertRow(0)
         for col, value in enumerate(newData):
-            self.tableCounts.setItem(0, col,QTableWidgetItem(str(value)))
-            self.cloneTable.setItem(0, col,QTableWidgetItem(str(value)))
+            self.tableCounts.setItem(0, col, self.rightAlignedItem(value))
+            self.cloneTable.setItem(0, col, self.rightAlignedItem(value))
         #Update values to label
         if self.channelACheckBox.isChecked():
             self.updateLabels("A",channelAValue, channelAUncertainty)
@@ -1424,7 +1424,11 @@ class CountEstimatedLogic():
         self.updateGraphic()
             
         
-    
+    def rightAlignedItem(self,value):
+        item = QTableWidgetItem(str(value))
+        item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        return item
+
     def updateLabels(self, channel, value, uncertainty):
         """
         Updates the UI labels displaying the latest measurement value and its uncertainty for the specified channel.
@@ -2095,6 +2099,9 @@ class CountEstimatedLogic():
         msg_box.setIcon(QMessageBox.Critical)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
+    
+    
+    
         
     
     

@@ -463,6 +463,18 @@ class Ui_CountsEstimated(object):
         self.ChannelBCountValues.setVisible(False)
         self.ChannelCCountValues.setVisible(False)
         self.ChannelDCountValues.setVisible(False)
+        self.setFontSizeToLabels(10,
+        self.titleCounts,
+        self.channelAValuesCount,
+        self.channelBValuesCount,
+        self.channelCValuesCount,
+        self.channelDValuesCount,
+        self.channelAUncertaintyCount,
+        self.channelBUncertaintyCount,
+        self.channelCUncertaintyCount,
+        self.channelDUncertaintyCount,
+        self.titleUncertainty
+        )
 
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
@@ -539,6 +551,12 @@ class Ui_CountsEstimated(object):
         painter.drawEllipse(x, y, point_size, point_size)
         painter.end()
         self.labelColor.setPixmap(pixmap)
+    
+    def setFontSizeToLabels(self,size, *labels):
+        font = QFont()
+        font.setPointSize(size)
+        for label in labels:
+            label.setFont(font)
     
 
 
