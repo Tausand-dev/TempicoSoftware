@@ -747,6 +747,15 @@ class MainWindow(QMainWindow):
             self.parametersTable.setColumnWidth(3, int(round(currentValue*1/50)))
     
     def manageConection(self):
+        """
+        Manages the connection status with the measurement device.
+
+        This function checks if the device is still connected. If the connection is lost, it stops the 
+        timer responsible for monitoring the device, removes the device instance, disables measurement 
+        functionalities in all tabs, and displays an error dialog to inform the user.
+
+        :return: None
+        """
         if self.conectedDevice:
             try:
                 self.conectedDevice.readIdnFromDevice()
@@ -767,6 +776,15 @@ class MainWindow(QMainWindow):
                 msg_box.exec_()
     
     def disconnectedDevice(self):
+        """
+        Handles device disconnection without displaying any user interface dialogs.
+
+        This function is triggered when the connection with the device is lost. It notifies 
+        all relevant components to handle the disconnection and sets the connected device 
+        reference to None.
+
+        :return: None
+        """
         print("Se ejecuta")
         if self.countsEstimatedGraphic:
             self.countsEstimatedGraphic.disconnectedDevice()
@@ -778,10 +796,26 @@ class MainWindow(QMainWindow):
     
     #Function to advise that a measurement is active
     def activeMeasurement(self):
+        """
+        Activates the sentinel indicating that a measurement is currently running.
+
+        This function sets the internal flag to True, which is used to track the 
+        active state of a measurement process.
+
+        :return: None
+        """
         self.currentMeasurement=True
     
     #Function to advise that a measurement is finished
     def noMeasurement(self):
+        """
+        Deactivates the sentinel indicating that no measurement is currently running.
+
+        This function sets the internal flag to False, marking that there is no active 
+        measurement process at the moment.
+
+        :return: None
+        """
         self.currentMeasurement=False
 
         
