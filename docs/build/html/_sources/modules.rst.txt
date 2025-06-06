@@ -7,6 +7,7 @@ src
    LifeTimeGraphics
    StartStopHist
    aboutDialog
+   CountsEstimatedGraphics
    createsavefile
    findDevices
    generalsettings

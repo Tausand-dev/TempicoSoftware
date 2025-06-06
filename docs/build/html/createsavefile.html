@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="findDevices module" href="findDevices.html" />
-    <link rel="prev" title="aboutDialog module" href="aboutDialog.html" /> 
+    <link rel="prev" title="CountsEstimatedGraphics module" href="CountsEstimatedGraphics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,8 +44,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">createsavefile module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#createsavefile.createsavefile"><code class="docutils literal notranslate"><span class="pre">createsavefile</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.check_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.check_folder_and_file()</span></code></a></li>
@@ -53,6 +55,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder_and_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.read_default_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.read_default_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_LifeTime_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_LifeTime_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_counts_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_counts_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_g2_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_g2_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_lists_as_columns_txt"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_lists_as_columns_txt()</span></code></a></li>
 </ul>
@@ -197,6 +200,11 @@ element is a list of corresponding LifeTime values (tuple of lists).</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_counts_data">
+<span class="sig-name descname"><span class="pre">save_counts_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_stamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_counts_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_counts_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="createsavefile.createsavefile.save_g2_data">
 <span class="sig-name descname"><span class="pre">save_g2_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_g2_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_g2_data" title="Permalink to this definition"></a></dt>
 <dd><p>Saves g2 data (tau and g2 values) into a text file in a specified folder. The function
@@ -260,7 +268,7 @@ the lengths of the input lists do not match.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="aboutDialog.html" class="btn btn-neutral float-left" title="aboutDialog module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CountsEstimatedGraphics.html" class="btn btn-neutral float-left" title="CountsEstimatedGraphics module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="findDevices.html" class="btn btn-neutral float-right" title="findDevices module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -43,8 +43,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
@@ -52,13 +54,18 @@
 <li class="toctree-l2"><a class="reference internal" href="#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.activeMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.activeMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_counts_estimated"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_counts_estimated()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnect_button_click"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnect_button_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnectedDevice()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.general_settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.general_settings_clicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
@@ -138,6 +145,19 @@ displays the About window.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.activeMeasurement">
+<span class="sig-name descname"><span class="pre">activeMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.activeMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.activeMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Activates the sentinel indicating that a measurement is currently running.</p>
+<p>This function sets the internal flag to True, which is used to track the 
+active state of a measurement process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.clicked_tabs">
 <span class="sig-name descname"><span class="pre">clicked_tabs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.clicked_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.clicked_tabs" title="Permalink to this definition"></a></dt>
 <dd><p>Executes an action when a tab is clicked and creates the corresponding window.</p>
@@ -167,6 +187,11 @@ If the user selects “No”, the close event is ignored, and the application re
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_counts_estimated">
+<span class="sig-name descname"><span class="pre">construct_counts_estimated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_counts_estimated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_counts_estimated" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.construct_g2">
@@ -231,6 +256,20 @@ If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cit
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handles device disconnection without displaying any user interface dialogs.</p>
+<p>This function is triggered when the connection with the device is lost. It notifies 
+all relevant components to handle the disconnection and sets the connected device 
+reference to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.general_settings_clicked">
 <span class="sig-name descname"><span class="pre">general_settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.general_settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.general_settings_clicked" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the general settings window for device-wide configurations.</p>
@@ -241,6 +280,33 @@ is displayed to inform the user that changes cannot be made while the measuremen
 progress. If no device is connected, a message box is shown indicating that no device was found.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.manageConection">
+<span class="sig-name descname"><span class="pre">manageConection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.manageConection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.manageConection" title="Permalink to this definition"></a></dt>
+<dd><p>Manages the connection status with the measurement device.</p>
+<p>This function checks if the device is still connected. If the connection is lost, it stops the 
+timer responsible for monitoring the device, removes the device instance, disables measurement 
+functionalities in all tabs, and displays an error dialog to inform the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.noMeasurement">
+<span class="sig-name descname"><span class="pre">noMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.noMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.noMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Deactivates the sentinel indicating that no measurement is currently running.</p>
+<p>This function sets the internal flag to False, marking that there is no active 
+measurement process at the moment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="aboutDialog module" href="aboutDialog.html" />
-    <link rel="prev" title="Welcome to Tempico Software’s documentation!" href="index.html" /> 
+    <link rel="prev" title="LifeTimeGraphics module" href="LifeTimeGraphics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,6 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">StartStopHist module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#StartStopHist.StartStopLogic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.autoRangeA"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.autoRangeA()</span></code></a></li>
@@ -61,11 +62,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.createDialog"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.createDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.create_graphs"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.create_graphs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.dialogChangeMode"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.dialogChangeMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.disconnectedDevice()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.hide_graphic2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.save_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_graphic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.save_plots"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_plots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.show_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.show_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.startTimerConnection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.start_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.start_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.stopTimerConnection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.stop_graphic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.threadComplete"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.threadComplete()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#StartStopHist.StartStopLogic.threadRunning"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.threadRunning()</span></code></a></li>
@@ -100,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
@@ -134,7 +139,7 @@
 <span id="startstophist-module"></span><h1>StartStopHist module<a class="headerlink" href="#module-StartStopHist" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="StartStopHist.StartStopLogic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">StartStopHist.</span></span><span class="sig-name descname"><span class="pre">StartStopLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savebutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_graph_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusPoint</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">StartStopHist.</span></span><span class="sig-name descname"><span class="pre">StartStopLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savebutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_graph_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusPoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class handles the functionality for managing buttons, checkboxes, and graphs for histograms related to the Start-Stop measurements. 
 It controls which channels are active, manages the display of histograms, and records the data from the Tempico device based on the user’s interactions. 
@@ -365,6 +370,19 @@ Expected values are ‘channel A’, ‘channel B’, ‘channel C’, or ‘cha
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="StartStopHist.StartStopLogic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Disables device interaction controls when the device is disconnected.</p>
+<p>This function updates the GUI to reflect that the device is no longer connected 
+by disabling the disconnect and start buttons and enabling the connect button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="StartStopHist.StartStopLogic.hide_graphic2">
 <span class="sig-name descname"><span class="pre">hide_graphic2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic.hide_graphic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic.hide_graphic2" title="Permalink to this definition"></a></dt>
 <dd><p>Disables the start and stop buttons in the graphical interface.</p>
@@ -432,11 +450,37 @@ The plots are saved with a timestamp in the specified format in the default fold
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="StartStopHist.StartStopLogic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the timer that periodically checks the device connection.</p>
+<p>The timer runs every 500 milliseconds to monitor connectivity. This is typically 
+called after a measurement finishes or when the application is idle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="StartStopHist.StartStopLogic.start_graphic">
 <span class="sig-name descname"><span class="pre">start_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic.start_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic.start_graphic" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the graphical representation of the measurement based on the selected channels.</p>
 <p>If no channels are selected, it prompts the user to select at least one channel before proceeding. 
 It also disables certain buttons to prevent interaction during the measurement process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StartStopHist.StartStopLogic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/StartStopHist.html#StartStopLogic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StartStopHist.StartStopLogic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the timer responsible for checking the device connection.</p>
+<p>This function is typically called when a measurement begins to avoid interference
+during the acquisition process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -815,7 +859,7 @@ the graph.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Tempico Software’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="LifeTimeGraphics.html" class="btn btn-neutral float-left" title="LifeTimeGraphics module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="aboutDialog.html" class="btn btn-neutral float-right" title="aboutDialog module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

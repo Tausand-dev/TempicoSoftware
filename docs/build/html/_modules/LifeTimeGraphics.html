@@ -41,8 +41,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
@@ -78,7 +80,7 @@
 <span class="kn">from</span> <span class="nn">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QColor</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">QFrame</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QFormLayout</span><span class="p">,</span> <span class="n">QDoubleSpinBox</span>
 <span class="kn">import</span> <span class="nn">pyqtgraph</span> <span class="k">as</span> <span class="nn">pg</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="nb">sum</span><span class="p">,</span> <span class="n">arange</span><span class="p">,</span> <span class="n">histogram</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="nb">sum</span><span class="p">,</span> <span class="n">arange</span><span class="p">,</span> <span class="n">histogram</span><span class="p">,</span> <span class="n">linspace</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">append</span> <span class="k">as</span> <span class="n">appnd</span>
 <span class="kn">from</span> <span class="nn">createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -126,7 +128,7 @@
     <span class="c1">#TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">comboBoxStartChannel</span><span class="p">:</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">:</span> <span class="n">QComboBox</span><span class="p">,</span> <span class="n">graphicFrame</span><span class="p">:</span><span class="n">QFrame</span><span class="p">,</span> <span class="n">startButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">initialParametersButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span>
                  <span class="n">clearButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">:</span><span class="n">QPushButton</span><span class="p">,</span><span class="n">savePlotButton</span><span class="p">:</span><span class="n">QPushButton</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">pointLabel</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">binWidthComboBox</span><span class="p">:</span> <span class="n">QComboBox</span><span class="p">,</span><span class="n">numberBins</span><span class="p">:</span><span class="n">QComboBox</span><span class="p">,</span><span class="n">functionComboBox</span><span class="p">:</span><span class="n">QComboBox</span><span class="p">,</span>
-                 <span class="n">numberMeasurementsSpinBox</span><span class="p">:</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">totalMeasurements</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">totalStart</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">totalTime</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">timeRange</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">applyButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">parameterTable</span><span class="p">:</span> <span class="n">QTableWidget</span><span class="p">,</span><span class="n">MainWindow</span><span class="p">,</span> <span class="n">timerStatus</span><span class="p">:</span> <span class="n">QTimer</span><span class="p">):</span>
+                 <span class="n">numberMeasurementsSpinBox</span><span class="p">:</span> <span class="n">QSpinBox</span><span class="p">,</span> <span class="n">totalMeasurements</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">totalStart</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">totalTime</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">timeRange</span><span class="p">:</span> <span class="n">QLabel</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">applyButton</span><span class="p">:</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">parameterTable</span><span class="p">:</span> <span class="n">QTableWidget</span><span class="p">,</span><span class="n">MainWindow</span><span class="p">,</span> <span class="n">timerConnection</span><span class="p">:</span> <span class="n">QTimer</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
         <span class="c1">#Initialize the main window</span>
@@ -263,15 +265,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">oldChannelD</span><span class="o">=</span><span class="mi">1</span>
         <span class="c1">#Variable to define the old number of runs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">oldNumberRuns</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">=</span><span class="n">timerConnection</span>
         <span class="c1">#--------End Define other parameters and sentinels-----#</span>
         <span class="c1">#--------Init the the timer to check the connection----#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">=</span><span class="n">timerStatus</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkDeviceStatus</span><span class="p">)</span>
         <span class="c1">#Set the value of R^2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R2</span><span class="o">=</span><span class="s2">&quot;Undefined&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">startButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
             
             
     <span class="c1">#Verify the connection of the function</span>
@@ -345,7 +345,6 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#Disable or enable the necessary</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -356,9 +355,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">binWidthComboBox</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberBins</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopTimerConnection</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plotLifeTime</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;Counts &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Counts &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;Start&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStartChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotLifeTime</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;Counts &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Counts &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotLifeTime</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;Counts Channels &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStartChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Channel &quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Channel &quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Counts &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStartChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBoxStopChannel</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+            
+            
         <span class="c1">#Change the parameters labels to undefined</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resetParametersLabels</span><span class="p">()</span>
         <span class="c1">#Save the channels mode before measurement</span>
@@ -382,6 +391,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">QTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startTimer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curveFit</span><span class="o">.</span><span class="n">setData</span><span class="p">([],[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xDataFitCopy</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yDataFitCopy</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">activeMeasurement</span><span class="p">()</span>
         <span class="c1">#Create the thread object</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">=</span><span class="n">WorkerThreadLifeTime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentStartChannel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">currentStopChannel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">binWidthComboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span><span class="o">.</span><span class="n">value</span><span class="p">(),</span>
                                      <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span><span class="n">timeRangeps</span><span class="p">)</span>
@@ -393,6 +405,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">changeStatusColor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">updateValues</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updateMeasurement</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">updateLabel</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updateLabel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">disconectedSignal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lostConnection</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">updateMeasurementsLabel</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updateLabels</span><span class="p">)</span>
         <span class="c1">#Start the thread</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
@@ -430,7 +443,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">enableAfterFinisihThread</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enableAfterFinisihThread</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span></div>
     
     <span class="c1">#Function to clear the graphic</span>
 <div class="viewcode-block" id="LifeTimeGraphic.clearGraphic"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.clearGraphic">[docs]</a>    <span class="k">def</span> <span class="nf">clearGraphic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -454,6 +468,8 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Se ejecuta&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTimerConnection</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberBins</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -464,16 +480,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">binWidthComboBox</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusLabel</span><span class="p">(</span><span class="s2">&quot;No measurement running&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusColor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopTimer</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setOldMode</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measuredTime</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">applyButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">initialParametersButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -494,7 +514,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">initialTau0Doub</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measuredTime</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initialTau1Doub</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measuredTime</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initialAlphaDoub</span><span class="o">=</span><span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveDataButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveDataButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span></div>
         
     
     <span class="c1">#Function to change the status measurement</span>
@@ -739,9 +760,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">=</span><span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="LifeTimeGraphic.stopTimerConnection"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimerConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="LifeTimeGraphic.startTimerConnection"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.startTimerConnection">[docs]</a>    <span class="k">def</span> <span class="nf">startTimerConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span></div>
+        
         
 <div class="viewcode-block" id="LifeTimeGraphic.disconnectedDevice"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.disconnectedDevice">[docs]</a>    <span class="k">def</span> <span class="nf">disconnectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -756,7 +783,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
     
     <span class="c1">#Functions to update the totalTime Label</span>
@@ -2148,7 +2174,15 @@
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">textRoute</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Successful save&quot;</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-                <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div></div>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="LifeTimeGraphic.lostConnection"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.lostConnection">[docs]</a>    <span class="k">def</span> <span class="nf">lostConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">)</span>
+        <span class="n">msg_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connection with the device has been lost&quot;</span><span class="p">)</span>
+        <span class="n">msg_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span>
+        <span class="n">msg_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
+        <span class="n">msg_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">msg_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div></div>
     
     
 
@@ -2189,6 +2223,7 @@
     <span class="n">updateValues</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">updateLabel</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="n">updateMeasurementsLabel</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">disconectedSignal</span><span class="o">=</span><span class="n">Signal</span><span class="p">()</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">deviceStartChannel</span><span class="p">,</span><span class="n">deviceStopChannel</span><span class="p">,</span><span class="n">binwidthText</span><span class="p">,</span><span class="n">numberMeasurements</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">TimeRange</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1">#Parameters of the measurement</span>
@@ -2228,7 +2263,6 @@
             <span class="n">percentage</span><span class="o">=</span><span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurements</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checkDeviceStatus</span><span class="p">()</span>
             <span class="c1">#Try in order to avoid the errors related to suddenly disconnect the device</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">checkDeviceStatus</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">takeMeasurements</span><span class="p">(</span><span class="n">percentage</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">createLifeTimeData</span><span class="p">()</span>
@@ -2307,16 +2341,14 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">totalStarts</span><span class="o">+=</span><span class="mi">1</span>
                         <span class="k">if</span> <span class="n">sentinelStart</span> <span class="ow">and</span> <span class="n">sentinelStop</span><span class="p">:</span>
                             <span class="n">differenceValue</span><span class="o">=</span><span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">currentStartMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-                            <span class="k">if</span> <span class="n">differenceValue</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">+=</span><span class="mi">1</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">totalTime</span><span class="o">+=</span><span class="n">differenceValue</span>
-                                <span class="k">if</span> <span class="n">differenceValue</span><span class="o">&lt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">=</span><span class="mi">0</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">+=</span><span class="mi">1</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">totalTime</span><span class="o">+=</span><span class="n">differenceValue</span>
+                            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span><span class="o">&lt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">=</span><span class="mi">0</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                            
                         <span class="k">else</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
                         
@@ -2366,6 +2398,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
             <span class="n">maximumValue</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span>
+            <span class="n">minimunValue</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span><span class="o">&gt;</span><span class="nb">abs</span><span class="p">(</span><span class="n">minimunValue</span><span class="p">)</span> <span class="ow">and</span> <span class="n">minimunValue</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=-</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+            <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span><span class="o">&lt;=</span><span class="nb">abs</span><span class="p">(</span><span class="n">minimunValue</span><span class="p">)</span> <span class="ow">and</span> <span class="n">minimunValue</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=-</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+            <span class="k">elif</span> <span class="n">minimunValue</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=</span><span class="mi">0</span>
+            
             <span class="n">unitsDivisionFactor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getUnits</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span>
             <span class="n">units</span><span class="o">=</span><span class="n">unitsDivisionFactor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">divisionFactor</span><span class="o">=</span><span class="n">unitsDivisionFactor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -2380,7 +2423,7 @@
                     <span class="n">currentValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                     <span class="n">newValue</span><span class="o">=</span><span class="n">currentValue</span><span class="o">/</span><span class="n">divisionFactor</span>
                     <span class="n">newDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newValue</span><span class="p">)</span>
-            <span class="n">domainValues</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">maximumValue</span><span class="o">/</span><span class="n">divisionFactor</span><span class="p">,</span><span class="n">newBinWidth</span><span class="p">)</span>
+            <span class="n">domainValues</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="n">minimunValue</span><span class="o">/</span><span class="n">divisionFactor</span><span class="p">,</span><span class="n">maximumValue</span><span class="o">/</span><span class="n">divisionFactor</span><span class="o">+</span><span class="n">newBinWidth</span><span class="p">,</span><span class="n">newBinWidth</span><span class="p">)</span>
             <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">appnd</span><span class="p">(</span><span class="n">domainValues</span> <span class="o">-</span> <span class="n">newBinWidth</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">domainValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">newBinWidth</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">counts</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">(</span><span class="n">newDifferences</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bin_edges</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">updateValues</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span><span class="n">domainValues</span><span class="p">)</span>

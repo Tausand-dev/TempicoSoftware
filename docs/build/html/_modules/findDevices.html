@@ -39,8 +39,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -69,7 +79,7 @@
 <span></span><span class="kn">import</span> <span class="nn">hid</span>
 <span class="kn">import</span> <span class="nn">serial.tools.list_ports</span>
 <span class="kn">import</span> <span class="nn">serial</span>
-
+<span class="kn">import</span> <span class="nn">os</span>
 <div class="viewcode-block" id="PyTempicoManager"><a class="viewcode-back" href="../findDevices.html#findDevices.PyTempicoManager">[docs]</a><span class="k">class</span> <span class="nc">PyTempicoManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for managing the search and connection of Tempico devices connected to serial ports on the PC.</span>
@@ -189,7 +199,7 @@
                     <span class="n">values_packet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vid_pid</span><span class="p">(</span><span class="n">vid_pid_string</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_packet</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_pyTempico</span><span class="p">(</span><span class="n">values_packet</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">!=</span><span class="s2">&quot;posix&quot;</span><span class="p">:</span>
                             <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">puerto</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;Tempico&quot;</span> <span class="ow">in</span> <span class="n">description</span><span class="p">:</span>
                     <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">puerto</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -204,7 +214,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

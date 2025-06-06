@@ -16,7 +16,6 @@
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -40,8 +39,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -78,7 +87,7 @@
 <span class="c1">#To do eliminate import</span>
 <span class="kn">from</span> <span class="nn">createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1">#Create graphic design#</span>
 <div class="viewcode-block" id="StartStopLogic"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic">[docs]</a><span class="k">class</span> <span class="nc">StartStopLogic</span><span class="p">():</span>
@@ -98,15 +107,15 @@
 <span class="sd">    :param mainWindow: The main window (QWindow) for the GUI.</span>
 <span class="sd">    :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">disconnect</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">check1</span><span class="p">,</span><span class="n">check2</span><span class="p">,</span><span class="n">check3</span><span class="p">,</span><span class="n">check4</span><span class="p">,</span><span class="n">startbutton</span><span class="p">,</span><span class="n">stopbutton</span><span class="p">,</span><span class="n">savebutton</span><span class="p">,</span><span class="n">save_graph_1</span><span class="p">,</span><span class="n">clear_channel_A</span><span class="p">,</span><span class="n">clear_channel_B</span><span class="p">,</span><span class="n">clear_channel_C</span><span class="p">,</span><span class="n">clear_channel_D</span><span class="p">,</span><span class="n">connect</span><span class="p">,</span><span class="n">mainWindow</span><span class="p">,</span><span class="n">statusValue</span><span class="p">,</span><span class="n">statusPoint</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">disconnect</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">check1</span><span class="p">,</span><span class="n">check2</span><span class="p">,</span><span class="n">check3</span><span class="p">,</span><span class="n">check4</span><span class="p">,</span><span class="n">startbutton</span><span class="p">,</span><span class="n">stopbutton</span><span class="p">,</span><span class="n">savebutton</span><span class="p">,</span><span class="n">save_graph_1</span><span class="p">,</span><span class="n">clear_channel_A</span><span class="p">,</span><span class="n">clear_channel_B</span><span class="p">,</span><span class="n">clear_channel_C</span><span class="p">,</span><span class="n">clear_channel_D</span><span class="p">,</span><span class="n">connect</span><span class="p">,</span><span class="n">mainWindow</span><span class="p">,</span><span class="n">statusValue</span><span class="p">,</span><span class="n">statusPoint</span><span class="p">,</span><span class="n">timerStatus</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
+        <span class="c1">#timer to manage disconnection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">=</span><span class="n">timerStatus</span>
         <span class="c1">#Disconnect button</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">=</span> <span class="n">disconnect</span>
         <span class="c1">#Connect button</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">=</span> <span class="n">connect</span>
-        <span class="c1">#Current measurement</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currentmeasurement</span><span class="o">=</span><span class="kc">False</span>
         <span class="c1">##----------------##</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startbutton</span><span class="o">=</span><span class="n">startbutton</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopbutton</span><span class="o">=</span><span class="n">stopbutton</span>
@@ -143,6 +152,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveB</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveC</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveD</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="o">=</span><span class="kc">False</span>
 
         <span class="c1">##---------------------------------##</span>
         <span class="c1">##---------------------------------##</span>
@@ -437,13 +447,16 @@
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="o">=</span><span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopTimerConnection</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedA</span><span class="o">=</span><span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedB</span><span class="o">=</span><span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedC</span><span class="o">=</span><span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedD</span><span class="o">=</span><span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">currentmeasurement</span><span class="o">=</span><span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">activeMeasurement</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_graphs</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">statusValue</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Measurement running&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusColor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -454,6 +467,32 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">checkC</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checkD</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">savebutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+    
+    
+    
+<div class="viewcode-block" id="StartStopLogic.stopTimerConnection"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.stopTimerConnection">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimerConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the timer responsible for checking the device connection.</span>
+
+<span class="sd">        This function is typically called when a measurement begins to avoid interference</span>
+<span class="sd">        during the acquisition process.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Stop timer when a measurement begins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="StartStopLogic.startTimerConnection"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.startTimerConnection">[docs]</a>    <span class="k">def</span> <span class="nf">startTimerConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the timer that periodically checks the device connection.</span>
+
+<span class="sd">        The timer runs every 500 milliseconds to monitor connectivity. This is typically </span>
+<span class="sd">        called after a measurement finishes or when the application is idle.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Start timer when a measurement begins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="StartStopLogic.hide_graphic2"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.hide_graphic2">[docs]</a>    <span class="k">def</span> <span class="nf">hide_graphic2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -488,6 +527,8 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">startTimerConnection</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threadCreatedSentinel</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -495,10 +536,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">statusValue</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No measurement running&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusColor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">currentmeasurement</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopbutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">startbutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">startbutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savebutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_graphs</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_channel_A</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -510,6 +553,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">checkC</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checkD</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
     
+    
     <span class="c1">#Future function if we want to add the option of number of measurements</span>
 <div class="viewcode-block" id="StartStopLogic.threadComplete"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.threadComplete">[docs]</a>    <span class="k">def</span> <span class="nf">threadComplete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -519,6 +563,7 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_graphic</span><span class="p">()</span></div>
     
@@ -638,10 +683,11 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoomCodeA</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de codigo&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom Code&quot;)</span>
+            <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedA</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de usuario&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom user&quot;)</span>
         <span class="c1"># Function called for graphA zoom </span>
         <span class="n">x_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewBoxA</span><span class="o">.</span><span class="n">viewRange</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Get current x range in the view</span>
         <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="c1"># Get the max and min current range in the view</span>
@@ -679,10 +725,11 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoomCodeB</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de codigo&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom code&quot;)</span>
+            <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedB</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de usuario&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom user&quot;)</span>
         <span class="c1"># Function called for graphB zoom</span>
         <span class="n">x_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewBoxB</span><span class="o">.</span><span class="n">viewRange</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># Get current x range in the view</span>
         <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>    <span class="c1"># Get the max and min current range in the view</span>
@@ -717,10 +764,11 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoomCodeC</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de codigo&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom code&quot;)</span>
+            <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedC</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de usuario&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom user&quot;)</span>
         <span class="c1"># Function called for graphC zoom</span>
         <span class="n">x_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewBoxC</span><span class="o">.</span><span class="n">viewRange</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Get current x range in the view</span>
         <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="c1"># Get the max and min current range in the view</span>
@@ -755,10 +803,11 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoomCodeD</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de codigo&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom code&quot;)</span>
+            <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedD</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zoom de usuario&quot;</span><span class="p">)</span>
+            <span class="c1">#print(&quot;Zoom user&quot;)</span>
         <span class="c1"># Function called for graphD zoom</span>
           
         <span class="n">x_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewBoxD</span><span class="o">.</span><span class="n">viewRange</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Get current x range in the view</span>
@@ -995,7 +1044,10 @@
                     <span class="n">current_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
                     <span class="n">current_date_str</span><span class="o">=</span><span class="n">current_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="n">graph_name</span><span class="o">=</span><span class="s1">&#39;Measure_ChannelA&#39;</span><span class="o">+</span><span class="n">current_date_str</span>
-                    <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
                     <span class="n">graph_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveB</span><span class="p">:</span>
                     <span class="n">exporter</span><span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">exporters</span><span class="o">.</span><span class="n">ImageExporter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotB</span><span class="p">)</span>
@@ -1005,7 +1057,10 @@
                     <span class="n">current_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
                     <span class="n">current_date_str</span><span class="o">=</span><span class="n">current_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="n">graph_name</span><span class="o">=</span><span class="s1">&#39;Measure_ChannelB&#39;</span><span class="o">+</span><span class="n">current_date_str</span>
-                    <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
                     <span class="n">graph_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveC</span><span class="p">:</span>
                     <span class="n">exporter</span><span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">exporters</span><span class="o">.</span><span class="n">ImageExporter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotC</span><span class="p">)</span>
@@ -1015,7 +1070,10 @@
                     <span class="n">current_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
                     <span class="n">current_date_str</span><span class="o">=</span><span class="n">current_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="n">graph_name</span><span class="o">=</span><span class="s1">&#39;Measure_ChannelC&#39;</span><span class="o">+</span><span class="n">current_date_str</span>
-                    <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>  
+                        <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">graph_name</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">selected_format</span><span class="p">)</span>
                     <span class="n">graph_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setinelSaveD</span><span class="p">:</span>
                     <span class="n">exporter</span><span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">exporters</span><span class="o">.</span><span class="n">ImageExporter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotD</span><span class="p">)</span>
@@ -1045,13 +1103,12 @@
             
         <span class="k">except</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Question</span><span class="p">)</span>  <span class="c1"># Cambiar a un icono de pregunta</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Do you want to change the mode?&quot;</span><span class="p">)</span>  <span class="c1"># Texto del mensaje</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Change Mode&quot;</span><span class="p">)</span>  <span class="c1"># Título de la ventana</span>
-            <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>  <span class="c1"># Botones &quot;Yes&quot; y &quot;No&quot;</span>
-
-            <span class="c1"># Ejecutar el cuadro de diálogo y obtener la respuesta</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The graphics could not be saved, check the folder path or system files&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Error saving&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+            
 
     <span class="c1">#Function to connect the Thread with update signal</span>
 <div class="viewcode-block" id="StartStopLogic.updateSignal"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.updateSignal">[docs]</a>    <span class="k">def</span> <span class="nf">updateSignal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="n">channel</span><span class="p">):</span>
@@ -1095,13 +1152,13 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;A&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datapureA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datapureA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;B&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datapureB</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datapureB</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;C&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datapureC</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datapureC</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;D&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datapureD</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datapureD</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">))</span></div>
     
     <span class="c1">#Change the status of sentinel dataThreadCreated</span>
 <div class="viewcode-block" id="StartStopLogic.threadRunning"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.threadRunning">[docs]</a>    <span class="k">def</span> <span class="nf">threadRunning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">status</span><span class="p">):</span>
@@ -1130,11 +1187,11 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="o">=</span><span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+        <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">)</span>
         <span class="n">msg_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connection with the device has been lost&quot;</span><span class="p">)</span>
         <span class="n">msg_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span>
-        <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s2">&quot;/Sources/tausand_small.ico&quot;</span><span class="p">)</span>
-        <span class="n">msg_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
         <span class="n">msg_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
         <span class="n">msg_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
         <span class="n">msg_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
@@ -1145,7 +1202,8 @@
         <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span></div>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span></div>
     
     <span class="c1">#Change the color of status Point</span>
     <span class="c1">#Function to change the color of point measurement</span>
@@ -1447,7 +1505,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedD</span><span class="o">=</span><span class="mi">0</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataD</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
             <span class="n">maxValue</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataD</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">changeZoomMax</span><span class="p">(</span><span class="n">maxValue</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changeZoomMax</span><span class="p">(</span><span class="n">maxValue</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="StartStopLogic.disconnectedDevice"><a class="viewcode-back" href="../StartStopHist.html#StartStopHist.StartStopLogic.disconnectedDevice">[docs]</a>    <span class="k">def</span> <span class="nf">disconnectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disables device interaction controls when the device is disconnected.</span>
+
+<span class="sd">        This function updates the GUI to reflect that the device is no longer connected </span>
+<span class="sd">        by disabling the disconnect and start buttons and enabling the connect button.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startbutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div></div>
     
     
         
@@ -1579,7 +1651,6 @@
                                     <span class="bp">self</span><span class="o">.</span><span class="n">sentinelDialogA</span><span class="o">=</span><span class="kc">True</span>
                                     <span class="c1">#Active waiting</span>
                                     <span class="k">while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">openDialog</span><span class="p">):</span>
-                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialog Open, waiting for close...&quot;</span><span class="p">)</span>
                                         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">dataSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">new_data1</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
@@ -1618,7 +1689,6 @@
                                     <span class="bp">self</span><span class="o">.</span><span class="n">sentinelDialogB</span><span class="o">=</span><span class="kc">True</span>
                                     <span class="c1">#Active waiting</span>
                                     <span class="k">while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">openDialog</span><span class="p">):</span>
-                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialog Open, waiting for close...&quot;</span><span class="p">)</span>
                                         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">dataSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">new_data2</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
@@ -1660,7 +1730,6 @@
                                     <span class="bp">self</span><span class="o">.</span><span class="n">sentinelDialogC</span><span class="o">=</span><span class="kc">True</span>
                                     <span class="c1">#Active waiting</span>
                                     <span class="k">while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">openDialog</span><span class="p">):</span>
-                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialog Open, waiting for close...&quot;</span><span class="p">)</span>
                                         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">dataSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">new_data3</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
@@ -1702,7 +1771,6 @@
                                     <span class="bp">self</span><span class="o">.</span><span class="n">sentinelDialogD</span><span class="o">=</span><span class="kc">True</span>
                                     <span class="c1">#Active waiting</span>
                                     <span class="k">while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">openDialog</span><span class="p">):</span>
-                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dialog Open, waiting for close...&quot;</span><span class="p">)</span>
                                         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">dataSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">new_data4</span><span class="p">,</span><span class="s2">&quot;D&quot;</span><span class="p">)</span>
@@ -1762,8 +1830,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;Measurement running&quot;</span><span class="p">)</span>        
                 
                                   
-        <span class="k">except</span> <span class="ne">NameError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dialogInit</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
              
@@ -1861,9 +1928,9 @@
                     <span class="k">elif</span> <span class="n">channelIndex</span><span class="o">==</span><span class="s1">&#39;C&#39;</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">totalC</span><span class="o">+=</span><span class="mi">1</span>    
                     <span class="k">elif</span> <span class="n">channelIndex</span><span class="o">==</span><span class="s1">&#39;D&#39;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">totalD</span><span class="o">+=</span><span class="mi">1</span>    
-                    <span class="nb">print</span><span class="p">(</span><span class="n">average_measurement</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">dataPureSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">average_measurement</span><span class="p">),</span><span class="n">channelIndex</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">totalD</span><span class="o">+=</span><span class="mi">1</span>   
+                    <span class="n">average_measurement</span><span class="o">=</span><span class="n">average_measurement</span><span class="o">/</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dataPureSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">average_measurement</span><span class="p">,</span><span class="n">channelIndex</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">miliseconds_measurement</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>
@@ -1944,7 +2011,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
