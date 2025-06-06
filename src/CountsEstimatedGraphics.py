@@ -813,7 +813,6 @@ class CountEstimatedLogic():
             self.mainWindow.activeMeasurement()
             self.worker=WorkerThreadCountsEstimated(self.selectChannelA,self.selectChannelB,self.selectChannelC,self.selectChannelD, self.device)
             self.worker.finished.connect(self.finishedThread)
-            self.worker.createdSignal.connect(self.getCreatedEvent)
             self.worker.newMeasurement.connect(self.captureMeasurement)
             self.worker.updateLabel.connect(self.updateLabels)
             self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
@@ -1425,6 +1424,18 @@ class CountEstimatedLogic():
             
         
     def rightAlignedItem(self,value):
+        """
+        Creates a QTableWidgetItem with right-aligned and vertically centered text.
+
+        This function takes a value, converts it to a string, wraps it in a QTableWidgetItem,
+        and sets the text alignment to align the content to the right and center it vertically.
+        It is used to ensure consistent formatting of numerical or textual data in table cells.
+
+        :param value: The value to be displayed in the table cell.
+        :type value: Any
+        :return: A QTableWidgetItem with the specified alignment.
+        :rtype: QTableWidgetItem
+        """
         item = QTableWidgetItem(str(value))
         item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
         return item
@@ -1468,9 +1479,6 @@ class CountEstimatedLogic():
             self.countChannelDUncertainty.setText(f"Uncertainty D: {finalUncertainty}")
     
     
-    
-    def getCreatedEvent(self):
-        print("Thread created")
     
     
     def closeDialogChannels(self, channel):
@@ -1923,8 +1931,7 @@ class CountEstimatedLogic():
                 message_box.exec_()
                 
             
-        except NameError as e:
-            print(e)
+        except:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The graphics could not be saved, check the folder path or system files")
@@ -2068,9 +2075,7 @@ class CountEstimatedLogic():
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
                     self.savebutton.setEnabled(True)
-                except NameError as e:
-                    #If an error occurs, an error message box will be displayed.
-                    print(e)
+                except:
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Critical)
                     message_box.setText("The changes could not be saved.")
@@ -2092,6 +2097,15 @@ class CountEstimatedLogic():
                 message_box.exec_()
     
     def lostConnection(self):
+        """
+        Displays a critical error message indicating that the device connection has been lost.
+
+        This function sets the sentinel flag `disconnectedMeasurement` to True and shows
+        a modal QMessageBox with a critical icon to inform the user that the connection to
+        the device has been lost. The dialog must be acknowledged before continuing.
+
+        :return: None
+        """
         self.disconnectedMeasurement=True
         msg_box = QMessageBox(self.mainWindow)
         msg_box.setText("Connection with the device has been lost")
@@ -2130,7 +2144,6 @@ class WorkerThreadCountsEstimated(QThread):
     :param device: The TempicoDevice instance used to perform the measurement operations.
 
     Signals:
-        - createdSignal: Emitted when the thread is fully initialized.
         - newValue(str, float, float): Emitted with updated values for display.
         - updateLabel(str, float, float): Updates label data in the GUI.
         - newMeasurement(float, datetime, float, float, float, float, float, float, float, float): 
@@ -2143,7 +2156,6 @@ class WorkerThreadCountsEstimated(QThread):
     """
     
     #One value is for the count estimated and the other is for the uncertainty
-    createdSignal=Signal()
     newValue=Signal(str,float,float)
     updateLabel= Signal(str,float,float)
     #Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty
@@ -2233,11 +2245,10 @@ class WorkerThreadCountsEstimated(QThread):
         if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure) and self.running:
             self.noTotalMeasurements.emit()
             self.running=False
-            print("No hay ninguna medicion en ningun canal")
+
         elif self.channelsWithoutMeasurements and self.running:
             self.noPartialMeasurements.emit(self.channelsWithoutMeasurements)
             self.continueEvent.wait()
-            print("El hilo continua luego de que la pestana se cierra")
         if self.running:
             self.enableDisableChannels()
         if self.running:
@@ -2250,7 +2261,6 @@ class WorkerThreadCountsEstimated(QThread):
                 self.running=False
                 self.disconnectedDevice.emit()
             if self.running:
-                print("Se ejecuta medicion")
                 self.getMeasurements()
                 time.sleep(1)
             
@@ -2276,8 +2286,6 @@ class WorkerThreadCountsEstimated(QThread):
         valuesC=[]
         valuesD=[]
         measure=self.device.measure()
-        
-        print(measure)
         if measure:
             if len(measure)!=0:
                 for run in measure:
