@@ -17,6 +17,56 @@ import threading
 from pyqtgraph import mkPen
 import os
 class CountEstimatedLogic():
+    """
+    Class responsible for managing the logic and graphical representation of the Count Estimation window.
+
+    This class handles user interactions and graphical updates related to photon/event count estimations across multiple channels (A, B, C, D). It coordinates the initialization of graphical elements, manages real-time measurements, and provides options for data saving, graphical visualization modes, and uncertainty tracking per channel. The main responsibilities include:
+    - Initializing and updating graphical frames for each measurement channel.
+    - Starting and stopping the count measurements.
+    - Handling user interactions with checkboxes, radio buttons, and combo boxes.
+    - Displaying and updating count values and their uncertainties.
+    - Managing separate, merged, or detached graphics.
+    - Saving count data and graphical plots.
+    - Monitoring the device connection and measurement state.
+
+    :param channelACheckBox: Checkbox for enabling/disabling measurements on channel A (QCheckBox).
+    :param channelBCheckBox: Checkbox for enabling/disabling measurements on channel B (QCheckBox).
+    :param channelCCheckBox: Checkbox for enabling/disabling measurements on channel C (QCheckBox).
+    :param channelDCheckBox: Checkbox for enabling/disabling measurements on channel D (QCheckBox).
+    :param startButton: Button to start the count measurement (QPushButton).
+    :param stopButton: Button to stop the count measurement (QPushButton).
+    :param mergeRadio: Radio button to merge all channel plots into one graph (QRadioButton).
+    :param separateGraphics: Radio button to display plots separately per channel (QRadioButton).
+    :param deatachedGraphics: Radio button to display detached external graphics (QRadioButton).
+    :param timeRangeComboBox: Combo box for selecting the time range for plot visualization (QComboBox).
+    :param clearButtonChannelA: Button to clear the graph and data of channel A (QPushButton).
+    :param clearButtonChannelB: Button to clear the graph and data of channel B (QPushButton).
+    :param clearButtonChannelC: Button to clear the graph and data of channel C (QPushButton).
+    :param clearButtonChannelD: Button to clear the graph and data of channel D (QPushButton).
+    :param saveDataButton: Button to save count data for all channels (QPushButton).
+    :param savePlotButton: Button to save the plot images (QPushButton).
+    :param countChannelAValue: Label displaying current count value on channel A (QLabel).
+    :param countChannelBValue: Label displaying current count value on channel B (QLabel).
+    :param countChannelCValue: Label displaying current count value on channel C (QLabel).
+    :param countChannelDValue: Label displaying current count value on channel D (QLabel).
+    :param countChannelAUncertainty: Label showing uncertainty of channel A (QLabel).
+    :param countChannelBUncertainty: Label showing uncertainty of channel B (QLabel).
+    :param countChannelCUncertainty: Label showing uncertainty of channel C (QLabel).
+    :param countChannelDUncertainty: Label showing uncertainty of channel D (QLabel).
+    :param tableCounts: Table displaying count and uncertainty data per measurement cycle (QTableWidget).
+    :param graphicsFrame: Frame container for holding the graphical layouts (QFrame).
+    :param channelAFrameLabel: Frame label associated with channel A graphics (QFrame).
+    :param channelBFrameLabel: Frame label associated with channel B graphics (QFrame).
+    :param channelCFrameLabel: Frame label associated with channel C graphics (QFrame).
+    :param channelDFrameLabel: Frame label associated with channel D graphics (QFrame).
+    :param statusLabel: Label showing the system status (QLabel).
+    :param pointStatusLabel: Label showing the status of the current measurement point (QLabel).
+    :param deatachedCheckBox: Checkbox to toggle between embedded and detached graphics layout (QCheckBox).
+    :param device: The connected measurement device.
+    :param parent: The parent window containing the UI (usually a QMainWindow).
+    :param timerConnection: Timer responsible for checking device connection status (QTimer).
+    :return: None
+    """
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
@@ -156,12 +206,20 @@ class CountEstimatedLogic():
             self.savePlotButton.setEnabled(False)
             
         
-    def verifyConnection(self):
-        
-        pass
     
     #Funcion to dinamically changes the interface
     def checkBoxListenerChannels(self):
+        """
+        Updates the visibility of graphical elements and table columns based on the state of the channel checkboxes.
+
+        This function performs the following actions:
+        - Checks the state of each channel's checkbox (A, B, C, D).
+        - Shows or hides the corresponding frame label for each channel depending on whether the checkbox is checked.
+        - Calls `hideColumns()` to hide the table columns associated with unchecked channels.
+        - Calls `updateGraphicsLayout()` to refresh the displayed plots based on the selected channels.
+
+        :return: None
+        """
         self.hideColumns()
         if self.channelACheckBox.isChecked():
             self.channelAFrameLabel.setVisible(True)
@@ -188,6 +246,24 @@ class CountEstimatedLogic():
         self.updateGraphicsLayout()
     
     def factoryGraphChannels(self, channel):
+        """
+        Creates and returns a configured plot widget for the specified measurement channel.
+
+        This factory function generates a graphical layout for visualizing count data from one of the four available channels (A, B, C, or D). The plot is customized with a unique color per channel, grid display, axis labeling, and a legend. It returns the PyQtGraph components necessary for real-time plotting.
+
+        This function performs the following actions:
+        - Selects a predefined color for the specified channel.
+        - Initializes a `GraphicsLayoutWidget` with a white background.
+        - Adds a plot to the widget with grid lines, axis labels, and legend.
+        - Creates a stylized curve object for plotting count data using markers and colored lines.
+        - Returns the components needed to integrate the plot into the GUI and update it dynamically.
+
+        :param channel: A single-character string indicating the channel ('A', 'B', 'C', or 'D').
+        :return: A tuple containing:
+            - `GraphicsLayoutWidget`: the plot container.
+            - `PlotItem`: the configured plot.
+            - `PlotDataItem`: the curve used for plotting the counts.
+        """
         colors = {
             "A": (0, 114, 189),    # azul
             "B": (217, 83, 25),    # rojo-naranja
@@ -220,6 +296,27 @@ class CountEstimatedLogic():
         return winCountsGraph, plotCounts, curve
 
     def factoryGraphsAllChannels(self):
+        """
+        Creates and returns a single plot widget containing curves for all selected measurement channels.
+
+        This factory function generates a unified graphical layout that displays the estimated counts for channels A, B, C, and D in a single plot. Each channel is represented with a distinct color and labeled curve, depending on whether its checkbox is enabled. This approach consolidates the visualization into one graph rather than creating separate ones per channel.
+
+        This function performs the following actions:
+        - Defines a unique color for each channel (A, B, C, D).
+        - Initializes a `GraphicsLayoutWidget` with a white background and grid lines.
+        - Configures a single plot with appropriate axis labels and a legend.
+        - Creates curve objects for each channel using stylized markers and pens.
+        - Only assigns a name to a curve if its corresponding channel checkbox is checked.
+        - Returns the complete widget and all channel curves for display and real-time updates.
+
+        :return: A tuple containing:
+            - `GraphicsLayoutWidget`: the shared plot container for all channels.
+            - `PlotItem`: the unified plot area.
+            - `PlotDataItem`: curve for channel A.
+            - `PlotDataItem`: curve for channel B.
+            - `PlotDataItem`: curve for channel C.
+            - `PlotDataItem`: curve for channel D.
+        """
         colors = {
             "A": (0, 114, 189),    # azul
             "B": (217, 83, 25),    # rojo-naranja
@@ -283,25 +380,93 @@ class CountEstimatedLogic():
     
 
     def constructGraphicA(self):
+        """
+        Constructs and initializes the graphical components for channel A.
+
+        This function uses the `factoryGraphChannels` method to generate the graphical layout for channel A, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.
+
+        This function performs the following actions:
+        - Calls `factoryGraphChannels` with channel 'A' to generate the graph.
+        - Stores the returned plot widget, plot item, and curve for channel A.
+
+        :return: None
+        """
         self.winCountsGraphA, self.plotCountsA, self.curveCountsA = self.factoryGraphChannels('A')
         
     
     def constructGraphicB(self):
+        """
+        Constructs and initializes the graphical components for channel B.
+
+        This function uses the `factoryGraphChannels` method to generate the graphical layout for channel B, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.
+
+        This function performs the following actions:
+        - Calls `factoryGraphChannels` with channel 'B' to generate the graph.
+        - Stores the returned plot widget, plot item, and curve for channel B.
+
+        :return: None
+        """
         self.winCountsGraphB, self.plotCountsB, self.curveCountsB = self.factoryGraphChannels('B')
         
     
     def constructGraphicC(self):
+        """
+        Constructs and initializes the graphical components for channel C.
+
+        This function uses the `factoryGraphChannels` method to generate the graphical layout for channel C, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.
+
+        This function performs the following actions:
+        - Calls `factoryGraphChannels` with channel 'C' to generate the graph.
+        - Stores the returned plot widget, plot item, and curve for channel C.
+
+        :return: None
+        """
         self.winCountsGraphC, self.plotCountsC, self.curveCountsC = self.factoryGraphChannels('C')
         
     
     def constructGraphicD(self):
+        """
+        Constructs and initializes the graphical components for channel D.
+
+        This function uses the `factoryGraphChannels` method to generate the graphical layout for channel D, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.
+
+        This function performs the following actions:
+        - Calls `factoryGraphChannels` with channel 'D' to generate the graph.
+        - Stores the returned plot widget, plot item, and curve for channel D.
+
+        :return: None
+        """
         self.winCountsGraphD, self.plotCountsD, self.curveCountsD = self.factoryGraphChannels('D')
     
     def constructAllGraphics(self):
+        """
+        Constructs and initializes the unified graphical layout for all measurement channels.
+
+        This function calls `factoryGraphsAllChannels` to generate a single plot widget that contains curves for channels A, B, C, and D. Each curve is customized by color and visibility based on whether its corresponding checkbox is enabled. The resulting components are stored as instance variables for centralized access and updates.
+
+        This function performs the following actions:
+        - Calls `factoryGraphsAllChannels` to create the shared plot and individual channel curves.
+        - Stores the plot widget, plot item, and all channel-specific curves as instance variables.
+
+        :return: None
+        """
         self.winCountsAllGraph, self.plotCountsAllC, self.cuveCountsAllA, self.cuveCountsAllB, self.cuveCountsAllC,self.cuveCountsAllD =self.factoryGraphsAllChannels()
         
 
     def createCloneTable(self):
+        """
+        Creates and configures a cloned table instance for storing a copy of the measurement data.
+
+        This function initializes a separate `QTableWidget` that mirrors the structure of the main count table. It includes predefined column headers for the date and channels A, B, C, and D. The cloned table is set to stretch its columns to fit the available space and is made read-only to prevent user edits.
+
+        This function performs the following actions:
+        - Creates a new `QTableWidget` instance with 5 columns.
+        - Sets the horizontal headers to ['Date', 'A', 'B', 'C', 'D'].
+        - Enables automatic stretching of column widths.
+        - Disables editing to preserve the integrity of the data.
+
+        :return: None
+        """
         self.cloneTable=QTableWidget()
         self.cloneTable.setColumnCount(5)
         self.cloneTable.setHorizontalHeaderLabels(['Date','A','B','C','D'])
@@ -313,6 +478,35 @@ class CountEstimatedLogic():
 
     #Function to update wich graphics are shown
     def updateGraphicsLayout(self):
+        """
+        Updates the graphical layout based on the selected visualization mode and active channel checkboxes.
+
+        This function dynamically reconfigures how the channel plots are displayed, depending on the selected radio button mode: 
+        separate graphics, merged graph, or detached dialogs. It ensures that the interface reflects the current user selections by showing or hiding the corresponding curves, windows, or layouts.
+
+        This function performs the following actions:
+        - If **separate graphics** mode is selected:
+            - Closes any open detached dialogs.
+            - Clears the current layout inside the `graphicsFrame`.
+            - Creates individual graphs for each selected channel (A–D).
+            - Arranges them responsively:
+                - 1 channel → full frame.
+                - 2 channels → one above the other.
+                - 3 channels → two top, one bottom.
+                - 4 channels → 2×2 grid layout.
+        - If **merge graphics** mode is selected:
+            - Closes detached dialogs if any exist.
+            - Clears the layout in `graphicsFrame`.
+            - Creates a single graph containing all curves.
+            - Displays or hides each curve depending on its checkbox status.
+        - If **detached graphics** mode is selected:
+            - Clears the main `graphicsFrame` layout.
+            - For each selected channel (A–D), opens a dedicated dialog window.
+            - Loads previous data into the newly created plots.
+            - Closes dialog windows for unchecked channels.
+
+        :return: None
+        """
         if self.separateGraphics.isChecked():
             if self.dialogACreated:
                 self.dialogACreated.close()
@@ -540,6 +734,19 @@ class CountEstimatedLogic():
     
     
     def connectedDevice(self,device):
+        """
+        Handles the UI and internal state updates when the device is successfully connected.
+
+        This function performs the following actions:
+        - Enables the disconnect button and disables the connect button in the main window.
+        - Updates the internal sentinel to indicate that the device is connected and measurements are allowed.
+        - Stores the reference to the connected device.
+        - Enables the start button to allow measurements to begin.
+        - (Optional) Starts a timer for updating measurement status (currently commented out).
+
+        :param device: The connected device instance.
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
         self.disconnectedMeasurement=False
@@ -552,6 +759,16 @@ class CountEstimatedLogic():
     
     
     def disconnectedDevice(self):
+        """
+        Handles the UI and internal state updates when the device is disconnected.
+
+        This function performs the following actions:
+        - Disables the disconnect button and enables the connect button in the main window.
+        - Disables the start button to prevent new measurements from being initiated.
+        - (Optional) May start a timer for monitoring status or reconnection attempts (currently commented out).
+
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         #TODO: SET THE TIMER OF MEASUREMENTS
@@ -559,6 +776,25 @@ class CountEstimatedLogic():
         self.startButton.setEnabled(False)
 
     def startMeasure(self):
+        """
+        Starts the count measurement process by configuring the UI, preparing internal states, and launching the background worker thread.
+
+        This function is triggered when the user clicks the Start button. It verifies that at least one measurement channel (A–D) is selected. If so, it proceeds to initialize the measurement by disabling conflicting buttons and tabs, saving current settings, resetting values, and setting up the worker thread responsible for data acquisition. If no channels are selected, it displays a dialog warning the user.
+
+        This function performs the following actions:
+        - Verifies that at least one channel checkbox is active.
+        - Disables the Start button and enables the Stop button.
+        - Disables data saving buttons and tab navigation to prevent user interference.
+        - Saves current settings and stops the connection monitoring timer.
+        - Resets measurement values and identifies the selected channels.
+        - Updates the UI status bar to indicate active measurement.
+        - Creates and configures a `WorkerThreadCountsEstimated` thread to perform background data acquisition.
+        - Connects various thread signals to corresponding update methods in the class.
+        - Starts the measurement thread.
+        - If no channels are selected, displays a warning dialog prompting the user to activate at least one channel.
+
+        :return: None
+        """
         if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
             self.startButton.setEnabled(False)
             self.stopButton.setEnabled(True)
@@ -590,6 +826,25 @@ class CountEstimatedLogic():
             self.noChannelsSelected()
     
     def stopMeasure(self):
+        """
+        Stops the ongoing measurement process and restores the UI and device to their initial configuration.
+
+        This function is triggered when the user clicks the Stop button. It halts the background measurement thread, resets relevant internal flags (sentinels), re-enables UI tabs and controls, and restores the initial settings of the Tempico device if the disconnection did not occur. If the device was disconnected during measurement, it triggers the disconnection handling routine.
+
+        This function performs the following actions:
+        - Re-enables the disabled UI tabs to allow user interaction post-measurement.
+        - Calls `resetSentinels()` to clear internal flags related to active measurement channels.
+        - Disables the Stop button and signals the worker thread to stop.
+        - If the device is still connected:
+            - Restarts the connection-monitoring timer.
+            - Re-enables the disconnect button.
+        - If the device was disconnected during measurement:
+            - Triggers the disconnection handling logic in the main window.
+        - Updates the main window status to indicate that no measurement is currently running.
+        - Calls `returnSettings()` to restore device parameters to their original configuration.
+
+        :return: None
+        """
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.resetSentinels()
@@ -607,32 +862,95 @@ class CountEstimatedLogic():
         
     
     def stopTimerConnection(self):
+        """
+        Stops the connection monitoring timer during an active measurement.
+
+        This function is called when a measurement begins to prevent interference from the periodic connection checks. It halts the `timerConnection`, which normally runs in the background to monitor the status of the Tempico device.
+
+        :return: None
+        """
         #Stop timer when a measurement begins
         self.timerConnection.stop()
     
     def startTimerConnection(self):
+        """
+        Starts the connection monitoring timer to periodically check the device status.
+
+        This function activates the `timerConnection`, which verifies the connection with the Tempico device every 500 milliseconds. It is typically called after a measurement has ended or when the device is reconnected, ensuring continuous monitoring of the device’s availability.
+
+        :return: None
+        """
         #Start timer when a measurement begins
         self.timerConnection.start(500)
     
     def clearChannelA(self):
+        """
+        Clears all stored measurement data for channel A and updates the corresponding plot.
+
+        This function is called when the user clicks the Clear button for channel A. It resets the timestamp lists and count values associated with channel A, and refreshes the plot to reflect the cleared state.
+
+        This function performs the following actions:
+        - Empties the list of raw timestamps and formatted date timestamps for channel A.
+        - Clears the list of count values associated with channel A.
+        - Updates the channel A curve to remove all plotted data.
+
+        :return: None
+        """
+
         self.timestampsChannelA=[]
         self.timestampsDateChannelA=[]
         self.channelAValues=[]
         self.curveCountsA.setData(self.timestampsChannelA,self.channelAValues)
     
     def clearChannelB(self):
+        """
+        Clears all stored measurement data for channel B and updates the corresponding plot.
+
+        This function is called when the user clicks the Clear button for channel B. It resets the timestamp lists and count values associated with channel B, and refreshes the plot to reflect the cleared state.
+
+        This function performs the following actions:
+        - Empties the list of raw timestamps and formatted date timestamps for channel B.
+        - Clears the list of count values associated with channel B.
+        - Updates the channel B curve to remove all plotted data.
+
+        :return: None
+        """
         self.timestampsChannelB=[]
         self.timestampsDateChannelB=[]
         self.channelBValues=[]
         self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
     
     def clearChannelC(self):
+        """
+        Clears all stored measurement data for channel C and updates the corresponding plot.
+
+        This function is called when the user clicks the Clear button for channel C. It resets the timestamp lists and count values associated with channel C, and refreshes the plot to reflect the cleared state.
+
+        This function performs the following actions:
+        - Empties the list of raw timestamps and formatted date timestamps for channel C.
+        - Clears the list of count values associated with channel C.
+        - Updates the channel C curve to remove all plotted data.
+
+        :return: None
+        """
         self.timestampsChannelC=[]
         self.timestampsDateChannelC=[]
         self.channelCValues=[]
         self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
     
     def clearChannelD(self):
+        """
+        Clears all stored measurement data for channel D and updates the corresponding plot.
+
+        This function is called when the user clicks the Clear button for channel D. It resets the timestamp lists and count values associated with channel D, and refreshes the plot to reflect the cleared state.
+
+        This function performs the following actions:
+        - Empties the list of raw timestamps and formatted date timestamps for channel D.
+        - Clears the list of count values associated with channel D.
+        - Updates the channel D curve to remove all plotted data.
+
+        :return: None
+        """
         self.timestampsChannelD=[]
         self.timestampsDateChannelD=[]
         self.channelDValues=[]
@@ -640,6 +958,20 @@ class CountEstimatedLogic():
         
     #Functions to create all the dialogs for each graphic
     def createDialogFactory(self, channel):
+        """
+        Creates and returns a non-modal dialog window for displaying detached graphics for the specified channel.
+
+        This factory function is used when the user selects the "detached graphics" mode. It generates a dedicated `QDialog` for a given channel (A, B, C, or D), configures its appearance and behavior, and positions it to avoid overlap with other dialogs. The dialog is linked to a callback that ensures proper cleanup when it is closed.
+
+        This function performs the following actions:
+        - Instantiates a `QDialog` as a child of the main window.
+        - Sets the dialog title and default size.
+        - Connects the `finished` signal to a cleanup method for the channel.
+        - Assigns a fixed screen position for each channel to avoid visual overlap.
+
+        :param channel: A string indicating the target channel ('A', 'B', 'C', or 'D').
+        :return: A configured, ready-to-display `QDialog` for the given channel.
+        """
         dialog = QDialog(self.mainWindow)
         dialog.setWindowTitle(f"Detached Graphics {channel}")
         dialog.resize(400, 300)
@@ -660,6 +992,19 @@ class CountEstimatedLogic():
         return dialog
         
     def updateGraphic(self):
+        """
+        Updates the visible X-axis range of all channel plots based on the selected time window.
+
+        This function is triggered when the user changes the time range using the `timeRangeComboBox`. It determines the most recent timestamp in channel A and adjusts the X-axis range for all plots (A–D) accordingly, displaying only the data within the selected time interval.
+
+        This function performs the following actions:
+        - Verifies that channel A has data; if not, it exits early.
+        - Attempts to extract the number of seconds from the selected combo box option.
+        - Calculates the minimum and maximum X-axis values based on the most recent timestamp.
+        - Updates the X-axis range of all plots (A, B, C, and D) to reflect the selected time window.
+
+        :return: None
+        """
         if not self.timestampsChannelA:
             return
         # Apply seconds filter to the list
@@ -676,6 +1021,20 @@ class CountEstimatedLogic():
         
     
     def getChannelsMeasure(self):
+        """
+        Determines which measurement channels are selected and updates internal sentinels accordingly.
+
+        This function evaluates the state of each channel's checkbox (A, B, C, D) to establish which channels will participate in the measurement. It sets the corresponding selection and measurement sentinels to `True` or `False` based on the checkboxes. Additionally, it disables the checkbox for any unselected channel to prevent user changes during the active measurement session.
+
+        This function performs the following actions:
+        - Assumes all channels are selected by default.
+        - Checks the state of each channel checkbox and updates:
+            - `selectChannelX`: sentinel to include channel X in the measurement loop.
+            - `measurementChannelX`: sentinel to track measurement activity per channel.
+        - Disables the checkbox for any channel that was not selected to lock in the configuration.
+
+        :return: None
+        """
         self.selectChannelA=True
         self.selectChannelB=True
         self.selectChannelC=True
@@ -702,6 +1061,17 @@ class CountEstimatedLogic():
             self.channelDCheckBox.setEnabled(False)
     
     def resetSentinels(self):
+        """
+        Resets internal channel selection sentinels and re-enables all channel checkboxes.
+
+        This function is typically called after a measurement is stopped. It clears the selection flags (`selectChannelX`) for all channels (A–D) and re-enables their corresponding checkboxes in the UI, allowing the user to configure new measurement selections.
+
+        This function performs the following actions:
+        - Sets all `selectChannelX` sentinels to `False`, indicating no active selections.
+        - Enables the checkboxes for channels A, B, C, and D to restore full configuration flexibility.
+
+        :return: None
+        """
         #Reset selected sentinels
         self.selectChannelA=False
         self.selectChannelB=False
@@ -714,6 +1084,21 @@ class CountEstimatedLogic():
         self.channelDCheckBox.setEnabled(True)
     
     def saveSettings(self):
+        """
+        Saves the current configuration settings of the Tempico device for all channels.
+
+        This function queries the device and stores key configuration parameters for each channel (A–D), such as the number of stops, acquisition mode, averaging cycles, and stop mask. These values are cached in instance variables so they can be restored later (e.g., after a measurement session). If the device is unavailable or any read operation fails, the function safely ignores the error.
+
+        This function performs the following actions:
+        - Retrieves and stores the global number of acquisition runs.
+        - Retrieves and stores the number of stops per channel.
+        - Retrieves and stores the operation mode per channel.
+        - Retrieves and stores the number of averaging cycles per channel.
+        - Retrieves and stores the stop mask per channel.
+        - Ignores exceptions silently if the device is not ready.
+
+        :return: None
+        """
         try:
             self.numberRunsSetting=self.device.getNumberOfRuns()
             #Number of stops
@@ -743,6 +1128,21 @@ class CountEstimatedLogic():
     
     
     def returnSettings(self):
+        """
+        Restores the previously saved configuration settings to the Tempico device.
+
+        This function is typically called after a measurement session ends. It applies the saved settings—previously captured via `saveSettings()`—back to the Tempico device for all channels (A–D). This includes restoring the number of runs, number of stops, mode, averaging cycles, and stop mask values. If any of the required variables were not initialized (e.g., due to a missing `saveSettings()` call), the function catches the `NameError` and prints the exception.
+
+        This function performs the following actions:
+        - Restores the number of acquisition runs for the entire device.
+        - Restores the number of averaging cycles for each channel.
+        - Restores the number of stop events for each channel.
+        - Restores the operation mode for each channel.
+        - Restores the stop mask configuration for each channel.
+        - Catches and prints `NameError` if any setting is undefined.
+
+        :return: None
+        """
         try:
             
             #Return number of runs
@@ -772,6 +1172,20 @@ class CountEstimatedLogic():
             print(e)
         
     def resetValues(self):
+        """
+        Resets all measurement-related data, graphics, tables, and save-state sentinels to their initial state.
+
+        This function is typically called before starting a new measurement session. It ensures that all previous data and UI elements are cleared to avoid inconsistencies or overlapping results. It resets internal storage lists, clears the curves on the plots, empties the result tables, and resets file save status indicators.
+
+        This function performs the following actions:
+        - Clears all count values and timestamps for channels A–D.
+        - Clears the corresponding date-formatted timestamp lists.
+        - Resets the row count of the main and cloned data tables.
+        - Clears all data from the plotted curves for each channel.
+        - Resets internal sentinels that track whether the data has been saved in TXT, CSV, or DAT format.
+
+        :return: None
+        """
         #Delete the values
         self.channelAValues=[]
         self.channelBValues=[]
@@ -803,6 +1217,18 @@ class CountEstimatedLogic():
 
     
     def enableButtons(self):
+        """
+        Enables or disables the clear buttons for each channel based on the current selection state.
+
+        This function checks which channels (A–D) have been marked as selected for measurement and enables their corresponding "Clear" buttons. If a channel is not selected, its clear button remains disabled. Additionally, it disables the disconnect button to prevent accidental disconnection during an active measurement setup.
+
+        This function performs the following actions:
+        - Enables the "Clear" button for each selected channel.
+        - Disables the "Clear" button for any unselected channel.
+        - Disables the disconnect button in the main window.
+
+        :return: None
+        """
         if not self.selectChannelA:
             self.clearButtonChannelA.setEnabled(False)
         else:
@@ -827,6 +1253,18 @@ class CountEstimatedLogic():
     
     #Hide and show column for channels measurement
     def hideColumns(self):
+        """
+        Updates the visibility of the table columns based on the selected measurement channels.
+
+        This function ensures that only the columns corresponding to active channels (A–D) are visible in both the main and cloned data tables. It first shows all channel columns, then hides those whose associated checkboxes are unchecked.
+
+        This function performs the following actions:
+        - Ensures all channel columns (1–4) are visible initially in both `tableCounts` and `cloneTable`.
+        - Checks the state of each channel's checkbox.
+        - Hides the column in both tables for any channel that is not currently selected.
+
+        :return: None
+        """
         #First show all columns
         self.tableCounts.showColumn(1);
         self.tableCounts.showColumn(2);
@@ -856,6 +1294,33 @@ class CountEstimatedLogic():
         
     
     def captureMeasurement(self,secondsTime,dateTime,channelAValue,channelAUncertainty,channelBValue,channelBUncertainty,channelCValue,channelCUncertainty,channelDValue,channelDUncertainty):
+        """
+        Captures and processes a new set of measurement values emitted via signal, updating the UI and internal data structures.
+
+        This function is connected to a QSignal from the background worker thread and is responsible for handling a single measurement cycle. It validates the presence of data, provides real-time user feedback when no measurements are detected for specific channels, updates plots with valid values, populates the measurement table, and refreshes visual labels.
+
+        This function performs the following actions:
+        - Checks for zero values in any channel and informs the user if one or more channels are not receiving valid measurements.
+        - Updates the status bar and color indicator depending on whether all channels are acquiring data.
+        - Appends valid count values and timestamps to the corresponding lists for each channel.
+        - Updates the graphical curves for each channel if valid data is present.
+        - Converts zero and -1 values into status messages like "Low Counts" or "Not Selected" for display purposes.
+        - Adds the latest measurement row to both the main table (`tableCounts`) and its clone (`cloneTable`).
+        - Updates the live count and uncertainty labels for any actively selected channel.
+        - Refreshes the visible X-axis range of the graphs using `updateGraphic()`.
+
+        :param secondsTime: Timestamp in seconds since measurement start (float).
+        :param dateTime: Human-readable datetime string for the measurement (str).
+        :param channelAValue: Count value for channel A (float or int).
+        :param channelAUncertainty: Uncertainty value for channel A (float).
+        :param channelBValue: Count value for channel B (float or int).
+        :param channelBUncertainty: Uncertainty value for channel B (float).
+        :param channelCValue: Count value for channel C (float or int).
+        :param channelCUncertainty: Uncertainty value for channel C (float).
+        :param channelDValue: Count value for channel D (float or int).
+        :param channelDUncertainty: Uncertainty value for channel D (float).
+        :return: None
+        """
         channelsWithoutMeasurements=[]
         #Manage status
         if channelAValue==0:
@@ -961,6 +1426,21 @@ class CountEstimatedLogic():
         
     
     def updateLabels(self, channel, value, uncertainty):
+        """
+        Updates the UI labels displaying the latest measurement value and its uncertainty for the specified channel.
+
+        This function formats and sets the value and uncertainty labels for a given channel (A–D). If the value is a string (e.g., "Low Counts" or "Not Selected"), it is displayed as-is. If it is a numeric value, the function rounds it for clearer presentation before updating the corresponding labels.
+
+        This function performs the following actions:
+        - Determines if the value is a string or numeric.
+        - Rounds numeric values (value to 2 decimals, uncertainty to 5 decimals).
+        - Updates the `QLabel` elements associated with the selected channel to reflect the latest measurement results.
+
+        :param channel: The target channel identifier ('A', 'B', 'C', or 'D').
+        :param value: The most recent measured value (float, int, or str).
+        :param uncertainty: The associated uncertainty of the measurement (float or str).
+        :return: None
+        """
         if value=="Low Counts":
             finalValue=value
             finalUncertainty=uncertainty
@@ -983,14 +1463,25 @@ class CountEstimatedLogic():
             self.countChannelDValue.setText(f"Channel D: {finalValue}")
             self.countChannelDUncertainty.setText(f"Uncertainty D: {finalUncertainty}")
     
-    def updateTableWidget(self):
-        pass
+    
     
     def getCreatedEvent(self):
         print("Thread created")
     
     
     def closeDialogChannels(self, channel):
+        """
+        Handles cleanup and UI updates when a detached graphics dialog is closed.
+
+        This function is triggered when a user manually closes a detached dialog window corresponding to a specific channel. It clears the internal reference to the dialog and unchecks the associated channel checkbox to reflect that the channel is no longer active in the detached view.
+
+        This function performs the following actions:
+        - Sets the corresponding `dialogXCreated` variable to `None`, where X is the channel (A–D).
+        - Unchecks the checkbox for the specified channel to visually indicate it is no longer selected.
+
+        :param channel: The identifier of the channel whose dialog was closed ('A', 'B', 'C', or 'D').
+        :return: None
+        """
         if channel == "A":
             self.dialogACreated=None
             self.channelACheckBox.setChecked(False)
@@ -1005,6 +1496,21 @@ class CountEstimatedLogic():
             self.channelDCheckBox.setChecked(False)
     
     def finishedThread(self):
+        """
+        Handles the post-execution cleanup and UI updates when the measurement thread finishes.
+
+        This function is automatically triggered when the background measurement thread completes. It resets internal sentinels, updates the UI to reflect the end of the measurement, enables or disables appropriate buttons depending on whether data was captured, and invokes the standard stop measurement routine.
+
+        This function performs the following actions:
+        - Resets all `selectChannelX` sentinels (A–D) to `False`.
+        - Enables the Start button and disables the Stop button.
+        - If any channel has collected data, enables the save buttons for data and plots.
+        - Disables all "Clear" buttons for individual channels.
+        - Updates the status label and color to indicate that no measurement is running.
+        - Calls `stopMeasure()` to finalize the stop process and restore the interface to its initial state.
+
+        :return: None
+        """
         #Restart the sentinels
         
         self.selectChannelA=False
@@ -1031,6 +1537,17 @@ class CountEstimatedLogic():
     
     #No selected channels function
     def noChannelsSelected(self):
+        """
+        Displays a warning dialog indicating that no channels have been selected for measurement.
+
+        This function is called when the user attempts to start a measurement without selecting any channels. It generates a modal warning dialog to inform the user that at least one channel must be selected to proceed.
+
+        This function performs the following actions:
+        - Opens a `QMessageBox` warning with a title and informative message.
+        - Prevents the measurement process from starting until the issue is resolved.
+
+        :return: None
+        """
         QMessageBox.warning(
             self.mainWindow,  
             "Not selected channels",
@@ -1041,6 +1558,18 @@ class CountEstimatedLogic():
     
     #Function to define that no measurements were founded
     def noMeasurementsFounded(self):
+        """
+        Displays a warning dialog and disables channel interactions when no measurements are detected.
+
+        This function is triggered when the system fails to obtain valid measurements from any of the selected channels. It informs the user of the issue, disables the "Clear" buttons for all channels, and resets the internal sentinels that indicate active measurement states.
+
+        This function performs the following actions:
+        - Shows a `QMessageBox` warning explaining that no measurements were found and outlines the minimum requirements for detection (e.g., 500 pulses per second).
+        - Disables the "Clear" buttons for channels A–D to prevent further user interaction.
+        - Resets `measurementChannelX` sentinels (A–D) to `False`, marking all channels as inactive.
+
+        :return: None
+        """
         QMessageBox.warning(
             self.mainWindow,  
             "No Measurements Found",
@@ -1058,6 +1587,26 @@ class CountEstimatedLogic():
     
     #Function to eliminate channels where there is no measurements
     def eliminateCheckBoxChannels(self, channelList):
+        """
+        Handles the removal of channels with insufficient measurement signals and prompts the user to continue or stop.
+
+        This function is triggered when one or more selected channels fail to meet the minimum pulse requirements for reliable count estimation (e.g., fewer than 500 pulses per second). It presents a dialog informing the user about the affected channels and asks whether to continue the measurement with the remaining valid channels or to stop entirely.
+
+        This function performs the following actions:
+        - Builds a human-readable list of the channels that failed to provide sufficient data.
+        - Displays a warning dialog with the option to continue or cancel the measurement.
+        - If the user chooses to continue:
+            - Disables the affected channels in the device.
+            - Unchecks and disables the associated checkboxes.
+            - Disables the "Clear" button for each affected channel.
+            - Marks the `measurementChannelX` sentinel as `False` for each affected channel.
+        - If the user chooses not to continue:
+            - Stops the measurement thread.
+        - Signals the worker thread to proceed based on the user's decision via `continueEvent`.
+
+        :param channelList: A list of channel identifiers (e.g., ['A', 'C']) that failed to meet the minimum measurement conditions.
+        :return: None
+        """
         newChannelList=[]
         for i in channelList:
             newValues="Channel "+i
@@ -1115,6 +1664,22 @@ class CountEstimatedLogic():
                 self.worker.stop()
     
     def deatachedTable(self):
+        """
+        Manages the visibility of the estimated counts table in a detached dialog window.
+
+        This function is triggered when the `deatachedCheckBox` is toggled. If the checkbox is checked, it opens a new non-modal `QDialog` containing the cloned measurement table (`cloneTable`). If the checkbox is unchecked, it closes the dialog and resets the internal reference to `None`.
+
+        This function performs the following actions:
+        - If the detached table mode is enabled:
+            - Creates and configures a new `QDialog` with the cloned table.
+            - Displays the dialog to the user.
+            - Connects the dialog's close event to a cleanup function.
+        - If the detached table mode is disabled:
+            - Closes the existing dialog if it is open.
+            - Clears the internal dialog reference.
+
+        :return: None
+        """
         if self.deatachedCheckBox.isChecked():
             self.dialogTableOpen = QDialog(self.mainWindow)
             self.dialogTableOpen.setWindowTitle(f"Estimated counts Table")
@@ -1133,12 +1698,36 @@ class CountEstimatedLogic():
         
         
     def closeTableDialog(self):
+        """
+        Handles cleanup when the detached table dialog is closed.
+
+        This function is triggered when the detached table dialog (`dialogTableOpen`) is closed by the user.
+        It performs the following actions to maintain consistency in the UI state:
+        
+        - Sets the internal dialog reference `dialogTableOpen` to `None`.
+        - Unchecks the `deatachedCheckBox` to reflect that the detached view is no longer active.
+
+        This ensures that the application's interface remains synchronized and avoids inconsistencies
+        when reopening or reattaching the measurement table view.
+
+        :return: None
+        """
         if self.deatachedCheckBox.isChecked():
             self.dialogTableOpen=None
             self.deatachedCheckBox.setChecked(False)
            
 
     def changeStatusLabel(self,textValue):
+        """
+        Updates the status label with a new message.
+
+        This function sets the text of the `statusLabel` widget to the given string.
+        It is used throughout the application to inform the user of the current 
+        measurement status, errors, warnings, or progress.
+
+        :param textValue: str - The message to display in the status label.
+        :return: None
+        """
         self.statusLabel.setText(textValue)
     
 
@@ -1514,6 +2103,38 @@ class CountEstimatedLogic():
     
 
 class WorkerThreadCountsEstimated(QThread):
+    """
+    This class represents a worker thread that processes Start-Stop measurements in a separate thread
+    to avoid blocking the main GUI thread. It handles data acquisition from the Tempico device,
+    determines the feasibility of performing measurements per channel, and continuously collects
+    and emits measurement data while running.
+
+    The thread evaluates which channels meet the minimum requirements for valid measurements
+    (at least 2 stops within a 4 ms window), disables those that do not, and allows the user
+    to decide whether to continue with the remaining ones.
+
+    Signals are used extensively to communicate with the GUI, updating labels, graphs, and table data
+    with real-time values or to notify when no valid measurements are possible.
+
+    :param channelASentinel: Boolean indicating if Channel A is initially selected for measurement.
+    :param channelBSentinel: Boolean indicating if Channel B is initially selected for measurement.
+    :param channelCSentinel: Boolean indicating if Channel C is initially selected for measurement.
+    :param channelDSentinel: Boolean indicating if Channel D is initially selected for measurement.
+    :param device: The TempicoDevice instance used to perform the measurement operations.
+
+    Signals:
+        - createdSignal: Emitted when the thread is fully initialized.
+        - newValue(str, float, float): Emitted with updated values for display.
+        - updateLabel(str, float, float): Updates label data in the GUI.
+        - newMeasurement(float, datetime, float, float, float, float, float, float, float, float): 
+          Emitted with measurement data for timestamp and all channels.
+        - noTotalMeasurements(): Emitted when none of the channels provide valid stop data.
+        - noPartialMeasurements(list): Emitted with a list of channels that failed.
+        - changeStatusText(str): Updates the status label in the GUI with custom text.
+        - changeStatusColor(int): Changes the GUI status label color (e.g., green, yellow, red).
+        - disconnectedDevice(): Emitted when the Tempico device becomes unreachable.
+    """
+    
     #One value is for the count estimated and the other is for the uncertainty
     createdSignal=Signal()
     newValue=Signal(str,float,float)
@@ -1554,6 +2175,18 @@ class WorkerThreadCountsEstimated(QThread):
     
     #Main function
     def run(self):
+        """
+        Executes the thread's main loop to perform count estimations from the Tempico device.
+
+        First, it evaluates each selected channel to determine whether valid measurements can be 
+        obtained. If a channel does not meet the required threshold, it is disabled and removed 
+        from the measurement process. If at least one channel is valid, the measurement process begins.
+
+        The loop runs continuously while the thread is active, triggering measurements every second. 
+        If the device becomes unresponsive or the user stops the measurement, the thread exits.
+
+        :return: None
+        """
         # self.createdSignal.emit()
         # for i in range(10):
         #     self.getMeasurements()
@@ -1617,6 +2250,20 @@ class WorkerThreadCountsEstimated(QThread):
             
         
     def getMeasurements(self):
+        """
+        Retrieves and processes the latest measurement data from the Tempico device.
+
+        For each enabled channel, it verifies that the received data is valid, calculates 
+        stop intervals based on the number of pulses received, and computes both the mean 
+        and standard deviation of the intervals. These values represent the estimated count 
+        and its uncertainty.
+
+        If valid data is found, the results are emitted via a signal along with the timestamp 
+        of the measurement. If no data is available, default values are emitted depending 
+        on the state of each channel.
+
+        :return: None
+        """
         values=[]
         valuesB=[]
         valuesC=[]
@@ -1739,6 +2386,18 @@ class WorkerThreadCountsEstimated(QThread):
 
 
     def calculateIntervalWithStops(self, currentMeasure, numberStops):
+        """
+        Calculates stop time intervals based on pulse timestamps from the measurement.
+
+        The function receives a raw measurement and the expected number of stops, 
+        then iteratively computes the time differences between consecutive valid 
+        pulse timestamps. Each interval is converted to a frequency in Hz by 
+        dividing 10^12 by the difference in timestamp units (assuming picoseconds).
+
+        :param currentMeasure: A list containing pulse data for a single run.
+        :param numberStops: The number of stop intervals expected in the measurement.
+        :return: A list of frequency values (in Hz) calculated from the stop intervals.
+        """
         #TODO: CHANGE RECALCULATING NUMBER OF STOPS
         tempValues=[]
         for i in range(numberStops-1):
@@ -1752,6 +2411,18 @@ class WorkerThreadCountsEstimated(QThread):
     
     #TODO: DETERMINE THE NUMBER OF STOPS TO PERFORM THE MEASUREMENTS
     def determineStopsNumber(self, channelTest):
+        """
+        Determines the optimal number of stop pulses for a given channel to ensure valid measurements.
+
+        This function tests different stop configurations by progressively reducing the number of 
+        required stop pulses (from 5 down to 2). For each configuration, it performs multiple test 
+        measurements and checks if at least half of them return valid data. If a configuration with 
+        sufficient measurements is found, it is returned. If none meet the condition, 1 is returned 
+        by default. If the thread is stopped during execution, the process halts.
+
+        :param channelTest: A string indicating the channel to test ("A", "B", "C", or "D").
+        :return: An integer representing the number of stop pulses that reliably produce measurements.
+        """
         #Disable all channels
         self.device.ch1.disableChannel()
         self.device.ch2.disableChannel()
@@ -1814,6 +2485,16 @@ class WorkerThreadCountsEstimated(QThread):
         
     
     def enableDisableChannels(self):
+        """
+        Enables or disables device channels based on active measurement sentinels.
+
+        This function disables all channels initially, then enables only the selected ones based on 
+        the sentinel flags. It configures each enabled channel with a default stop mask and averaging 
+        settings, and adds them to the list of channels to be measured. This reduces processing time 
+        by avoiding unnecessary measurements from inactive channels.
+
+        :return: None
+        """
         self.device.ch1.disableChannel()
         self.device.ch2.disableChannel()
         self.device.ch3.disableChannel()
@@ -1845,5 +2526,14 @@ class WorkerThreadCountsEstimated(QThread):
         
     @Slot()   
     def stop(self):
+        """
+        Stops the measurement process by setting the running sentinel to False.
+
+        This function is typically called from the GUI when the user requests to stop the measurement. 
+        Once the sentinel is set to False, the running loop in the thread will exit, effectively 
+        terminating the background measurement process.
+
+        :return: None
+        """
         self.running=False
         
