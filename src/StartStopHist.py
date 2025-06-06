@@ -393,10 +393,26 @@ class StartStopLogic():
     
     
     def stopTimerConnection(self):
+        """
+        Stops the timer responsible for checking the device connection.
+
+        This function is typically called when a measurement begins to avoid interference
+        during the acquisition process.
+
+        :return: None
+        """
         #Stop timer when a measurement begins
         self.timerConnection.stop()
     
     def startTimerConnection(self):
+        """
+        Starts the timer that periodically checks the device connection.
+
+        The timer runs every 500 milliseconds to monitor connectivity. This is typically 
+        called after a measurement finishes or when the application is idle.
+
+        :return: None
+        """
         #Start timer when a measurement begins
         self.timerConnection.start(500)
     
@@ -1415,6 +1431,14 @@ class StartStopLogic():
     
     
     def disconnectedDevice(self):
+        """
+        Disables device interaction controls when the device is disconnected.
+
+        This function updates the GUI to reflect that the device is no longer connected 
+        by disabling the disconnect and start buttons and enabling the connect button.
+
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         self.startbutton.setEnabled(False)
