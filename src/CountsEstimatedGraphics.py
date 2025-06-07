@@ -2074,7 +2074,6 @@ class CountEstimatedLogic():
                     message_box.setWindowTitle("Successful save")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
-                    self.savebutton.setEnabled(True)
                 except:
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Critical)
