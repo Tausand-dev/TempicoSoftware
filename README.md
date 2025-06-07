@@ -92,16 +92,15 @@ After the measurement, the user can decide whether to save the image of the data
 ### Before Measurement
 Before starting the measurement, the user can select the channels on which they wish to estimate the counts. They can also choose whether they want the graphs to be merged, meaning all channel curves are displayed on a single graph; separated, where each curve has its own individual graph; or detached, where each graph appears in a separate dialog window. Additionally, the user can choose to view the measurement table in a separate dialog window and can select the time range of the graphs, such as viewing the last 10 seconds, the last 20 seconds, and so on, up to a range of 1000 seconds.
 
-![image](https://github.com/user-attachments/assets/fac7233e-05fb-43a4-9f7d-d3fea6a4b589)
+![Before measurement Counts estimated window](https://github.com/user-attachments/assets/fac7233e-05fb-43a4-9f7d-d3fea6a4b589)
 
 ### During Measurement
 While the measurement is in progress, the user can track the history of the recorded parameters in the table located at the bottom of the screen and view the current data in the panel at the lower right. Similarly, the user can observe the real-time update of the graphs for each measurement taken. Additionally, the user can interact with the entire configuration panel and clear the data of any channel if desired. The only limitation is that channels not selected before the start of the measurement cannot be selected during the measurement.
-![image](https://github.com/user-attachments/assets/70b2012a-19e5-41ab-8628-11e0f519f0b8)
+![During measurement Counts estimated window](https://github.com/user-attachments/assets/70b2012a-19e5-41ab-8628-11e0f519f0b8)
 
 ### After Measurement
 After the measurement, the options to save the data and save the plots become available to the user. When saving the data, the user can choose between txt, csv, and dat formats, and for images, they can select png, tiff, or jpg formats. Likewise, the user can interact with the graph to obtain a different view before saving the image again. The time range filter remains active, and the user can also enable or disable channels if they prefer not to display the curve of a particular graph.
-
-
+![After measurement Counts estimated window](https://github.com/user-attachments/assets/cb592f9b-3787-421a-a5a8-7bf392c2e92b)
 
 
 ## Grant port access on Linux
