@@ -278,6 +278,7 @@ class LifeTimeGraphic():
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
         self.mainWindow.tabs.setTabEnabled(2,False)
+        self.mainWindow.saveSettings()
         self.mainWindow.disconnectButton.setEnabled(False)
         self.stopTimerConnection()
         self.numberMeasurementsSpinBox.setEnabled(False)
@@ -367,6 +368,7 @@ class LifeTimeGraphic():
         else:
             self.enableAfterFinisihThread()
         self.mainWindow.noMeasurement()
+        self.mainWindow.enableSettings()
     
     #Function to clear the graphic
     def clearGraphic(self):
@@ -438,6 +440,7 @@ class LifeTimeGraphic():
                 self.initialAlphaDoub=0
         self.saveDataButton.setEnabled(True)
         self.mainWindow.noMeasurement()
+        self.mainWindow.enableSettings()
         
     
     #Function to change the status measurement

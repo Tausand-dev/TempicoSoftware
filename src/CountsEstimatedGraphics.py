@@ -72,7 +72,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device, parent, timerConnection):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device: tempico.TempicoDevice, parent, timerConnection):
         #Get the parameters
         self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
@@ -188,6 +188,9 @@ class CountEstimatedLogic():
         self.timestampsDateChannelB=[]
         self.timestampsDateChannelC=[]
         self.timestampsDateChannelD=[]
+        #Value for inital and final date
+        self.initialDate=""
+        self.finalDate=""
         #End connection for the checkbox
         
         #Create the sentinels for connection
@@ -477,7 +480,6 @@ class CountEstimatedLogic():
         self.cloneTable.setHorizontalHeaderLabels(['Date','A','B','C','D'])
         self.cloneTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.cloneTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        
         
         
 
@@ -801,6 +803,8 @@ class CountEstimatedLogic():
         :return: None
         """
         if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
+            self.initialDate=""
+            self.finalDate=""
             self.startButton.setEnabled(False)
             self.stopButton.setEnabled(True)
             #Disable save buttons
@@ -809,6 +813,7 @@ class CountEstimatedLogic():
             #Disable other tabs while the software is taking measurements
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.saveSettings()
             self.saveSettings()
             self.stopTimerConnection()
             self.resetValues()
@@ -820,6 +825,8 @@ class CountEstimatedLogic():
             self.worker.finished.connect(self.finishedThread)
             self.worker.newMeasurement.connect(self.captureMeasurement)
             self.worker.updateLabel.connect(self.updateLabels)
+            self.worker.initialDate.connect(self.captureInitalDate)
+            self.worker.finalDate.connect(self.captureFinalDate)
             self.worker.noTotalMeasurements.connect(self.noMeasurementsFounded)
             self.worker.noPartialMeasurements.connect(self.eliminateCheckBoxChannels)
             self.worker.changeStatusText.connect(self.changeStatusLabel)
@@ -862,6 +869,7 @@ class CountEstimatedLogic():
             self.mainWindow.disconnectedDevice()
         self.mainWindow.noMeasurement()
         self.returnSettings()
+        self.mainWindow.enableSettings()
         
         
     
@@ -1129,6 +1137,12 @@ class CountEstimatedLogic():
             self.stopMaskChannelBSetting=self.device.ch2.getStopMask()
             self.stopMaskChannelCSetting=self.device.ch3.getStopMask()
             self.stopMaskChannelDSetting=self.device.ch4.getStopMask()
+            #Settings to save in the data
+            self.thresholdVoltageSetting=self.device.getThresholdVoltage()
+            self.channelAEdgeTypeSetting=self.device.ch1.getStopEdge()
+            self.channelBEdgeTypeSetting=self.device.ch2.getStopEdge()
+            self.channelCEdgeTypeSetting=self.device.ch3.getStopEdge()
+            self.channelDEdgeTypeSetting=self.device.ch4.getStopEdge()
         except:
             pass
         
@@ -1951,6 +1965,13 @@ class CountEstimatedLogic():
             message_box.setWindowTitle("Error saving")
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+
+
+    def captureInitalDate(self,date):
+        self.initialDate=date
+    
+    def captureFinalDate(self,date):
+        self.finalDate=date
     
     
     def saveData(self):
@@ -2031,7 +2052,7 @@ class CountEstimatedLogic():
             if not total_condition:
                 if self.measurementChannelA:
                     filename1=data_prefix+current_date_str+'channelA'
-                    setting_A=""
+                    setting_A=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelAEdgeTypeSetting} \n"
                     settings.append(setting_A)
                     filenames.append(filename1)
                     timeStamps.append(self.timestampsDateChannelA)
@@ -2040,7 +2061,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
                     filename2=data_prefix+current_date_str+'channelB'
-                    setting_B=""
+                    setting_B=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelBEdgeTypeSetting} \n"
                     settings.append(setting_B)
                     filenames.append(filename2)
                     timeStamps.append(self.timestampsDateChannelB)
@@ -2049,7 +2070,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
                     filename3=data_prefix+current_date_str+'channelC'
-                    setting_C=""
+                    setting_C=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelCEdgeTypeSetting} \n"
                     settings.append(setting_C)
                     filenames.append(filename3)
                     timeStamps.append(self.timestampsDateChannelC)
@@ -2058,7 +2079,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
                     filename4=data_prefix+current_date_str+'channelD'
-                    setting_D=""
+                    setting_D=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelDEdgeTypeSetting} \n"
                     settings.append(setting_D)
                     filenames.append(filename4)
                     timeStamps.append(self.timestampsDateChannelD)
@@ -2183,6 +2204,8 @@ class WorkerThreadCountsEstimated(QThread):
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
     disconnectedDevice=Signal()
+    initialDate=Signal(str)
+    finalDate=Signal(str)
     
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel,channelDSentinel, device: tempico.TempicoDevice):
@@ -2270,6 +2293,7 @@ class WorkerThreadCountsEstimated(QThread):
             self.enableDisableChannels()
         if self.running:
             #Get the init time for measurement
+            self.initialDate.emit(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.initialMeasurementTime = time.time()
         while self.running:
             try:
@@ -2280,6 +2304,7 @@ class WorkerThreadCountsEstimated(QThread):
             if self.running:
                 self.getMeasurements()
                 time.sleep(1)
+        self.finalDate.emit(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             
             
         
@@ -2511,7 +2536,7 @@ class WorkerThreadCountsEstimated(QThread):
                 stopsInMeasure-=1
         if self.running:
             self.changeStatusText.emit(f"Estimating number stops in channel {channelTest} 100%")
-            time.sleep(2)
+            time.sleep(1)
         
         return stopsInMeasure
         

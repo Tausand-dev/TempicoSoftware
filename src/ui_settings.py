@@ -660,7 +660,6 @@ class Ui_settings(object):
         self.StopMaskValueChannelD.setSuffix(QCoreApplication.translate("Dialog", u"\u00b5s", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Dialog", u"ChannelD", None))
         self.AplicarCambios.setText(QCoreApplication.translate("Dialog", u"Apply changes", None))
-        self.get_settings()
         
         
     #Get the default settings of device
@@ -741,6 +740,38 @@ class Ui_settings(object):
         self.StopMaskValueChannelB.setValue(stop_maskB)
         self.StopMaskValueChannelC.setValue(stop_maskC)
         self.StopMaskValueChannelD.setValue(stop_maskD)
+    
+    def preDefinedSettings(self, average_cyclesA, average_cyclesB, average_cyclesC, average_cyclesD,
+                           modeA, modeB, modeC, modeD, number_stopsA, number_stopsB, number_stopsC, number_stopsD,
+                           edgeA, edgeB, edgeC, edgeD, stop_maskA, stop_maskB, stop_maskC, stop_maskD):
+        #Set average cycles
+        self.AverageCyclesValueA.setCurrentIndex(average_cyclesA)
+        self.AverageCyclesValueB.setCurrentIndex(average_cyclesB)
+        self.AverageCyclesValueC.setCurrentIndex(average_cyclesC)
+        self.AverageCyclesValueD.setCurrentIndex(average_cyclesD)
+        #Set Mode
+        self.ModeValueChannelA.setCurrentIndex(modeA-1)
+        self.ModeValueChannelB.setCurrentIndex(modeB-1)
+        self.ModeValueChannelC.setCurrentIndex(modeC-1)
+        self.ModeValueChannelD.setCurrentIndex(modeD-1)
+        #Set number of stops
+        self.NumberStopsValueChannelA.setCurrentIndex(number_stopsA-1)
+        self.NumberStopsValueChannelB.setCurrentIndex(number_stopsB-1)
+        self.NumberStopsValueChannelC.setCurrentIndex(number_stopsC-1)
+        self.NumberStopsValueChannelD.setCurrentIndex(number_stopsD-1)
+        #Set Edge
+        self.EdgeTypeValueChannelA.setCurrentIndex(edgeA)
+        self.EdgeTypeValueChannelB.setCurrentIndex(edgeB)
+        self.EdgeTypeValueChannelC.setCurrentIndex(edgeC)
+        self.EdgeTypeValueChannelD.setCurrentIndex(edgeD)
+        #Set stop mask
+        self.StopMaskValueChannelA.setValue(stop_maskA)
+        self.StopMaskValueChannelB.setValue(stop_maskB)
+        self.StopMaskValueChannelC.setValue(stop_maskC)
+        self.StopMaskValueChannelD.setValue(stop_maskD)
+        
+        
+        
         
             
         
@@ -822,6 +853,66 @@ class Ui_settings(object):
         
         #Cerrar el qdialog
         self.dialog_1.accept()
+    
+    def onlyReading(self):
+        # Disable Edge type
+        self.EdgeTypeValueChannelA.setEnabled(False)
+        self.EdgeTypeValueChannelB.setEnabled(False)
+        self.EdgeTypeValueChannelC.setEnabled(False)
+        self.EdgeTypeValueChannelD.setEnabled(False)
+        # disable stop mask
+        self.StopMaskValueChannelA.setEnabled(False)
+        self.StopMaskValueChannelB.setEnabled(False)
+        self.StopMaskValueChannelC.setEnabled(False)
+        self.StopMaskValueChannelD.setEnabled(False)
+        # disable average cycles
+        self.AverageCyclesValueA.setEnabled(False)
+        self.AverageCyclesValueB.setEnabled(False)
+        self.AverageCyclesValueC.setEnabled(False)
+        self.AverageCyclesValueD.setEnabled(False)
+        # disable mode
+        self.ModeValueChannelA.setEnabled(False)
+        self.ModeValueChannelB.setEnabled(False)
+        self.ModeValueChannelC.setEnabled(False)
+        self.ModeValueChannelD.setEnabled(False)
+        # disable number of stops
+        self.NumberStopsValueChannelA.setEnabled(False)
+        self.NumberStopsValueChannelB.setEnabled(False)
+        self.NumberStopsValueChannelC.setEnabled(False)
+        self.NumberStopsValueChannelD.setEnabled(False)
+        # disable apply changes button
+        self.AplicarCambios.setEnabled(False)
+        
+
+    def enableSettings(self):
+        # Disable Edge type
+        self.EdgeTypeValueChannelA.setEnabled(True)
+        self.EdgeTypeValueChannelB.setEnabled(True)
+        self.EdgeTypeValueChannelC.setEnabled(True)
+        self.EdgeTypeValueChannelD.setEnabled(True)
+        # disable stop mask
+        self.StopMaskValueChannelA.setEnabled(True)
+        self.StopMaskValueChannelB.setEnabled(True)
+        self.StopMaskValueChannelC.setEnabled(True)
+        self.StopMaskValueChannelD.setEnabled(True)
+        # disable average cycles
+        self.AverageCyclesValueA.setEnabled(True)
+        self.AverageCyclesValueB.setEnabled(True)
+        self.AverageCyclesValueC.setEnabled(True)
+        self.AverageCyclesValueD.setEnabled(True)
+        # disable mode
+        self.ModeValueChannelA.setEnabled(True)
+        self.ModeValueChannelB.setEnabled(True)
+        self.ModeValueChannelC.setEnabled(True)
+        self.ModeValueChannelD.setEnabled(True)
+        # disable number of stops
+        self.NumberStopsValueChannelA.setEnabled(True)
+        self.NumberStopsValueChannelB.setEnabled(True)
+        self.NumberStopsValueChannelC.setEnabled(True)
+        self.NumberStopsValueChannelD.setEnabled(True)
+        # disable apply changes button
+        self.AplicarCambios.setEnabled(True)
+    
         
         
         

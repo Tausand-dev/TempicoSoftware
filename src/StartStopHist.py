@@ -369,6 +369,7 @@ class StartStopLogic():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.mainWindow.saveSettings()
             self.withoutMeasurement=False
             self.stopTimerConnection()
             self.sentinelZoomChangedA=0
@@ -389,6 +390,7 @@ class StartStopLogic():
             self.checkC.setEnabled(False)
             self.checkD.setEnabled(False)
             self.savebutton.setEnabled(False)
+            
     
     
     

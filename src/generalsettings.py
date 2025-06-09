@@ -53,13 +53,12 @@ class GeneralSettingsWindow(QDialog):
 
         # Save Button
         button_layout = QVBoxLayout()  # Vertical layout for the save button
-        button = QPushButton("Save changes", self)
-        button_layout.addWidget(button)
+        self.button = QPushButton("Save changes", self)
+        button_layout.addWidget(self.button)
         main_layout.addLayout(button_layout)
 
         # Connect the button
-        self.getsettings()
-        button.clicked.connect(self.setsettings)
+        self.button.clicked.connect(self.setsettings)
 
     
     
@@ -77,6 +76,12 @@ class GeneralSettingsWindow(QDialog):
         self.spinboxNumerOfStops.setValue(int(number_runs))
         tresholdVoltage= self.device.getThresholdVoltage()
         self.Comboboxthresholdvoltage.setValue(float(tresholdVoltage))
+    
+    
+    def preDefinedSettings(self, thresholdVoltage, numberRuns):
+        
+        self.spinboxNumerOfStops.setValue(numberRuns)
+        self.Comboboxthresholdvoltage.setValue(thresholdVoltage)
     
     def setsettings(self):
         """
@@ -109,6 +114,30 @@ class GeneralSettingsWindow(QDialog):
             self.showHelp()
             return True
         return QDialog.event(self, event)
+    
+    def disableSettings(self):
+        """
+        Disables the settings in the General Settings dialog.
+
+        This function sets the threshold voltage and number of runs spinbox to read-only mode, preventing any changes to these settings by the user.
+
+        :returns: None
+        """
+        self.Comboboxthresholdvoltage.setEnabled(False)
+        self.spinboxNumerOfStops.setEnabled(False)
+        self.button.setEnabled(False)
+    
+    def enableSettings(self):
+        """
+        Enables the settings in the General Settings dialog.
+
+        This function allows the user to modify the threshold voltage and number of runs by enabling the corresponding spinbox and button.
+
+        :returns: None
+        """
+        self.Comboboxthresholdvoltage.setEnabled(True)
+        self.spinboxNumerOfStops.setEnabled(True)
+        self.button.setEnabled(True)
     
 
     def showHelp(self):

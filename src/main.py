@@ -22,6 +22,7 @@ from ui_LifeTimemeasurement import UiLifeTime
 from LifeTimeGraphics import LifeTimeGraphic
 from CountsEstimatedGraphics import CountEstimatedLogic
 import sys
+import math
 
 
 
@@ -102,7 +103,37 @@ class MainWindow(QMainWindow):
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
         self.currentMeasurement=False
-        
+        # save old settings state
+        self.averageCycleChannelA= 0
+        self.averageCycleChannelB= 0
+        self.averageCycleChannelC= 0
+        self.averageCycleChannelD= 0
+        #
+        self.modeChangeChannelA= 0
+        self.modeChangeChannelB= 0
+        self.modeChangeChannelC= 0
+        self.modeChangeChannelD= 0
+        #
+        self.numberOfStopsChannelA=0
+        self.numberOfStopsChannelB=0
+        self.numberOfStopsChannelC=0
+        self.numberOfStopsChannelD=0
+        #
+        self.edgeTypeChannelA=0
+        self.edgeTypeChannelB=0
+        self.edgeTypeChannelC=0
+        self.edgeTypeChannelD=0
+        #
+        self.stopMaskChannelA=0
+        self.stopMaskChannelB=0
+        self.stopMaskChannelC=0
+        self.stopMaskChannelD=0
+        ##
+        self.openSettings=False
+        self.openGeneralSettings=False
+        ## general settings 
+        self.thresholdVoltage=0
+        self.numberRuns=0
 
         if sys.platform == 'win32':
             import ctypes
@@ -589,16 +620,32 @@ class MainWindow(QMainWindow):
                 self.dialog_settings=QDialog(self)
                 self.settings_channels = Ui_settings()
                 self.settings_channels.setupUi(self.dialog_settings, self.conectedDevice)
+                self.settings_channels.get_settings()
                 self.dialog_settings.exec_()
+                self.openSettings=True
             else:
+                #Open warning dialog
                 message_box = QMessageBox(self)
                 message_box.setWindowTitle("Running measurement")
-                message_box.setText("It is not possible to make changes when a measurement is running.")
+                message_box.setText("The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.")
                 pixmap= QPixmap(ICON_LOCATION)
                 message_box.setIconPixmap(pixmap)
                 message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
+                #Open settings
+                self.dialog_settings=QDialog(self)
+                self.settings_channels = Ui_settings()
+                self.settings_channels.setupUi(self.dialog_settings, self.conectedDevice)
+                self.settings_channels.preDefinedSettings(self.averageCycleChannelA,self.averageCycleChannelB,self.averageCycleChannelC,self.averageCycleChannelD, 
+                                                            self.modeChangeChannelA,self.modeChangeChannelB,self.modeChangeChannelC,self.modeChangeChannelD,
+                                                            self.numberOfStopsChannelA,self.numberOfStopsChannelB,self.numberOfStopsChannelC,self.numberOfStopsChannelD,
+                                                            self.edgeTypeChannelA,self.edgeTypeChannelB,self.edgeTypeChannelC,self.edgeTypeChannelD,
+                                                            self.stopMaskChannelA,self.stopMaskChannelB,self.stopMaskChannelC,self.stopMaskChannelD)
+                self.settings_channels.onlyReading()
+                self.dialog_settings.exec_()
+                
+                
     
                 
         else:
@@ -610,6 +657,78 @@ class MainWindow(QMainWindow):
             message_box.setIcon(QMessageBox.Information)
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+            
+    def enableSettings(self):
+        if self.openSettings:
+            if self.dialog_settings.isVisible():
+                self.settings_channels.get_settings()
+                self.settings_channels.enableSettings()
+        if self.openGeneralSettings:
+            if self.settings_windows.isVisible():
+                self.settings_windows.getsettings()
+                self.settings_windows.enableSettings()
+            
+    
+    def saveSettings(self):
+        if self.conectedDevice!=None:
+            #Get the channels objects
+            channel1=self.conectedDevice.ch1
+            channel2=self.conectedDevice.ch2
+            channel3=self.conectedDevice.ch3
+            channel4=self.conectedDevice.ch4
+            #Get the average cycles
+            self.averageCycleChannelA=int(math.log(channel1.getAverageCycles(),2))
+            self.averageCycleChannelB=int(math.log(channel2.getAverageCycles(),2))
+            self.averageCycleChannelC=int(math.log(channel3.getAverageCycles(),2))
+            self.averageCycleChannelD=int(math.log(channel4.getAverageCycles(),2))
+            #Get the mode
+            self.modeChangeChannelA=channel1.getMode()
+            self.modeChangeChannelB=channel2.getMode()
+            self.modeChangeChannelC=channel3.getMode()
+            self.modeChangeChannelD=channel4.getMode()
+            #Get the number of stops
+            self.numberOfStopsChannelA=channel1.getNumberOfStops()
+            self.numberOfStopsChannelB=channel2.getNumberOfStops()
+            self.numberOfStopsChannelC=channel3.getNumberOfStops()
+            self.numberOfStopsChannelD=channel4.getNumberOfStops()
+            #Get and transform the stop edge
+            self.edgeTypeChannelA=channel1.getStopEdge()
+            if (self.edgeTypeChannelA=="RISE"):
+                self.edgeTypeChannelA=0
+            else:
+                self.edgeTypeChannelA=1
+            
+            self.edgeTypeChannelB=channel2.getStopEdge()
+            if (self.edgeTypeChannelB=="RISE"):
+                self.edgeTypeChannelB=0
+            else:
+                self.edgeTypeChannelB=1
+            
+            self.edgeTypeChannelC=channel3.getStopEdge()
+            if (self.edgeTypeChannelC=="RISE"):
+                self.edgeTypeChannelC=0
+            else:
+                self.edgeTypeChannelC=1
+            
+            self.edgeTypeChannelD=channel4.getStopEdge()
+            if (self.edgeTypeChannelD=="RISE"):
+                self.edgeTypeChannelD=0
+            else:
+                self.edgeTypeChannelD=1
+            #Get the stop mask
+            self.stopMaskChannelA=int(channel1.getStopMask())
+            self.stopMaskChannelB=int(channel2.getStopMask())
+            self.stopMaskChannelC=int(channel3.getStopMask())
+            self.stopMaskChannelD=int(channel4.getStopMask())
+            #Get the threshold voltage
+            self.thresholdVoltage=self.conectedDevice.getThresholdVoltage()
+            self.numberRuns=self.conectedDevice.getNumberOfRuns()
+            
+            
+        
+            
+            
+            
     
     def general_settings_clicked(self):
         """
@@ -626,17 +745,25 @@ class MainWindow(QMainWindow):
         """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
-                settings_windows=GeneralSettingsWindow(self.conectedDevice)
-                settings_windows.exec_()
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows.getsettings()
+                self.openGeneralSettings=True
+                self.settings_windows.exec_()
+                
             else:
                 message_box = QMessageBox(self)  # Icono de advertencia
                 message_box.setWindowTitle("Running measurement")
-                message_box.setText("It is not possible to make changes when a measurement is running.")
+                message_box.setText("The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.")
                 pixmap= QPixmap(ICON_LOCATION)
                 message_box.setIconPixmap(pixmap)
                 message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows.preDefinedSettings(self.thresholdVoltage, self.numberRuns)
+                self.settings_windows.disableSettings()
+                self.openGeneralSettings=True
+                self.settings_windows.exec_()
     
                 
         else:
@@ -785,7 +912,6 @@ class MainWindow(QMainWindow):
 
         :return: None
         """
-        print("Se ejecuta")
         if self.countsEstimatedGraphic:
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
