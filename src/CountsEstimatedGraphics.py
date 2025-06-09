@@ -16,6 +16,7 @@ import random
 import threading
 from pyqtgraph import mkPen
 import os
+import numpy as np
 class CountEstimatedLogic():
     """
     Class responsible for managing the logic and graphical representation of the Count Estimation window.
@@ -178,6 +179,10 @@ class CountEstimatedLogic():
         self.channelBValues=[]
         self.channelCValues=[]
         self.channelDValues=[]
+        self.channelAUncertainties=[]
+        self.channelBUncertainties=[]
+        self.channelCUncertainties=[]
+        self.channelDUncertainties=[]
         #Values for save data
         self.timestampsDateChannelA=[]
         self.timestampsDateChannelB=[]
@@ -899,6 +904,7 @@ class CountEstimatedLogic():
         self.timestampsChannelA=[]
         self.timestampsDateChannelA=[]
         self.channelAValues=[]
+        self.channelAUncertainties=[]
         self.curveCountsA.setData(self.timestampsChannelA,self.channelAValues)
     
     def clearChannelB(self):
@@ -917,6 +923,7 @@ class CountEstimatedLogic():
         self.timestampsChannelB=[]
         self.timestampsDateChannelB=[]
         self.channelBValues=[]
+        self.channelBUncertainties=[]
         self.curveCountsB.setData(self.timestampsChannelB,self.channelBValues)
     
     def clearChannelC(self):
@@ -935,6 +942,7 @@ class CountEstimatedLogic():
         self.timestampsChannelC=[]
         self.timestampsDateChannelC=[]
         self.channelCValues=[]
+        self.channelCUncertainties=[]
         self.curveCountsC.setData(self.timestampsChannelC,self.channelCValues)
     
     def clearChannelD(self):
@@ -953,6 +961,7 @@ class CountEstimatedLogic():
         self.timestampsChannelD=[]
         self.timestampsDateChannelD=[]
         self.channelDValues=[]
+        self.channelDUncertainties=[]
         self.curveCountsD.setData(self.timestampsChannelD,self.channelDValues)
         
     #Functions to create all the dialogs for each graphic
@@ -1353,6 +1362,7 @@ class CountEstimatedLogic():
             self.timestampsChannelA.append(secondsTime)
             self.timestampsDateChannelA.append(dateTime)
             self.channelAValues.append(channelAValue)
+            self.channelAUncertainties.append(channelAUncertainty)
             self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
         elif channelAValue==0:
             channelAValue="Low Counts"
@@ -1367,6 +1377,7 @@ class CountEstimatedLogic():
             self.timestampsChannelB.append(secondsTime)
             self.timestampsDateChannelB.append(dateTime)
             self.channelBValues.append(channelBValue)
+            self.channelBUncertainties.append(channelBUncertainty)
             self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
         elif channelBValue==0:
             channelBValue="Low Counts"
@@ -1381,6 +1392,7 @@ class CountEstimatedLogic():
             self.timestampsChannelC.append(secondsTime)
             self.timestampsDateChannelC.append(dateTime)
             self.channelCValues.append(channelCValue)
+            self.channelCUncertainties.append(channelCUncertainty)
             self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
         elif channelCValue==0:
             channelCValue="Low Counts"
@@ -1395,6 +1407,7 @@ class CountEstimatedLogic():
             self.timestampsChannelD.append(secondsTime)
             self.timestampsDateChannelD.append(dateTime)
             self.channelDValues.append(channelDValue)
+            self.channelDUncertainties.append(channelDUncertainty)
             self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
         elif channelDValue==0:
             channelDValue="Low Counts"
@@ -1974,6 +1987,7 @@ class CountEstimatedLogic():
         #Init filenames and data list
         filenames=[]
         data=[]
+        dataUncertainties=[]
         timeStamps=[]
         settings=[]
         channels=[]
@@ -2023,6 +2037,7 @@ class CountEstimatedLogic():
                     timeStamps.append(self.timestampsDateChannelA)
                     channels.append("A")
                     data.append(self.channelAValues)
+                    dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
                     filename2=data_prefix+current_date_str+'channelB'
                     setting_B=""
@@ -2031,6 +2046,7 @@ class CountEstimatedLogic():
                     timeStamps.append(self.timestampsDateChannelB)
                     channels.append("B")
                     data.append(self.channelBValues)
+                    dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
                     filename3=data_prefix+current_date_str+'channelC'
                     setting_C=""
@@ -2039,6 +2055,7 @@ class CountEstimatedLogic():
                     timeStamps.append(self.timestampsDateChannelC)
                     channels.append("C")
                     data.append(self.channelCValues)
+                    dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
                     filename4=data_prefix+current_date_str+'channelD'
                     setting_D=""
@@ -2047,11 +2064,12 @@ class CountEstimatedLogic():
                     timeStamps.append(self.timestampsDateChannelD)
                     channels.append("D")
                     data.append(self.channelDValues)
+                    dataUncertainties.append(self.channelDUncertainties)
                 folder_path=self.savefile.read_default_data()['Folder path']
                 
                 try:
                     
-                    self.savefile.save_counts_data(timeStamps,data,filenames,folder_path,settings,selected_format,channels)
+                    self.savefile.save_counts_data(timeStamps,data,dataUncertainties,filenames,folder_path,settings,selected_format,channels)
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Information)
                     inital_text="The files have been saved successfully in path folder: "
