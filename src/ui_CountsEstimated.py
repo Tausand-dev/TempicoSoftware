@@ -278,6 +278,7 @@ class Ui_CountsEstimated(object):
         self.TitleCountsFrame.setObjectName(u"TitleCountsFrame")
         self.TitleCountsFrame.setFrameShape(QFrame.StyledPanel)
         self.TitleCountsFrame.setFrameShadow(QFrame.Raised)
+        self.TitleCountsFrame.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.horizontalLayout_10 = QHBoxLayout(self.TitleCountsFrame)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.titleCounts = QLabel(self.TitleCountsFrame)
@@ -297,6 +298,7 @@ class Ui_CountsEstimated(object):
         self.ChannelACountValues.setObjectName(u"ChannelACountValues")
         self.ChannelACountValues.setFrameShape(QFrame.StyledPanel)
         self.ChannelACountValues.setFrameShadow(QFrame.Raised)
+        self.ChannelACountValues.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.horizontalLayout_11 = QHBoxLayout(self.ChannelACountValues)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.channelAValuesCount = QLabel(self.ChannelACountValues)
@@ -316,6 +318,7 @@ class Ui_CountsEstimated(object):
         self.ChannelBCountValues.setObjectName(u"ChannelBCountValues")
         self.ChannelBCountValues.setFrameShape(QFrame.StyledPanel)
         self.ChannelBCountValues.setFrameShadow(QFrame.Raised)
+        self.ChannelBCountValues.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.horizontalLayout_12 = QHBoxLayout(self.ChannelBCountValues)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.channelBValuesCount = QLabel(self.ChannelBCountValues)
@@ -335,6 +338,7 @@ class Ui_CountsEstimated(object):
         self.ChannelCCountValues.setObjectName(u"ChannelCCountValues")
         self.ChannelCCountValues.setFrameShape(QFrame.StyledPanel)
         self.ChannelCCountValues.setFrameShadow(QFrame.Raised)
+        self.ChannelCCountValues.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.horizontalLayout_13 = QHBoxLayout(self.ChannelCCountValues)
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.channelCValuesCount = QLabel(self.ChannelCCountValues)
@@ -354,6 +358,7 @@ class Ui_CountsEstimated(object):
         self.ChannelDCountValues.setObjectName(u"ChannelDCountValues")
         self.ChannelDCountValues.setFrameShape(QFrame.StyledPanel)
         self.ChannelDCountValues.setFrameShadow(QFrame.Raised)
+        self.ChannelDCountValues.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.horizontalLayout_14 = QHBoxLayout(self.ChannelDCountValues)
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.channelDValuesCount = QLabel(self.ChannelDCountValues)
@@ -467,7 +472,7 @@ class Ui_CountsEstimated(object):
         self.ChannelBCountValues.setVisible(False)
         self.ChannelCCountValues.setVisible(False)
         self.ChannelDCountValues.setVisible(False)
-        self.setFontSizeToLabels(10,
+        self.setFontSizeToLabels(12,
         self.titleCounts,
         self.channelAValuesCount,
         self.channelBValuesCount,
@@ -479,6 +484,29 @@ class Ui_CountsEstimated(object):
         self.channelDUncertaintyCount,
         self.titleUncertainty
         )
+        self.verticalLayout_3.setSpacing(2)  # Espacio vertical entre filas
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)  # Márgenes del layout general
+        
+        # Channel A
+        left, _, right, _ = self.horizontalLayout_11.getContentsMargins()
+        self.horizontalLayout_11.setContentsMargins(left, 0, right, 0)
+
+        # Channel B
+        left, _, right, _ = self.horizontalLayout_12.getContentsMargins()
+        self.horizontalLayout_12.setContentsMargins(left, 0, right, 0)
+
+        # Channel C
+        left, _, right, _ = self.horizontalLayout_13.getContentsMargins()
+        self.horizontalLayout_13.setContentsMargins(left, 0, right, 0)
+
+        # Channel D
+        left, _, right, _ = self.horizontalLayout_14.getContentsMargins()
+        self.horizontalLayout_14.setContentsMargins(left, 0, right, 0)
+        
+        #Title
+        left, top, right, _ = self.horizontalLayout_14.getContentsMargins()
+        self.horizontalLayout_10.setContentsMargins(left, top, right, 0)
+        
 
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
@@ -513,8 +541,8 @@ class Ui_CountsEstimated(object):
         self.channelDClearButton.setText(QCoreApplication.translate("Form", u"D", None))
         self.saveDataButton.setText(QCoreApplication.translate("Form", u"Save data", None))
         self.savePlotsButton.setText(QCoreApplication.translate("Form", u"Save Plots", None))
-        self.titleCounts.setText(QCoreApplication.translate("Form", u"Counts estimated", None))
-        self.titleUncertainty.setText(QCoreApplication.translate("Form", u"Uncertainty", None))
+        self.titleCounts.setText(QCoreApplication.translate("Form", u" <b>Est. counts (cps)<\b>", None))
+        self.titleUncertainty.setText(QCoreApplication.translate("Form", u"<b>Uncertainty<\b>", None))
         self.channelAValuesCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         self.channelAUncertaintyCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         self.channelBValuesCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
@@ -523,16 +551,33 @@ class Ui_CountsEstimated(object):
         self.channelCUncertaintyCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         self.channelDValuesCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
         self.channelDUncertaintyCount.setText(QCoreApplication.translate("Form", u"Not estimated yet", None))
-        ___qtablewidgetitem = self.countValuesTable.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Date", None));
-        ___qtablewidgetitem1 = self.countValuesTable.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"A", None));
-        ___qtablewidgetitem2 = self.countValuesTable.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"B", None));
-        ___qtablewidgetitem3 = self.countValuesTable.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", u"C", None));
-        ___qtablewidgetitem4 = self.countValuesTable.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"D", None));
+        font_bold = QFont()
+        font_bold.setBold(True)
+
+        ___qtablewidgetitem = QTableWidgetItem()
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Date", None))
+        ___qtablewidgetitem.setFont(font_bold)
+        self.countValuesTable.setHorizontalHeaderItem(0, ___qtablewidgetitem)
+
+        ___qtablewidgetitem1 = QTableWidgetItem()
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"A", None))
+        ___qtablewidgetitem1.setFont(font_bold)
+        self.countValuesTable.setHorizontalHeaderItem(1, ___qtablewidgetitem1)
+
+        ___qtablewidgetitem2 = QTableWidgetItem()
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"B", None))
+        ___qtablewidgetitem2.setFont(font_bold)
+        self.countValuesTable.setHorizontalHeaderItem(2, ___qtablewidgetitem2)
+
+        ___qtablewidgetitem3 = QTableWidgetItem()
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", u"C", None))
+        ___qtablewidgetitem3.setFont(font_bold)
+        self.countValuesTable.setHorizontalHeaderItem(3, ___qtablewidgetitem3)
+
+        ___qtablewidgetitem4 = QTableWidgetItem()
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"D", None))
+        ___qtablewidgetitem4.setFont(font_bold)
+        self.countValuesTable.setHorizontalHeaderItem(4, ___qtablewidgetitem4)
         self.separateGraphicButton.setChecked(True)
         self.mergeGraphicButton.setChecked(False)
     # retranslateUi

@@ -1,5 +1,5 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
-from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtGui import QPixmap, QPainter, QColor, QFont
 from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication, QHBoxLayout
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
@@ -157,15 +157,15 @@ class CountEstimatedLogic():
         self.dialogTableOpen=None
         self.dialogLabelOpen=None
         #Configure labels
-        self.countChannelAValue.setText("Channel A: No running")
-        self.countChannelBValue.setText("Channel B: No running")
-        self.countChannelCValue.setText("Channel C: No running")
-        self.countChannelDValue.setText("Channel D: No running")
+        self.countChannelAValue.setText("A: No running")
+        self.countChannelBValue.setText("B: No running")
+        self.countChannelCValue.setText("C: No running")
+        self.countChannelDValue.setText("D: No running")
         # label dialog 
-        self.countChannelAValueClone= QLabel("Channel A: No running")
-        self.countChannelBValueClone= QLabel("Channel B: No running")
-        self.countChannelCValueClone= QLabel("Channel C: No running")
-        self.countChannelDValueClone= QLabel("Channel D: No running")
+        self.countChannelAValueClone= QLabel("A: No running")
+        self.countChannelBValueClone= QLabel("B: No running")
+        self.countChannelCValueClone= QLabel("C: No running")
+        self.countChannelDValueClone= QLabel("D: No running")
         # uncertainties labels dialog
         self.countChannelAUncertaintyClone= QLabel("Not estimated yet")
         self.countChannelBUncertaintyClone= QLabel("Not estimated yet")
@@ -1530,25 +1530,25 @@ class CountEstimatedLogic():
             finalValue=round(value,2)
             finalUncertainty=round(uncertainty,5)
         if channel=="A":    
-            self.countChannelAValue.setText(f"Channel A: {finalValue}")
-            self.countChannelAUncertainty.setText(f"Uncertainty A: {finalUncertainty}")
-            self.countChannelAValueClone.setText(f"Channel A: {finalValue}")
-            self.countChannelAUncertaintyClone.setText(f"Uncertainty A: {finalUncertainty}")
+            self.countChannelAValue.setText(f"A: {finalValue}")
+            self.countChannelAUncertainty.setText(f"{finalUncertainty}")
+            self.countChannelAValueClone.setText(f"A: {finalValue}")
+            self.countChannelAUncertaintyClone.setText(f"{finalUncertainty}")
         elif channel=="B":
-            self.countChannelBValue.setText(f"Channel B: {finalValue}")
-            self.countChannelBUncertainty.setText(f"Uncertainty B: {finalUncertainty}")
-            self.countChannelBValueClone.setText(f"Channel B: {finalValue}")
-            self.countChannelBUncertaintyClone.setText(f"Uncertainty B: {finalUncertainty}")
+            self.countChannelBValue.setText(f"B: {finalValue}")
+            self.countChannelBUncertainty.setText(f"{finalUncertainty}")
+            self.countChannelBValueClone.setText(f"B: {finalValue}")
+            self.countChannelBUncertaintyClone.setText(f"{finalUncertainty}")
         elif channel=="C":
-            self.countChannelCValue.setText(f"Channel C: {finalValue}")
-            self.countChannelCUncertainty.setText(f"Uncertainty C: {finalUncertainty}")
-            self.countChannelCValueClone.setText(f"Channel C: {finalValue}")
-            self.countChannelCUncertaintyClone.setText(f"Uncertainty C: {finalUncertainty}")
+            self.countChannelCValue.setText(f"C: {finalValue}")
+            self.countChannelCUncertainty.setText(f"{finalUncertainty}")
+            self.countChannelCValueClone.setText(f"C: {finalValue}")
+            self.countChannelCUncertaintyClone.setText(f"{finalUncertainty}")
         elif channel=="D":
-            self.countChannelDValue.setText(f"Channel D: {finalValue}")
-            self.countChannelDUncertainty.setText(f"Uncertainty D: {finalUncertainty}")
-            self.countChannelDValueClone.setText(f"Channel D: {finalValue}")
-            self.countChannelDUncertaintyClone.setText(f"Uncertainty D: {finalUncertainty}")
+            self.countChannelDValue.setText(f"D: {finalValue}")
+            self.countChannelDUncertainty.setText(f"{finalUncertainty}")
+            self.countChannelDValueClone.setText(f"D: {finalValue}")
+            self.countChannelDUncertaintyClone.setText(f"{finalUncertainty}")
     
     
     
@@ -1784,30 +1784,32 @@ class CountEstimatedLogic():
             self.dialogLabelOpen.setWindowTitle("Current measurements values")
             self.dialogLabelOpen.setModal(False)
 
-            # Frame exterior con estilo Panel | Sunken
+            
             frame = QFrame()
             frame.setFrameShape(QFrame.Panel)
             frame.setFrameShadow(QFrame.Sunken)
 
-            # Layout vertical del frame exterior
+            
             frameLayout = QVBoxLayout()
 
-            # Cabecera alineada en una fila
+            
             headerLayout = QHBoxLayout()
-            headerLayout.addWidget(QLabel("<b>Counts estimated</b>"))
-            headerLayout.addWidget(QLabel("<b>Uncertainty</b>"))
+
+            
+            titleFont = QFont()
+            titleFont.setPointSize(12)
+            titleFont.setBold(True)
+
+            
+            labelCounts = QLabel("Est. counts (cps)")
+            labelUncertainty = QLabel("Uncertainty")
+            labelCounts.setFont(titleFont)
+            labelUncertainty.setFont(titleFont)
+
+            headerLayout.addWidget(labelCounts)
+            headerLayout.addWidget(labelUncertainty)
             frameLayout.addLayout(headerLayout)
-
-            # Función para crear una fila con valor + incertidumbre
-            def createRow(leftLabel, rightLabel):
-                row = QFrame()
-                rowLayout = QHBoxLayout()
-                rowLayout.addWidget(leftLabel)
-                rowLayout.addWidget(rightLabel)
-                row.setLayout(rowLayout)
-                return row
-
-            # Añadir filas de canales
+            
             self.channelAFrameLabelClone=self.createRow(self.countChannelAValueClone, self.countChannelAUncertaintyClone)
             self.channelBFrameLabelClone=self.createRow(self.countChannelBValueClone, self.countChannelBUncertaintyClone)
             self.channelCFrameLabelClone=self.createRow(self.countChannelCValueClone, self.countChannelCUncertaintyClone)
@@ -1841,9 +1843,25 @@ class CountEstimatedLogic():
                 self.dialogLabelOpen = None
         
         
-    def createRow(self,leftLabel, rightLabel):
+    def createRow(self, leftLabel, rightLabel):
+        
         row = QFrame()
         rowLayout = QHBoxLayout()
+
+        
+        left, _, right, _ = rowLayout.getContentsMargins()
+        rowLayout.setContentsMargins(left, 0, right, 0)
+        rowLayout.setSpacing(10)
+
+        
+        font = QFont()
+        font.setPointSize(14)
+
+        
+        leftLabel.setFont(font)
+        rightLabel.setFont(font)
+
+        
         rowLayout.addWidget(leftLabel)
         rowLayout.addWidget(rightLabel)
         row.setLayout(rowLayout)
