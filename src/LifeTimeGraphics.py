@@ -553,6 +553,10 @@ class LifeTimeGraphic():
             self.oldChannelB=self.device.ch2.getMode()
             self.oldChannelC=self.device.ch3.getMode()
             self.oldChannelD=self.device.ch4.getMode()
+            self.oldNumberStopsChannelA=self.device.ch1.getNumberOfStops()
+            self.oldNumberStopsChannelB=self.device.ch2.getNumberOfStops()
+            self.oldNumberStopsChannelC=self.device.ch3.getNumberOfStops()
+            self.oldNumberStopsChannelD=self.device.ch4.getNumberOfStops()
         except:
             pass
     
@@ -570,7 +574,11 @@ class LifeTimeGraphic():
             self.device.ch1.setMode(self.oldChannelA)
             self.device.ch2.setMode(self.oldChannelB)
             self.device.ch3.setMode(self.oldChannelC)
-            self.device.ch4.setMode(self.oldChannelD) 
+            self.device.ch4.setMode(self.oldChannelD)
+            self.device.ch1.setNumberOfStops(self.oldNumberStopsChannelA)
+            self.device.ch2.setNumberOfStops(self.oldNumberStopsChannelB)
+            self.device.ch3.setNumberOfStops(self.oldNumberStopsChannelC)
+            self.device.ch4.setNumberOfStops(self.oldNumberStopsChannelD)
         except:
             pass
         

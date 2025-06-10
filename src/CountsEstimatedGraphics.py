@@ -1207,10 +1207,10 @@ class CountEstimatedLogic():
             #Return number of runs
             self.device.setNumberOfRuns(self.numberRunsSetting)
             #Return average cycles
-            self.device.ch1.setAverageCycles(self.averageCyclesChannelASetting)
-            self.device.ch2.setAverageCycles(self.averageCyclesChannelBSetting)
-            self.device.ch1.setAverageCycles(self.averageCyclesChannelCSetting)
-            self.device.ch1.setAverageCycles(self.averageCyclesChannelDSetting)
+            self.device.ch1.setAverageCycles(int(self.averageCyclesChannelASetting))
+            self.device.ch2.setAverageCycles(int(self.averageCyclesChannelBSetting))
+            self.device.ch3.setAverageCycles(int(self.averageCyclesChannelCSetting))
+            self.device.ch4.setAverageCycles(int(self.averageCyclesChannelDSetting))
             #Return number of stops
             self.device.ch1.setNumberOfStops(self.numberStopsChannelASetting)
             self.device.ch2.setNumberOfStops(self.numberStopsChannelBSetting)
