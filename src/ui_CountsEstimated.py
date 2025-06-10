@@ -124,7 +124,7 @@ class Ui_CountsEstimated(object):
 
         self.verticalLayout_2.addWidget(self.SelectGraphFrame)
         self.tableLabel= QLabel(self.SettingsFrame)
-        self.tableLabel.setText("Table:")
+        self.tableLabel.setText("Detached:")
         self.verticalLayout_2.addWidget(self.tableLabel)
 
         #FrameDeatached
@@ -133,10 +133,14 @@ class Ui_CountsEstimated(object):
         #Horizontallayout
         self.horizontalLayoutDeatached= QHBoxLayout(self.tableDeatachedFrame)
         
-        #CheckBoxDeatached
+        #CheckBoxDeatached Table 
         self.tableCheckBox= QCheckBox()
-        self.tableCheckBox.setText("Deatached table")
+        self.tableCheckBox.setText("Detached table")
         self.horizontalLayoutDeatached.addWidget(self.tableCheckBox)
+        #CheckBoxDeatached Labels
+        self.labelCheckBox= QCheckBox()
+        self.labelCheckBox.setText("Detached current mearument")
+        self.horizontalLayoutDeatached.addWidget(self.labelCheckBox)
         ###
         self.timeRangeLabel = QLabel(self.SettingsFrame)
         self.timeRangeLabel.setObjectName(u"timeRangeLabel")

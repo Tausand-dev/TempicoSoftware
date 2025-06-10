@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication, QHBoxLayout
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
@@ -72,7 +72,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, device: tempico.TempicoDevice, parent, timerConnection):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, detachedLabelCheckBox: QCheckBox, device: tempico.TempicoDevice, parent, timerConnection):
         #Get the parameters
         self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
@@ -111,6 +111,7 @@ class CountEstimatedLogic():
         self.statusLabel=statusLabel
         self.pointStatusLabel=pointStatusLabel
         self.deatachedCheckBox= deatachedCheckBox
+        self.detachedLabelCheckBox= detachedLabelCheckBox
         #Init for the buttons
         self.stopButton.setEnabled(False)
         self.clearButtonChannelA.setEnabled(False)
@@ -130,6 +131,7 @@ class CountEstimatedLogic():
         self.channelCCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.channelDCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.deatachedCheckBox.stateChanged.connect(self.deatachedTable)
+        self.detachedLabelCheckBox.stateChanged.connect(self.detachedLabels)
         #Connection for the radio button
         self.separateGraphics.toggled.connect(self.updateGraphicsLayout)
         self.mergeGraphics.toggled.connect(self.updateGraphicsLayout)
@@ -153,11 +155,22 @@ class CountEstimatedLogic():
         self.dialogCCreated=None
         self.dialogDCreated=None
         self.dialogTableOpen=None
+        self.dialogLabelOpen=None
         #Configure labels
         self.countChannelAValue.setText("Channel A: No running")
         self.countChannelBValue.setText("Channel B: No running")
         self.countChannelCValue.setText("Channel C: No running")
         self.countChannelDValue.setText("Channel D: No running")
+        # label dialog 
+        self.countChannelAValueClone= QLabel("Channel A: No running")
+        self.countChannelBValueClone= QLabel("Channel B: No running")
+        self.countChannelCValueClone= QLabel("Channel C: No running")
+        self.countChannelDValueClone= QLabel("Channel D: No running")
+        # uncertainties labels dialog
+        self.countChannelAUncertaintyClone= QLabel("Not estimated yet")
+        self.countChannelBUncertaintyClone= QLabel("Not estimated yet")
+        self.countChannelCUncertaintyClone= QLabel("Not estimated yet")
+        self.countChannelDUncertaintyClone= QLabel("Not estimated yet")
         #Connection for the buttons
         self.startButton.clicked.connect(self.startMeasure)
         self.stopButton.clicked.connect(self.stopMeasure)
@@ -231,25 +244,49 @@ class CountEstimatedLogic():
         self.hideColumns()
         if self.channelACheckBox.isChecked():
             self.channelAFrameLabel.setVisible(True)
+            if self.dialogLabelOpen:
+                self.channelAFrameLabelClone.setVisible(True)
+    
         else:
             self.channelAFrameLabel.setVisible(False)
+            if self.dialogLabelOpen:
+                self.channelAFrameLabelClone.setVisible(False)
+                
         
         
         if self.channelBCheckBox.isChecked():
             self.channelBFrameLabel.setVisible(True)
+            if self.dialogLabelOpen:
+                self.channelBFrameLabelClone.setVisible(True)
+                
         else:
             self.channelBFrameLabel.setVisible(False)
+            if self.dialogLabelOpen:
+                self.channelBFrameLabelClone.setVisible(False)
+                
 
         
         if self.channelCCheckBox.isChecked():
             self.channelCFrameLabel.setVisible(True)
+            if self.dialogLabelOpen:
+                self.channelCFrameLabelClone.setVisible(True)
+                
         else:
             self.channelCFrameLabel.setVisible(False)
+            if self.dialogLabelOpen:
+                self.channelCFrameLabelClone.setVisible(False)
+                
 
         if self.channelDCheckBox.isChecked():
             self.channelDFrameLabel.setVisible(True)
+            if self.dialogLabelOpen:
+                self.channelDFrameLabelClone.setVisible(True)
+                
         else:
             self.channelDFrameLabel.setVisible(False)
+            if self.dialogLabelOpen:
+                self.channelDFrameLabelClone.setVisible(False)
+                
         #Here we update the graphics that are shown in the interface
         self.updateGraphicsLayout()
     
@@ -1495,15 +1532,23 @@ class CountEstimatedLogic():
         if channel=="A":    
             self.countChannelAValue.setText(f"Channel A: {finalValue}")
             self.countChannelAUncertainty.setText(f"Uncertainty A: {finalUncertainty}")
+            self.countChannelAValueClone.setText(f"Channel A: {finalValue}")
+            self.countChannelAUncertaintyClone.setText(f"Uncertainty A: {finalUncertainty}")
         elif channel=="B":
             self.countChannelBValue.setText(f"Channel B: {finalValue}")
             self.countChannelBUncertainty.setText(f"Uncertainty B: {finalUncertainty}")
+            self.countChannelBValueClone.setText(f"Channel B: {finalValue}")
+            self.countChannelBUncertaintyClone.setText(f"Uncertainty B: {finalUncertainty}")
         elif channel=="C":
             self.countChannelCValue.setText(f"Channel C: {finalValue}")
             self.countChannelCUncertainty.setText(f"Uncertainty C: {finalUncertainty}")
+            self.countChannelCValueClone.setText(f"Channel C: {finalValue}")
+            self.countChannelCUncertaintyClone.setText(f"Uncertainty C: {finalUncertainty}")
         elif channel=="D":
             self.countChannelDValue.setText(f"Channel D: {finalValue}")
             self.countChannelDUncertainty.setText(f"Uncertainty D: {finalUncertainty}")
+            self.countChannelDValueClone.setText(f"Channel D: {finalValue}")
+            self.countChannelDUncertaintyClone.setText(f"Uncertainty D: {finalUncertainty}")
     
     
     
@@ -1732,6 +1777,86 @@ class CountEstimatedLogic():
             if self.dialogTableOpen:
                 self.dialogTableOpen.close()
                 self.dialogTableOpen=None
+    
+    def detachedLabels(self):
+        if self.detachedLabelCheckBox.isChecked():
+            self.dialogLabelOpen = QDialog(self.mainWindow)
+            self.dialogLabelOpen.setWindowTitle("Current measurements values")
+            self.dialogLabelOpen.setModal(False)
+
+            # Frame exterior con estilo Panel | Sunken
+            frame = QFrame()
+            frame.setFrameShape(QFrame.Panel)
+            frame.setFrameShadow(QFrame.Sunken)
+
+            # Layout vertical del frame exterior
+            frameLayout = QVBoxLayout()
+
+            # Cabecera alineada en una fila
+            headerLayout = QHBoxLayout()
+            headerLayout.addWidget(QLabel("<b>Counts estimated</b>"))
+            headerLayout.addWidget(QLabel("<b>Uncertainty</b>"))
+            frameLayout.addLayout(headerLayout)
+
+            # Función para crear una fila con valor + incertidumbre
+            def createRow(leftLabel, rightLabel):
+                row = QFrame()
+                rowLayout = QHBoxLayout()
+                rowLayout.addWidget(leftLabel)
+                rowLayout.addWidget(rightLabel)
+                row.setLayout(rowLayout)
+                return row
+
+            # Añadir filas de canales
+            self.channelAFrameLabelClone=self.createRow(self.countChannelAValueClone, self.countChannelAUncertaintyClone)
+            self.channelBFrameLabelClone=self.createRow(self.countChannelBValueClone, self.countChannelBUncertaintyClone)
+            self.channelCFrameLabelClone=self.createRow(self.countChannelCValueClone, self.countChannelCUncertaintyClone)
+            self.channelDFrameLabelClone=self.createRow(self.countChannelDValueClone, self.countChannelDUncertaintyClone)
+            frameLayout.addWidget(self.channelAFrameLabelClone)
+            frameLayout.addWidget(self.channelBFrameLabelClone)
+            frameLayout.addWidget(self.channelCFrameLabelClone)
+            frameLayout.addWidget(self.channelDFrameLabelClone)
+            if not self.channelACheckBox.isChecked():
+                self.channelAFrameLabelClone.setVisible(False)
+            if not self.channelBCheckBox.isChecked():
+                self.channelBFrameLabelClone.setVisible(False)
+            if not self.channelCCheckBox.isChecked():
+                self.channelCFrameLabelClone.setVisible(False)
+            if not self.channelDCheckBox.isChecked():
+                self.channelDFrameLabelClone.setVisible(False)
+
+            frame.setLayout(frameLayout)
+
+            # Agregar al layout principal
+            mainLayout = QVBoxLayout()
+            mainLayout.addWidget(frame)
+
+            self.dialogLabelOpen.setLayout(mainLayout)
+            self.dialogLabelOpen.resize(400, 300)
+            self.dialogLabelOpen.show()
+            self.dialogLabelOpen.finished.connect(lambda _: self.closeLabelDialog())
+        else:
+            if self.dialogLabelOpen:
+                self.dialogLabelOpen.close()
+                self.dialogLabelOpen = None
+        
+        
+    def createRow(self,leftLabel, rightLabel):
+        row = QFrame()
+        rowLayout = QHBoxLayout()
+        rowLayout.addWidget(leftLabel)
+        rowLayout.addWidget(rightLabel)
+        row.setLayout(rowLayout)
+        return row
+    
+    
+    def closeLabelDialog(self):
+        
+        if self.detachedLabelCheckBox.isChecked():
+            self.dialogLabelOpen=None
+            self.detachedLabelCheckBox.setChecked(False)
+            
+            
                 
             
         
