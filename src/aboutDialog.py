@@ -144,8 +144,8 @@ class Ui_AboutDialog(object):
         self.linkGitHub.setOpenExternalLinks(True)
         ##translateFuncion
         self.descriptionLabel.setText(QCoreApplication.translate("AboutDialog", u"Tempico Software is a suite of tools build to ensure your experience with Tausand's time to digital converters.", None))
-        self.softwareLabel.setText(QCoreApplication.translate("AboutDialog", u"Software Version: 1.1.0", None))
-        self.tempicoLabel.setText(QCoreApplication.translate("AboutDialog", u"PyTempico Version: 1.1.0", None))
+        self.softwareLabel.setText(QCoreApplication.translate("AboutDialog", u"Software Version: 1.2.0", None))
+        self.tempicoLabel.setText(QCoreApplication.translate("AboutDialog", u"PyTempico Version: 1.1.1", None))
         #self.imageLabel.setText(QCoreApplication.translate("AboutDialog", u"Picture Label", None))
         self.linkTausand.setText(QCoreApplication.translate("AboutDialog", u"Visit us at: %s "%tausand, None))
         self.linkGitHub.setText(QCoreApplication.translate("AboutDialog", u"More information on Tempico Software implementation can be found at: %s"%pages, None))
