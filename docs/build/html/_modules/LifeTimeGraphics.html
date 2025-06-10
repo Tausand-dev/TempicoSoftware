@@ -356,6 +356,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">numberBins</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setTabEnabled</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">saveSettings</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopTimerConnection</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -444,7 +445,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">enableAfterFinisihThread</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span></div>
     
     <span class="c1">#Function to clear the graphic</span>
 <div class="viewcode-block" id="LifeTimeGraphic.clearGraphic"><a class="viewcode-back" href="../LifeTimeGraphics.html#LifeTimeGraphics.LifeTimeGraphic.clearGraphic">[docs]</a>    <span class="k">def</span> <span class="nf">clearGraphic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -515,7 +517,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">initialTau1Doub</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">measuredTime</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initialAlphaDoub</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveDataButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">noMeasurement</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span></div>
         
     
     <span class="c1">#Function to change the status measurement</span>
@@ -628,6 +631,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">oldChannelB</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">oldChannelC</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">oldChannelD</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelA</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelB</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelC</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelD</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span></div>
     
@@ -645,7 +652,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldChannelA</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldChannelB</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldChannelC</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldChannelD</span><span class="p">)</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldChannelD</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelA</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelB</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelC</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldNumberStopsChannelD</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span></div>
         

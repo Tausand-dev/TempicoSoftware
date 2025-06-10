@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main module &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>main module &mdash; Tempico Software 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -63,12 +63,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnect_button_click"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnect_button_click()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.enableSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.enableSettings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.general_settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.general_settings_clicked()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.saveSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.saveSettings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.settings_clicked()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">MainWindow.staticMetaObject</span></code></a></li>
 </ul>
@@ -270,6 +272,20 @@ reference to None.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.enableSettings">
+<span class="sig-name descname"><span class="pre">enableSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.enableSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.enableSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Re-enables the device and general settings dialogs if they are open.</p>
+<p>If either the device configuration or general settings dialog is currently visible, 
+this function refreshes and reactivates their interactive fields by calling the 
+corresponding <cite>get_settings()</cite> and <cite>enableSettings()</cite> methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.general_settings_clicked">
 <span class="sig-name descname"><span class="pre">general_settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.general_settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.general_settings_clicked" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the general settings window for device-wide configurations.</p>
@@ -346,6 +362,21 @@ widths are scaled proportionally to ensure the table adapts to the new window si
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.saveSettings">
+<span class="sig-name descname"><span class="pre">saveSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.saveSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.saveSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves and stores the current device configuration into internal variables.</p>
+<p>This function queries the connected device for channel-specific settings such as
+averaging cycles, mode, number of stops, stop edge type, stop mask, threshold voltage,
+and number of runs. These values are saved into instance attributes for later use,
+such as restoring settings or displaying them in the UI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

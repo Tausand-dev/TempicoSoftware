@@ -100,6 +100,7 @@
 <span class="kn">from</span> <span class="nn">LifeTimeGraphics</span> <span class="kn">import</span> <span class="n">LifeTimeGraphic</span>
 <span class="kn">from</span> <span class="nn">CountsEstimatedGraphics</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span>
 
 
 
@@ -180,7 +181,37 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manageConection</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="o">=</span><span class="kc">False</span>
-        
+        <span class="c1"># save old settings state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelA</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelB</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelC</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelD</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelA</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelB</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelC</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelD</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelA</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelB</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelC</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelD</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelA</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelB</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelC</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">##</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openSettings</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="o">=</span><span class="kc">False</span>
+        <span class="c1">## general settings </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="mi">0</span>
 
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">ctypes</span>
@@ -594,8 +625,9 @@
                 <span class="n">statusLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelState</span>
                 <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelColor</span>
                 <span class="n">deatachedCheckBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">tableCheckBox</span>
+                <span class="n">detachedLabelCheckBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelCheckBox</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">=</span><span class="n">CountEstimatedLogic</span><span class="p">(</span><span class="n">channelACheckBox</span><span class="p">,</span><span class="n">channelBCheckBox</span><span class="p">,</span><span class="n">channelCCheckBox</span><span class="p">,</span><span class="n">channelDCheckBox</span><span class="p">,</span><span class="n">startButon</span><span class="p">,</span><span class="n">stopButon</span><span class="p">,</span><span class="n">mergeRadioButton</span><span class="p">,</span><span class="n">separateRadioButton</span><span class="p">,</span> <span class="n">deatachedRadioButton</span><span class="p">,</span><span class="n">timeRangeComboBox</span><span class="p">,</span><span class="n">clearButtonChannelA</span><span class="p">,</span><span class="n">clearButtonChannelB</span><span class="p">,</span><span class="n">clearButtonChannelC</span><span class="p">,</span><span class="n">clearButtonChannelD</span>
-                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span></div>
+                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="n">detachedLabelCheckBox</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span></div>
                 
                 
                  
@@ -667,16 +699,32 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span> <span class="o">=</span> <span class="n">Ui_settings</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">get_settings</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openSettings</span><span class="o">=</span><span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#Open warning dialog</span>
                 <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Running measurement&quot;</span><span class="p">)</span>
-                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;It is not possible to make changes when a measurement is running.&quot;</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.&quot;</span><span class="p">)</span>
                 <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="c1">#Open settings</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span> <span class="o">=</span> <span class="n">Ui_settings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">preDefinedSettings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelA</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelB</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelD</span><span class="p">,</span> 
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelA</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelB</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelD</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelA</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelB</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelD</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelA</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelB</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">onlyReading</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                
+                
     
                 
         <span class="k">else</span><span class="p">:</span>
@@ -688,6 +736,97 @@
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+            
+<div class="viewcode-block" id="MainWindow.enableSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.enableSettings">[docs]</a>    <span class="k">def</span> <span class="nf">enableSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-enables the device and general settings dialogs if they are open.</span>
+
+<span class="sd">        If either the device configuration or general settings dialog is currently visible, </span>
+<span class="sd">        this function refreshes and reactivates their interactive fields by calling the </span>
+<span class="sd">        corresponding `get_settings()` and `enableSettings()` methods.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openSettings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialog_settings</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">get_settings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_channels</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">getsettings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span></div>
+            
+    
+<div class="viewcode-block" id="MainWindow.saveSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.saveSettings">[docs]</a>    <span class="k">def</span> <span class="nf">saveSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves and stores the current device configuration into internal variables.</span>
+
+<span class="sd">        This function queries the connected device for channel-specific settings such as</span>
+<span class="sd">        averaging cycles, mode, number of stops, stop edge type, stop mask, threshold voltage,</span>
+<span class="sd">        and number of runs. These values are saved into instance attributes for later use,</span>
+<span class="sd">        such as restoring settings or displaying them in the UI.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#Get the channels objects</span>
+            <span class="n">channel1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">ch1</span>
+            <span class="n">channel2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">ch2</span>
+            <span class="n">channel3</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">ch3</span>
+            <span class="n">channel4</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">ch4</span>
+            <span class="c1">#Get the average cycles</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelA</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">channel1</span><span class="o">.</span><span class="n">getAverageCycles</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelB</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">channel2</span><span class="o">.</span><span class="n">getAverageCycles</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelC</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">channel3</span><span class="o">.</span><span class="n">getAverageCycles</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelD</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">channel4</span><span class="o">.</span><span class="n">getAverageCycles</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+            <span class="c1">#Get the mode</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelA</span><span class="o">=</span><span class="n">channel1</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelB</span><span class="o">=</span><span class="n">channel2</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelC</span><span class="o">=</span><span class="n">channel3</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modeChangeChannelD</span><span class="o">=</span><span class="n">channel4</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+            <span class="c1">#Get the number of stops</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelA</span><span class="o">=</span><span class="n">channel1</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelB</span><span class="o">=</span><span class="n">channel2</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelC</span><span class="o">=</span><span class="n">channel3</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberOfStopsChannelD</span><span class="o">=</span><span class="n">channel4</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+            <span class="c1">#Get and transform the stop edge</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="o">=</span><span class="n">channel1</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="o">==</span><span class="s2">&quot;RISE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelA</span><span class="o">=</span><span class="mi">1</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="o">=</span><span class="n">channel2</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="o">==</span><span class="s2">&quot;RISE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelB</span><span class="o">=</span><span class="mi">1</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="o">=</span><span class="n">channel3</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="o">==</span><span class="s2">&quot;RISE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelC</span><span class="o">=</span><span class="mi">1</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="o">=</span><span class="n">channel4</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="o">==</span><span class="s2">&quot;RISE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edgeTypeChannelD</span><span class="o">=</span><span class="mi">1</span>
+            <span class="c1">#Get the stop mask</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelA</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel1</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelB</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel2</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelC</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel3</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel4</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
+            <span class="c1">#Get the threshold voltage</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span></div>
+            
+            
+        
+            
+            
+            
     
 <div class="viewcode-block" id="MainWindow.general_settings_clicked"><a class="viewcode-back" href="../main.html#main.MainWindow.general_settings_clicked">[docs]</a>    <span class="k">def</span> <span class="nf">general_settings_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -704,17 +843,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="p">:</span>
-                <span class="n">settings_windows</span><span class="o">=</span><span class="n">GeneralSettingsWindow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
-                <span class="n">settings_windows</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">=</span><span class="n">GeneralSettingsWindow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">getsettings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Icono de advertencia</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Running measurement&quot;</span><span class="p">)</span>
-                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;It is not possible to make changes when a measurement is running.&quot;</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.&quot;</span><span class="p">)</span>
                 <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
                 <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">=</span><span class="n">GeneralSettingsWindow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">preDefinedSettings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">disableSettings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
     
                 
         <span class="k">else</span><span class="p">:</span>
@@ -863,7 +1010,6 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Se ejecuta&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="p">:</span>

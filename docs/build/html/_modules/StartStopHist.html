@@ -447,6 +447,7 @@
             <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
             <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span><span class="o">.</span><span class="n">saveSettings</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">withoutMeasurement</span><span class="o">=</span><span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stopTimerConnection</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinelZoomChangedA</span><span class="o">=</span><span class="mi">0</span>
@@ -467,6 +468,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">checkC</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checkD</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">savebutton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+            
     
     
     
