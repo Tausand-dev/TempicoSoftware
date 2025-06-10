@@ -660,6 +660,15 @@ class MainWindow(QMainWindow):
             message_box.exec_()
             
     def enableSettings(self):
+        """
+        Re-enables the device and general settings dialogs if they are open.
+
+        If either the device configuration or general settings dialog is currently visible, 
+        this function refreshes and reactivates their interactive fields by calling the 
+        corresponding `get_settings()` and `enableSettings()` methods.
+
+        :return: None
+        """
         if self.openSettings:
             if self.dialog_settings.isVisible():
                 self.settings_channels.get_settings()
@@ -671,6 +680,16 @@ class MainWindow(QMainWindow):
             
     
     def saveSettings(self):
+        """
+        Retrieves and stores the current device configuration into internal variables.
+
+        This function queries the connected device for channel-specific settings such as
+        averaging cycles, mode, number of stops, stop edge type, stop mask, threshold voltage,
+        and number of runs. These values are saved into instance attributes for later use,
+        such as restoring settings or displaying them in the UI.
+
+        :return: None
+        """
         if self.conectedDevice!=None:
             #Get the channels objects
             channel1=self.conectedDevice.ch1

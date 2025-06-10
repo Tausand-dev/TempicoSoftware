@@ -1779,6 +1779,24 @@ class CountEstimatedLogic():
                 self.dialogTableOpen=None
     
     def detachedLabels(self):
+        """
+        Displays or hides a dialog showing current measurement values for selected channels.
+
+        When the 'Detached current measurement' checkbox is checked, this function creates 
+        and displays a non-modal QDialog containing the current estimated count rates 
+        and their uncertainties for each selected channel (A–D). Each visible row in the 
+        dialog corresponds to a channel, displaying the estimated counts (in cps) and the 
+        associated uncertainty. If a channel is not selected, its row remains hidden.
+
+        The dialog layout is organized using a sunken panel-style QFrame with a vertical 
+        layout. A bold header row indicates the meaning of each column. This interface 
+        allows users to quickly inspect the most recent count values without modifying the 
+        ongoing measurement.
+
+        If the checkbox is unchecked, any open measurement dialog is closed automatically.
+
+        :return: None
+        """
         if self.detachedLabelCheckBox.isChecked():
             self.dialogLabelOpen = QDialog(self.mainWindow)
             self.dialogLabelOpen.setWindowTitle("Current measurements values")
@@ -1844,6 +1862,21 @@ class CountEstimatedLogic():
         
         
     def createRow(self, leftLabel, rightLabel):
+        """
+        Creates a horizontal row frame containing two labels.
+
+        This function constructs a `QFrame` that represents a single row in a dialog or panel.
+        It arranges two given `QLabel` widgets — one aligned to the left and the other to the right —
+        using a `QHBoxLayout`. The labels are styled with a consistent font size and the vertical
+        margins are removed to minimize vertical spacing between rows.
+
+        This method is used to visually structure measurement data (such as estimated counts and uncertainties)
+        in a clean, compact format.
+
+        :param leftLabel: QLabel - The label to place on the left side of the row.
+        :param rightLabel: QLabel - The label to place on the right side of the row.
+        :return: QFrame - A frame containing the two labels arranged horizontally.
+        """
         
         row = QFrame()
         rowLayout = QHBoxLayout()
@@ -1869,6 +1902,12 @@ class CountEstimatedLogic():
     
     
     def closeLabelDialog(self):
+        """
+        Resets the dialog state and unchecks the measurement label checkbox
+        if the dialog was closed while still marked as active.
+        
+        :return: None
+        """
         
         if self.detachedLabelCheckBox.isChecked():
             self.dialogLabelOpen=None
@@ -2020,71 +2059,104 @@ class CountEstimatedLogic():
                 selected_format = FormatBox.currentText()
                 
                 if self.channelACheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
-                    self.plotCountsA.setAspectLocked(False)
-                    exporter= pg.exporters.ImageExporter(self.winCountsGraphA.scene())
-                    exporter.parameters()['width'] = 800
-                    exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
-                    current_date=datetime.now()
-                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Counts_ChannelA'+current_date_str
-                    if os.name == 'posix':  
-                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
-                    else:  
-                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    
+                    winCopy, plotCopy, curveCopy = self.factoryGraphChannels("A")
+                    curveCopy.setData(self.timestampsChannelA, self.channelAValues)
+                    x_range, y_range = self.plotCountsA.viewRange()
+                    plotCopy.setXRange(x_range[0], x_range[1])
+                    plotCopy.setYRange(y_range[0], y_range[1])
+                    plotCopy.getAxis('left').setWidth(80)  
+                    plotCopy.setAspectLocked(False)
+                    QApplication.processEvents()
+                    exporter = pg.exporters.ImageExporter(winCopy.scene())
+                    exporter.parameters()['width'] = 1200
+                    exporter.parameters()['height'] = 800
+                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date = datetime.now()
+                    current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name = 'Counts_ChannelA' + current_date_str
+                    output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
+                    exporter.export(output_path)
                     graph_names.append(graph_name)
+                    
                 if self.channelBCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
-                    exporter= pg.exporters.ImageExporter(self.plotCountsB)
-                    exporter.parameters()['width'] = 800
-                    exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
-                    current_date=datetime.now()
-                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Counts_ChannelB'+current_date_str
-                    if os.name == 'posix':  
-                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
-                    else:  
-                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    winCopy, plotCopy, curveCopy = self.factoryGraphChannels("B")
+                    curveCopy.setData(self.timestampsChannelB, self.channelBValues)
+                    x_range, y_range = self.plotCountsB.viewRange()
+                    plotCopy.setXRange(x_range[0], x_range[1])
+                    plotCopy.setYRange(y_range[0], y_range[1])
+                    plotCopy.getAxis('left').setWidth(80)  
+                    plotCopy.setAspectLocked(False)
+                    QApplication.processEvents()
+                    exporter = pg.exporters.ImageExporter(winCopy.scene())
+                    exporter.parameters()['width'] = 1400
+                    exporter.parameters()['height'] = 1000
+                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date = datetime.now()
+                    current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name = 'Counts_ChannelB' + current_date_str
+                    output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
+                    exporter.export(output_path)
                     graph_names.append(graph_name)
                 if self.channelCCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
-                    exporter= pg.exporters.ImageExporter(self.plotCountsC)
-                    exporter.parameters()['width'] = 800
-                    exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
-                    current_date=datetime.now()
-                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Counts_ChannelC'+current_date_str
-                    if os.name == 'posix':  
-                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
-                    else:  
-                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    winCopy, plotCopy, curveCopy = self.factoryGraphChannels("C")
+                    curveCopy.setData(self.timestampsChannelC, self.channelCValues)
+                    x_range, y_range = self.plotCountsC.viewRange()
+                    plotCopy.setXRange(x_range[0], x_range[1])
+                    plotCopy.setYRange(y_range[0], y_range[1])
+                    plotCopy.getAxis('left').setWidth(80)  
+                    plotCopy.setAspectLocked(False)
+                    QApplication.processEvents()
+                    exporter = pg.exporters.ImageExporter(winCopy.scene())
+                    exporter.parameters()['width'] = 1400
+                    exporter.parameters()['height'] = 1000
+                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date = datetime.now()
+                    current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name = 'Counts_ChannelC' + current_date_str
+                    output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
+                    exporter.export(output_path)
                     graph_names.append(graph_name)
                 if self.channelDCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
-                    self.separateGraphics.setChecked(True)
-                    exporter= pg.exporters.ImageExporter(self.plotCountsD)
-                    exporter.parameters()['width'] = 800
-                    exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
-                    current_date=datetime.now()
-                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Counts_ChannelD'+current_date_str
-                    if os.name == 'posix':  
-                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
-                    else:  
-                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    winCopy, plotCopy, curveCopy = self.factoryGraphChannels("D")
+                    curveCopy.setData(self.timestampsChannelD, self.channelDValues)
+                    x_range, y_range = self.plotCountsD.viewRange()
+                    plotCopy.setXRange(x_range[0], x_range[1])
+                    plotCopy.setYRange(y_range[0], y_range[1])
+                    plotCopy.getAxis('left').setWidth(80)  
+                    plotCopy.setAspectLocked(False)
+                    QApplication.processEvents()
+                    exporter = pg.exporters.ImageExporter(winCopy.scene())
+                    exporter.parameters()['width'] = 1400
+                    exporter.parameters()['height'] = 1000
+                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date = datetime.now()
+                    current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name = 'Counts_ChannelD' + current_date_str
+                    output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
+                    exporter.export(output_path)
                     graph_names.append(graph_name)
                 if self.mergeGraphics.isChecked():
-                    exporter= pg.exporters.ImageExporter(self.plotCountsA)
-                    exporter.parameters()['width'] = 800
-                    exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
-                    current_date=datetime.now()
-                    current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Counts_MergeChannels'+current_date_str
-                    if os.name == 'posix':  
-                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
-                    else:  
-                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    winCopy, plotCopy, curveACopy,curveBCopy,curveCCopy, curveDCopy = self.factoryGraphsAllChannels()
+                    curveACopy.setData(self.timestampsChannelA, self.channelAValues)
+                    curveBCopy.setData(self.timestampsChannelB, self.channelBValues)
+                    curveCCopy.setData(self.timestampsChannelC, self.channelCValues)
+                    curveDCopy.setData(self.timestampsChannelD, self.channelDValues)
+                    x_range, y_range = self.plotCountsA.viewRange()
+                    plotCopy.setXRange(x_range[0], x_range[1])
+                    plotCopy.setYRange(y_range[0], y_range[1])
+                    plotCopy.getAxis('left').setWidth(80)  
+                    plotCopy.setAspectLocked(False)
+                    QApplication.processEvents()
+                    exporter = pg.exporters.ImageExporter(winCopy.scene())
+                    exporter.parameters()['width'] = 1400
+                    exporter.parameters()['height'] = 1000
+                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
+                    current_date = datetime.now()
+                    current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    graph_name = 'Counts_AllChannels' + current_date_str
+                    output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
+                    exporter.export(output_path)
                     graph_names.append(graph_name)
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Information)
@@ -2101,7 +2173,8 @@ class CountEstimatedLogic():
                 message_box.exec_()
                 
             
-        except:
+        except NameError as e:
+            print(e)
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The graphics could not be saved, check the folder path or system files")
@@ -2111,9 +2184,21 @@ class CountEstimatedLogic():
 
 
     def captureInitalDate(self,date):
+        """
+        Stores the initial date received from a signal.
+
+        :param date: QDateTime - The start date of the measurement range.
+        :return: None
+        """
         self.initialDate=date
     
     def captureFinalDate(self,date):
+        """
+        Stores the final date received from a signal.
+
+        :param date: QDateTime - The end date of the measurement range.
+        :return: None
+        """
         self.finalDate=date
     
     
