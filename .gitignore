@@ -8,6 +8,9 @@
 !/docs/build/latex/tempicosoftware.pdf
 /src/ubuntuInstaller/
 /src/WindowsInstaller/
+/src/UbuntuInstaller/
+/src/Ubuntu1.2Installer/
+/src/UbuntuTestNew/
 /WindowsInstaller/
 /src/TestVenv/
 /src/dist/
