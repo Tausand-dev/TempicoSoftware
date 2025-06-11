@@ -5,7 +5,6 @@ from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
 from generalsettings import GeneralSettingsWindow
 from aboutDialog import Ui_AboutDialog
 from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_g2measurement import Ui_G2
 from ui_devicesDialog import Ui_Devices
 import time
 from PySide2.QtCore import QTimer
@@ -98,7 +97,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
-        self.setMinimumSize(1000,700)
+        self.setMinimumSize(1100,800)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
@@ -135,11 +134,7 @@ class MainWindow(QMainWindow):
         self.thresholdVoltage=0
         self.numberRuns=0
 
-        if sys.platform == 'win32':
-            import ctypes
-            myappid = APPID  # arbitrary string
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-        elif sys.platform == 'linux':
+        if sys.platform == 'linux':
             tray_icon = QSystemTrayIcon(QIcon(ICON_LOCATION), self) 
             tray_icon.setToolTip("Tempico Software")
             
@@ -298,9 +293,7 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         if self.sentinel3==0:
-            self.uig2 = Ui_G2()
-            self.uig2.setupUi(parent)
-            self.sentinel3=1
+            pass
 
     def open_dialog(self):
         """

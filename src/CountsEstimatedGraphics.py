@@ -6,7 +6,6 @@ from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
 from createsavefile import createsavefile as savefile
 from datetime import datetime, date
-from scipy.optimize import curve_fit
 import math
 import re
 from pyqtgraph.exporters import ImageExporter
