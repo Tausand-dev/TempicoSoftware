@@ -484,6 +484,17 @@ class Ui_CountsEstimated(object):
         self.channelDUncertaintyCount,
         self.titleUncertainty
         )
+        self.titleCounts.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.titleUncertainty.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelAValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelAUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelBValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelBUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelCValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelCUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelDValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelDUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        
         self.verticalLayout_3.setSpacing(2)  # Espacio vertical entre filas
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)  # Márgenes del layout general
         

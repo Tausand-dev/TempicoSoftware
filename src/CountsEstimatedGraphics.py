@@ -1260,6 +1260,11 @@ class CountEstimatedLogic():
         self.timestampsDateChannelB=[]
         self.timestampsDateChannelC=[]
         self.timestampsDateChannelD=[]
+        #Reset Uncertainties
+        self.channelAUncertainties=[]
+        self.channelBUncertainties=[]
+        self.channelCUncertainties=[]
+        self.channelDUncertainties=[]
         #Reset table rows
         self.tableCounts.setRowCount(0)
         self.cloneTable.setRowCount(0)
@@ -1408,13 +1413,15 @@ class CountEstimatedLogic():
         #Channel A
         
         if channelAValue!=0 and channelAValue!=-1:
-            channelAValue=round(channelAValue,2)
+            channelAValue=round(channelAValue,5)
             channelAUncertainty= round(channelAUncertainty,5)
             self.timestampsChannelA.append(secondsTime)
             self.timestampsDateChannelA.append(dateTime)
             self.channelAValues.append(channelAValue)
             self.channelAUncertainties.append(channelAUncertainty)
             self.curveCountsA.setData(self.timestampsChannelA, self.channelAValues)
+            channelAValue=f"{channelAValue:.5f}"
+            channelAUncertainty=f"{channelAUncertainty:.5f}"
         elif channelAValue==0:
             channelAValue="Low Counts"
             channelAUncertainty="Low Counts"
@@ -1423,13 +1430,15 @@ class CountEstimatedLogic():
             channelAUncertainty="Not Selected"
         #Channel B
         if channelBValue!=0 and channelBValue!=-1:
-            channelBValue=round(channelBValue,2)
+            channelBValue=round(channelBValue,5)
             channelBUncertainty= round(channelBUncertainty,5)
             self.timestampsChannelB.append(secondsTime)
             self.timestampsDateChannelB.append(dateTime)
             self.channelBValues.append(channelBValue)
             self.channelBUncertainties.append(channelBUncertainty)
             self.curveCountsB.setData(self.timestampsChannelB, self.channelBValues)
+            channelBValue=f"{channelBValue:.5f}"
+            channelBUncertainty=f"{channelBUncertainty:.5f}"
         elif channelBValue==0:
             channelBValue="Low Counts"
             channelBUncertainty="Low Counts"
@@ -1438,13 +1447,15 @@ class CountEstimatedLogic():
             channelBUncertainty="Not Selected"
         #Channel C
         if channelCValue!=0 and channelCValue!=-1:
-            channelCValue=round(channelCValue,2)
+            channelCValue=round(channelCValue,5)
             channelCUncertainty= round(channelCUncertainty,5)
             self.timestampsChannelC.append(secondsTime)
             self.timestampsDateChannelC.append(dateTime)
             self.channelCValues.append(channelCValue)
             self.channelCUncertainties.append(channelCUncertainty)
             self.curveCountsC.setData(self.timestampsChannelC, self.channelCValues)
+            channelCValue=f"{channelCValue:.5f}"
+            channelCUncertainty=f"{channelCUncertainty:.5f}"
         elif channelCValue==0:
             channelCValue="Low Counts"
             channelCUncertainty="Low Counts"
@@ -1453,13 +1464,15 @@ class CountEstimatedLogic():
             channelCUncertainty="Not Selected"
         #Channel D
         if channelDValue!=0 and channelDValue!=-1:
-            channelDValue=round(channelDValue,2)
+            channelDValue=round(channelDValue,5)
             channelDUncertainty= round(channelDUncertainty,5)
             self.timestampsChannelD.append(secondsTime)
             self.timestampsDateChannelD.append(dateTime)
             self.channelDValues.append(channelDValue)
             self.channelDUncertainties.append(channelDUncertainty)
             self.curveCountsD.setData(self.timestampsChannelD, self.channelDValues)
+            channelDValue=f"{channelDValue:.5f}"
+            channelDUncertainty=f"{channelDUncertainty:.5f}"
         elif channelDValue==0:
             channelDValue="Low Counts"
             channelDUncertainty="Low Counts"
@@ -1520,15 +1533,17 @@ class CountEstimatedLogic():
         :param uncertainty: The associated uncertainty of the measurement (float or str).
         :return: None
         """
-        if value=="Low Counts":
-            finalValue=value
-            finalUncertainty=uncertainty
-        elif value=="Not Selected":
-            finalValue=value
-            finalUncertainty=uncertainty
-        else:    
-            finalValue=round(value,2)
-            finalUncertainty=round(uncertainty,5)
+        finalValue = value
+        finalUncertainty = uncertainty
+        # if value=="Low Counts":
+        #     finalValue=value
+        #     finalUncertainty=uncertainty
+        # elif value=="Not Selected":
+        #     finalValue=value
+        #     finalUncertainty=uncertainty
+        # else:    
+        #     finalValue=round(value,2)
+        #     finalUncertainty=round(uncertainty,5)
         if channel=="A":    
             self.countChannelAValue.setText(f"A: {finalValue}")
             self.countChannelAUncertainty.setText(f"{finalUncertainty}")
@@ -1824,6 +1839,10 @@ class CountEstimatedLogic():
             labelCounts.setFont(titleFont)
             labelUncertainty.setFont(titleFont)
 
+            # Alinear a la derecha
+            labelCounts.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+            labelUncertainty.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
             headerLayout.addWidget(labelCounts)
             headerLayout.addWidget(labelUncertainty)
             frameLayout.addLayout(headerLayout)
@@ -1881,20 +1900,20 @@ class CountEstimatedLogic():
         row = QFrame()
         rowLayout = QHBoxLayout()
 
-        
         left, _, right, _ = rowLayout.getContentsMargins()
         rowLayout.setContentsMargins(left, 0, right, 0)
         rowLayout.setSpacing(10)
 
-        
         font = QFont()
         font.setPointSize(14)
 
-        
         leftLabel.setFont(font)
         rightLabel.setFont(font)
 
-        
+        # Alinear texto a la derecha
+        leftLabel.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        rightLabel.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
         rowLayout.addWidget(leftLabel)
         rowLayout.addWidget(rightLabel)
         row.setLayout(rowLayout)
