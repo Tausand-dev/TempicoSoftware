@@ -276,7 +276,9 @@ class createsavefile:
                     file.write(setting_channel + '\n')
                     file.write(f"Hour (HH:MM:SS) \t Counts Channel {channel}(counts/sec) \t Uncertainties Channel {channel}(counts/sec)\n")
                     for timeStamp, countValue,uncertanty in zip(timeStamp,data_list,data_uncertainties):
-                        file.write(f"{timeStamp}\t{countValue}\t\t{uncertanty}\n")
+                        valueFormated= f"{countValue:.5f}"
+                        uncertaintyFormated=f"{uncertanty:.5f}"
+                        file.write(f"{timeStamp}\t{valueFormated}\t\t{uncertaintyFormated}\n")
 
     
     
