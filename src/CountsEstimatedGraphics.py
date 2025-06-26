@@ -2602,8 +2602,13 @@ class WorkerThreadCountsEstimated(QThread):
                                 intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelC)
                                 valuesD=valuesD+intervalValues
         if len(values)>0:
-            meanValue=mean(values)
-            uncertaintyValue=std(values)
+            meanValue=(10**12)/mean(values)
+            desvestValues=std(values)
+            meanValuePs=mean(values)
+            if desvestValues == 0:
+                uncertaintyValue = 0
+            else:
+                uncertaintyValue = (desvestValues / (meanValuePs ** 2))* 1e12
             #Send the signal to the main window
             #TODO calculate everything for all channels
             
@@ -2625,8 +2630,13 @@ class WorkerThreadCountsEstimated(QThread):
         
         
         if len(valuesB)>0:
-            meanValueB=mean(valuesB)
-            uncertaintyValueB=std(valuesB)
+            meanValueB=(10**12)/mean(valuesB)
+            desvestValuesB=std(valuesB)
+            meanValueBPs=mean(valuesB)
+            if desvestValuesB == 0:
+                uncertaintyValueB = 0
+            else:
+                uncertaintyValueB = (desvestValuesB / (meanValueBPs ** 2))* 1e12
             #Send the signal to the main window
             #TODO calculate everything for all channels
             
@@ -2645,8 +2655,13 @@ class WorkerThreadCountsEstimated(QThread):
                 uncertaintyChannelB=-1
 
         if len(valuesC)>0:
-            meanValueC=mean(valuesC)
-            uncertaintyValueC=std(valuesC)
+            meanValueC=(10**12)/mean(valuesC)
+            desvestValuesC=std(valuesC)
+            meanValuesCPs=mean(valuesC)
+            if desvestValuesC == 0:
+                uncertaintyValueC = 0
+            else:
+                uncertaintyValueC = (desvestValuesC / (meanValuesCPs ** 2))* 1e12
             #Send the signal to the main window
             #TODO calculate everything for all channels
             
@@ -2665,8 +2680,13 @@ class WorkerThreadCountsEstimated(QThread):
                 uncertaintyChannelC=-1
         
         if len(valuesD)>0:
-            meanValueD=mean(valuesD)
-            uncertaintyValueD=std(valuesD)
+            meanValueD=(10**12)/mean(valuesD)
+            desvestValuesD = np.std(valuesD)
+            meanValuesDPs=mean(valuesD)
+            if desvestValuesD == 0:
+                uncertaintyValueD = 0
+            else:
+                uncertaintyValueD = (desvestValuesD / (meanValuesDPs ** 2))* 1e12
             #Send the signal to the main window
             #TODO calculate everything for all channels
             
@@ -2707,8 +2727,7 @@ class WorkerThreadCountsEstimated(QThread):
         for i in range(numberStops-1):
             if currentMeasure[i+3]!=-1 and currentMeasure[i+4]!=-1:
                 differenceValue=currentMeasure[i+4]-currentMeasure[i+3]
-                realValueSeconds=(10**12)/(differenceValue)
-                tempValues.append(realValueSeconds)
+                tempValues.append(differenceValue)
         
         return tempValues
     
