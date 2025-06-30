@@ -938,7 +938,15 @@ the update_timer function to be executed at one-second intervals.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.startTimerConnection">
 <span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.startTimerConnection" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Starts the timer to check the device connection status every 500 milliseconds.</p>
+<p>This method initiates periodic checks to monitor if the connected device remains
+active and responsive. The interval is set to 500 ms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopMeasurement">
@@ -968,7 +976,15 @@ and sets the totalTime label to indicate that no measurement is currently runnin
 <dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection">
 <span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Stops the timer responsible for checking the device connection status.</p>
+<p>This method halts the periodic checks performed by <cite>timerConnection</cite> to avoid
+unnecessary polling or to pause the connection validation during inactive states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.timeRangeValue">

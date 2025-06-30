@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>main &mdash; Tempico Software 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=def9ab29"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -101,6 +101,7 @@
 <span class="kn">from</span> <span class="nn">CountsEstimatedGraphics</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">qt_material</span> <span class="kn">import</span> <span class="n">apply_stylesheet</span>
 
 
 
@@ -354,6 +355,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">=</span><span class="mi">1</span></div>
     
 <div class="viewcode-block" id="MainWindow.construct_counts_estimated"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_counts_estimated">[docs]</a>    <span class="k">def</span> <span class="nf">construct_counts_estimated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs the Counts Estimated window.</span>
+
+<span class="sd">        This function takes a `QTabWidget` parent, and if the sentinel is not set,</span>
+<span class="sd">        it creates an instance of the `Ui_CountsEstimated` class and sets up the UI using the given parent.</span>
+
+<span class="sd">        It ensures the UI is initialized only once by checking the `sentinel3` flag.</span>
+
+<span class="sd">        :param parent: The parent widget (typically a `QTabWidget`) for the counts estimated window.</span>
+<span class="sd">        :type parent: QWidget</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#TO DO Build Documentation</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span> <span class="o">=</span> <span class="n">Ui_CountsEstimated</span><span class="p">()</span>
@@ -626,8 +639,9 @@
                 <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelColor</span>
                 <span class="n">deatachedCheckBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">tableCheckBox</span>
                 <span class="n">detachedLabelCheckBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelCheckBox</span>
+                <span class="n">helpButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">helpButton</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">=</span><span class="n">CountEstimatedLogic</span><span class="p">(</span><span class="n">channelACheckBox</span><span class="p">,</span><span class="n">channelBCheckBox</span><span class="p">,</span><span class="n">channelCCheckBox</span><span class="p">,</span><span class="n">channelDCheckBox</span><span class="p">,</span><span class="n">startButon</span><span class="p">,</span><span class="n">stopButon</span><span class="p">,</span><span class="n">mergeRadioButton</span><span class="p">,</span><span class="n">separateRadioButton</span><span class="p">,</span> <span class="n">deatachedRadioButton</span><span class="p">,</span><span class="n">timeRangeComboBox</span><span class="p">,</span><span class="n">clearButtonChannelA</span><span class="p">,</span><span class="n">clearButtonChannelB</span><span class="p">,</span><span class="n">clearButtonChannelC</span><span class="p">,</span><span class="n">clearButtonChannelD</span>
-                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="n">detachedLabelCheckBox</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span></div>
+                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="n">detachedLabelCheckBox</span><span class="p">,</span><span class="n">helpButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span></div>
                 
                 
                  
@@ -1052,6 +1066,30 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>
+    <span class="c1">#Amber theme</span>
+    <span class="c1"># apply_stylesheet(app, theme=&#39;dark_amber.xml&#39;)</span>
+    <span class="c1">#Amber purple</span>
+    <span class="c1"># apply_stylesheet(app, theme=&#39;light_purple_500.xml&#39;)</span>
+    <span class="c1"># app.setStyleSheet(app.styleSheet() + &quot;&quot;&quot;</span>
+    <span class="c1"># /* Aplica solo a QPushButton dentro de QWidget para tener prioridad */</span>
+    <span class="c1"># QWidget QPushButton {</span>
+    <span class="c1">#     color: #4a0072;</span>
+    <span class="c1">#     font-weight: bold;</span>
+    <span class="c1"># }</span>
+
+    <span class="c1"># /* Hover elegante con fondo morado claro */</span>
+    <span class="c1"># QWidget QPushButton:hover {</span>
+    <span class="c1">#     background-color: #f3e5f5;</span>
+    <span class="c1">#     border: 1px solid #ce93d8;</span>
+    <span class="c1"># }</span>
+
+    <span class="c1"># /* Botones deshabilitados con texto legible */</span>
+    <span class="c1"># QWidget QPushButton:disabled {</span>
+    <span class="c1">#     color: #888888;</span>
+    <span class="c1">#     background-color: #f5f5f5;</span>
+    <span class="c1">#     border: 1px solid #dddddd;</span>
+    <span class="c1"># }</span>
+    <span class="c1"># &quot;&quot;&quot;)</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">BANNER</span><span class="p">)</span>
     <span class="n">desired_size</span> <span class="o">=</span> <span class="n">QSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">splash_pix</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="n">desired_size</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">)</span>

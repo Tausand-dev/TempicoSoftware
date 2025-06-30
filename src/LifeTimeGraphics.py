@@ -696,9 +696,25 @@ class LifeTimeGraphic():
         self.startButton.setEnabled(True)
     
     def stopTimerConnection(self):
+        """
+        Stops the timer responsible for checking the device connection status.
+
+        This method halts the periodic checks performed by `timerConnection` to avoid
+        unnecessary polling or to pause the connection validation during inactive states.
+
+        :return: None
+        """
         self.timerConnection.stop()
     
     def startTimerConnection(self):
+        """
+        Starts the timer to check the device connection status every 500 milliseconds.
+
+        This method initiates periodic checks to monitor if the connected device remains
+        active and responsive. The interval is set to 500 ms.
+
+        :return: None
+        """
         self.timerConnection.start(500)
         
         

@@ -277,6 +277,18 @@ class MainWindow(QMainWindow):
             self.sentinel2=1
     
     def construct_counts_estimated(self,parent):
+        """
+        Constructs the Counts Estimated window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set,
+        it creates an instance of the `Ui_CountsEstimated` class and sets up the UI using the given parent.
+
+        It ensures the UI is initialized only once by checking the `sentinel3` flag.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the counts estimated window.
+        :type parent: QWidget
+        :returns: None
+        """
         #TO DO Build Documentation
         if self.sentinel3==0:
             self.uiCountsEstimated = Ui_CountsEstimated()

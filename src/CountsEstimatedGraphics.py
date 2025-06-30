@@ -63,6 +63,8 @@ class CountEstimatedLogic():
     :param statusLabel: Label showing the system status (QLabel).
     :param pointStatusLabel: Label showing the status of the current measurement point (QLabel).
     :param deatachedCheckBox: Checkbox to toggle between embedded and detached graphics layout (QCheckBox).
+    :param detachedLabelCheckBox: Checkbox to toggle detached labels in the plot layout (QCheckBox).
+    :param helpButton: Button that displays a help/information dialog (QPushButton).
     :param device: The connected measurement device.
     :param parent: The parent window containing the UI (usually a QMainWindow).
     :param timerConnection: Timer responsible for checking device connection status (QTimer).
@@ -837,7 +839,7 @@ class CountEstimatedLogic():
         - Creates and configures a `WorkerThreadCountsEstimated` thread to perform background data acquisition.
         - Connects various thread signals to corresponding update methods in the class.
         - Starts the measurement thread.
-        - If no channels are selected, displays a warning dialog prompting the user to activate at least one channel.
+        - If no channels are selected, displays a warning dialog requiring the user to activate at least one channel.
 
         :return: None
         """
@@ -2401,6 +2403,16 @@ class CountEstimatedLogic():
         msg_box.exec_()
     
     def helpButtonDialog(self):
+        """
+        Displays an informational dialog with instructions for using the Count Estimation window.
+
+        This function shows a modal QMessageBox with an information icon to guide the user
+        on how to correctly connect the signal sources for pulse estimation. It clarifies
+        that a periodic signal should be connected to the Start input, and the sources to be
+        measured should be connected to the Stop channels.
+
+        :return: None
+        """
         message_box = QMessageBox(self.mainWindow)
         message_box.setIcon(QMessageBox.Information)
         message_box.setWindowTitle("Counts estimated Information")
@@ -2425,11 +2437,14 @@ class WorkerThreadCountsEstimated(QThread):
     and emits measurement data while running.
 
     The thread evaluates which channels meet the minimum requirements for valid measurements
-    (at least 2 stops within a 4 ms window), disables those that do not, and allows the user
-    to decide whether to continue with the remaining ones.
+    (e.g., at least 2 stops within a defined time window), disables those that do not, and allows
+    the user to decide whether to proceed with the remaining ones.
 
-    Signals are used extensively to communicate with the GUI, updating labels, graphs, and table data
-    with real-time values or to notify when no valid measurements are possible.
+    Signals are extensively used to communicate with the GUI, updating labels, graphs, and table data
+    in real time, or notifying when no valid measurements are available.
+
+    Additional attributes track the number of stop events per channel and enable synchronization
+    with the main interface using a `threading.Event()` object.
 
     :param channelASentinel: Boolean indicating if Channel A is initially selected for measurement.
     :param channelBSentinel: Boolean indicating if Channel B is initially selected for measurement.
@@ -2438,15 +2453,26 @@ class WorkerThreadCountsEstimated(QThread):
     :param device: The TempicoDevice instance used to perform the measurement operations.
 
     Signals:
-        - newValue(str, float, float): Emitted with updated values for display.
-        - updateLabel(str, float, float): Updates label data in the GUI.
+        - newValue(str, float, float): Emitted with updated values for display (label updates).
+        - updateLabel(str, float, float): Updates the label values for each channel.
         - newMeasurement(float, datetime, float, float, float, float, float, float, float, float): 
-          Emitted with measurement data for timestamp and all channels.
+          Emitted with measurement timestamp, and count/uncertainty data for each channel.
         - noTotalMeasurements(): Emitted when none of the channels provide valid stop data.
-        - noPartialMeasurements(list): Emitted with a list of channels that failed.
-        - changeStatusText(str): Updates the status label in the GUI with custom text.
-        - changeStatusColor(int): Changes the GUI status label color (e.g., green, yellow, red).
-        - disconnectedDevice(): Emitted when the Tempico device becomes unreachable.
+        - noPartialMeasurements(list): Emitted with a list of channels that failed the threshold.
+        - changeStatusText(str): Updates the system status label with a custom message.
+        - changeStatusColor(int): Updates the system status label color code.
+        - disconnectedDevice(): Emitted when the Tempico device is no longer reachable.
+        - initialDate(str): Emitted with the starting timestamp of the measurement session.
+        - finalDate(str): Emitted with the ending timestamp of the measurement session.
+
+    Attributes:
+        - channelsMeasure: List of channels accepted for measurement after validation.
+        - channelsWithoutMeasurements: List of channels that failed the validation criteria.
+        - continueEvent: Event object used to pause/resume thread logic when user interaction is needed.
+        - running: Boolean flag to control the thread's main loop.
+        - numberStopsChannelA/B/C/D: Internal counters to track stop events for each channel.
+
+    :return: None
     """
     
     #One value is for the count estimated and the other is for the uncertainty
