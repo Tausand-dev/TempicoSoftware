@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['main.py'],
+    ['src\\main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -31,7 +31,7 @@ exe = EXE(
     name='TempicoSoftware',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=False,
+    strip=True,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
@@ -41,11 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['Sources/tausand_small.ico'],
-)
-app = BUNDLE(
-    exe,
-    name='TempicoSoftware.app',
-    icon='Sources/tausand_small.ico',
-    bundle_identifier=None,
+    icon=['Sources\\tausand_small.png'],
 )
