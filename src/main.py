@@ -23,6 +23,7 @@ from LifeTimeGraphics import LifeTimeGraphic
 from CountsEstimatedGraphics import CountEstimatedLogic
 import sys
 import math
+from qt_material import apply_stylesheet
 
 
 
@@ -548,8 +549,9 @@ class MainWindow(QMainWindow):
                 pointLabel=self.uiCountsEstimated.labelColor
                 deatachedCheckBox=self.uiCountsEstimated.tableCheckBox
                 detachedLabelCheckBox=self.uiCountsEstimated.labelCheckBox
+                helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
-                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,self.conectedDevice,self, self.LifeTimeTimer)
+                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
                 
                 
                  
@@ -974,6 +976,30 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication([])
+    #Amber theme
+    # apply_stylesheet(app, theme='dark_amber.xml')
+    #Amber purple
+    # apply_stylesheet(app, theme='light_purple_500.xml')
+    # app.setStyleSheet(app.styleSheet() + """
+    # /* Aplica solo a QPushButton dentro de QWidget para tener prioridad */
+    # QWidget QPushButton {
+    #     color: #4a0072;
+    #     font-weight: bold;
+    # }
+
+    # /* Hover elegante con fondo morado claro */
+    # QWidget QPushButton:hover {
+    #     background-color: #f3e5f5;
+    #     border: 1px solid #ce93d8;
+    # }
+
+    # /* Botones deshabilitados con texto legible */
+    # QWidget QPushButton:disabled {
+    #     color: #888888;
+    #     background-color: #f5f5f5;
+    #     border: 1px solid #dddddd;
+    # }
+    # """)
     splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)

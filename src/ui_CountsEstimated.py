@@ -426,22 +426,25 @@ class Ui_CountsEstimated(object):
         sizePolicyStatus.setHeightForWidth(self.statusFrame.sizePolicy().hasHeightForWidth())
         self.statusFrame.setSizePolicy(sizePolicyStatus)
 
-        # Crear los labels
+        # Create Labels
         self.labelStatus = QLabel("Status:", self.statusFrame)
         self.labelState = QLabel("No running", self.statusFrame)
         self.labelColor = QLabel("N", self.statusFrame)
+        self.helpButton= QPushButton("Help",self.statusFrame)
+        #Create Help button
 
-        # Opcional: puedes ajustar estilos si quieres negrita, tamaño, etc.
+        
 
-        # Añadir elementos alineados a la izquierda
+        # Align to left
         self.statusLayout.addWidget(self.labelStatus)
         self.statusLayout.addWidget(self.labelState)
 
-        # Espaciador para empujar el siguiente label hacia la derecha
+        # Spacer fot the label
         self.statusLayout.addStretch()
 
         # Añadir el label alineado a la derecha
         self.statusLayout.addWidget(self.labelColor)
+        self.statusLayout.addWidget(self.helpButton)
         self.horizontalLayout_15.addWidget(self.countValuesTable)
         self.horizontalLayout_15.addWidget(self.statusFrame)
 
@@ -617,6 +620,7 @@ class Ui_CountsEstimated(object):
         font.setPointSize(size)
         for label in labels:
             label.setFont(font)
+    
     
 
 

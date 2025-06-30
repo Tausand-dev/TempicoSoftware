@@ -392,7 +392,6 @@ class LifeTimeGraphic():
 
         :return: None
         """
-        print("Se ejecuta")
         self.startTimerConnection()
         self.numberBins.setEnabled(True)
         self.stopButton.setEnabled(False)

@@ -72,7 +72,7 @@ class CountEstimatedLogic():
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
-                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, detachedLabelCheckBox: QCheckBox, device: tempico.TempicoDevice, parent, timerConnection):
+                 tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, detachedLabelCheckBox: QCheckBox, helpButton: QPushButton, device: tempico.TempicoDevice, parent, timerConnection):
         #Get the parameters
         self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
@@ -112,6 +112,7 @@ class CountEstimatedLogic():
         self.pointStatusLabel=pointStatusLabel
         self.deatachedCheckBox= deatachedCheckBox
         self.detachedLabelCheckBox= detachedLabelCheckBox
+        self.helpButton=helpButton
         #Init for the buttons
         self.stopButton.setEnabled(False)
         self.clearButtonChannelA.setEnabled(False)
@@ -180,6 +181,7 @@ class CountEstimatedLogic():
         self.clearButtonChannelD.clicked.connect(self.clearChannelD)
         self.savePlotButton.clicked.connect(self.savePlots)
         self.saveDataButton.clicked.connect(self.saveData)
+        self.helpButton.clicked.connect(self.helpButtonDialog)
         #Connection for the combo Box
         self.timeRangeComboBox.currentIndexChanged.connect(self.updateGraphic)
         #Creation data list for measurements
@@ -1227,8 +1229,8 @@ class CountEstimatedLogic():
             self.device.ch2.setStopMask(self.stopMaskChannelBSetting)
             self.device.ch3.setStopMask(self.stopMaskChannelCSetting)
             self.device.ch4.setStopMask(self.stopMaskChannelDSetting)   
-        except NameError as e:
-            print(e)
+        except:
+            pass
         
     def resetValues(self):
         """
@@ -2192,8 +2194,7 @@ class CountEstimatedLogic():
                 message_box.exec_()
                 
             
-        except NameError as e:
-            print(e)
+        except:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The graphics could not be saved, check the folder path or system files")
@@ -2399,6 +2400,14 @@ class CountEstimatedLogic():
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
     
+    def helpButtonDialog(self):
+        message_box = QMessageBox(self.mainWindow)
+        message_box.setIcon(QMessageBox.Information)
+        message_box.setWindowTitle("Counts estimated Information")
+        message_box.setText("To perform measurements in this window, you must connect a periodic signal to the Start input that is different from the source you want to measure. Then, connect the source you want to estimate pulses from to the Stop channels.")
+        message_box.setStandardButtons(QMessageBox.Ok)
+        message_box.exec_()
+        
     
     
         
