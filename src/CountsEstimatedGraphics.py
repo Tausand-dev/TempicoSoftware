@@ -2638,7 +2638,7 @@ class WorkerThreadCountsEstimated(QThread):
                                 valuesD=valuesD+intervalValues
         if len(values)>0:
             meanValue=(10**12)/mean(values)
-            desvestValues=std(values)
+            desvestValues=std(values)/sqrt(len(values))
             meanValuePs=mean(values)
             if desvestValues == 0:
                 uncertaintyValue = 0
@@ -2666,7 +2666,7 @@ class WorkerThreadCountsEstimated(QThread):
         
         if len(valuesB)>0:
             meanValueB=(10**12)/mean(valuesB)
-            desvestValuesB=std(valuesB)
+            desvestValuesB=std(valuesB)/sqrt(len(valuesB))
             meanValueBPs=mean(valuesB)
             if desvestValuesB == 0:
                 uncertaintyValueB = 0
@@ -2691,7 +2691,7 @@ class WorkerThreadCountsEstimated(QThread):
 
         if len(valuesC)>0:
             meanValueC=(10**12)/mean(valuesC)
-            desvestValuesC=std(valuesC)
+            desvestValuesC=std(valuesC)/sqrt(len(valuesC))
             meanValuesCPs=mean(valuesC)
             if desvestValuesC == 0:
                 uncertaintyValueC = 0
@@ -2716,7 +2716,7 @@ class WorkerThreadCountsEstimated(QThread):
         
         if len(valuesD)>0:
             meanValueD=(10**12)/mean(valuesD)
-            desvestValuesD = np.std(valuesD)
+            desvestValuesD = np.std(valuesD)/sqrt(len(valuesD))
             meanValuesDPs=mean(valuesD)
             if desvestValuesD == 0:
                 uncertaintyValueD = 0

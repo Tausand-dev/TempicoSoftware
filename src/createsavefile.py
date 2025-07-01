@@ -274,7 +274,7 @@ class createsavefile:
                 
                 with open(full_path, 'w') as file:
                     file.write(setting_channel + '\n')
-                    file.write(f"Hour (HH:MM:SS) \t Counts Channel {channel}(counts/sec) \t Uncertainties Channel {channel}(counts/sec) \t Mean Time (us) \t Uncertainty Time (us)\n")
+                    file.write(f"Hour (HH:MM:SS) \t Counts Channel {channel}(counts/sec) \t Uncertainties Channel {channel}(counts/sec) \t Mean time interval (us) \t Uncertainty mean time interval (us)\n")
                     for timeStamp, countValue,uncertanty in zip(timeStamp,data_list,data_uncertainties):
                         valueFormated= f"{countValue:.5f}"
                         timeValue=(1/float(countValue))*(10**6)
