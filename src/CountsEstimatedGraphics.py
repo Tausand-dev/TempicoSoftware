@@ -16,7 +16,6 @@ import random
 import threading
 from pyqtgraph import mkPen
 import os
-import numpy as np
 class CountEstimatedLogic():
     """
     Class responsible for managing the logic and graphical representation of the Count Estimation window.
@@ -2716,7 +2715,7 @@ class WorkerThreadCountsEstimated(QThread):
         
         if len(valuesD)>0:
             meanValueD=(10**12)/mean(valuesD)
-            desvestValuesD = np.std(valuesD)/sqrt(len(valuesD))
+            desvestValuesD = std(valuesD)/sqrt(len(valuesD))
             meanValuesDPs=mean(valuesD)
             if desvestValuesD == 0:
                 uncertaintyValueD = 0
