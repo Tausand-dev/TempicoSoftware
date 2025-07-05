@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
-        self.setMinimumSize(1000,700)
+        self.setMinimumSize(1000,720)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
