@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LifeTimeGraphics module &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>LifeTimeGraphics module &mdash; Tempico Software 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=def9ab29"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -72,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.initialParametersDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.initialParametersDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.insertParameters"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.insertParameters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.kohl_decay"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.kohl_decay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.lostConnection"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.lostConnection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.maxRound"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.maxRound()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.resetInitialDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.resetParametersLabels()</span></code></a></li>
@@ -83,8 +84,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.shifted_decay_function"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.shifted_decay_function()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.startMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.startMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.startTimer"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.startTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.startTimerConnection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.stopMeasurement"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.stopMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimer"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.stopTimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.stopTimerConnection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.timeRangeValue"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.timeRangeValue()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabel"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.updateLabel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.LifeTimeGraphic.updateLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeGraphic.updateLabels()</span></code></a></li>
@@ -97,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.clear()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.createLifeTimeData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createLifeTimeData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createdSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.disconectedSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.disconectedSignal</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#LifeTimeGraphics.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
@@ -115,6 +119,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
@@ -149,7 +154,7 @@
 <h1>LifeTimeGraphics module<a class="headerlink" href="#lifetimegraphics-module" title="Permalink to this heading"></a></h1>
 <span class="target" id="module-LifeTimeGraphics"></span><dl class="py class">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">LifeTimeGraphics.</span></span><span class="sig-name descname"><span class="pre">LifeTimeGraphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comboBoxStartChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comboBoxStopChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphicFrame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialParametersButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binWidthComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberBins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">functionComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurementsSpinBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalStart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalTime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeRange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applyButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterTable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTableWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">LifeTimeGraphics.</span></span><span class="sig-name descname"><span class="pre">LifeTimeGraphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comboBoxStartChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comboBoxStopChannel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphicFrame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialParametersButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binWidthComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberBins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">functionComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurementsSpinBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalStart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalTime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeRange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applyButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterTable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTableWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerConnection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class responsible for the logic and functionality of the LifeTime (Fluorescence Lifetime Measurement) window.</p>
 <p>This class manages the creation and updating of graphical plots related to LifeTime, controls user interactions with various 
@@ -720,6 +725,11 @@ time <cite>t</cite>, initial value <cite>I0</cite>, decay constant <cite>tau0</c
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.lostConnection">
+<span class="sig-name descname"><span class="pre">lostConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.lostConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.lostConnection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.maxRound">
 <span class="sig-name descname"><span class="pre">maxRound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.maxRound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.maxRound" title="Permalink to this definition"></a></dt>
 <dd><p>Determines the number of decimal places needed for at least three significant figures.</p>
@@ -926,6 +936,19 @@ the update_timer function to be executed at one-second intervals.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the timer to check the device connection status every 500 milliseconds.</p>
+<p>This method initiates periodic checks to monitor if the connected device remains
+active and responsive. The interval is set to 500 ms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopMeasurement">
 <span class="sig-name descname"><span class="pre">stopMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.stopMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.stopMeasurement" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the measurement thread if it is created and executes the 
@@ -943,6 +966,19 @@ function enableAfterFinishedThread() if the thread is not created.</p>
 <dd><p>Stops the timer that triggers the update_timer function.</p>
 <p>This function halts the timer responsible for updating the measurement time
 and sets the totalTime label to indicate that no measurement is currently running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LifeTimeGraphics.html#LifeTimeGraphic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LifeTimeGraphics.LifeTimeGraphic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the timer responsible for checking the device connection status.</p>
+<p>This method halts the periodic checks performed by <cite>timerConnection</cite> to avoid
+unnecessary polling or to pause the connection validation during inactive states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -1106,6 +1142,11 @@ Normalizes the data according to the determined units and calculates the histogr
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.createdSignal">
 <span class="sig-name descname"><span class="pre">createdSignal</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.createdSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LifeTimeGraphics.WorkerThreadLifeTime.disconectedSignal">
+<span class="sig-name descname"><span class="pre">disconectedSignal</span></span><a class="headerlink" href="#LifeTimeGraphics.WorkerThreadLifeTime.disconectedSignal" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

@@ -41,9 +41,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../FLIMGraphics.html">FLIMGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
@@ -130,13 +131,12 @@
 
         <span class="c1"># Save Button</span>
         <span class="n">button_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>  <span class="c1"># Vertical layout for the save button</span>
-        <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save changes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save changes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
         <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">button_layout</span><span class="p">)</span>
 
         <span class="c1"># Connect the button</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">getsettings</span><span class="p">()</span>
-        <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setsettings</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setsettings</span><span class="p">)</span>
 
     
     
@@ -154,6 +154,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">number_runs</span><span class="p">))</span>
         <span class="n">tresholdVoltage</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tresholdVoltage</span><span class="p">))</span></div>
+    
+    
+<div class="viewcode-block" id="GeneralSettingsWindow.preDefinedSettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.preDefinedSettings">[docs]</a>    <span class="k">def</span> <span class="nf">preDefinedSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thresholdVoltage</span><span class="p">,</span> <span class="n">numberRuns</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">numberRuns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">thresholdVoltage</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="GeneralSettingsWindow.setsettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.setsettings">[docs]</a>    <span class="k">def</span> <span class="nf">setsettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -187,6 +193,30 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
     
+<div class="viewcode-block" id="GeneralSettingsWindow.disableSettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.disableSettings">[docs]</a>    <span class="k">def</span> <span class="nf">disableSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disables the settings in the General Settings dialog.</span>
+
+<span class="sd">        This function sets the threshold voltage and number of runs spinbox to read-only mode, preventing any changes to these settings by the user.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="GeneralSettingsWindow.enableSettings"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.enableSettings">[docs]</a>    <span class="k">def</span> <span class="nf">enableSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables the settings in the General Settings dialog.</span>
+
+<span class="sd">        This function allows the user to modify the threshold voltage and number of runs by enabling the corresponding spinbox and button.</span>
+
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Comboboxthresholdvoltage</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spinboxNumerOfStops</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+    
 
 <div class="viewcode-block" id="GeneralSettingsWindow.showHelp"><a class="viewcode-back" href="../generalsettings.html#generalsettings.GeneralSettingsWindow.showHelp">[docs]</a>    <span class="k">def</span> <span class="nf">showHelp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -215,7 +245,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

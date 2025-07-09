@@ -1,0 +1,24 @@
+Commands used for generate the image are:
+{signal: [
+  {name: 'start', wave: 'p.....'},
+  {name: 'stop1', wave: 'lpl...'},
+  {name: 'stop2', wave: 'l...pl'},
+  
+]}
+
+{signal: [
+  {name: 'start', wave: '0pl...'},
+  {name: 'stop', wave: 'l...pl'},
+  
+]}
+{signal: [
+  {name: 'start', wave: 'p..........'},
+  {name: 'channel A', wave: 'lpl.pl..pl.'},
+  {name: 'channel B', wave: 'lplplplplpl'},
+]}
+
+
+
+using the online wavedrom editor:
+https://wavedrom.com/editor.html
+

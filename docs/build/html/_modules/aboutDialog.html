@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aboutDialog &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>aboutDialog &mdash; Tempico Software 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=def9ab29"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -39,8 +39,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -211,9 +221,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">linkTausand</span><span class="o">.</span><span class="n">setOpenExternalLinks</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linkGitHub</span><span class="o">.</span><span class="n">setOpenExternalLinks</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1">##translateFuncion</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">descriptionLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;Tempico Software is a suite of tools build to ensure your experience with Tausand&#39;s time to digital.&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">softwareLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;Software Version: 1.1.0&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tempicoLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;PyTempico Version: 1.0.0&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptionLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;Tempico Software is a suite of tools build to ensure your experience with Tausand&#39;s time to digital converters.&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">softwareLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;Software Version: 1.2.0&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempicoLabel</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;PyTempico Version: 1.1.1&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="c1">#self.imageLabel.setText(QCoreApplication.translate(&quot;AboutDialog&quot;, u&quot;Picture Label&quot;, None))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linkTausand</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;Visit us at: </span><span class="si">%s</span><span class="s2"> &quot;</span><span class="o">%</span><span class="n">tausand</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linkGitHub</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;AboutDialog&quot;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;More information on Tempico Software implementation can be found at: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">pages</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -252,7 +262,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, David Guzman, Joan Amaya.</p>
+    <p>&#169; Copyright 2025,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

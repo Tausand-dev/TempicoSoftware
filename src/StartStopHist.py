@@ -29,15 +29,15 @@ class StartStopLogic():
     :param mainWindow: The main window (QWindow) for the GUI.
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint, *args, **kwargs):
+    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
         super().__init__()
         self.savefile=savefile()
+        #timer to manage disconnection
+        self.timerConnection=timerStatus
         #Disconnect button
         self.disconnectButton= disconnect
         #Connect button
         self.connectButton= connect
-        #Current measurement
-        self.currentmeasurement=False
         ##----------------##
         self.startbutton=startbutton
         self.stopbutton=stopbutton
@@ -74,6 +74,7 @@ class StartStopLogic():
         self.setinelSaveB=False
         self.setinelSaveC=False
         self.setinelSaveD=False
+        self.withoutMeasurement=False
 
         ##---------------------------------##
         ##---------------------------------##
@@ -368,13 +369,17 @@ class StartStopLogic():
             message_box.setIcon(QMessageBox.Information)
             message_box.exec_()
         else: 
+            self.mainWindow.saveSettings()
+            self.withoutMeasurement=False
+            self.stopTimerConnection()
             self.sentinelZoomChangedA=0
             self.sentinelZoomChangedB=0
             self.sentinelZoomChangedC=0
             self.sentinelZoomChangedD=0
             self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.tabs.setTabEnabled(2,False)
             self.disconnectButton.setEnabled(False)
-            self.currentmeasurement=True
+            self.mainWindow.activeMeasurement()
             self.create_graphs()
             self.statusValue.setText("Measurement running")
             self.changeStatusColor(1)
@@ -385,6 +390,33 @@ class StartStopLogic():
             self.checkC.setEnabled(False)
             self.checkD.setEnabled(False)
             self.savebutton.setEnabled(False)
+            
+    
+    
+    
+    def stopTimerConnection(self):
+        """
+        Stops the timer responsible for checking the device connection.
+
+        This function is typically called when a measurement begins to avoid interference
+        during the acquisition process.
+
+        :return: None
+        """
+        #Stop timer when a measurement begins
+        self.timerConnection.stop()
+    
+    def startTimerConnection(self):
+        """
+        Starts the timer that periodically checks the device connection.
+
+        The timer runs every 500 milliseconds to monitor connectivity. This is typically 
+        called after a measurement finishes or when the application is idle.
+
+        :return: None
+        """
+        #Start timer when a measurement begins
+        self.timerConnection.start(500)
     
     def hide_graphic2(self):
         """
@@ -419,6 +451,8 @@ class StartStopLogic():
 
         :return: None
         """
+        if not self.withoutMeasurement:
+            self.startTimerConnection()
         if self.threadCreatedSentinel:
             self.worker.stop()
             time.sleep(1)
@@ -426,10 +460,12 @@ class StartStopLogic():
         self.statusValue.setText("No measurement running")
         self.changeStatusColor(0)
         self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.disconnectButton.setEnabled(True)
-        self.currentmeasurement=False
+        self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
-        self.startbutton.setEnabled(True)
+        if not self.withoutMeasurement:
+            self.startbutton.setEnabled(True)
         self.savebutton.setEnabled(True)
         self.save_graphs.setEnabled(True)
         self.clear_channel_A.setEnabled(False)
@@ -441,6 +477,7 @@ class StartStopLogic():
         self.checkC.setEnabled(True)
         self.checkD.setEnabled(True)
     
+    
     #Future function if we want to add the option of number of measurements
     def threadComplete(self):
         """
@@ -450,6 +487,7 @@ class StartStopLogic():
         :return: None
         """
         self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.threadCreated=False
         self.stop_graphic()
     
@@ -943,7 +981,10 @@ class StartStopLogic():
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelB'+current_date_str
-                    exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                 if self.setinelSaveC:
                     exporter= pg.exporters.ImageExporter(self.plotC)
@@ -953,7 +994,10 @@ class StartStopLogic():
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name='Measure_ChannelC'+current_date_str
-                    exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                 if self.setinelSaveD:
                     exporter= pg.exporters.ImageExporter(self.plotD)
@@ -983,13 +1027,12 @@ class StartStopLogic():
             
         except:
             message_box = QMessageBox(self.parent)
-            message_box.setIcon(QMessageBox.Question)  # Cambiar a un icono de pregunta
-            message_box.setText("Do you want to change the mode?")  # Texto del mensaje
-            message_box.setWindowTitle("Change Mode")  # Título de la ventana
-            message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)  # Botones "Yes" y "No"
-
-            # Ejecutar el cuadro de diálogo y obtener la respuesta
-            response = message_box.exec_()
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The graphics could not be saved, check the folder path or system files")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            
 
     #Function to connect the Thread with update signal
     def updateSignal(self,value,channel):
@@ -1033,13 +1076,13 @@ class StartStopLogic():
         :return: None
         """
         if channel=="A":
-            self.datapureA.append(value)
+            self.datapureA.append(value*(10**9))
         elif channel=="B":
-            self.datapureB.append(value)
+            self.datapureB.append(value*(10**9))
         elif channel=="C":
-            self.datapureC.append(value)
+            self.datapureC.append(value*(10**9))
         elif channel=="D":
-            self.datapureD.append(value)
+            self.datapureD.append(value*(10**9))
     
     #Change the status of sentinel dataThreadCreated
     def threadRunning(self,status):
@@ -1068,11 +1111,11 @@ class StartStopLogic():
 
         :return: None
         """
-        msg_box = QMessageBox(self.parent)
+        self.withoutMeasurement=True
+        self.disconnectedDevice()
+        msg_box = QMessageBox(self.mainWindow)
         msg_box.setText("Connection with the device has been lost")
         msg_box.setWindowTitle("Connection Error")
-        pixmap= QPixmap("/Sources/tausand_small.ico")
-        msg_box.setIconPixmap(pixmap)
         msg_box.setIcon(QMessageBox.Critical)
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
@@ -1084,6 +1127,7 @@ class StartStopLogic():
                 self.device.close()
         except:
             pass
+        self.mainWindow.disconnectedDevice()
     
     #Change the color of status Point
     #Function to change the color of point measurement
@@ -1386,6 +1430,20 @@ class StartStopLogic():
         if len(self.dataD)>0:
             maxValue=max(self.dataD)
             self.changeZoomMax(maxValue,'D')
+    
+    
+    def disconnectedDevice(self):
+        """
+        Disables device interaction controls when the device is disconnected.
+
+        This function updates the GUI to reflect that the device is no longer connected 
+        by disabling the disconnect and start buttons and enabling the connect button.
+
+        :return: None
+        """
+        self.mainWindow.disconnectButton.setEnabled(False)
+        self.mainWindow.connectButton.setEnabled(True)
+        self.startbutton.setEnabled(False)
     
     
         
@@ -1794,8 +1852,9 @@ class WorkerThreadStartStopHistogram(QThread):
                     elif channelIndex=='C':
                         self.totalC+=1    
                     elif channelIndex=='D':
-                        self.totalD+=1    
-                    self.dataPureSignal.emit(round(average_measurement),channelIndex)
+                        self.totalD+=1   
+                    average_measurement=average_measurement/(10**9)
+                    self.dataPureSignal.emit(average_measurement,channelIndex)
                     return miliseconds_measurement
                 else:
                     return None
