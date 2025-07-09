@@ -234,7 +234,7 @@ class MainWindow(QMainWindow):
         self.sentinel2=0
         self.sentinel3=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
-        self.showMinimized()
+        self.show()
         self.open_dialog()
         self.show()
 
