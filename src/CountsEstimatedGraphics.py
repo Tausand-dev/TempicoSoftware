@@ -1062,19 +1062,53 @@ class CountEstimatedLogic():
 
         :return: None
         """
-        if not self.timestampsChannelA:
+        if self.timeRangeComboBox.currentText()=="Free Navigation":
+            return
+        if self.channelACheckBox.isChecked() and not self.timestampsChannelA:
+            return
+        if self.channelBCheckBox.isChecked() and not self.timestampsChannelB:
+            return
+        if self.channelCCheckBox.isChecked() and not self.timestampsChannelC:
+            return
+        if self.channelDCheckBox.isChecked() and not self.timestampsChannelD:
             return
         # Apply seconds filter to the list
         try:
-            segundosValue= int(self.timeRangeComboBox.currentText().split()[0])
+            if self.timeRangeComboBox.currentText()=="All range":
+                segundosValue=0
+            else:
+                segundosValue= int(self.timeRangeComboBox.currentText().split()[0])
         except ValueError:
             segundosValue = 10  # fallback
-        x_max = self.timestampsChannelA[-1]
-        x_min = x_max - segundosValue
-        self.plotCountsA.setXRange(x_min, x_max, padding=0)
-        self.plotCountsB.setXRange(x_min, x_max, padding=0)
-        self.plotCountsC.setXRange(x_min, x_max, padding=0)
-        self.plotCountsD.setXRange(x_min, x_max, padding=0)
+        if self.channelACheckBox.isChecked():
+            x_max = self.timestampsChannelA[-1]
+        elif self.channelBCheckBox.isChecked():
+            x_max = self.timestampsChannelB[-1]
+        elif self.channelCCheckBox.isChecked():
+            x_max = self.timestampsChannelC[-1]
+        elif self.channelDCheckBox.isChecked():
+            x_max = self.timestampsChannelD[-1]
+        if self.channelACheckBox.isChecked() or self.channelBCheckBox.isChecked() or self.channelCCheckBox.isChecked() or self.channelDCheckBox.isChecked():
+            if segundosValue==0:
+                x_min=0
+            else:
+                x_min = x_max - segundosValue
+            if x_min==0:
+                self.plotCountsA.setXRange(x_min, x_max, padding=0.02)
+                self.plotCountsB.setXRange(x_min, x_max, padding=0.02)
+                self.plotCountsC.setXRange(x_min, x_max, padding=0.02)
+                self.plotCountsD.setXRange(x_min, x_max, padding=0.02)
+            else:
+                self.plotCountsA.setXRange(x_min, x_max, padding=0)
+                self.plotCountsB.setXRange(x_min, x_max, padding=0)
+                self.plotCountsC.setXRange(x_min, x_max, padding=0)
+                self.plotCountsD.setXRange(x_min, x_max, padding=0)
+            for plot in [self.plotCountsA, self.plotCountsB, self.plotCountsC, self.plotCountsD]:
+                vb = plot.getViewBox()
+                vb.enableAutoRange(axis=vb.YAxis, enable=True)
+                vb.updateAutoRange()  
+                vb.enableAutoRange(axis=vb.YAxis, enable=False)
+                
         
     
     def getChannelsMeasure(self):
@@ -2634,7 +2668,7 @@ class WorkerThreadCountsEstimated(QThread):
                     if self.channelDSentinel:
                         if run:
                             if run[0]==4 and run[3]!=-1 :
-                                intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelC)
+                                intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelD)
                                 valuesD=valuesD+intervalValues
         if len(values)>0:
             meanValue=(10**12)/mean(values)
