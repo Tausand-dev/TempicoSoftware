@@ -11,6 +11,7 @@ import time
 from PySide2.QtCore import QTimer
 import time
 from ui_CountsEstimated import Ui_CountsEstimated
+from ui_TimeStamping import Ui_TimeStamping
 #To do eliminate import
 from createsavefile import createsavefile as savefile
 from ui_settings import Ui_settings
@@ -21,6 +22,7 @@ from constants import *
 from ui_LifeTimemeasurement import UiLifeTime
 from LifeTimeGraphics import LifeTimeGraphic
 from CountsEstimatedGraphics import CountEstimatedLogic
+from timeStampGraphics import TimeStampLogic
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -99,7 +101,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
-        self.setMinimumSize(1000,700)
+        self.setMinimumSize(1100,800)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
@@ -185,9 +187,11 @@ class MainWindow(QMainWindow):
         self.tab1=QWidget()
         self.tab2=QWidget()
         self.tab3=QWidget()
+        self.tab4=QWidget()
         self.tabs.addTab(self.tab1,"Start-Stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts Estimation")
+        self.tabs.addTab(self.tab4,"TimeStamping")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -222,6 +226,10 @@ class MainWindow(QMainWindow):
         #------Counts Estimated Graphic class---------#
         self.countsEstimatedGraphic=None
         self.countsEstimated_init_sentinel=0
+        #------Time Stamping Graphic class---------#
+        self.timeStampGraphic=None
+        self.timeStampGraphic_init_sentinel=0
+        
 
         #------Layout for the main window---------#
         mainLayout = QVBoxLayout(mainWidget)
@@ -233,6 +241,7 @@ class MainWindow(QMainWindow):
         self.disconnectButton.clicked.connect(self.disconnect_button_click)
         self.sentinel2=0
         self.sentinel3=0
+        self.sentinel4=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
         self.open_dialog()
@@ -294,6 +303,26 @@ class MainWindow(QMainWindow):
             self.uiCountsEstimated = Ui_CountsEstimated()
             self.uiCountsEstimated.setupUi(parent)
             self.sentinel3=1
+    
+    
+    def construct_time_stamping(self,parent):
+        """
+        Constructs the Counts Estimated window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set,
+        it creates an instance of the `Ui_CountsEstimated` class and sets up the UI using the given parent.
+
+        It ensures the UI is initialized only once by checking the `sentinel3` flag.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the counts estimated window.
+        :type parent: QWidget
+        :returns: None
+        """
+        #TO DO Build Documentation
+        if self.sentinel4==0:
+            self.uiTimeStamping = Ui_TimeStamping()
+            self.uiTimeStamping.setupUi(parent)
+            self.sentinel4=1
 
 
 
@@ -351,6 +380,9 @@ class MainWindow(QMainWindow):
                         self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                     if self.countsEstimatedGraphic!=None:
                         self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+                    #To do implement connect device
+                    if self.timeStampGraphic!=None:
+                        self.timeStampGraphic.connectedDevice(self.conectedDevice)
 
 
                     checkchannel1=self.ui.Channel1Graph1
@@ -410,11 +442,12 @@ class MainWindow(QMainWindow):
                             self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                         if self.countsEstimatedGraphic!=None and openSentinel:
                             self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+                        if self.timeStampGraphic!=None and openSentinel:
+                            self.timeStampGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
-                    except NameError as e:
-                        print(e)
+                    except:
                         msg_box = QMessageBox(self)
                         msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                         msg_box.setWindowTitle("Connection Error")
@@ -438,6 +471,8 @@ class MainWindow(QMainWindow):
                     self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
             if self.countsEstimatedGraphic!=None and openSentinel:
                     self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+            if self.timeStampGraphic!=None and openSentinel:
+                    self.timeStampGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -464,6 +499,8 @@ class MainWindow(QMainWindow):
             self.LifeTimeGraphic.disconnectedDevice()
         if self.countsEstimatedGraphic!=None:
             self.countsEstimatedGraphic.disconnectedDevice()
+        if self.timeStampGraphic!=None:
+            self.timeStampGraphic.disconnectedDevice()
 
 
 
@@ -564,8 +601,40 @@ class MainWindow(QMainWindow):
                 helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
-
-
+          elif valor_padre==3:
+            padre=self.tab4
+            self.construct_time_stamping(padre)  
+            if self.timeStampGraphic==None:
+                enableCheckBoxChannelA=self.uiTimeStamping.enableChannelACheckBox
+                enableCheckBoxChannelB=self.uiTimeStamping.enableChannelBCheckBox
+                enableCheckBoxChannelC=self.uiTimeStamping.enableChannelCCheckBox
+                enableCheckBoxChannelD=self.uiTimeStamping.enableChannelDCheckBox
+                scheduleCheckBox=self.uiTimeStamping.ScheduleMeasurementCheckBox
+                scheduleTimeEdit=self.uiTimeStamping.scheduleDateTime
+                limitMeasurementsCheckBox=self.uiTimeStamping.limitMeasurementsCheckBox
+                limitMeasurementsSpinBox=self.uiTimeStamping.measurementsSpinBox
+                showTableCheckBox= self.uiTimeStamping.showTableCheckBox
+                syncComboBox= self.uiTimeStamping.syncComboBox
+                startButtonTimeStamp= self.uiTimeStamping.startButton
+                pauseButtonTimeStamp= self.uiTimeStamping.pauseButton
+                stopButtonTimeStamp= self.uiTimeStamping.stopButton
+                saveDataButtonTimeStamp=self.uiTimeStamping.saveDataButton
+                valueMeasurementA=self.uiTimeStamping.label_7
+                valueMeasurementB=self.uiTimeStamping.label_8
+                valueMeasurementC=self.uiTimeStamping.label_9
+                valueMeasurementD=self.uiTimeStamping.label_11
+                valueMeasurementTotal=self.uiTimeStamping.label_10
+                labelMeasurementsA=self.uiTimeStamping.label_4
+                labelMeasurementsB=self.uiTimeStamping.label_2
+                labelMeasurementsC=self.uiTimeStamping.label_5
+                labelMeasurementsD=self.uiTimeStamping.label_3
+                tableTimeStamp=self.uiTimeStamping.tableTimeStamp
+                statusLabelTimeStamp=self.uiTimeStamping.valueStateLabel
+                colorLabel=self.uiTimeStamping.labelColor
+                self.timeStampGraphic=TimeStampLogic(enableCheckBoxChannelA,enableCheckBoxChannelB,enableCheckBoxChannelC,enableCheckBoxChannelD,scheduleCheckBox,scheduleTimeEdit,limitMeasurementsCheckBox,limitMeasurementsSpinBox,
+                                                     showTableCheckBox, syncComboBox, startButtonTimeStamp, pauseButtonTimeStamp, stopButtonTimeStamp,saveDataButtonTimeStamp,valueMeasurementA,
+                                                     valueMeasurementB, valueMeasurementC, valueMeasurementD, valueMeasurementTotal,labelMeasurementsA,labelMeasurementsB,labelMeasurementsC,labelMeasurementsD, tableTimeStamp, statusLabelTimeStamp, colorLabel,self,self.conectedDevice)
+                
 
         #   elif valor_padre==1:
 
@@ -923,6 +992,8 @@ class MainWindow(QMainWindow):
             except:
                 if self.countsEstimatedGraphic:
                     self.countsEstimatedGraphic.disconnectedDevice()
+                if self.timeStampGraphic:
+                    self.timeStampGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
                 if self.grafico:
@@ -948,6 +1019,8 @@ class MainWindow(QMainWindow):
         """
         if self.countsEstimatedGraphic:
             self.countsEstimatedGraphic.disconnectedDevice()
+        if self.timeStampGraphic:
+            self.timeStampGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
         if self.grafico:
