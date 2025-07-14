@@ -339,7 +339,7 @@ class CountEstimatedLogic():
             symbol='o',                   
             symbolSize=7,
             symbolBrush=color,
-            name='Counts Estimated'
+            name='Counts'
         )
 
         return winCountsGraph, plotCounts, curve
@@ -398,7 +398,7 @@ class CountEstimatedLogic():
             symbol='o',                   
             symbolSize=7,
             symbolBrush=colorA,
-            name='Counts Estimated A'  if self.channelACheckBox.isChecked() else None
+            name='Counts A'  if self.channelACheckBox.isChecked() else None
         )
         
         curveB = plotCounts.plot(
@@ -406,7 +406,7 @@ class CountEstimatedLogic():
             symbol='o',                   
             symbolSize=7,
             symbolBrush=colorB,
-            name='Counts Estimated B' if self.channelBCheckBox.isChecked() else None
+            name='Counts B' if self.channelBCheckBox.isChecked() else None
         )
         
         curveC = plotCounts.plot(
@@ -414,7 +414,7 @@ class CountEstimatedLogic():
             symbol='o',                   
             symbolSize=7,
             symbolBrush=colorC,
-            name='Counts Estimated C' if self.channelCCheckBox.isChecked() else None
+            name='Counts C' if self.channelCCheckBox.isChecked() else None
         )
         
         curveD = plotCounts.plot(
@@ -422,7 +422,7 @@ class CountEstimatedLogic():
             symbol='o',                   
             symbolSize=7,
             symbolBrush=colorD,
-            name='Counts Estimated D' if self.channelDCheckBox.isChecked() else None
+            name='Counts D' if self.channelDCheckBox.isChecked() else None
         )
 
         return winCountsGraph, plotCounts, curveA, curveB, curveC, curveD
@@ -1062,7 +1062,7 @@ class CountEstimatedLogic():
 
         :return: None
         """
-        if self.timeRangeComboBox.currentText()=="Free Navigation":
+        if self.timeRangeComboBox.currentText()=="Free navigation":
             self.plotCountsA.getViewBox().setMouseEnabled(x=True, y=True)
             self.plotCountsB.getViewBox().setMouseEnabled(x=True, y=True)
             self.plotCountsC.getViewBox().setMouseEnabled(x=True, y=True)
