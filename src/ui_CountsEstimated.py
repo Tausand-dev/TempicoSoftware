@@ -549,7 +549,7 @@ class Ui_CountsEstimated(object):
         self.comboBoxTimeRange.setItemText(4, QCoreApplication.translate("Form", u"200 seconds", None))
         self.comboBoxTimeRange.setItemText(5, QCoreApplication.translate("Form", u"500 seconds", None))
         self.comboBoxTimeRange.setItemText(6, QCoreApplication.translate("Form", u"1000 seconds", None))
-        self.comboBoxTimeRange.setItemText(7, QCoreApplication.translate("Form", u"All range", None))
+        self.comboBoxTimeRange.setItemText(7, QCoreApplication.translate("Form", u"Full range", None))
         self.comboBoxTimeRange.setItemText(8, QCoreApplication.translate("Form", u"Free Navigation", None))
 
         self.clearLabel.setText(QCoreApplication.translate("Form", u"Clear data channels:", None))

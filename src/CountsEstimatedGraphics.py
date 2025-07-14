@@ -1063,6 +1063,10 @@ class CountEstimatedLogic():
         :return: None
         """
         if self.timeRangeComboBox.currentText()=="Free Navigation":
+            self.plotCountsA.getViewBox().setMouseEnabled(x=True, y=True)
+            self.plotCountsB.getViewBox().setMouseEnabled(x=True, y=True)
+            self.plotCountsC.getViewBox().setMouseEnabled(x=True, y=True)
+            self.plotCountsD.getViewBox().setMouseEnabled(x=True, y=True)
             return
         if self.channelACheckBox.isChecked() and not self.timestampsChannelA:
             return
@@ -1072,9 +1076,13 @@ class CountEstimatedLogic():
             return
         if self.channelDCheckBox.isChecked() and not self.timestampsChannelD:
             return
+        self.plotCountsA.getViewBox().setMouseEnabled(x=False, y=False)
+        self.plotCountsB.getViewBox().setMouseEnabled(x=False, y=False)
+        self.plotCountsC.getViewBox().setMouseEnabled(x=False, y=False)
+        self.plotCountsD.getViewBox().setMouseEnabled(x=False, y=False)
         # Apply seconds filter to the list
         try:
-            if self.timeRangeComboBox.currentText()=="All range":
+            if self.timeRangeComboBox.currentText()=="Full range":
                 segundosValue=0
             else:
                 segundosValue= int(self.timeRangeComboBox.currentText().split()[0])
