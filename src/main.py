@@ -640,11 +640,13 @@ class MainWindow(QMainWindow):
                 tabNormalMeasurement=self.uiTimeStamping.tabNormalMeasurement
                 tabScheduleMeasurement=self.uiTimeStamping.tab_2
                 tabLimitedMeasurement=self.uiTimeStamping.limitedMeasurementsFrame
+                saveDataButton= self.uiTimeStamping.saveDataButton
+                tabsTimeStamp=self.uiTimeStamping.tabStartStopTypes
                 self.timeStampGraphic=TimeStampLogic(enableCheckBoxA,enableCheckBoxB,enableCheckBoxC,enableCheckBoxD, startNormalButton, pauseNormalButton, stopNormalButton, startScheduleButton,
                                                      pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
-                                                     tabScheduleMeasurement, tabLimitedMeasurement, self, self.conectedDevice)
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp, self, self.conectedDevice)
                 
 
         #   elif valor_padre==1:
