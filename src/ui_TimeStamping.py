@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'TimeStampPagekilvzV.ui'
+## Form generated from reading UI file 'TimeStampPageFJvZRx.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_TimeStamping(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(934, 643)
+        Form.resize(1076, 711)
         Form.setAutoFillBackground(True)
         self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -63,7 +63,7 @@ class Ui_TimeStamping(object):
         self.EnableChannelsFrame.setObjectName(u"EnableChannelsFrame")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(1)
+        sizePolicy2.setVerticalStretch(3)
         sizePolicy2.setHeightForWidth(self.EnableChannelsFrame.sizePolicy().hasHeightForWidth())
         self.EnableChannelsFrame.setSizePolicy(sizePolicy2)
         self.EnableChannelsFrame.setFrameShape(QFrame.StyledPanel)
@@ -103,105 +103,199 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_2.addWidget(self.EnableChannelsFrame)
 
-        self.ScheduleFrame = QFrame(self.SettingsFrame)
-        self.ScheduleFrame.setObjectName(u"ScheduleFrame")
+        self.frame_2 = QFrame(self.SettingsFrame)
+        self.frame_2.setObjectName(u"frame_2")
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(4)
-        sizePolicy4.setHeightForWidth(self.ScheduleFrame.sizePolicy().hasHeightForWidth())
-        self.ScheduleFrame.setSizePolicy(sizePolicy4)
-        self.ScheduleFrame.setFrameShape(QFrame.StyledPanel)
-        self.ScheduleFrame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_8 = QVBoxLayout(self.ScheduleFrame)
-        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.ScheduleMeasurementCheckBox = QCheckBox(self.ScheduleFrame)
-        self.ScheduleMeasurementCheckBox.setObjectName(u"ScheduleMeasurementCheckBox")
-
-        self.verticalLayout_8.addWidget(self.ScheduleMeasurementCheckBox)
-
-        self.scheduleDateTime = QDateTimeEdit(self.ScheduleFrame)
-        self.scheduleDateTime.setObjectName(u"scheduleDateTime")
-
-        self.verticalLayout_8.addWidget(self.scheduleDateTime)
-
-        self.limitMeasurementsCheckBox = QCheckBox(self.ScheduleFrame)
-        self.limitMeasurementsCheckBox.setObjectName(u"limitMeasurementsCheckBox")
-
-        self.verticalLayout_8.addWidget(self.limitMeasurementsCheckBox)
-
-        self.measurementsSpinBox = QSpinBox(self.ScheduleFrame)
-        self.measurementsSpinBox.setObjectName(u"measurementsSpinBox")
-
-        self.verticalLayout_8.addWidget(self.measurementsSpinBox)
-
-        self.showTableCheckBox = QCheckBox(self.ScheduleFrame)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy4)
+        self.frame_2.setFrameShape(QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_9 = QVBoxLayout(self.frame_2)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.showTableCheckBox = QCheckBox(self.frame_2)
         self.showTableCheckBox.setObjectName(u"showTableCheckBox")
 
-        self.verticalLayout_8.addWidget(self.showTableCheckBox)
+        self.verticalLayout_9.addWidget(self.showTableCheckBox)
+
+        self.saveDataAfterCompleteCheckBox = QCheckBox(self.frame_2)
+        self.saveDataAfterCompleteCheckBox.setObjectName(u"saveDataAfterCompleteCheckBox")
+
+        self.verticalLayout_9.addWidget(self.saveDataAfterCompleteCheckBox)
 
 
-        self.verticalLayout_2.addWidget(self.ScheduleFrame)
+        self.verticalLayout_2.addWidget(self.frame_2)
 
-        self.SyncFrame = QFrame(self.SettingsFrame)
-        self.SyncFrame.setObjectName(u"SyncFrame")
+        self.frameStartStop = QFrame(self.SettingsFrame)
+        self.frameStartStop.setObjectName(u"frameStartStop")
         sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(1)
-        sizePolicy5.setHeightForWidth(self.SyncFrame.sizePolicy().hasHeightForWidth())
-        self.SyncFrame.setSizePolicy(sizePolicy5)
-        self.SyncFrame.setFrameShape(QFrame.StyledPanel)
-        self.SyncFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_5 = QHBoxLayout(self.SyncFrame)
+        sizePolicy5.setVerticalStretch(5)
+        sizePolicy5.setHeightForWidth(self.frameStartStop.sizePolicy().hasHeightForWidth())
+        self.frameStartStop.setSizePolicy(sizePolicy5)
+        self.frameStartStop.setFrameShape(QFrame.StyledPanel)
+        self.frameStartStop.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.tabStartStopTypes = QTabWidget(self.frameStartStop)
+        self.tabStartStopTypes.setObjectName(u"tabStartStopTypes")
+        self.tabStartStopTypes.setAutoFillBackground(True)
+        self.tabStartStopTypes.setInputMethodHints(Qt.ImhNone)
+        self.tabStartStopTypes.setDocumentMode(False)
+        self.tabStartStopTypes.setTabsClosable(False)
+        self.tabStartStopTypes.setMovable(False)
+        self.tabStartStopTypes.setTabBarAutoHide(False)
+        self.tabNormalMeasurement = QWidget()
+        self.tabNormalMeasurement.setObjectName(u"tabNormalMeasurement")
+        self.tabNormalMeasurement.setAutoFillBackground(True)
+        self.verticalLayout_10 = QVBoxLayout(self.tabNormalMeasurement)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.startNormalButton = QPushButton(self.tabNormalMeasurement)
+        self.startNormalButton.setObjectName(u"startNormalButton")
+
+        self.verticalLayout_10.addWidget(self.startNormalButton)
+
+        self.pauseNormalButton = QPushButton(self.tabNormalMeasurement)
+        self.pauseNormalButton.setObjectName(u"pauseNormalButton")
+
+        self.verticalLayout_10.addWidget(self.pauseNormalButton)
+
+        self.stopNormalButton = QPushButton(self.tabNormalMeasurement)
+        self.stopNormalButton.setObjectName(u"stopNormalButton")
+
+        self.verticalLayout_10.addWidget(self.stopNormalButton)
+
+        self.tabStartStopTypes.addTab(self.tabNormalMeasurement, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.verticalLayout_11 = QVBoxLayout(self.tab_2)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.labelStartSchedule = QLabel(self.tab_2)
+        self.labelStartSchedule.setObjectName(u"labelStartSchedule")
+
+        self.verticalLayout_11.addWidget(self.labelStartSchedule)
+
+        self.frameStartDateTime = QFrame(self.tab_2)
+        self.frameStartDateTime.setObjectName(u"frameStartDateTime")
+        self.frameStartDateTime.setFrameShape(QFrame.StyledPanel)
+        self.frameStartDateTime.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_5 = QHBoxLayout(self.frameStartDateTime)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.syncLabel = QLabel(self.SyncFrame)
-        self.syncLabel.setObjectName(u"syncLabel")
+        self.startDate = QDateEdit(self.frameStartDateTime)
+        self.startDate.setObjectName(u"startDate")
+        self.startDate.setCalendarPopup(True)
 
-        self.horizontalLayout_5.addWidget(self.syncLabel)
+        self.horizontalLayout_5.addWidget(self.startDate)
 
-        self.syncComboBox = QComboBox(self.SyncFrame)
-        self.syncComboBox.addItem("")
-        self.syncComboBox.addItem("")
-        self.syncComboBox.addItem("")
-        self.syncComboBox.addItem("")
-        self.syncComboBox.addItem("")
-        self.syncComboBox.addItem("")
-        self.syncComboBox.setObjectName(u"syncComboBox")
+        self.startTime = QTimeEdit(self.frameStartDateTime)
+        self.startTime.setObjectName(u"startTime")
+        self.startTime.setCalendarPopup(False)
 
-        self.horizontalLayout_5.addWidget(self.syncComboBox)
+        self.horizontalLayout_5.addWidget(self.startTime)
 
 
-        self.verticalLayout_2.addWidget(self.SyncFrame)
+        self.verticalLayout_11.addWidget(self.frameStartDateTime)
 
-        self.StartStopPauseFrame = QFrame(self.SettingsFrame)
-        self.StartStopPauseFrame.setObjectName(u"StartStopPauseFrame")
-        sizePolicy5.setHeightForWidth(self.StartStopPauseFrame.sizePolicy().hasHeightForWidth())
-        self.StartStopPauseFrame.setSizePolicy(sizePolicy5)
-        self.StartStopPauseFrame.setFrameShape(QFrame.StyledPanel)
-        self.StartStopPauseFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.StartStopPauseFrame)
+        self.labelStopSchedule = QLabel(self.tab_2)
+        self.labelStopSchedule.setObjectName(u"labelStopSchedule")
+
+        self.verticalLayout_11.addWidget(self.labelStopSchedule)
+
+        self.frameStopDateTime = QFrame(self.tab_2)
+        self.frameStopDateTime.setObjectName(u"frameStopDateTime")
+        self.frameStopDateTime.setFrameShape(QFrame.StyledPanel)
+        self.frameStopDateTime.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_6 = QHBoxLayout(self.frameStopDateTime)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.stopDate = QDateEdit(self.frameStopDateTime)
+        self.stopDate.setObjectName(u"stopDate")
+        self.stopDate.setCalendarPopup(True)
+
+        self.horizontalLayout_6.addWidget(self.stopDate)
+
+        self.stopTime = QTimeEdit(self.frameStopDateTime)
+        self.stopTime.setObjectName(u"stopTime")
+
+        self.horizontalLayout_6.addWidget(self.stopTime)
+
+
+        self.verticalLayout_11.addWidget(self.frameStopDateTime)
+
+        self.frameStartStopPauseButtons = QFrame(self.tab_2)
+        self.frameStartStopPauseButtons.setObjectName(u"frameStartStopPauseButtons")
+        self.frameStartStopPauseButtons.setFrameShape(QFrame.StyledPanel)
+        self.frameStartStopPauseButtons.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.frameStartStopPauseButtons)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.startButton = QPushButton(self.StartStopPauseFrame)
-        self.startButton.setObjectName(u"startButton")
+        self.startScheduleButton = QPushButton(self.frameStartStopPauseButtons)
+        self.startScheduleButton.setObjectName(u"startScheduleButton")
 
-        self.horizontalLayout_3.addWidget(self.startButton)
+        self.horizontalLayout_3.addWidget(self.startScheduleButton)
 
-        self.pauseButton = QPushButton(self.StartStopPauseFrame)
-        self.pauseButton.setObjectName(u"pauseButton")
+        self.pauseScheduleButton = QPushButton(self.frameStartStopPauseButtons)
+        self.pauseScheduleButton.setObjectName(u"pauseScheduleButton")
 
-        self.horizontalLayout_3.addWidget(self.pauseButton)
+        self.horizontalLayout_3.addWidget(self.pauseScheduleButton)
 
-        self.stopButton = QPushButton(self.StartStopPauseFrame)
-        self.stopButton.setObjectName(u"stopButton")
+        self.stopScheduleButton = QPushButton(self.frameStartStopPauseButtons)
+        self.stopScheduleButton.setObjectName(u"stopScheduleButton")
 
-        self.horizontalLayout_3.addWidget(self.stopButton)
+        self.horizontalLayout_3.addWidget(self.stopScheduleButton)
 
 
-        self.verticalLayout_2.addWidget(self.StartStopPauseFrame)
+        self.verticalLayout_11.addWidget(self.frameStartStopPauseButtons)
+
+        self.tabStartStopTypes.addTab(self.tab_2, "")
+        self.limitedMeasurementsFrame = QWidget()
+        self.limitedMeasurementsFrame.setObjectName(u"limitedMeasurementsFrame")
+        self.verticalLayout_12 = QVBoxLayout(self.limitedMeasurementsFrame)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.numberMeasurementsLabel = QLabel(self.limitedMeasurementsFrame)
+        self.numberMeasurementsLabel.setObjectName(u"numberMeasurementsLabel")
+
+        self.verticalLayout_12.addWidget(self.numberMeasurementsLabel)
+
+        self.numberMeasurementsSpinBox = QSpinBox(self.limitedMeasurementsFrame)
+        self.numberMeasurementsSpinBox.setObjectName(u"numberMeasurementsSpinBox")
+
+        self.verticalLayout_12.addWidget(self.numberMeasurementsSpinBox)
+
+        self.frame_6 = QFrame(self.limitedMeasurementsFrame)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setFrameShape(QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.frame_6)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.startLimitedMeasurementsButton = QPushButton(self.frame_6)
+        self.startLimitedMeasurementsButton.setObjectName(u"startLimitedMeasurementsButton")
+
+        self.horizontalLayout_7.addWidget(self.startLimitedMeasurementsButton)
+
+        self.pausetLimitedMeasurementsButton = QPushButton(self.frame_6)
+        self.pausetLimitedMeasurementsButton.setObjectName(u"pausetLimitedMeasurementsButton")
+
+        self.horizontalLayout_7.addWidget(self.pausetLimitedMeasurementsButton)
+
+        self.stoptLimitedMeasurementsButton = QPushButton(self.frame_6)
+        self.stoptLimitedMeasurementsButton.setObjectName(u"stoptLimitedMeasurementsButton")
+
+        self.horizontalLayout_7.addWidget(self.stoptLimitedMeasurementsButton)
+
+
+        self.verticalLayout_12.addWidget(self.frame_6)
+
+        self.tabStartStopTypes.addTab(self.limitedMeasurementsFrame, "")
+
+        self.verticalLayout_8.addWidget(self.tabStartStopTypes)
+
+
+        self.verticalLayout_2.addWidget(self.frameStartStop)
 
         self.SaveDataFrame = QFrame(self.SettingsFrame)
         self.SaveDataFrame.setObjectName(u"SaveDataFrame")
-        sizePolicy5.setHeightForWidth(self.SaveDataFrame.sizePolicy().hasHeightForWidth())
-        self.SaveDataFrame.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.SaveDataFrame.sizePolicy().hasHeightForWidth())
+        self.SaveDataFrame.setSizePolicy(sizePolicy4)
         self.SaveDataFrame.setFrameShape(QFrame.StyledPanel)
         self.SaveDataFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_4 = QVBoxLayout(self.SaveDataFrame)
@@ -219,8 +313,11 @@ class Ui_TimeStamping(object):
 
         self.MeasurementsFrame = QFrame(self.SettingsMeasurementsFrame)
         self.MeasurementsFrame.setObjectName(u"MeasurementsFrame")
-        sizePolicy2.setHeightForWidth(self.MeasurementsFrame.sizePolicy().hasHeightForWidth())
-        self.MeasurementsFrame.setSizePolicy(sizePolicy2)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(2)
+        sizePolicy6.setHeightForWidth(self.MeasurementsFrame.sizePolicy().hasHeightForWidth())
+        self.MeasurementsFrame.setSizePolicy(sizePolicy6)
         self.MeasurementsFrame.setFrameShape(QFrame.Panel)
         self.MeasurementsFrame.setFrameShadow(QFrame.Sunken)
         self.horizontalLayout_4 = QHBoxLayout(self.MeasurementsFrame)
@@ -231,30 +328,30 @@ class Ui_TimeStamping(object):
         self.MeasurementsChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_6 = QVBoxLayout(self.MeasurementsChannelsFrame)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.label_4 = QLabel(self.MeasurementsChannelsFrame)
-        self.label_4.setObjectName(u"label_4")
+        self.measurementsChannelALabel = QLabel(self.MeasurementsChannelsFrame)
+        self.measurementsChannelALabel.setObjectName(u"measurementsChannelALabel")
 
-        self.verticalLayout_6.addWidget(self.label_4)
+        self.verticalLayout_6.addWidget(self.measurementsChannelALabel)
 
-        self.label_2 = QLabel(self.MeasurementsChannelsFrame)
-        self.label_2.setObjectName(u"label_2")
+        self.measurementsChannelBLabel = QLabel(self.MeasurementsChannelsFrame)
+        self.measurementsChannelBLabel.setObjectName(u"measurementsChannelBLabel")
 
-        self.verticalLayout_6.addWidget(self.label_2)
+        self.verticalLayout_6.addWidget(self.measurementsChannelBLabel)
 
-        self.label_5 = QLabel(self.MeasurementsChannelsFrame)
-        self.label_5.setObjectName(u"label_5")
+        self.measurementsChannelCLabel = QLabel(self.MeasurementsChannelsFrame)
+        self.measurementsChannelCLabel.setObjectName(u"measurementsChannelCLabel")
 
-        self.verticalLayout_6.addWidget(self.label_5)
+        self.verticalLayout_6.addWidget(self.measurementsChannelCLabel)
 
-        self.label_3 = QLabel(self.MeasurementsChannelsFrame)
-        self.label_3.setObjectName(u"label_3")
+        self.measurementsChannelDLabel = QLabel(self.MeasurementsChannelsFrame)
+        self.measurementsChannelDLabel.setObjectName(u"measurementsChannelDLabel")
 
-        self.verticalLayout_6.addWidget(self.label_3)
+        self.verticalLayout_6.addWidget(self.measurementsChannelDLabel)
 
-        self.label_6 = QLabel(self.MeasurementsChannelsFrame)
-        self.label_6.setObjectName(u"label_6")
+        self.totalMeasurementsLabel = QLabel(self.MeasurementsChannelsFrame)
+        self.totalMeasurementsLabel.setObjectName(u"totalMeasurementsLabel")
 
-        self.verticalLayout_6.addWidget(self.label_6)
+        self.verticalLayout_6.addWidget(self.totalMeasurementsLabel)
 
 
         self.horizontalLayout_4.addWidget(self.MeasurementsChannelsFrame)
@@ -265,30 +362,30 @@ class Ui_TimeStamping(object):
         self.MeasurementsValuesFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_7 = QVBoxLayout(self.MeasurementsValuesFrame)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.label_7 = QLabel(self.MeasurementsValuesFrame)
-        self.label_7.setObjectName(u"label_7")
+        self.valueChannelALabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelALabel.setObjectName(u"valueChannelALabel")
 
-        self.verticalLayout_7.addWidget(self.label_7)
+        self.verticalLayout_7.addWidget(self.valueChannelALabel)
 
-        self.label_8 = QLabel(self.MeasurementsValuesFrame)
-        self.label_8.setObjectName(u"label_8")
+        self.valueChannelBLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelBLabel.setObjectName(u"valueChannelBLabel")
 
-        self.verticalLayout_7.addWidget(self.label_8)
+        self.verticalLayout_7.addWidget(self.valueChannelBLabel)
 
-        self.label_9 = QLabel(self.MeasurementsValuesFrame)
-        self.label_9.setObjectName(u"label_9")
+        self.valueChannelCLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelCLabel.setObjectName(u"valueChannelCLabel")
 
-        self.verticalLayout_7.addWidget(self.label_9)
+        self.verticalLayout_7.addWidget(self.valueChannelCLabel)
 
-        self.label_11 = QLabel(self.MeasurementsValuesFrame)
-        self.label_11.setObjectName(u"label_11")
+        self.valueChannelDLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelDLabel.setObjectName(u"valueChannelDLabel")
 
-        self.verticalLayout_7.addWidget(self.label_11)
+        self.verticalLayout_7.addWidget(self.valueChannelDLabel)
 
-        self.label_10 = QLabel(self.MeasurementsValuesFrame)
-        self.label_10.setObjectName(u"label_10")
+        self.valueTotalLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueTotalLabel.setObjectName(u"valueTotalLabel")
 
-        self.verticalLayout_7.addWidget(self.label_10)
+        self.verticalLayout_7.addWidget(self.valueTotalLabel)
 
 
         self.horizontalLayout_4.addWidget(self.MeasurementsValuesFrame)
@@ -301,22 +398,22 @@ class Ui_TimeStamping(object):
 
         self.TableStatusFrame = QFrame(self.TimeStampPage)
         self.TableStatusFrame.setObjectName(u"TableStatusFrame")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy6.setHorizontalStretch(6)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.TableStatusFrame.sizePolicy().hasHeightForWidth())
-        self.TableStatusFrame.setSizePolicy(sizePolicy6)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy7.setHorizontalStretch(6)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.TableStatusFrame.sizePolicy().hasHeightForWidth())
+        self.TableStatusFrame.setSizePolicy(sizePolicy7)
         self.TableStatusFrame.setFrameShape(QFrame.Panel)
         self.TableStatusFrame.setFrameShadow(QFrame.Sunken)
         self.verticalLayout = QVBoxLayout(self.TableStatusFrame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.TableFrame = QFrame(self.TableStatusFrame)
         self.TableFrame.setObjectName(u"TableFrame")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(9)
-        sizePolicy7.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
-        self.TableFrame.setSizePolicy(sizePolicy7)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(9)
+        sizePolicy8.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
+        self.TableFrame.setSizePolicy(sizePolicy8)
         self.TableFrame.setFrameShape(QFrame.StyledPanel)
         self.TableFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_9 = QHBoxLayout(self.TableFrame)
@@ -345,39 +442,39 @@ class Ui_TimeStamping(object):
 
         self.StatusFrame = QFrame(self.TableStatusFrame)
         self.StatusFrame.setObjectName(u"StatusFrame")
-        sizePolicy5.setHeightForWidth(self.StatusFrame.sizePolicy().hasHeightForWidth())
-        self.StatusFrame.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.StatusFrame.sizePolicy().hasHeightForWidth())
+        self.StatusFrame.setSizePolicy(sizePolicy4)
         self.StatusFrame.setFrameShape(QFrame.Panel)
         self.StatusFrame.setFrameShadow(QFrame.Sunken)
         self.horizontalLayout_10 = QHBoxLayout(self.StatusFrame)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.stateLabe = QLabel(self.StatusFrame)
         self.stateLabe.setObjectName(u"stateLabe")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy8.setHorizontalStretch(45)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.stateLabe.sizePolicy().hasHeightForWidth())
-        self.stateLabe.setSizePolicy(sizePolicy8)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy9.setHorizontalStretch(45)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.stateLabe.sizePolicy().hasHeightForWidth())
+        self.stateLabe.setSizePolicy(sizePolicy9)
 
         self.horizontalLayout_10.addWidget(self.stateLabe)
 
         self.valueStateLabel = QLabel(self.StatusFrame)
         self.valueStateLabel.setObjectName(u"valueStateLabel")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy9.setHorizontalStretch(55)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.valueStateLabel.sizePolicy().hasHeightForWidth())
-        self.valueStateLabel.setSizePolicy(sizePolicy9)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy10.setHorizontalStretch(55)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.valueStateLabel.sizePolicy().hasHeightForWidth())
+        self.valueStateLabel.setSizePolicy(sizePolicy10)
 
         self.horizontalLayout_10.addWidget(self.valueStateLabel)
 
         self.labelColor = QLabel(self.StatusFrame)
         self.labelColor.setObjectName(u"labelColor")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy10.setHorizontalStretch(5)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.labelColor.sizePolicy().hasHeightForWidth())
-        self.labelColor.setSizePolicy(sizePolicy10)
+        sizePolicy11 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy11.setHorizontalStretch(5)
+        sizePolicy11.setVerticalStretch(0)
+        sizePolicy11.setHeightForWidth(self.labelColor.sizePolicy().hasHeightForWidth())
+        self.labelColor.setSizePolicy(sizePolicy11)
 
         self.horizontalLayout_10.addWidget(self.labelColor)
 
@@ -390,11 +487,13 @@ class Ui_TimeStamping(object):
 
         self.horizontalLayout.addWidget(self.TimeStampPage)
 
-        
-        self.showTableCheckBox.setChecked(True)
+
         self.retranslateUi(Form)
         self.drawColorPoint()
         self.tableTimeStamp.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.tabStartStopTypes.setCurrentIndex(1)
+
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
@@ -406,31 +505,34 @@ class Ui_TimeStamping(object):
         self.enableChannelBCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel B", None))
         self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel C", None))
         self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel D", None))
-        self.ScheduleMeasurementCheckBox.setText(QCoreApplication.translate("Form", u"Schedule measurement completion", None))
-        self.limitMeasurementsCheckBox.setText(QCoreApplication.translate("Form", u"Limit measurements", None))
         self.showTableCheckBox.setText(QCoreApplication.translate("Form", u"Show table", None))
-        self.syncLabel.setText(QCoreApplication.translate("Form", u"Synchronize:", None))
-        self.syncComboBox.setItemText(0, QCoreApplication.translate("Form", u"Only with start", None))
-        self.syncComboBox.setItemText(1, QCoreApplication.translate("Form", u"30 seconds", None))
-        self.syncComboBox.setItemText(2, QCoreApplication.translate("Form", u"1 minute", None))
-        self.syncComboBox.setItemText(3, QCoreApplication.translate("Form", u"5 minute", None))
-        self.syncComboBox.setItemText(4, QCoreApplication.translate("Form", u"10 minute", None))
-        self.syncComboBox.setItemText(5, QCoreApplication.translate("Form", u"1 hour", None))
-
-        self.startButton.setText(QCoreApplication.translate("Form", u"Start adquisition", None))
-        self.pauseButton.setText(QCoreApplication.translate("Form", u"Pause adquisiton", None))
-        self.stopButton.setText(QCoreApplication.translate("Form", u"Stop adquisition", None))
+        self.saveDataAfterCompleteCheckBox.setText(QCoreApplication.translate("Form", u"Save data when measurement is complete", None))
+        self.startNormalButton.setText(QCoreApplication.translate("Form", u"Start adquisition", None))
+        self.pauseNormalButton.setText(QCoreApplication.translate("Form", u"Pause adquisition", None))
+        self.stopNormalButton.setText(QCoreApplication.translate("Form", u"Stop adquisition", None))
+        self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.tabNormalMeasurement), QCoreApplication.translate("Form", u"Tab 1", None))
+        self.labelStartSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time start measurement", None))
+        self.labelStopSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time finish measurement", None))
+        self.startScheduleButton.setText(QCoreApplication.translate("Form", u"Start", None))
+        self.pauseScheduleButton.setText(QCoreApplication.translate("Form", u"Pause", None))
+        self.stopScheduleButton.setText(QCoreApplication.translate("Form", u"Stop", None))
+        self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.tab_2), QCoreApplication.translate("Form", u"Tab 2", None))
+        self.numberMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Number of measurements:", None))
+        self.startLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Start", None))
+        self.pausetLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Pause", None))
+        self.stoptLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Stop", None))
+        self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.limitedMeasurementsFrame), QCoreApplication.translate("Form", u"P\u00e1gina", None))
         self.saveDataButton.setText(QCoreApplication.translate("Form", u"Save Data", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"Measurements Channel A", None))
-        self.label_2.setText(QCoreApplication.translate("Form", u"Measurements Channel B", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"Measurements Channel C", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"Measurements Channel D", None))
-        self.label_6.setText(QCoreApplication.translate("Form", u"Total measurements", None))
-        self.label_7.setText(QCoreApplication.translate("Form", u"No running measurement", None))
-        self.label_8.setText(QCoreApplication.translate("Form", u"No running measurement", None))
-        self.label_9.setText(QCoreApplication.translate("Form", u"No running measurement", None))
-        self.label_11.setText(QCoreApplication.translate("Form", u"No running measurement", None))
-        self.label_10.setText(QCoreApplication.translate("Form", u"No running measurement", None))
+        self.measurementsChannelALabel.setText(QCoreApplication.translate("Form", u"Measurements Channel A", None))
+        self.measurementsChannelBLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel B", None))
+        self.measurementsChannelCLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel C", None))
+        self.measurementsChannelDLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel D", None))
+        self.totalMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Total measurements", None))
+        self.valueChannelALabel.setText(QCoreApplication.translate("Form", u"Values", None))
+        self.valueChannelBLabel.setText(QCoreApplication.translate("Form", u"Values", None))
+        self.valueChannelCLabel.setText(QCoreApplication.translate("Form", u"Values", None))
+        self.valueChannelDLabel.setText(QCoreApplication.translate("Form", u"Values", None))
+        self.valueTotalLabel.setText(QCoreApplication.translate("Form", u"Values", None))
         ___qtablewidgetitem = self.tableTimeStamp.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Stop time", None));
         ___qtablewidgetitem1 = self.tableTimeStamp.horizontalHeaderItem(1)

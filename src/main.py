@@ -605,35 +605,46 @@ class MainWindow(QMainWindow):
             padre=self.tab4
             self.construct_time_stamping(padre)  
             if self.timeStampGraphic==None:
-                enableCheckBoxChannelA=self.uiTimeStamping.enableChannelACheckBox
-                enableCheckBoxChannelB=self.uiTimeStamping.enableChannelBCheckBox
-                enableCheckBoxChannelC=self.uiTimeStamping.enableChannelCCheckBox
-                enableCheckBoxChannelD=self.uiTimeStamping.enableChannelDCheckBox
-                scheduleCheckBox=self.uiTimeStamping.ScheduleMeasurementCheckBox
-                scheduleTimeEdit=self.uiTimeStamping.scheduleDateTime
-                limitMeasurementsCheckBox=self.uiTimeStamping.limitMeasurementsCheckBox
-                limitMeasurementsSpinBox=self.uiTimeStamping.measurementsSpinBox
-                showTableCheckBox= self.uiTimeStamping.showTableCheckBox
-                syncComboBox= self.uiTimeStamping.syncComboBox
-                startButtonTimeStamp= self.uiTimeStamping.startButton
-                pauseButtonTimeStamp= self.uiTimeStamping.pauseButton
-                stopButtonTimeStamp= self.uiTimeStamping.stopButton
-                saveDataButtonTimeStamp=self.uiTimeStamping.saveDataButton
-                valueMeasurementA=self.uiTimeStamping.label_7
-                valueMeasurementB=self.uiTimeStamping.label_8
-                valueMeasurementC=self.uiTimeStamping.label_9
-                valueMeasurementD=self.uiTimeStamping.label_11
-                valueMeasurementTotal=self.uiTimeStamping.label_10
-                labelMeasurementsA=self.uiTimeStamping.label_4
-                labelMeasurementsB=self.uiTimeStamping.label_2
-                labelMeasurementsC=self.uiTimeStamping.label_5
-                labelMeasurementsD=self.uiTimeStamping.label_3
+                enableCheckBoxA=self.uiTimeStamping.enableChannelACheckBox
+                enableCheckBoxB=self.uiTimeStamping.enableChannelBCheckBox
+                enableCheckBoxC=self.uiTimeStamping.enableChannelCCheckBox
+                enableCheckBoxD=self.uiTimeStamping.enableChannelDCheckBox
+                startNormalButton=self.uiTimeStamping.startNormalButton
+                pauseNormalButton=self.uiTimeStamping.pauseNormalButton
+                stopNormalButton=self.uiTimeStamping.stopNormalButton
+                startScheduleButton=self.uiTimeStamping.startScheduleButton
+                pauseScheduleButton=self.uiTimeStamping.pauseScheduleButton
+                stopScheduleButton=self.uiTimeStamping.stopScheduleButton
+                startLimitedButton=self.uiTimeStamping.startLimitedMeasurementsButton
+                pauseLimitedButton=self.uiTimeStamping.pausetLimitedMeasurementsButton
+                stopLimitedButton=self.uiTimeStamping.stoptLimitedMeasurementsButton
+                startDate=self.uiTimeStamping.startDate
+                startTime=self.uiTimeStamping.startTime
+                finishDate=self.uiTimeStamping.stopDate
+                finishTime=self.uiTimeStamping.stopTime
+                numberMeasurementsSpinBox=self.uiTimeStamping.numberMeasurementsSpinBox
+                showTableCheckBox=self.uiTimeStamping.showTableCheckBox
+                measurementLabelA=self.uiTimeStamping.measurementsChannelALabel
+                measurementLabelB=self.uiTimeStamping.measurementsChannelBLabel
+                measurementLabelC=self.uiTimeStamping.measurementsChannelCLabel
+                measurementLabelD=self.uiTimeStamping.measurementsChannelDLabel
+                valueMeasurementA=self.uiTimeStamping.valueChannelALabel
+                valueMeasurementB=self.uiTimeStamping.valueChannelBLabel
+                valueMeasurementC=self.uiTimeStamping.valueChannelCLabel
+                valueMeasurementD=self.uiTimeStamping.valueChannelDLabel
+                valueTotalMeasurement=self.uiTimeStamping.valueTotalLabel
                 tableTimeStamp=self.uiTimeStamping.tableTimeStamp
                 statusLabelTimeStamp=self.uiTimeStamping.valueStateLabel
-                colorLabel=self.uiTimeStamping.labelColor
-                self.timeStampGraphic=TimeStampLogic(enableCheckBoxChannelA,enableCheckBoxChannelB,enableCheckBoxChannelC,enableCheckBoxChannelD,scheduleCheckBox,scheduleTimeEdit,limitMeasurementsCheckBox,limitMeasurementsSpinBox,
-                                                     showTableCheckBox, syncComboBox, startButtonTimeStamp, pauseButtonTimeStamp, stopButtonTimeStamp,saveDataButtonTimeStamp,valueMeasurementA,
-                                                     valueMeasurementB, valueMeasurementC, valueMeasurementD, valueMeasurementTotal,labelMeasurementsA,labelMeasurementsB,labelMeasurementsC,labelMeasurementsD, tableTimeStamp, statusLabelTimeStamp, colorLabel,self,self.conectedDevice)
+                colorLabelTimeStamp=self.uiTimeStamping.labelColor
+                saveDataComplete=self.uiTimeStamping.saveDataAfterCompleteCheckBox
+                tabNormalMeasurement=self.uiTimeStamping.tabNormalMeasurement
+                tabScheduleMeasurement=self.uiTimeStamping.tab_2
+                tabLimitedMeasurement=self.uiTimeStamping.limitedMeasurementsFrame
+                self.timeStampGraphic=TimeStampLogic(enableCheckBoxA,enableCheckBoxB,enableCheckBoxC,enableCheckBoxD, startNormalButton, pauseNormalButton, stopNormalButton, startScheduleButton,
+                                                     pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
+                                                     numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
+                                                     valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
+                                                     tabScheduleMeasurement, tabLimitedMeasurement, self, self.conectedDevice)
                 
 
         #   elif valor_padre==1:
