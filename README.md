@@ -89,19 +89,22 @@ After the measurement, the user can decide whether to save the image of the data
 ![Fit measurement](./Sources/AfterFit.png)
 
 ## Counts Estimated Window
+
 ### Before Measurement
+
 Before starting the measurement, the user can select the channels on which they wish to estimate the counts. They can also choose whether they want the graphs to be merged, meaning all channel curves are displayed on a single graph; separated, where each curve has its own individual graph; or detached, where each graph appears in a separate dialog window. Additionally, the user can choose to view the measurement table in a separate dialog window and can select the time range of the graphs, such as viewing the last 10 seconds, the last 20 seconds, and so on, up to a range of 1000 seconds.
 
 ![Before measurement Counts estimated window](./Sources/preMeasurementCountsEstimated.png)
 
 ### During Measurement
+
 While the measurement is in progress, the user can track the history of the recorded parameters in the table located at the bottom of the screen and view the current data in the panel at the lower right. Similarly, the user can observe the real-time update of the graphs for each measurement taken. Additionally, the user can interact with the entire configuration panel and clear the data of any channel if desired. The only limitation is that channels not selected before the start of the measurement cannot be selected during the measurement.
 ![During measurement Counts estimated window](./Sources/measurementCountEstimated.png)
 
 ### After Measurement
+
 After the measurement, the options to save the data and save the plots become available to the user. When saving the data, the user can choose between txt, csv, and dat formats, and for images, they can select png, tiff, or jpg formats. Likewise, the user can interact with the graph to obtain a different view before saving the image again. The time range filter remains active, and the user can also enable or disable channels if they prefer not to display the curve of a particular graph.
 ![After measurement Counts estimated window](./Sources/postMeasurementCountsEstimated.png)
-
 
 ## Grant port access on Linux
 
@@ -109,10 +112,10 @@ Most Linux configurations have a dialout group for full and direct access to ser
 
 1. Open Terminal.
 
-2. Enter the following command, replacing ```<username>``` with the name of your account.
+2. Enter the following command, replacing `<username>` with the name of your account.
 
 ```
-sudo usermod -a -G dialout <username>   
+sudo usermod -a -G dialout <username>
 ```
 
 3. Sign in and out for the changes to take effect.
@@ -123,9 +126,9 @@ sudo usermod -a -G dialout <username>
 
 Modify the version number in the following files:
 
-* installer/installer_builder.iss
+- installer/installer_builder.iss
 
-* src/constants.py
+- src/constants.py
 
 ### Creating a virtual environment
 
@@ -138,13 +141,13 @@ python -m venv .venv
 #### Activate
 
 - On Unix systems:
-  
+
   ```
   source .venv/bin/activate
   ```
 
 - On Windows:
-  
+
   ```
   .venv\Scripts\activate
   ```
@@ -163,13 +166,13 @@ After the virtual environment has been activated, install required packages by u
 python -m pip install -r requirements.txt
 ```
 
-From the console, in the same path of the cloned project, run 
+From the console, in the same path of the cloned project, run
 
 ```
 python src/main.py
 ```
 
-This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 main.py`. 
+This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 main.py`.
 
 **Note**: It is recommended to use Python version 3.8.10 (32-bit).
 
@@ -243,8 +246,7 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 9](./ReadmeSources/Tutorial12.png)
 
-![Step 9](./ReadmeSources/Tutorial13.png)
-10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
+![Step 9](./ReadmeSources/Tutorial13.png) 10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
 
 ![Step 10](./ReadmeSources/Tutorial14.png)
 
@@ -279,13 +281,13 @@ If it doesn't run, make sure it has execute permissions. In case it doesn't run 
 
 To create an AppImage that can be run from multiple Linux distributions and be launch by double clicking, follow the next steps.
 
-* Create the following folder path: 
-    TempicoSoftware.AppDir/usr/bin
-* Place the executable inside the bin folder 
-* Place the Sources folder inside the bin folder
-* Place the icon tausand_small.png located at Sources/tausand_small.png inside TempicoSoftware.AppDir
-* Create a file called TempicoSoftware.desktop inside TempicoSoftware.AppDir
-* Edit the `.desktop` file with the following
+- Create the following folder path:
+  TempicoSoftware.AppDir/usr/bin
+- Place the executable inside the bin folder
+- Place the Sources folder inside the bin folder
+- Place the icon tausand_small.png located at Sources/tausand_small.png inside TempicoSoftware.AppDir
+- Create a file called TempicoSoftware.desktop inside TempicoSoftware.AppDir
+- Edit the `.desktop` file with the following
 
 ```
 [Desktop Entry]
@@ -296,8 +298,8 @@ Type=Application
 Categories=Utility;
 ```
 
-* Give execution permisions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
-* Create a script called `AppRun` with the following contents
+- Give execution permisions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
+- Create a script called `AppRun` with the following contents
 
 ```
 #!/bin/bash
@@ -307,17 +309,17 @@ EXEC="${HERE}/usr/bin/TempicoSoftware"
 exec "${EXEC}"
 ```
 
-* Give execution permisions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` on a Terminal.
+- Give execution permisions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` on a Terminal.
 
-* For 64-bit architecture, download appimagetool-x86_64.AppImage from https://github.com/AppImage/AppImageKit/releases/ and give execution permisions to it. 
+- For 64-bit architecture, download appimagetool-x86_64.AppImage from https://github.com/AppImage/AppImageKit/releases/ and give execution permisions to it.
 
-* Place appimagetool outside TempicoSoftware.AppDir and run
+- Place appimagetool outside TempicoSoftware.AppDir and run
 
 ```
   ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
 ```
 
-* The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
+- The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
 
 ## Generate sphinx documentation
 
@@ -352,7 +354,7 @@ Inside the `docs` folder, several files will have been generated, one of which i
 We will also change the script's path so that when it runs, it can recognize the scripts inside the `src` folder. To do this, we add the following line of code at the beginning, even before the imports:
 
 ```
-sys.path.insert(0, os.path.abspath('../src'))  
+sys.path.insert(0, os.path.abspath('../src'))
 ```
 
 Now there should be a text variable called `html_theme`; here, we will change the default theme and set it to `sphinx_rtd_theme`.
@@ -431,5 +433,3 @@ After this , we can run the commands again to generate the documentation accordi
 ```
 
 If the developer did not create a new script, they only need to run the previous commands to update the documentation.
-
-

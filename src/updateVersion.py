@@ -29,12 +29,12 @@ def updateRelease(fileReleaseStory,fileRelease):
         originalRelease.write(allcontent) 
 
 
-absolutePathConstants= os.path.abspath("src\\constants.py")
+absolutePathConstants= os.path.abspath("constants.py")
 
 updateVersion(absolutePathConstants,version)
 
-absolutePathNewRelease= os.path.abspath("src\\releaseStory.md")
-absolutePathOldRelease= os.path.abspath("README.md")
+absolutePathNewRelease= os.path.abspath("releaseStoryNewVersion.md")
+absolutePathOldRelease= os.path.abspath("../release_history.md")
 
 updateRelease(absolutePathNewRelease,absolutePathOldRelease)
 

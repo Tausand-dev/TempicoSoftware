@@ -16,7 +16,7 @@ numpy==1.22.0
 packaging==24.1
 pefile==2024.8.26
 pillow==10.4.0
-pip==21.1.1
+pip>=23.3
 platformdirs==4.3.6
 pygments==2.18.0
 pyinstaller==5.12
@@ -32,9 +32,9 @@ pywin32-ctypes==0.2.2
 readme-renderer==43.0
 rich==13.9.1
 scipy==1.9.1 --only-binary=:all:
-setuptools==65.5.1
+setuptools>=70.0.0
 shiboken2==5.15.2.1
 six==1.16.0
 typing-extensions==4.12.2
 virtualenv>=20.26.6
-zipp==3.1.0
+zipp>=3.19.1
