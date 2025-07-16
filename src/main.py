@@ -185,9 +185,9 @@ class MainWindow(QMainWindow):
         self.tab1=QWidget()
         self.tab2=QWidget()
         self.tab3=QWidget()
-        self.tabs.addTab(self.tab1,"Start-Stop histogram")
+        self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
-        self.tabs.addTab(self.tab3,"Counts Estimation")
+        self.tabs.addTab(self.tab3,"Counts estimation")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget

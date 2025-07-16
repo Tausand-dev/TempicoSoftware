@@ -175,6 +175,8 @@ class Ui_CountsEstimated(object):
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
+        self.comboBoxTimeRange.addItem("")
+        self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.setObjectName(u"comboBoxTimeRange")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy2.setHorizontalStretch(5)
@@ -567,6 +569,8 @@ class Ui_CountsEstimated(object):
         self.comboBoxTimeRange.setItemText(4, QCoreApplication.translate("Form", u"200 seconds", None))
         self.comboBoxTimeRange.setItemText(5, QCoreApplication.translate("Form", u"500 seconds", None))
         self.comboBoxTimeRange.setItemText(6, QCoreApplication.translate("Form", u"1000 seconds", None))
+        self.comboBoxTimeRange.setItemText(7, QCoreApplication.translate("Form", u"Full range", None))
+        self.comboBoxTimeRange.setItemText(8, QCoreApplication.translate("Form", u"Free navigation", None))
 
         self.clearLabel.setText(QCoreApplication.translate("Form", u"Clear data channels:", None))
         self.channelAClearButton.setText(QCoreApplication.translate("Form", u"A", None))
