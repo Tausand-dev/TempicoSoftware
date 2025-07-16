@@ -282,7 +282,7 @@ class createsavefile:
                         timeFormated=f"{timeValue:.5f}"
                         uncertaintyTime=(float(uncertanty)/(float(countValue)**2))*(10**6)
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
-                        file.write(f"{timeStamp}\t{valueFormated}\t\t{uncertaintyFormated}\t{timeFormated}\t\t{uncertaintyTimeFormated}\n")
+                        file.write(f"{timeStamp}\t{valueFormated}\t{uncertaintyFormated}\t{timeFormated}\t{uncertaintyTimeFormated}\n")
 
     
     
