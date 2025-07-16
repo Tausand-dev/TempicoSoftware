@@ -1,6 +1,6 @@
 import os
 
-version="1.1.0"
+version="1.2.1"
 
 #Here update the constants.py
 def updateVersion(fileName,versionNumber):
