@@ -2344,7 +2344,7 @@ class CountEstimatedLogic():
             if not total_condition:
                 if self.measurementChannelA:
                     filename1=data_prefix+current_date_str+'channelA'
-                    setting_A=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelAEdgeTypeSetting} \n"
+                    setting_A=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
                     settings.append(setting_A)
                     filenames.append(filename1)
                     timeStamps.append(self.timestampsDateChannelA)
@@ -2353,7 +2353,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
                     filename2=data_prefix+current_date_str+'channelB'
-                    setting_B=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelBEdgeTypeSetting} \n"
+                    setting_B=f"Initial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
                     settings.append(setting_B)
                     filenames.append(filename2)
                     timeStamps.append(self.timestampsDateChannelB)
@@ -2362,7 +2362,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
                     filename3=data_prefix+current_date_str+'channelC'
-                    setting_C=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelCEdgeTypeSetting} \n"
+                    setting_C=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
                     settings.append(setting_C)
                     filenames.append(filename3)
                     timeStamps.append(self.timestampsDateChannelC)
@@ -2371,7 +2371,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
                     filename4=data_prefix+current_date_str+'channelD'
-                    setting_D=f"Initial date:{self.initialDate} \nFinal date:{self.finalDate} \nThreshold Voltage: {self.thresholdVoltageSetting} \nStop Edge: {self.channelDEdgeTypeSetting} \n"
+                    setting_D=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
                     settings.append(setting_D)
                     filenames.append(filename4)
                     timeStamps.append(self.timestampsDateChannelD)
