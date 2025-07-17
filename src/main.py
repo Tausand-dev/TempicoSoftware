@@ -188,9 +188,9 @@ class MainWindow(QMainWindow):
         self.tab2=QWidget()
         self.tab3=QWidget()
         self.tab4=QWidget()
-        self.tabs.addTab(self.tab1,"Start-Stop histogram")
+        self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
-        self.tabs.addTab(self.tab3,"Counts Estimation")
+        self.tabs.addTab(self.tab3,"Counts estimation")
         self.tabs.addTab(self.tab4,"TimeStamping")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
@@ -646,7 +646,7 @@ class MainWindow(QMainWindow):
                                                      pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
-                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp, self, self.conectedDevice)
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp, self, self.conectedDevice, self.LifeTimeTimer)
                 
 
         #   elif valor_padre==1:
