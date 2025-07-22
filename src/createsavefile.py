@@ -284,6 +284,25 @@ class createsavefile:
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
                         file.write(f"{timeStamp}\t{valueFormated}\t\t{uncertaintyFormated}\t{timeFormated}\t\t{uncertaintyTimeFormated}\n")
 
-    
+    def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings=None):
+        channelList = ["Start", "A", "B", "C", "D"]
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        if len(startValues) != len(stopValues) or len(stopValues) != len(channels):
+            raise ValueError("Start times, stop times and channels list must have the same length")
+
+        full_path = os.path.join(folder_path, f"{filename}.{extension}")
+
+        file_exists = os.path.isfile(full_path)
+
+        
+        with open(full_path, 'a') as file:    
+            if not file_exists:
+                file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
+            for startTime, stopTime, channel in zip(startValues, stopValues, channels):
+                file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
+                
     
 

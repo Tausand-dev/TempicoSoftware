@@ -191,7 +191,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
-        self.tabs.addTab(self.tab4,"TimeStamping")
+        self.tabs.addTab(self.tab4,"Time stamping")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -642,11 +642,13 @@ class MainWindow(QMainWindow):
                 tabLimitedMeasurement=self.uiTimeStamping.limitedMeasurementsFrame
                 saveDataButton= self.uiTimeStamping.saveDataButton
                 tabsTimeStamp=self.uiTimeStamping.tabStartStopTypes
+                autoSaveComboBox= self.uiTimeStamping.timeAutoSaveComboBox
+                helpSaveButton=self.uiTimeStamping.helpSaveButton
                 self.timeStampGraphic=TimeStampLogic(enableCheckBoxA,enableCheckBoxB,enableCheckBoxC,enableCheckBoxD, startNormalButton, pauseNormalButton, stopNormalButton, startScheduleButton,
                                                      pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
-                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp, self, self.conectedDevice, self.LifeTimeTimer)
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
                 
 
         #   elif valor_padre==1:

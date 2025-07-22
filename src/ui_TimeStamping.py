@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'TimeStampPageFJvZRx.ui'
+## Form generated from reading UI file 'TimeStampPagecePyeP.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_TimeStamping(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(1076, 711)
+        Form.resize(1076, 726)
         Form.setAutoFillBackground(True)
         self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -63,7 +63,7 @@ class Ui_TimeStamping(object):
         self.EnableChannelsFrame.setObjectName(u"EnableChannelsFrame")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(3)
+        sizePolicy2.setVerticalStretch(2)
         sizePolicy2.setHeightForWidth(self.EnableChannelsFrame.sizePolicy().hasHeightForWidth())
         self.EnableChannelsFrame.setSizePolicy(sizePolicy2)
         self.EnableChannelsFrame.setFrameShape(QFrame.StyledPanel)
@@ -103,43 +103,34 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_2.addWidget(self.EnableChannelsFrame)
 
-        self.frame_2 = QFrame(self.SettingsFrame)
-        self.frame_2.setObjectName(u"frame_2")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
-        self.frame_2.setSizePolicy(sizePolicy4)
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_9 = QVBoxLayout(self.frame_2)
-        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
-        self.showTableCheckBox = QCheckBox(self.frame_2)
-        self.showTableCheckBox.setObjectName(u"showTableCheckBox")
-
-        self.verticalLayout_9.addWidget(self.showTableCheckBox)
-
-        self.saveDataAfterCompleteCheckBox = QCheckBox(self.frame_2)
-        self.saveDataAfterCompleteCheckBox.setObjectName(u"saveDataAfterCompleteCheckBox")
-
-        self.verticalLayout_9.addWidget(self.saveDataAfterCompleteCheckBox)
-
-
-        self.verticalLayout_2.addWidget(self.frame_2)
-
         self.frameStartStop = QFrame(self.SettingsFrame)
         self.frameStartStop.setObjectName(u"frameStartStop")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(5)
-        sizePolicy5.setHeightForWidth(self.frameStartStop.sizePolicy().hasHeightForWidth())
-        self.frameStartStop.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(6)
+        sizePolicy4.setHeightForWidth(self.frameStartStop.sizePolicy().hasHeightForWidth())
+        self.frameStartStop.setSizePolicy(sizePolicy4)
         self.frameStartStop.setFrameShape(QFrame.StyledPanel)
         self.frameStartStop.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.showTableCheckBox = QCheckBox(self.frameStartStop)
+        self.showTableCheckBox.setObjectName(u"showTableCheckBox")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(1)
+        sizePolicy5.setHeightForWidth(self.showTableCheckBox.sizePolicy().hasHeightForWidth())
+        self.showTableCheckBox.setSizePolicy(sizePolicy5)
+
+        self.verticalLayout_8.addWidget(self.showTableCheckBox)
+
         self.tabStartStopTypes = QTabWidget(self.frameStartStop)
         self.tabStartStopTypes.setObjectName(u"tabStartStopTypes")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(9)
+        sizePolicy6.setHeightForWidth(self.tabStartStopTypes.sizePolicy().hasHeightForWidth())
+        self.tabStartStopTypes.setSizePolicy(sizePolicy6)
         self.tabStartStopTypes.setAutoFillBackground(True)
         self.tabStartStopTypes.setInputMethodHints(Qt.ImhNone)
         self.tabStartStopTypes.setDocumentMode(False)
@@ -169,7 +160,6 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.addTab(self.tabNormalMeasurement, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.tab_2.setAutoFillBackground(True)
         self.verticalLayout_11 = QVBoxLayout(self.tab_2)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.labelStartSchedule = QLabel(self.tab_2)
@@ -186,6 +176,7 @@ class Ui_TimeStamping(object):
         self.startDate = QDateEdit(self.frameStartDateTime)
         self.startDate.setObjectName(u"startDate")
         self.startDate.setCalendarPopup(True)
+        self.tab_2.setAutoFillBackground(True)
 
         self.horizontalLayout_5.addWidget(self.startDate)
 
@@ -250,7 +241,6 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.addTab(self.tab_2, "")
         self.limitedMeasurementsFrame = QWidget()
         self.limitedMeasurementsFrame.setObjectName(u"limitedMeasurementsFrame")
-        self.limitedMeasurementsFrame.setAutoFillBackground(True)
         self.verticalLayout_12 = QVBoxLayout(self.limitedMeasurementsFrame)
         self.verticalLayout_12.setObjectName(u"verticalLayout_12")
         self.numberMeasurementsLabel = QLabel(self.limitedMeasurementsFrame)
@@ -273,7 +263,7 @@ class Ui_TimeStamping(object):
         self.startLimitedMeasurementsButton.setObjectName(u"startLimitedMeasurementsButton")
 
         self.horizontalLayout_7.addWidget(self.startLimitedMeasurementsButton)
-
+        self.limitedMeasurementsFrame.setAutoFillBackground(True)
         self.pausetLimitedMeasurementsButton = QPushButton(self.frame_6)
         self.pausetLimitedMeasurementsButton.setObjectName(u"pausetLimitedMeasurementsButton")
 
@@ -296,12 +286,63 @@ class Ui_TimeStamping(object):
 
         self.SaveDataFrame = QFrame(self.SettingsFrame)
         self.SaveDataFrame.setObjectName(u"SaveDataFrame")
-        sizePolicy4.setHeightForWidth(self.SaveDataFrame.sizePolicy().hasHeightForWidth())
-        self.SaveDataFrame.setSizePolicy(sizePolicy4)
+        sizePolicy2.setHeightForWidth(self.SaveDataFrame.sizePolicy().hasHeightForWidth())
+        self.SaveDataFrame.setSizePolicy(sizePolicy2)
         self.SaveDataFrame.setFrameShape(QFrame.StyledPanel)
         self.SaveDataFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_4 = QVBoxLayout(self.SaveDataFrame)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.saveDataAfterCompleteCheckBox = QCheckBox(self.SaveDataFrame)
+        self.saveDataAfterCompleteCheckBox.setObjectName(u"saveDataAfterCompleteCheckBox")
+
+        self.verticalLayout_4.addWidget(self.saveDataAfterCompleteCheckBox)
+
+        self.AutoSaveFrame = QFrame(self.SaveDataFrame)
+        self.AutoSaveFrame.setObjectName(u"AutoSaveFrame")
+        self.AutoSaveFrame.setFrameShape(QFrame.StyledPanel)
+        self.AutoSaveFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_8 = QHBoxLayout(self.AutoSaveFrame)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.everyLabel = QLabel(self.AutoSaveFrame)
+        self.everyLabel.setObjectName(u"everyLabel")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy7.setHorizontalStretch(45)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.everyLabel.sizePolicy().hasHeightForWidth())
+        self.everyLabel.setSizePolicy(sizePolicy7)
+
+        self.horizontalLayout_8.addWidget(self.everyLabel)
+
+        self.timeAutoSaveComboBox = QComboBox(self.AutoSaveFrame)
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.addItem("")
+        self.timeAutoSaveComboBox.setObjectName(u"timeAutoSaveComboBox")
+        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy8.setHorizontalStretch(60)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.timeAutoSaveComboBox.sizePolicy().hasHeightForWidth())
+        self.timeAutoSaveComboBox.setSizePolicy(sizePolicy8)
+
+        self.horizontalLayout_8.addWidget(self.timeAutoSaveComboBox)
+
+        self.helpSaveButton = QPushButton(self.AutoSaveFrame)
+        self.helpSaveButton.setObjectName(u"helpSaveButton")
+        sizePolicy9 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy9.setHorizontalStretch(5)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.helpSaveButton.sizePolicy().hasHeightForWidth())
+        self.helpSaveButton.setSizePolicy(sizePolicy9)
+
+        self.horizontalLayout_8.addWidget(self.helpSaveButton)
+
+
+        self.verticalLayout_4.addWidget(self.AutoSaveFrame)
+
         self.saveDataButton = QPushButton(self.SaveDataFrame)
         self.saveDataButton.setObjectName(u"saveDataButton")
 
@@ -315,11 +356,8 @@ class Ui_TimeStamping(object):
 
         self.MeasurementsFrame = QFrame(self.SettingsMeasurementsFrame)
         self.MeasurementsFrame.setObjectName(u"MeasurementsFrame")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(2)
-        sizePolicy6.setHeightForWidth(self.MeasurementsFrame.sizePolicy().hasHeightForWidth())
-        self.MeasurementsFrame.setSizePolicy(sizePolicy6)
+        sizePolicy2.setHeightForWidth(self.MeasurementsFrame.sizePolicy().hasHeightForWidth())
+        self.MeasurementsFrame.setSizePolicy(sizePolicy2)
         self.MeasurementsFrame.setFrameShape(QFrame.Panel)
         self.MeasurementsFrame.setFrameShadow(QFrame.Sunken)
         self.horizontalLayout_4 = QHBoxLayout(self.MeasurementsFrame)
@@ -400,22 +438,22 @@ class Ui_TimeStamping(object):
 
         self.TableStatusFrame = QFrame(self.TimeStampPage)
         self.TableStatusFrame.setObjectName(u"TableStatusFrame")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy7.setHorizontalStretch(6)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.TableStatusFrame.sizePolicy().hasHeightForWidth())
-        self.TableStatusFrame.setSizePolicy(sizePolicy7)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy10.setHorizontalStretch(6)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.TableStatusFrame.sizePolicy().hasHeightForWidth())
+        self.TableStatusFrame.setSizePolicy(sizePolicy10)
         self.TableStatusFrame.setFrameShape(QFrame.Panel)
         self.TableStatusFrame.setFrameShadow(QFrame.Sunken)
         self.verticalLayout = QVBoxLayout(self.TableStatusFrame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.TableFrame = QFrame(self.TableStatusFrame)
         self.TableFrame.setObjectName(u"TableFrame")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(9)
-        sizePolicy8.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
-        self.TableFrame.setSizePolicy(sizePolicy8)
+        sizePolicy11 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy11.setHorizontalStretch(0)
+        sizePolicy11.setVerticalStretch(9)
+        sizePolicy11.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
+        self.TableFrame.setSizePolicy(sizePolicy11)
         self.TableFrame.setFrameShape(QFrame.StyledPanel)
         self.TableFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_9 = QHBoxLayout(self.TableFrame)
@@ -444,39 +482,39 @@ class Ui_TimeStamping(object):
 
         self.StatusFrame = QFrame(self.TableStatusFrame)
         self.StatusFrame.setObjectName(u"StatusFrame")
-        sizePolicy4.setHeightForWidth(self.StatusFrame.sizePolicy().hasHeightForWidth())
-        self.StatusFrame.setSizePolicy(sizePolicy4)
+        sizePolicy12 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy12.setHorizontalStretch(0)
+        sizePolicy12.setVerticalStretch(1)
+        sizePolicy12.setHeightForWidth(self.StatusFrame.sizePolicy().hasHeightForWidth())
+        self.StatusFrame.setSizePolicy(sizePolicy12)
         self.StatusFrame.setFrameShape(QFrame.Panel)
         self.StatusFrame.setFrameShadow(QFrame.Sunken)
         self.horizontalLayout_10 = QHBoxLayout(self.StatusFrame)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.stateLabe = QLabel(self.StatusFrame)
         self.stateLabe.setObjectName(u"stateLabe")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy9.setHorizontalStretch(45)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.stateLabe.sizePolicy().hasHeightForWidth())
-        self.stateLabe.setSizePolicy(sizePolicy9)
+        sizePolicy7.setHeightForWidth(self.stateLabe.sizePolicy().hasHeightForWidth())
+        self.stateLabe.setSizePolicy(sizePolicy7)
 
         self.horizontalLayout_10.addWidget(self.stateLabe)
 
         self.valueStateLabel = QLabel(self.StatusFrame)
         self.valueStateLabel.setObjectName(u"valueStateLabel")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy10.setHorizontalStretch(55)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.valueStateLabel.sizePolicy().hasHeightForWidth())
-        self.valueStateLabel.setSizePolicy(sizePolicy10)
+        sizePolicy13 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy13.setHorizontalStretch(55)
+        sizePolicy13.setVerticalStretch(0)
+        sizePolicy13.setHeightForWidth(self.valueStateLabel.sizePolicy().hasHeightForWidth())
+        self.valueStateLabel.setSizePolicy(sizePolicy13)
 
         self.horizontalLayout_10.addWidget(self.valueStateLabel)
 
         self.labelColor = QLabel(self.StatusFrame)
         self.labelColor.setObjectName(u"labelColor")
-        sizePolicy11 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy11.setHorizontalStretch(5)
-        sizePolicy11.setVerticalStretch(0)
-        sizePolicy11.setHeightForWidth(self.labelColor.sizePolicy().hasHeightForWidth())
-        self.labelColor.setSizePolicy(sizePolicy11)
+        sizePolicy14 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy14.setHorizontalStretch(5)
+        sizePolicy14.setVerticalStretch(0)
+        sizePolicy14.setHeightForWidth(self.labelColor.sizePolicy().hasHeightForWidth())
+        self.labelColor.setSizePolicy(sizePolicy14)
 
         self.horizontalLayout_10.addWidget(self.labelColor)
 
@@ -491,10 +529,12 @@ class Ui_TimeStamping(object):
 
 
         self.retranslateUi(Form)
+
         self.drawColorPoint()
         self.tableTimeStamp.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.tabStartStopTypes.setCurrentIndex(1)
+        self.tabStartStopTypes.setCurrentIndex(0)
+        self.settingsForSpinBox()
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -508,7 +548,7 @@ class Ui_TimeStamping(object):
         self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel C", None))
         self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel D", None))
         self.showTableCheckBox.setText(QCoreApplication.translate("Form", u"Show table", None))
-        self.saveDataAfterCompleteCheckBox.setText(QCoreApplication.translate("Form", u"Save data when measurement is complete", None))
+        self.saveDataAfterCompleteCheckBox.setText(QCoreApplication.translate("Form", u"Auto save data", None))
         self.startNormalButton.setText(QCoreApplication.translate("Form", u"Start adquisition", None))
         self.pauseNormalButton.setText(QCoreApplication.translate("Form", u"Pause adquisition", None))
         self.stopNormalButton.setText(QCoreApplication.translate("Form", u"Stop adquisition", None))
@@ -523,13 +563,22 @@ class Ui_TimeStamping(object):
         self.startLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.pausetLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Pause", None))
         self.stoptLimitedMeasurementsButton.setText(QCoreApplication.translate("Form", u"Stop", None))
-        self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.limitedMeasurementsFrame), QCoreApplication.translate("Form", u"Fixed measurements", None))
+        self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.limitedMeasurementsFrame), QCoreApplication.translate("Form", u"By sample size", None))
         self.saveDataButton.setText(QCoreApplication.translate("Form", u"Save Data", None))
         self.measurementsChannelALabel.setText(QCoreApplication.translate("Form", u"Measurements Channel A", None))
         self.measurementsChannelBLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel B", None))
         self.measurementsChannelCLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel C", None))
         self.measurementsChannelDLabel.setText(QCoreApplication.translate("Form", u"Measurements Channel D", None))
         self.totalMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Total measurements", None))
+        self.everyLabel.setText(QCoreApplication.translate("Form", u"Every:", None))
+        self.timeAutoSaveComboBox.setItemText(0, QCoreApplication.translate("Form", u"30 Minutes", None))
+        self.timeAutoSaveComboBox.setItemText(1, QCoreApplication.translate("Form", u"1 Hour", None))
+        self.timeAutoSaveComboBox.setItemText(2, QCoreApplication.translate("Form", u"2 Hours", None))
+        self.timeAutoSaveComboBox.setItemText(3, QCoreApplication.translate("Form", u"3 Hours", None))
+        self.timeAutoSaveComboBox.setItemText(4, QCoreApplication.translate("Form", u"4 Hours", None))
+        self.timeAutoSaveComboBox.setItemText(5, QCoreApplication.translate("Form", u"5 Hours", None))
+        self.timeAutoSaveComboBox.setItemText(6, QCoreApplication.translate("Form", u"6 Hours", None))
+        self.helpSaveButton.setText(QCoreApplication.translate("Form", u"Help", None))
         self.valueChannelALabel.setText(QCoreApplication.translate("Form", u"Values", None))
         self.valueChannelBLabel.setText(QCoreApplication.translate("Form", u"Values", None))
         self.valueChannelCLabel.setText(QCoreApplication.translate("Form", u"Values", None))
@@ -543,8 +592,9 @@ class Ui_TimeStamping(object):
         ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"Channel", None));
         self.stateLabe.setText(QCoreApplication.translate("Form", u"State:", None))
         self.valueStateLabel.setText(QCoreApplication.translate("Form", u"No measurement running", None))
-        self.labelColor.setText(QCoreApplication.translate("Form", u"N", None))
+        self.labelColor.setText(QCoreApplication.translate("Form",u"N",None))
     # retranslateUi
+
 
 
 
@@ -583,3 +633,8 @@ class Ui_TimeStamping(object):
         font.setPointSize(size)
         for label in labels:
             label.setFont(font)
+    
+    def settingsForSpinBox(self):
+        self.numberMeasurementsSpinBox.setMinimum(1)
+        self.numberMeasurementsSpinBox.setMaximum(2**28)
+        self.numberMeasurementsSpinBox.setValue(1000)
