@@ -1,11 +1,11 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
 from PySide2.QtGui import QPixmap, QPainter, QColor, QFont
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QWidget, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication, QHBoxLayout, QDateEdit, QTimeEdit, QSpinBox, QTabWidget
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QWidget, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication, QHBoxLayout, QDateEdit, QTimeEdit, QSpinBox, QTabWidget, QProgressBar
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
 from numpy import append as appnd
 from createsavefile import createsavefile as savefile
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from scipy.optimize import curve_fit
 import math
 import re
@@ -95,13 +95,13 @@ class TimeStampLogic():
         #Connect buttons
         self.startNormalButton.clicked.connect(self.startNormalMeasurement)
         self.pauseNormalButton.clicked.connect(self.pauseNormalMeasurement)
-        self.stopNormalButton.clicked.connect(self.stopNormalMeasurement)
+        self.stopNormalButton.clicked.connect(self.stopNormalButtonAction)
         self.startScheduleButton.clicked.connect(self.startScheduledMeasurement)
         self.pauseScheduleButton.clicked.connect(self.pauseScheduledMeasurement)
-        self.stopScheduleButton.clicked.connect(self.stopScheduledMeasurement)
+        self.stopScheduleButton.clicked.connect(self.stopScyheduledButtonAction)
         self.startLimitedButton.clicked.connect(self.startLimitedMeasurement)
         self.pauseLimitedButton.clicked.connect(self.pauseLimitedMeasurement)
-        self.stopLimitedButton.clicked.connect(self.stopLimitedMeasurement)
+        self.stopLimitedButton.clicked.connect(self.stopLimitedButtonAction)
         self.helpSaveButton.clicked.connect(self.dialogHelpSaveButton)
         self.saveDataButton.clicked.connect(self.saveDataButtonAction)
         #Sentinels
@@ -112,6 +112,15 @@ class TimeStampLogic():
         self.isWaiting=False
         #Sentinel to know if a measurement was made in order to enable the save data button
         self.measurementMade=False
+        #Sentinel to know if data is already saved
+        self.dataAutoSaved=False
+        #Sentinel to know if data is saved with any specific format
+        self.dataTxtSaved=False
+        self.dataCsvSaved=False
+        self.dataDatSaved=False
+        self.dateTxtSaved=""
+        self.dateCsvSaved=""
+        self.dateDatSaved=""
         #Sentinel to know if the software is saving
         self.currenSaving=False
         #Set the current date to date time and hour
@@ -135,8 +144,10 @@ class TimeStampLogic():
         self.savefile=savefile()
         #timer for autosave
         self.autoSaveTimer=QTimer()
-        #Deafault forma
+        #Deafault format
         self.selectedFormat="txt"
+        #File name
+        self.fileName=""
         #Buttons disabled if there is not device
         if device==None:
             #Normal Buttons
@@ -237,24 +248,40 @@ class TimeStampLogic():
             #Set values 
             self.setValuesBeforeMeasurement()
             self.stopTimerConnection()
-            self.tableTimeStamp.clearContents()
-            self.tableTimeStamp.setRowCount(0)
             #Auto save settings
             self.settingsBeforeMeasurement()
+            autoSaved=False
             if self.saveDataComplete.isChecked():
+                autoSaved=True
                 self.autoSaveSettings("Normal")
             #Test performance in saving data
             N = 2_000_000  # 2 millones
             if self.isSelectedFormat:
-                self.dateTimeData = [1] * N
+                self.clearData()
+                self.changeStatusLabel("Running measurement")
+                self.changeStatusColor(1)
+                start_date = datetime(2024, 1, 1)
+                end_date = datetime.now()
+                delta_seconds = int((end_date - start_date).total_seconds())
+
+                # Generar datetimes aleatorios y convertirlos a string con milisegundos
+                self.dateTimeData = [
+                    (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
+                    .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
+                    for _ in range(N)
+                ]
                 self.stopData = [1] * N
                 self.channelData = [1] * N
+                #Set the name for the file
+                if self.saveDataComplete.isChecked():
+                    self.fileNameAutoSave()
                 #Init thread
-                self.worker= WorkerThreadCountsEstimated(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,True,False,False, self.device)
+                self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,True,False,False, self.device, self.savefile, self.fileName, autoSaved)
                 self.worker.finished.connect(self.finishedThread)
                 self.worker.newMeasurement.connect(self.captureMeasurement)
                 self.worker.changeStatusColor.connect(self.changeStatusColor)
                 self.worker.changeStatusText.connect(self.changeStatusLabel)
+                self.worker.finishedMeasurements.connect(self.finishedMeasurements)
                 self.isWaiting=True
                 self.worker.start()
         else:
@@ -383,32 +410,50 @@ class TimeStampLogic():
             return f"{minutes}:{seconds:02d}"
         
     def beginMeasurementTime(self):
+        self.isReordering=False
         self.isWaiting=False
         self.pauseScheduleButton.setEnabled(True)
         self.changeStatusColor(1)
         self.changeStatusLabel("Running measurement")
-        self.tableTimeStamp.clearContents()
-        self.tableTimeStamp.setRowCount(0)
-        print("Empieza la medición de acuerdo a la hora dada por el usuario")
+        self.clearData()
         self.resetValuesSentinels()
         self.setValuesBeforeMeasurement()
         self.stopTimerConnection()
         
         #Auto save settings
+        autoSaved=False
         if self.saveDataComplete.isChecked():
             self.autoSaveSettings("Scheduled")
+            autoSaved=True
+        # N=2_000_000
+        # start_date = datetime(2024, 1, 1)
+        # end_date = datetime.now()
+        # delta_seconds = int((end_date - start_date).total_seconds())
+
+        # # Generar datetimes aleatorios y convertirlos a string con milisegundos
+        # self.dateTimeData = [
+        #     (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
+        #     .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
+        #     for _ in range(N)
+        # ]
+        # self.stopData = [1] * N
+        # self.channelData = [1] * N
+        #Set the file name for auto save
+        if self.saveDataComplete.isChecked():
+            self.fileNameAutoSave()
+        
         #Init thread
         self.timerToStopMeasurement=QTimer()
         self.timerToStopMeasurement.timeout.connect(self.countToStop)
-        self.worker= WorkerThreadCountsEstimated(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,True,False, self.device)
+        self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,True,False, self.device, self.savefile, self.fileName, autoSaved)
         self.worker.finished.connect(self.finishedThreadSchedule)
         self.worker.newMeasurement.connect(self.captureMeasurement)
         self.worker.changeStatusColor.connect(self.changeStatusColor)
         self.worker.changeStatusText.connect(self.changeLabelToUpdate)
+        self.worker.finishedMeasurements.connect(self.finishedMeasurements)
         self.worker.start()
         self.timerToStopMeasurement.start(1000)
         
-    
     
     
     
@@ -448,10 +493,10 @@ class TimeStampLogic():
         
     
     def stopScheduledMeasurement(self):
-        self.measurementMade=True 
+         
         if self.isWaiting:
             self.changeStatusColor(0)
-            self.changeStatusLabel("No running measurement")
+            self.changeStatusLabel("No measurement running")
             self.timerBeginMeasurement.stop()
             if self.pauseScheduleButton.text()=="Continue":
                 self.pauseScheduleButton.setText("Pause")
@@ -465,10 +510,10 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(2,True)
             self.mainWindow.enableSettings()
             self.settingsAfterMeasurement()
-            
         else:
+            self.measurementMade=True
             self.changeStatusColor(0)
-            self.changeStatusLabel("No running measurement")
+            self.changeStatusLabel("No measurement running")
             self.timerToStopMeasurement.stop()
             self.worker.stop()
             if self.pauseScheduleButton.text()=="Continue":
@@ -487,7 +532,7 @@ class TimeStampLogic():
     
     def notSelectedFormatScheduledStop(self):
         self.changeStatusColor(0)
-        self.changeStatusLabel("No running measurement")
+        self.changeStatusLabel("No measurement running")
         self.startScheduleButton.setEnabled(True)
         self.stopScheduleButton.setEnabled(False)
         self.pauseScheduleButton.setEnabled(False)
@@ -515,24 +560,30 @@ class TimeStampLogic():
             self.tabs.setTabEnabled(1,False)
             #Set values 
             self.setValuesBeforeMeasurement()
-            self.changeStatusLabel("Running measurement")
-            self.changeStatusColor(1)
+            
             self.stopTimerConnection()
-            self.tableTimeStamp.clearContents()
-            self.tableTimeStamp.setRowCount(0)
             #Auto save settings
+            autoSaved=False
             self.settingsBeforeMeasurement()
             if self.saveDataComplete.isChecked():
                 self.autoSaveSettings("Limited")
+                autoSaved=True
             if self.isSelectedFormat:
+                self.clearData()
+                #Set the filename to save
+                self.changeStatusLabel("Running measurement")
+                self.changeStatusColor(1)
+                if self.saveDataComplete.isChecked():
+                    self.fileNameAutoSave()
                 #Init thread
                 numberMeasurementsValue=self.numberMeasurementsSpinBox.value()
                 self.numberMeasurementsSpinBox.setEnabled(False)
-                self.worker= WorkerThreadCountsEstimated(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,False,True, self.device,numberMeasurementsValue)
+                self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,False,True, self.device, self.savefile, self.fileName, autoSaved,numberMeasurementsValue)
                 self.worker.finished.connect(self.finishedThreadLimited)
                 self.worker.newMeasurement.connect(self.captureMeasurement)
                 self.worker.changeStatusColor.connect(self.changeStatusColor)
                 self.worker.changeStatusText.connect(self.changeStatusLabel)
+                self.worker.finishedMeasurements.connect(self.finishedMeasurements)
                 self.isWaiting=True
                 self.worker.start()
         else:
@@ -622,18 +673,31 @@ class TimeStampLogic():
             self.channelDSentinel=True
         
     def resetValuesSentinels(self):
-        self.dateTimeData=[]
-        self.stopData=[]
-        self.channelData=[]
         self.channelASentinel=False
         self.channelBSentinel=False
         self.channelCSentinel=False
         self.channelDSentinel=False
+        
     
     def settingsBeforeMeasurement(self):
         self.saveDataComplete.setEnabled(False)
         self.autoSaveComboBox.setEnabled(False)
         self.saveDataButton.setEnabled(False)
+    
+    def clearData(self):
+        self.dataAutoSaved=False
+        self.dataTxtSaved=False
+        self.dataCsvSaved=False
+        self.dataDatSaved=False
+        self.dateTxtSaved=""
+        self.dateCsvSaved=""
+        self.dateDatSaved=""
+        self.tableTimeStamp.clearContents()
+        self.tableTimeStamp.setRowCount(0)
+        self.dateTimeData=[]
+        self.stopData=[]
+        self.channelData=[]
+        
     
     def settingsAfterMeasurement(self):
         self.saveDataComplete.setEnabled(True)
@@ -773,26 +837,34 @@ class TimeStampLogic():
             
 
     def changeLabelToUpdate(self, textValue):
-        self.statusValueMeasurements=textValue
+        if not self.isReordering:
+            self.statusValueMeasurements=textValue
+        else:
+            self.statusLabel.setText(textValue)
+            
         
         
     def finishedThread(self):
-        self.autoSaveTimer.stop()
         if self.saveDataComplete.isChecked():
-            self.autoSaveActionRoute()
+            self.dialogToShowSave()
         self.stopNormalMeasurement()
     
     def finishedThreadSchedule(self):
-        self.autoSaveTimer.stop()
         if self.saveDataComplete.isChecked():
-            self.autoSaveActionRoute()
+            self.dialogToShowSave()
         self.stopScheduledMeasurement()
     
     def finishedThreadLimited(self):
+        if self.saveDataComplete.isChecked():
+            self.dialogToShowSave()
+        self.stopLimitedMeasurement()
+    
+    def finishedMeasurements(self):
         self.autoSaveTimer.stop()
         if self.saveDataComplete.isChecked():
             self.autoSaveActionRoute()
-        self.stopLimitedMeasurement()
+        
+        
     
     def captureMeasurement(self, valuesA, valuesB,valuesC,valuesD, valuesStart, totalMeasurementsChannelA,totalMeasurementsChannelB,totalMeasurementsChannelC,totalMeasurementsChannelD,totalMeasurements):
         moreThan50000=False
@@ -946,27 +1018,117 @@ class TimeStampLogic():
     
     
     #This function will save data in txt file (TO DO: Put other formats)
-    def saveDataAction(self,format,date):
+    def saveDataAction(self,format,date): 
         try:
-            folder_path=self.savefile.read_default_data()['Folder path']
-            data_prefix="TimeStamping"
-            current_date_str=date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-            filename=data_prefix+current_date_str
-            self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format)
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Information)
-            inital_text="The files have been saved successfully in path folder: "
-            text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-            name= f"\n\n{filename}.{format}"
-            message_box.setText(inital_text+text_route+name)
-            message_box.setWindowTitle("Successful save")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.exec_()
+            folder_path=self.savefile.read_default_data()['Folder path']
+            if self.dataAutoSaved:
+                inital_text = "The data has already been saved automatically due to the autosave feature.\n\n"
+                autosave_info = (
+                    "This system periodically saves data during the measurement process to prevent memory issues.\n"
+                    "Therefore, no manual save is necessary.\n\n"
+                )
+                text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
+                currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                onlyFileName = f"TimeStamping{currentDateStr}.{self.selectedFormat}"
+
+                message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
+                message_box.setWindowTitle("Data Already Saved")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_() 
+            else:
+                if format=="txt" and self.dataTxtSaved:
+                    inital_text="The files have been already saved with txt format in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                    name= f"\n\nTimeStamping{self.dateTxtSaved}.txt"
+                    message_box.setText(inital_text+text_route+name)
+                    message_box.setWindowTitle("Data Already Saved")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                elif format=="csv" and self.dataCsvSaved:
+                    inital_text="The files have been already saved with csv format in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                    name= f"\n\nTimeStamping{self.dateCsvSaved}.csv"
+                    message_box.setText(inital_text+text_route+name)
+                    message_box.setWindowTitle("Data Already Saved")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                elif format=="dat" and self.dataDatSaved:
+                    inital_text="The files have been already saved with dat format in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                    name= f"\n\nTimeStamping{self.dateDatSaved}.dat"
+                    message_box.setText(inital_text+text_route+name)
+                    message_box.setWindowTitle("Data Already Saved")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                else:
+                    data_prefix="TimeStamping"
+                    current_date_str=date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    filename=data_prefix+current_date_str
+                    self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format)
+                    inital_text="The files have been saved successfully in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                    name= f"\n\n{filename}.{format}"
+                    allFileName=f"{folder_path}\\{filename}.{format}"
+                    self.saveFinalText=inital_text+text_route+name
+                    self.showProgressDialog(allFileName)
+                    if format=="txt":
+                        self.dataTxtSaved=True
+                        self.dateTxtSaved=current_date_str
+                    elif format=="csv":
+                        self.dataCsvSaved=True
+                        self.dateCsvSaved=current_date_str
+                    elif format=="dat":
+                        self.dataDatSaved=True
+                        self.dateDatSaved=current_date_str        
+                    
         except NameError as e:
             print(e)
+            
+    def showProgressDialog(self,filename):
+        
+        self.progressDialog = QDialog(self.mainWindow)
+        self.progressDialog.setWindowTitle("Progress")
+        self.progressDialog.setWindowModality(Qt.ApplicationModal)
+        self.progressDialog.setFixedSize(300, 100)
+
+        layout = QVBoxLayout(self.progressDialog)
+        self.progressLabel = QLabel("Processing...", self.progressDialog)
+        self.progressBar = QProgressBar(self.progressDialog)
+        self.progressBar.setRange(0, 100)
+
+        layout.addWidget(self.progressLabel)
+        layout.addWidget(self.progressBar)
+        self.progressDialog.setLayout(layout)
+        self.progressDialog.show()
+
+        # Conectar la señal
+        self.workerUpdate=ProcessingDataSaved(filename)
+        self.workerUpdate.changeProgress.connect(self.updateProgressDialog)
+        self.workerUpdate.finished.connect(self.finalMessageAfterSave)
+        self.workerUpdate.start()
+        
+    def finalMessageAfterSave(self):
+        message_box = QMessageBox(self.mainWindow)
+        message_box.setIcon(QMessageBox.Information)
+        message_box.setText(self.saveFinalText)
+        message_box.setWindowTitle("Successful save")
+        message_box.setStandardButtons(QMessageBox.Ok)
+        message_box.exec_()
+        
+    
+    def updateProgressDialog(self, percent):
+        self.progressBar.setValue(percent)
+        self.progressLabel.setText(f"Processing data {percent}%")
+        QApplication.processEvents()
+        
+        if percent >= 100:
+            self.progressDialog.close()
     
 
     def autoSaveActionRoute(self):
+        self.isReordering=True
         self.currenSaving=True
         self.changeStatusLabel("Saving data")
         self.changeStatusColor(2)
@@ -982,19 +1144,12 @@ class TimeStampLogic():
             self.stopData=self.stopData[totalLenData:]
             self.channelData=self.channelData[totalLenData:]
             self.currenSaving=False
-            message_box = QMessageBox(self.mainWindow)
-            message_box.setIcon(QMessageBox.Information)
-            inital_text="The files have been saved successfully in path folder: "
-            text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-            name= f"\n\n{filename}.{self.selectedFormat}"
-            message_box.setText(inital_text+text_route+name)
-            message_box.setWindowTitle("Successful save")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.exec_()
-            
-            
+            self.worker.changeReadyToReorder()
+            self.dataAutoSaved=True
         except NameError as e:
             print(e)
+
+        
     
     def autoSaveAction(self):
         self.currenSaving=True
@@ -1014,17 +1169,60 @@ class TimeStampLogic():
             self.currenSaving=False
         except NameError as e:
             print(e)
+    
+    def fileNameAutoSave(self):
+        folderpath=self.savefile.read_default_data()['Folder path']
+        data_prefix="TimeStamping"
+        currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        self.fileName = os.path.join(folderpath, f"{data_prefix}{currentDateStr}.{self.selectedFormat}")
+    
+    def dialogToShowSave(self):
+        message_box = QMessageBox(self.mainWindow)
+        message_box.setIcon(QMessageBox.Information)
+        inital_text="The files have been saved successfully in path folder: "
+        folderPath=self.savefile.read_default_data()['Folder path']
+        text_route="\n\n"+ str(folderPath)+"\n\n"+"with the following name:"
+        currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        onlyFileName=f"TimeStamping{currentDateStr}.{self.selectedFormat}"
+        name= f"\n\n{onlyFileName}"
+        message_box.setText(inital_text+text_route+name)
+        message_box.setWindowTitle("Successful save")
+        message_box.setStandardButtons(QMessageBox.Ok)
+        message_box.exec_()
+    
+    def stopNormalButtonAction(self):
+        self.pauseNormalButton.setEnabled(False)
+        self.stopNormalButton.setEnabled(False)
+        self.worker.stop()
+        
+
+    def stopScyheduledButtonAction(self):
+        if self.isWaiting:
+            self.stopScheduledMeasurement()
+        else:
+            self.timerToStopMeasurement.stop()
+            self.pauseScheduleButton.setEnabled(False)
+            self.stopScheduleButton.setEnabled(False)
+            self.worker.stop()
+    
+    def stopLimitedButtonAction(self):
+        self.pauseLimitedButton.setEnabled(False)
+        self.stopLimitedButton.setEnabled(False)
+        self.worker.stop()
+
+        
      
         
 
 
-class WorkerThreadCountsEstimated(QThread):
+class WorkerThreadTimeStamping(QThread):
     newMeasurement=Signal(tuple,tuple,tuple,tuple,tuple,float,float,float,float,float)
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
+    finishedMeasurements=Signal()
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel, channelDSentinel,normalMeasurementSentinel, scheduleMeasurementSentinel,limitMeasurementSentinel,
-                 device: tempico.TempicoDevice,maximumMeasurements=0):
+                 device: tempico.TempicoDevice,savefile,filename,isAutoSave,maximumMeasurements=0):
         super().__init__()
         #init the parameters
         self.channelASentinel= channelASentinel
@@ -1048,12 +1246,18 @@ class WorkerThreadCountsEstimated(QThread):
         self.numberStopsD=0
         #Value for limited measurements
         self.maximumMeasurements=maximumMeasurements
+        print(self.maximumMeasurements)
         self.allMeasurementsComplete=False
         #Sentinel to pause thread
         self.isPause=False
         #Sentinel for running
         self.running=True
+        #Class to save the file and file name
+        self.savefile=savefile
+        self.filename=filename
+        self.isAutosave=isAutoSave
         #Enable and disable the channels
+        self.readyToReOrder=False
         self.enableDisableChannels()
     
     
@@ -1087,6 +1291,14 @@ class WorkerThreadCountsEstimated(QThread):
                     time.sleep(0.5)
                 else:
                     self.getLimitedMeasurements()
+        
+        if self.isAutosave:
+            self.finishedMeasurements.emit()
+            while not self.readyToReOrder:
+                time.sleep(0.5)
+            self.changeStatusText.emit("Processing data")
+            self.changeStatusColor.emit(2)
+            self.sortTimeStamps(self.filename)
                 
     def enableDisableChannels(self):
         if self.channelASentinel:
@@ -1546,11 +1758,110 @@ class WorkerThreadCountsEstimated(QThread):
     def changeIsPauseFalse(self):
         self.isPause= False
     
-              
+    def changeReadyToReorder(self):
+        self.readyToReOrder=True
+        
+    # Function to reorder data
+    def sortTimeStamps(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+
+        if not lines:
+            return
+
+        header = lines[0]
+        data_lines = lines[1:]
+        total_lines = len(data_lines)
+        parsed_data = []
+
+        for idx, line in enumerate(data_lines):
+            parts = line.strip().split('\t')
+            if len(parts) == 3:
+                start_time_str, stop_time, channel = parts
+                try:
+                    start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S.%f")
+                    parsed_data.append((start_time, stop_time, channel))
+                except ValueError:
+                    continue
+
+            if idx % max(1, total_lines // 30) == 0:
+                percent = int((idx + 1) / total_lines * 30)
+                self.changeStatusText.emit(f"Processing data {percent}%")
+
+        self.changeStatusText.emit("Processing timestamps 70%")
+        sorted_data = sorted(parsed_data, key=lambda x: x[0])
+
+        self.changeStatusText.emit("Processing data 70%...")
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(header)
+            for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+
+                if idx % max(1, len(sorted_data) // 30) == 0:
+                    percent = 70 + int((idx + 1) / len(sorted_data) * 30)
+                    self.changeStatusText.emit(f"Processing data {percent}%")
+
+        self.changeStatusText.emit("Processing complete.")
     
     @Slot()   
     def stop(self):
-        self.running=False      
+        self.running=False    
+
+
+class ProcessingDataSaved(QThread):
+    changeProgress=Signal(float)
+    def __init__(self, filename):
+        super().__init__()
+        self.filename=filename
+    
+    def run(self):
+        self.sortTimeStamps(self.filename)
+    
+    def sortTimeStamps(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+
+        if not lines:
+            self.changeProgress.emit(100)
+            return
+
+        header = lines[0]
+        data_lines = lines[1:]
+        total_lines = len(data_lines)
+        parsed_data = []
+
+        for idx, line in enumerate(data_lines):
+            parts = line.strip().split('\t')
+            if len(parts) == 3:
+                start_time_str, stop_time, channel = parts
+                try:
+                    start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S.%f")
+                    parsed_data.append((start_time, stop_time, channel))
+                except ValueError:
+                    continue
+
+            if idx % max(1, total_lines // 30) == 0:
+                percent = int((idx + 1) / total_lines * 30)
+                self.changeProgress.emit(percent)
+
+        self.changeProgress.emit(70)
+
+        sorted_data = sorted(parsed_data, key=lambda x: x[0])
+
+        self.changeProgress.emit(70)  # igual que el "Processing data 70%..." en la primera
+
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(header)
+            for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+
+                if idx % max(1, len(sorted_data) // 30) == 0:
+                    percent = 70 + int((idx + 1) / len(sorted_data) * 30)
+                    self.changeProgress.emit(percent)
+
+        self.changeProgress.emit(100)
+
+        
         
             
         

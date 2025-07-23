@@ -1,5 +1,6 @@
 import os
 import pathlib
+from datetime import datetime
 
 
 
@@ -282,7 +283,7 @@ class createsavefile:
                         timeFormated=f"{timeValue:.5f}"
                         uncertaintyTime=(float(uncertanty)/(float(countValue)**2))*(10**6)
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
-                        file.write(f"{timeStamp}\t{valueFormated}\t\t{uncertaintyFormated}\t{timeFormated}\t\t{uncertaintyTimeFormated}\n")
+                        file.write(f"{timeStamp}\t{valueFormated}\t{uncertaintyFormated}\t{timeFormated}\t{uncertaintyTimeFormated}\n")
 
     def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings=None):
         channelList = ["Start", "A", "B", "C", "D"]
@@ -303,6 +304,35 @@ class createsavefile:
                 file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
+    
+    def sort_time_stamps(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+
+        if not lines:
+            return
+
+        header = lines[0]
+        data_lines = lines[1:]
+
+        parsed_data = []
+        for line in data_lines:
+            parts = line.strip().split('\t')
+            if len(parts) == 3:
+                start_time_str, stop_time, channel = parts
+                try:
+                    start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S.%f")
+                    parsed_data.append((start_time, stop_time, channel))
+                except ValueError:
+                    continue  # Skip malformed lines
+
+        sorted_data = sorted(parsed_data, key=lambda x: x[0])
+
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(header)
+            for start_time, stop_time, channel in sorted_data:
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+        
                 
     
 
