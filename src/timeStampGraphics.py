@@ -1886,6 +1886,7 @@ class WorkerThreadTimeStamping(QThread):
                                  self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
         
     
+    
     def changeIsPauseTrue(self):
         self.isPause= True
     
