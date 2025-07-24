@@ -1,6 +1,6 @@
 import os
 
-version="1.1.0"
+version="1.2.1"
 
 #Here update the constants.py
 def updateVersion(fileName,versionNumber):
@@ -29,12 +29,12 @@ def updateRelease(fileReleaseStory,fileRelease):
         originalRelease.write(allcontent) 
 
 
-absolutePathConstants= os.path.abspath("src\\constants.py")
+absolutePathConstants= os.path.abspath("constants.py")
 
 updateVersion(absolutePathConstants,version)
 
-absolutePathNewRelease= os.path.abspath("src\\releaseStory.md")
-absolutePathOldRelease= os.path.abspath("README.md")
+absolutePathNewRelease= os.path.abspath("releaseStoryNewVersion.md")
+absolutePathOldRelease= os.path.abspath("../release_history.md")
 
 updateRelease(absolutePathNewRelease,absolutePathOldRelease)
 

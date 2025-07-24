@@ -244,12 +244,14 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
-            self.mainWindow.activeMeasurement()
             #Set values 
             self.setValuesBeforeMeasurement()
             self.stopTimerConnection()
             #Auto save settings
             self.settingsBeforeMeasurement()
+            #Save settings and beggin measurements for main window
+            self.mainWindow.saveSettings()
+            self.mainWindow.activeMeasurement()
             autoSaved=False
             if self.saveDataComplete.isChecked():
                 autoSaved=True
@@ -260,18 +262,18 @@ class TimeStampLogic():
                 self.clearData()
                 self.changeStatusLabel("Running measurement")
                 self.changeStatusColor(1)
-                start_date = datetime(2024, 1, 1)
-                end_date = datetime.now()
-                delta_seconds = int((end_date - start_date).total_seconds())
+                # start_date = datetime(2024, 1, 1)
+                # end_date = datetime.now()
+                # delta_seconds = int((end_date - start_date).total_seconds())
 
-                # Generar datetimes aleatorios y convertirlos a string con milisegundos
-                self.dateTimeData = [
-                    (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
-                    .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
-                    for _ in range(N)
-                ]
-                self.stopData = [1] * N
-                self.channelData = [1] * N
+                # # Generar datetimes aleatorios y convertirlos a string con milisegundos
+                # self.dateTimeData = [
+                #     (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
+                #     .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
+                #     for _ in range(N)
+                # ]
+                # self.stopData = [1] * N
+                # self.channelData = [1] * N
                 #Set the name for the file
                 if self.saveDataComplete.isChecked():
                     self.fileNameAutoSave()
@@ -317,6 +319,7 @@ class TimeStampLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.settingsAfterMeasurement()
+        self.mainWindow.noMeasurement()
         self.mainWindow.enableSettings()
         
     def notSelectedFormatNormalStop(self):
@@ -386,6 +389,8 @@ class TimeStampLogic():
                         self.isWaiting=True
                         self.changeStatusColor(2)
                         formattedTime = self.formatWaitingTime(timerTimeSeconds)
+                        self.mainWindow.saveSettings()
+                        self.mainWindow.activeMeasurement()
                         self.changeStatusLabel(f"Waiting to start in {formattedTime}")
                         self.timerBeginMeasurement.start(1000)
                     else:
@@ -464,7 +469,7 @@ class TimeStampLogic():
         if timerTimeSeconds>0:
             self.changeStatusColor(2)
             formattedTime = self.formatWaitingTime(timerTimeSeconds)
-            self.changeStatusLabel(f"Waiting the hour to start {formattedTime}")
+            self.changeStatusLabel(f"Waiting to start in {formattedTime}")
         else:
             self.timerBeginMeasurement.stop()
             self.beginMeasurementTime()
@@ -508,6 +513,7 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,True)
             self.mainWindow.tabs.setTabEnabled(1,True)
             self.mainWindow.tabs.setTabEnabled(2,True)
+            self.mainWindow.noMeasurement()
             self.mainWindow.enableSettings()
             self.settingsAfterMeasurement()
         else:
@@ -526,6 +532,8 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,True)
             self.mainWindow.tabs.setTabEnabled(1,True)
             self.mainWindow.tabs.setTabEnabled(2,True)
+            self.mainWindow.enableSettings()
+            self.mainWindow.noMeasurement()
             self.mainWindow.enableSettings()
             self.settingsAfterMeasurement()
         self.startTimerConnection()
@@ -575,6 +583,8 @@ class TimeStampLogic():
                 self.changeStatusColor(1)
                 if self.saveDataComplete.isChecked():
                     self.fileNameAutoSave()
+                self.mainWindow.saveSettings()
+                self.mainWindow.activeMeasurement()
                 #Init thread
                 numberMeasurementsValue=self.numberMeasurementsSpinBox.value()
                 self.numberMeasurementsSpinBox.setEnabled(False)
@@ -605,6 +615,8 @@ class TimeStampLogic():
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.enableSettings()
+        self.mainWindow.noMeasurement()
         self.mainWindow.enableSettings()
         self.settingsAfterMeasurement()
         self.startTimerConnection()
@@ -1337,27 +1349,19 @@ class WorkerThreadTimeStamping(QThread):
         valueD=[]
         onlyStartMeasurements=[]
         measure=self.device.measure()
-        numberRun=0
+        startValues={}
+        totalNoStarts=0
+        StartChannelRegister=True
         if measure:
             for channelMeasure in measure:
                 if channelMeasure:
-                    if channelMeasure[1]!=numberRun:
-                        #generar medición con solamente el start
-                        if numberRun!=0:
-                            if not measuresDetected:
-                                self.totalMeasurements+=1
-                                if self.totalMeasurements>=self.maximumMeasurements:
-                                    self.allMeasurementsComplete=True
-                                    break
-                                onlyStartMeasurements.append(startValue)
-                        numberRun=channelMeasure[1]
-                        startValue=channelMeasure[2]
-                        startValue= str(datetime.fromtimestamp(startValue))
-                        measuresDetected=False
+                    startValue=channelMeasure[2]
+                    startValue= str(datetime.fromtimestamp(startValue))
+                    startValues[startValue]=0  
                     if self.channelASentinel:
                         if channelMeasure[0]==1:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueA.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelA+=1
@@ -1366,7 +1370,7 @@ class WorkerThreadTimeStamping(QThread):
                                     break
                             if self.numberStopsA>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
@@ -1375,7 +1379,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsA>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
@@ -1384,7 +1388,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsA>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
@@ -1393,7 +1397,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsA>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
@@ -1405,7 +1409,7 @@ class WorkerThreadTimeStamping(QThread):
                     if self.channelBSentinel:
                         if channelMeasure[0]==2:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueB.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelB+=1
@@ -1414,7 +1418,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsB>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
@@ -1423,7 +1427,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsB>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
@@ -1432,7 +1436,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsB>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
@@ -1441,7 +1445,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsB>4: 
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
@@ -1451,7 +1455,7 @@ class WorkerThreadTimeStamping(QThread):
                     if self.channelCSentinel:
                         if channelMeasure[0]==3:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueC.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelB+=1
@@ -1460,7 +1464,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsC>1: 
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
@@ -1469,7 +1473,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsC>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
@@ -1478,7 +1482,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsC>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
@@ -1487,7 +1491,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsC>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
@@ -1497,7 +1501,7 @@ class WorkerThreadTimeStamping(QThread):
                     if self.channelDSentinel:
                         if channelMeasure[0]==4:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueD.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelD+=1
@@ -1506,7 +1510,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsD>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
@@ -1515,7 +1519,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsD>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
@@ -1524,7 +1528,7 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsD>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
@@ -1533,27 +1537,41 @@ class WorkerThreadTimeStamping(QThread):
                                         break
                             if self.numberStopsD>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
                                     if self.totalMeasurements>=self.maximumMeasurements:
                                         self.allMeasurementsComplete=True
                                         break
-        if measure:
-            if not measuresDetected:
-                self.totalMeasurements+=1
-                onlyStartMeasurements.append(startValue)
-                if self.totalMeasurements>=self.maximumMeasurements:
-                    self.allMeasurementsComplete=True
+                else:
+                    totalNoStarts+=1
+        else:
+            errorMessageInput=f"The start channel is not taking measurements"
+            StartChannelRegister=False
+            self.changeStatusText.emit(errorMessageInput)
+            self.changeStatusColor.emit(3)
+        if totalNoStarts==len(measure):
+            errorMessageInput=f"The start channel is not taking measurements"
+            StartChannelRegister=False
+            self.changeStatusText.emit(errorMessageInput)
+            self.changeStatusColor.emit(3)  
+        for key, value in startValues.items():
+            if self.totalMeasurements>= self.maximumMeasurements:
+                self.allMeasurementsComplete=True
+                break
+            else:
+                if value==0:
+                    onlyStartMeasurements.append(key)
+                    self.totalMeasurements+=1
         channelStringList=[]
-        if self.channelASentinel and not valueA:
+        if self.channelASentinel and not valueA and StartChannelRegister:
             channelStringList.append("A")
-        if self.channelBSentinel and not valueB:
+        if self.channelBSentinel and not valueB and StartChannelRegister:
             channelStringList.append("B")
-        if self.channelCSentinel and not valueC:
+        if self.channelCSentinel and not valueC and StartChannelRegister:
             channelStringList.append("C")
-        if self.channelDSentinel and not valueD:
+        if self.channelDSentinel and not valueD and StartChannelRegister:
             channelStringList.append("D")
         percentage=round((self.totalMeasurements/self.maximumMeasurements)*100,2)
         if channelStringList:
@@ -1565,6 +1583,8 @@ class WorkerThreadTimeStamping(QThread):
             
             self.changeStatusText.emit(errorMessage)
             self.changeStatusColor.emit(3)
+        elif not StartChannelRegister:
+            pass
         else:
             message=f"Running measurement {percentage} %"
             
@@ -1581,49 +1601,45 @@ class WorkerThreadTimeStamping(QThread):
         valueC=[]
         valueD=[]
         onlyStartMeasurements=[]
+        startValues={}
         measure=self.device.measure()
-        numberRun=0
+        totalNoStarts=0
+        StartChannelRegister=True
         if measure:
             for channelMeasure in measure:
                 if channelMeasure:
-                    if channelMeasure[1]!=numberRun:
-                        #generar medición con solamente el start
-                        if numberRun!=0:
-                            if not measuresDetected:
-                                self.totalMeasurements+=1
-                                onlyStartMeasurements.append(startValue)
-                        numberRun=channelMeasure[1]
-                        startValue=channelMeasure[2]
-                        startValue= str(datetime.fromtimestamp(startValue))
-                        measuresDetected=False
+                    #New start algo
+                    startValue=channelMeasure[2]
+                    startValue= str(datetime.fromtimestamp(startValue))
+                    startValues[startValue]=0
                     if self.channelASentinel:
                         if channelMeasure[0]==1:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueA.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelA+=1
                             if self.numberStopsA>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
                             if self.numberStopsA>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
                             if self.numberStopsA>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
                             if self.numberStopsA>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueA.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
@@ -1632,108 +1648,119 @@ class WorkerThreadTimeStamping(QThread):
                     if self.channelBSentinel:
                         if channelMeasure[0]==2:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueB.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelB+=1
                             if self.numberStopsB>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                             if self.numberStopsB>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                             if self.numberStopsB>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                             if self.numberStopsB>4: 
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueB.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                     if self.channelCSentinel:
                         if channelMeasure[0]==3:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueC.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelB+=1
                             if self.numberStopsC>1: 
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
                             if self.numberStopsC>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
                             if self.numberStopsC>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
                             if self.numberStopsC>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueC.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelC+=1
                     if self.channelDSentinel:
                         if channelMeasure[0]==4:
                             if channelMeasure[3]!=-1:
-                                measuresDetected=True
+                                startValues[startValue]+=1
                                 valueD.append((startValue,channelMeasure[3]))
                                 self.totalMeasurements+=1
                                 self.totalMeasurementsChannelD+=1
                             if self.numberStopsD>1:
                                 if channelMeasure[4]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[4]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
                             if self.numberStopsD>2:
                                 if channelMeasure[5]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[5]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
                             if self.numberStopsD>3:
                                 if channelMeasure[6]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[6]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
                             if self.numberStopsD>4:
                                 if channelMeasure[7]!=-1:
-                                    measuresDetected=True
+                                    startValues[startValue]+=1
                                     valueD.append((startValue,channelMeasure[7]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
-        if measure:
-            if not measuresDetected:
-                self.totalMeasurements+=1
-                onlyStartMeasurements.append(startValue)
+                else:
+                    totalNoStarts+=1
+        else:
+            errorMessageInput=f"The start channel is not taking measurements"
+            StartChannelRegister=False
+            self.changeStatusText.emit(errorMessageInput)
+            self.changeStatusColor.emit(3)
+        if totalNoStarts==len(measure):
+            errorMessageInput=f"The start channel is not taking measurements"
+            StartChannelRegister=False
+            self.changeStatusText.emit(errorMessageInput)
+            self.changeStatusColor.emit(3)
+        onlyStartsValues = [key for key, value in startValues.items() if value == 0]
+        onlyStartMeasurements=onlyStartsValues
+        self.totalMeasurements+=len(onlyStartMeasurements)
         channelStringList=[]
-        if self.channelASentinel and not valueA:
+        if self.channelASentinel and (not valueA) and StartChannelRegister: 
             channelStringList.append("A")
-        if self.channelBSentinel and not valueB:
+        if self.channelBSentinel and (not valueB) and StartChannelRegister:
             channelStringList.append("B")
-        if self.channelCSentinel and not valueC:
+        if self.channelCSentinel and (not valueC) and StartChannelRegister:
             channelStringList.append("C")
-        if self.channelDSentinel and not valueD:
+        if self.channelDSentinel and (not valueD) and StartChannelRegister:
             channelStringList.append("D")
         if channelStringList:
             channelErrorString=", ".join(channelStringList)
@@ -1744,6 +1771,8 @@ class WorkerThreadTimeStamping(QThread):
             
             self.changeStatusText.emit(errorMessage)
             self.changeStatusColor.emit(3)
+        elif not StartChannelRegister:
+            pass
         else:
             self.changeStatusText.emit("Running measurement")
             self.changeStatusColor.emit(1)  
@@ -1848,7 +1877,7 @@ class ProcessingDataSaved(QThread):
 
         sorted_data = sorted(parsed_data, key=lambda x: x[0])
 
-        self.changeProgress.emit(70)  # igual que el "Processing data 70%..." en la primera
+        self.changeProgress.emit(70)  
 
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(header)

@@ -597,17 +597,6 @@ class Ui_TimeStamping(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     def drawColorPoint(self):
         pixmap = QPixmap(self.labelColor.size())
         pixmap.fill(Qt.transparent)  
