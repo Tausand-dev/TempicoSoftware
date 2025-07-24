@@ -285,7 +285,12 @@ class createsavefile:
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
                         file.write(f"{timeStamp}\t{valueFormated}\t{uncertaintyFormated}\t{timeFormated}\t{uncertaintyTimeFormated}\n")
 
-    def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings=None):
+    def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings):
+        if extension=="csv":
+            separator=";"
+        else:
+            separator="\t"
+            
         channelList = ["Start", "A", "B", "C", "D"]
 
         if not os.path.exists(folder_path):
@@ -301,9 +306,10 @@ class createsavefile:
         
         with open(full_path, 'a') as file:    
             if not file_exists:
-                file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
+                file.write(settings)
+                file.write(f"Start Time (YY:MM:DD:HH:MM:SS){separator}Stop Time (ps){separator}Channel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
-                file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
+                file.write(f"{startTime}{separator}{stopTime}{separator}{channelList[channel]}\n")
     
     def sort_time_stamps(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -312,8 +318,8 @@ class createsavefile:
         if not lines:
             return
 
-        header = lines[0]
-        data_lines = lines[1:]
+        header = lines[6]
+        data_lines = lines[7:]
 
         parsed_data = []
         for line in data_lines:
@@ -332,6 +338,42 @@ class createsavefile:
             file.write(header)
             for start_time, stop_time, channel in sorted_data:
                 file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+    
+    def convertFileFormat(file_path, new_extension):
+        current_ext = file_path.split(".")[-1].lower()
+        base_path = ".".join(file_path.split(".")[:-1])
+        new_file_path = base_path + "." + new_extension.lower()
+
+        if current_ext == "csv":
+            current_sep = ";"
+        else:
+            current_sep = "\t"
+
+        if new_extension.lower() == "csv":
+            new_sep = ";"
+        else:
+            new_sep = "\t"
+
+
+        with open(file_path, 'r', encoding='utf-8') as infile:
+            lines = infile.readlines()
+
+        if not lines:
+            return  
+
+        header = lines[:8]
+        data = lines[8:]
+
+
+        with open(new_file_path, 'w', encoding='utf-8') as outfile:
+            for line in header:
+                outfile.write(line)
+            for line in data:
+                if current_sep != new_sep:
+                    parts = line.strip().split(current_sep)
+                    outfile.write(new_sep.join(parts) + "\n")
+                else:
+                    outfile.write(line)
         
                 
     

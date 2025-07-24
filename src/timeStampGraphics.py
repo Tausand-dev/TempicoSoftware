@@ -23,7 +23,7 @@ class TimeStampLogic():
                  startScheduleButton: QPushButton, pauseScheduleButton: QPushButton, stopScheduleButton: QPushButton,startLimitedButton: QPushButton, pauseLimitedButton: QPushButton, stopLimitedButton: QPushButton
                  ,startDate: QDateEdit,startTime: QTimeEdit,finishDate: QDateEdit,finishTime: QTimeEdit, numberMeasurementsSpinBox: QSpinBox, showTableCheckBox: QCheckBox,measurementLabelA: QLabel,measurementLabelB: QLabel,
                  measurementLabelC: QLabel, measurementLabelD: QLabel,valueMeasurementA: QLabel,valueMeasurementB: QLabel,valueMeasurementC: QLabel,valueMeasurementD: QLabel,valueTotalMeasurement: QLabel, tableTimeStamp: QTableWidget,
-                 statusLabel: QLabel,colorLabel:QLabel, saveDataComplete:QCheckBox,tabNormalMeasurement: QWidget, tabScheduleMeasurement: QWidget, tabLimitedMeasurement: QWidget, saveDataButton:QPushButton, tabs:QTabWidget,autoSaveComboBox: QComboBox, helpSaveButton: QPushButton,parent,device, timerConnection: QTimer):
+                 statusLabel: QLabel,colorLabel:QLabel, saveDataComplete:QCheckBox,tabNormalMeasurement: QWidget, tabScheduleMeasurement: QWidget, tabLimitedMeasurement: QWidget, saveDataButton:QPushButton, tabs:QTabWidget,autoSaveComboBox: QComboBox, helpSaveButton: QPushButton,parent,device: tempico.TempicoDevice, timerConnection: QTimer):
         #Define the elements from the class
         #Timer for connection
         self.timerConnection=timerConnection
@@ -278,6 +278,7 @@ class TimeStampLogic():
                 if self.saveDataComplete.isChecked():
                     self.fileNameAutoSave()
                 #Init thread
+                self.saveSettings()
                 self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,True,False,False, self.device, self.savefile, self.fileName, autoSaved)
                 self.worker.finished.connect(self.finishedThread)
                 self.worker.newMeasurement.connect(self.captureMeasurement)
@@ -448,6 +449,7 @@ class TimeStampLogic():
             self.fileNameAutoSave()
         
         #Init thread
+        self.saveSettings()
         self.timerToStopMeasurement=QTimer()
         self.timerToStopMeasurement.timeout.connect(self.countToStop)
         self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,True,False, self.device, self.savefile, self.fileName, autoSaved)
@@ -586,6 +588,7 @@ class TimeStampLogic():
                 self.mainWindow.saveSettings()
                 self.mainWindow.activeMeasurement()
                 #Init thread
+                self.saveSettings()
                 numberMeasurementsValue=self.numberMeasurementsSpinBox.value()
                 self.numberMeasurementsSpinBox.setEnabled(False)
                 self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,False,False,True, self.device, self.savefile, self.fileName, autoSaved,numberMeasurementsValue)
@@ -853,6 +856,85 @@ class TimeStampLogic():
             self.statusValueMeasurements=textValue
         else:
             self.statusLabel.setText(textValue)
+    
+    #Function to know settings of device
+    def saveSettings(self):
+        header = "Channels in measurement: "
+        channelsList = []
+        channelASettings = ""
+        channelBSettings = ""
+        channelCSettings = ""
+        channelDSettings = ""
+
+        generalSettings = (
+            f"General Device configurations:\n"
+            f"Number of runs: {self.device.getNumberOfRuns()}, "
+            f"Threshold voltage: {self.device.getThresholdVoltage()}"
+        )
+
+        if self.channelASentinel:
+            channelsList.append("A")
+            channelASettings = (
+                f"Channel A:"
+                f"Average cycles: {self.device.ch1.getAverageCycles()}, "
+                f"number of stops: {self.device.ch1.getNumberOfStops()}, "
+                f"stop mask: {self.device.ch1.getStopMask()}, "
+                f"mode: {self.device.ch1.getMode()}, "
+                f"stop edge: {self.device.ch1.getStopEdge()}, "
+                f"start edge: {self.device.ch1.getStartEdge()}"
+            )
+
+        if self.channelBSentinel:
+            channelsList.append("B")
+            channelBSettings = (
+                f"Channel B:"
+                f"Average cycles: {self.device.ch2.getAverageCycles()}, "
+                f"number of stops: {self.device.ch2.getNumberOfStops()}, "
+                f"stop mask: {self.device.ch2.getStopMask()}, "
+                f"mode: {self.device.ch2.getMode()}, "
+                f"stop edge: {self.device.ch2.getStopEdge()}, "
+                f"start edge: {self.device.ch2.getStartEdge()}"
+            )
+
+        if self.channelCSentinel:
+            channelsList.append("C")
+            channelCSettings = (
+                f"Channel C:"
+                f"Average cycles: {self.device.ch3.getAverageCycles()}, "
+                f"number of stops: {self.device.ch3.getNumberOfStops()}, "
+                f"stop mask: {self.device.ch3.getStopMask()}, "
+                f"mode: {self.device.ch3.getMode()}, "
+                f"stop edge: {self.device.ch3.getStopEdge()}, "
+                f"start edge: {self.device.ch3.getStartEdge()}"
+            )
+
+        if self.channelDSentinel:
+            channelsList.append("D")
+            channelDSettings = (
+                f"Channel D:"
+                f"Average cycles: {self.device.ch4.getAverageCycles()}, "
+                f"number of stops: {self.device.ch4.getNumberOfStops()}, "
+                f"stop mask: {self.device.ch4.getStopMask()}, "
+                f"mode: {self.device.ch4.getMode()}, "
+                f"stop edge: {self.device.ch4.getStopEdge()}, "
+                f"start edge: {self.device.ch4.getStartEdge()}"
+            )
+
+        stringChannel = ", ".join(channelsList)
+        header += stringChannel + "\n"
+        header += generalSettings + "\n"
+        header += channelASettings + "\n"
+        header += channelBSettings + "\n"
+        header += channelCSettings + "\n"
+        header += channelDSettings + "\n"
+
+        self.header = header
+    
+    
+        
+        
+        
+        
             
         
         
@@ -1078,7 +1160,7 @@ class TimeStampLogic():
                     data_prefix="TimeStamping"
                     current_date_str=date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     filename=data_prefix+current_date_str
-                    self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format)
+                    self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format, self.header)
                     inital_text="The files have been saved successfully in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
                     name= f"\n\n{filename}.{format}"
@@ -1151,7 +1233,7 @@ class TimeStampLogic():
             data_prefix="TimeStamping"
             current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
             filename=data_prefix+current_date_str
-            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat)
+            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
             self.dateTimeData=self.dateTimeData[totalLenData:]
             self.stopData=self.stopData[totalLenData:]
             self.channelData=self.channelData[totalLenData:]
@@ -1174,7 +1256,7 @@ class TimeStampLogic():
             data_prefix="TimeStamping"
             current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
             filename=data_prefix+current_date_str
-            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat)
+            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
             self.dateTimeData=self.dateTimeData[totalLenData:]
             self.stopData=self.stopData[totalLenData:]
             self.channelData=self.channelData[totalLenData:]
@@ -1303,7 +1385,8 @@ class WorkerThreadTimeStamping(QThread):
                     time.sleep(0.5)
                 else:
                     self.getLimitedMeasurements()
-        
+        #Enable channels again after finished measurements
+        self.enableChannelsAfterFinishedMeasurement()
         if self.isAutosave:
             self.finishedMeasurements.emit()
             while not self.readyToReOrder:
@@ -1313,32 +1396,51 @@ class WorkerThreadTimeStamping(QThread):
             self.sortTimeStamps(self.filename)
                 
     def enableDisableChannels(self):
+        self.totalDataPerMeasurement=0
         if self.channelASentinel:
             self.device.ch1.enableChannel()
             self.numberStopsA=self.device.ch1.getNumberOfStops()
+            self.totalDataPerMeasurement+= self.device.getNumberOfRuns()*self.device.ch1.getNumberOfStops()
         else:
             self.device.ch1.disableChannel()
             
         if self.channelBSentinel:
             self.device.ch2.enableChannel()
             self.numberStopsB=self.device.ch2.getNumberOfStops()
+            self.totalDataPerMeasurement+= self.device.getNumberOfRuns()*self.device.ch1.getNumberOfStops()
         else:
             self.device.ch2.disableChannel()
             
         if self.channelCSentinel:
             self.device.ch3.enableChannel()
             self.numberStopsC=self.device.ch3.getNumberOfStops()
+            self.totalDataPerMeasurement+= self.device.getNumberOfRuns()*self.device.ch1.getNumberOfStops()
         else:
             self.device.ch3.disableChannel()
             
         if self.channelDSentinel:
             self.device.ch4.enableChannel()
             self.numberStopsD=self.device.ch4.getNumberOfStops()
+            self.totalDataPerMeasurement+= self.device.getNumberOfRuns()*self.device.ch1.getNumberOfStops()
         else:
             self.device.ch4.disableChannel()
     
+    def enableChannelsAfterFinishedMeasurement(self):
+        self.device.ch1.enableChannel()
+        self.device.ch2.enableChannel()
+        self.device.ch3.enableChannel()
+        self.device.ch4.enableChannel()
+    
     def syncTime(self):
         self.device.setDateTime()
+    
+    def sortMeasurementByStart(self, measurement):
+        dataFiltered=[]
+        for run in measurement:
+            if run:
+                dataFiltered.append(run)
+        dataFiltered.sort(key=lambda x: x[2])
+        return dataFiltered
     
     #Function to get the measurements
     
@@ -1349,6 +1451,9 @@ class WorkerThreadTimeStamping(QThread):
         valueD=[]
         onlyStartMeasurements=[]
         measure=self.device.measure()
+        if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
+            if measure:
+                measure=self.sortMeasurementByStart(measure)
         startValues={}
         totalNoStarts=0
         StartChannelRegister=True
@@ -1798,13 +1903,17 @@ class WorkerThreadTimeStamping(QThread):
         if not lines:
             return
 
-        header = lines[0]
-        data_lines = lines[1:]
+        header = lines[:8]
+        data_lines = lines[7:]
         total_lines = len(data_lines)
         parsed_data = []
-
+        selectedFormat=file_path.split(".")[-1]
+        if selectedFormat=="csv":
+            separator=";"
+        else:
+            separator="\t"
         for idx, line in enumerate(data_lines):
-            parts = line.strip().split('\t')
+            parts = line.strip().split(separator)
             if len(parts) == 3:
                 start_time_str, stop_time, channel = parts
                 try:
@@ -1822,9 +1931,10 @@ class WorkerThreadTimeStamping(QThread):
 
         self.changeStatusText.emit("Processing data 70%...")
         with open(file_path, 'w', encoding='utf-8') as file:
-            file.write(header)
+            for headerValue in header:
+                file.write(headerValue)
             for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}{separator}{stop_time}{separator}{channel}\n")
 
                 if idx % max(1, len(sorted_data) // 30) == 0:
                     percent = 70 + int((idx + 1) / len(sorted_data) * 30)
@@ -1854,13 +1964,18 @@ class ProcessingDataSaved(QThread):
             self.changeProgress.emit(100)
             return
 
-        header = lines[0]
-        data_lines = lines[1:]
+        header = lines[:8]
+        data_lines = lines[7:]
         total_lines = len(data_lines)
         parsed_data = []
+        selectedFormat=file_path.split(".")[-1]
+        if selectedFormat=="csv":
+            separator=";"
+        else:
+            separator="\t"
 
         for idx, line in enumerate(data_lines):
-            parts = line.strip().split('\t')
+            parts = line.strip().split(separator)
             if len(parts) == 3:
                 start_time_str, stop_time, channel = parts
                 try:
@@ -1880,9 +1995,10 @@ class ProcessingDataSaved(QThread):
         self.changeProgress.emit(70)  
 
         with open(file_path, 'w', encoding='utf-8') as file:
-            file.write(header)
+            for headerValue in header:
+                file.write(headerValue)
             for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}{separator}{stop_time}{separator}{channel}\n")
 
                 if idx % max(1, len(sorted_data) // 30) == 0:
                     percent = 70 + int((idx + 1) / len(sorted_data) * 30)
