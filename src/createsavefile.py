@@ -339,7 +339,7 @@ class createsavefile:
             for start_time, stop_time, channel in sorted_data:
                 file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
     
-    def convertFileFormat(file_path, new_extension):
+    def convertFileFormat(self,file_path, new_extension):
         current_ext = file_path.split(".")[-1].lower()
         base_path = ".".join(file_path.split(".")[:-1])
         new_file_path = base_path + "." + new_extension.lower()

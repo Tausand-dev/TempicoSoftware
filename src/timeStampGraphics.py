@@ -113,7 +113,9 @@ class TimeStampLogic():
         #Sentinel to know if a measurement was made in order to enable the save data button
         self.measurementMade=False
         #Sentinel to know if data is already saved
-        self.dataAutoSaved=False
+        self.dataAutoSavedTxt=False
+        self.dataAutoSavedCsv=False
+        self.dataAutoSavedDat=False
         #Sentinel to know if data is saved with any specific format
         self.dataTxtSaved=False
         self.dataCsvSaved=False
@@ -698,9 +700,15 @@ class TimeStampLogic():
         self.saveDataComplete.setEnabled(False)
         self.autoSaveComboBox.setEnabled(False)
         self.saveDataButton.setEnabled(False)
+        self.enableCheckBoxA.setEnabled(False)
+        self.enableCheckBoxB.setEnabled(False)
+        self.enableCheckBoxC.setEnabled(False)
+        self.enableCheckBoxD.setEnabled(False)
     
     def clearData(self):
-        self.dataAutoSaved=False
+        self.dataAutoSavedTxt=False
+        self.dataAutoSavedCsv=False
+        self.dataAutoSavedDat=False
         self.dataTxtSaved=False
         self.dataCsvSaved=False
         self.dataDatSaved=False
@@ -717,6 +725,10 @@ class TimeStampLogic():
     def settingsAfterMeasurement(self):
         self.saveDataComplete.setEnabled(True)
         self.checkBoxSaveData()
+        self.enableCheckBoxA.setEnabled(True)
+        self.enableCheckBoxB.setEnabled(True)
+        self.enableCheckBoxC.setEnabled(True)
+        self.enableCheckBoxD.setEnabled(True)
         
         
         
@@ -1117,20 +1129,75 @@ class TimeStampLogic():
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Information)
             folder_path=self.savefile.read_default_data()['Folder path']
-            if self.dataAutoSaved:
-                inital_text = "The data has already been saved automatically due to the autosave feature.\n\n"
-                autosave_info = (
-                    "This system periodically saves data during the measurement process to prevent memory issues.\n"
-                    "Therefore, no manual save is necessary.\n\n"
-                )
-                text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
-                currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                onlyFileName = f"TimeStamping{currentDateStr}.{self.selectedFormat}"
+            #If exits and autosaved version with txt format
+            if self.dataAutoSavedTxt or self.dataAutoSavedCsv or self.dataAutoSavedDat:
+                if self.dataAutoSavedTxt and format=="txt":
+                    inital_text = (
+                        "The autosave feature has already preserved your data.\n"
+                        "Additionally, if you selected a different format, the data may have already been converted accordingly.\n\n"
+                    )
+                    autosave_info = (
+                        "This system periodically saves data during the measurement process to avoid memory loss or crashes.\n"
+                        "As a result, no manual save is required.\n\n"
+                    )
+                    text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
+                    currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    onlyFileName = f"TimeStamping{currentDateStr}.txt"
 
-                message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
-                message_box.setWindowTitle("Data Already Saved")
-                message_box.setStandardButtons(QMessageBox.Ok)
-                message_box.exec_() 
+                    message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
+                    message_box.setWindowTitle("Data Already Saved or Converted")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                elif self.dataAutoSavedCsv and format=="csv":
+                    inital_text = (
+                        "The autosave feature has already preserved your data.\n"
+                        "Additionally, if you selected a different format, the data may have already been converted accordingly.\n\n"
+                    )
+                    autosave_info = (
+                        "This system periodically saves data during the measurement process to avoid memory loss or crashes.\n"
+                        "As a result, no manual save is required.\n\n"
+                    )
+                    text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
+                    currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    onlyFileName = f"TimeStamping{currentDateStr}.csv"
+
+                    message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
+                    message_box.setWindowTitle("Data Already Saved or Converted")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                elif self.dataAutoSavedDat and format=="dat":
+                    inital_text = (
+                        "The autosave feature has already preserved your data.\n"
+                        "Additionally, if you selected a different format, the data may have already been converted accordingly.\n\n"
+                    )
+                    autosave_info = (
+                        "This system periodically saves data during the measurement process to avoid memory loss or crashes.\n"
+                        "As a result, no manual save is required.\n\n"
+                    )
+                    text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
+                    currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    onlyFileName = f"TimeStamping{currentDateStr}.dat"
+
+                    message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
+                    message_box.setWindowTitle("Data Already Saved or Converted")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                elif (self.dataAutoSavedTxt and format!="txt") or (self.dataAutoSavedCsv and format!="csv") or (self.dataAutoSavedDat and format!="dat"):
+                    dateAutoSaved=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                    self.savefile.convertFileFormat(self.fileName,format)
+                    inital_text=f"The files have been already saved with {format} format in path folder: "
+                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                    name= f"\n\nTimeStamping{dateAutoSaved}.{format}"
+                    message_box.setText(inital_text+text_route+name)
+                    message_box.setWindowTitle("Data Already Saved")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()
+                    if format=="txt":
+                        self.dataAutoSavedTxt=True
+                    elif format=="csv":
+                        self.dataAutoSavedCsv=True
+                    elif format=="dat":
+                        self.dataAutoSavedDat=True
             else:
                 if format=="txt" and self.dataTxtSaved:
                     inital_text="The files have been already saved with txt format in path folder: "
@@ -1239,7 +1306,12 @@ class TimeStampLogic():
             self.channelData=self.channelData[totalLenData:]
             self.currenSaving=False
             self.worker.changeReadyToReorder()
-            self.dataAutoSaved=True
+            if self.selectedFormat=="txt":
+                self.dataAutoSavedTxt=True
+            elif self.selectedFormat=="csv":
+                self.dataAutoSavedCsv=True
+            elif self.selectedFormat=="dat":
+                self.dataAutoSavedDat=True
         except NameError as e:
             print(e)
 
