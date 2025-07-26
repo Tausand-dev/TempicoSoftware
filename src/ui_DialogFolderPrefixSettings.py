@@ -182,7 +182,7 @@ class Ui_DialogFolderPrefix(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Save path and filename settings", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Save folder path:", None))
         self.startStopHistogramPrefix.setText(QCoreApplication.translate("Dialog", u"Start-stop histogram prefix:", None))
         self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
@@ -232,7 +232,7 @@ class Ui_DialogFolderPrefix(object):
             data["timeStampingPrefix"]=self.lineEdit.text()
             with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
-        self.dialog.close()
+            self.dialog.close()
             
     
     
@@ -242,8 +242,8 @@ class Ui_DialogFolderPrefix(object):
         invalid_chars = r'\/:*?"<>|'
         QMessageBox.warning(
             self.dialog,
-            f"Invalid Characters in {prefix}",
-            f"The prefix contains invalid characters.\n\n"
+            f"Invalid Characters in prefix",
+            f"The {prefix} contains invalid characters.\n\n"
             f"Please avoid using any of the following:\n\n"
             f"{invalid_chars}\n\n"
             f"These characters are not allowed in file names."

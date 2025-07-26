@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
         self.savefile=savefile()
-        self.savefile.create_folder_and_file()
+        self.savefile.createDefaultFolder()
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
@@ -176,7 +176,7 @@ class MainWindow(QMainWindow):
         general_settings_action=QAction("General settings",self)
         settings_menu.addAction(general_settings_action)
         general_settings_action.triggered.connect(self.general_settings_clicked)
-        folder_prefix_settings_action=QAction("Save Path and Filename Settings",self)
+        folder_prefix_settings_action=QAction("Save path and filename settings",self)
         settings_menu.addAction(folder_prefix_settings_action)
         folder_prefix_settings_action.triggered.connect(self.folderPrefixClicked)
         general_settings_action.triggered.connect(self.general_settings_clicked)

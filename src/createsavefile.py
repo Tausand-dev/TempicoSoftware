@@ -19,17 +19,27 @@ class createsavefile:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             self.create_folder_and_file()
     
+    def getExistenceCurrentFolder(self, data):
+        folderPath=data['saveFolder']
+        return os.path.isdir(folderPath)
+            
+        
+    
     def getDataFolderPrefix(self):
         with open("SaveFileConstants.json","r",encoding="utf-8") as file:
             data = json.load(file)
         dataDict={}
         documents_folder = os.path.join(os.path.expanduser("~"), "Documents")
         default_save_folder = os.path.join(documents_folder, "TempicoSoftwareData")
-        self.create_folder_and_file()
+        existFolder=self.getExistenceCurrentFolder(data)
+        if not existFolder:
+           data['saveFolder']=""
         if data['saveFolder']=="":
+            self.create_folder_and_file()
             dataDict['saveFolder']= default_save_folder
+            self.changeFolder(default_save_folder)
         else:
-            dataDict['saveFolder']= data['saveFolder'] 
+            dataDict['saveFolder']= data['saveFolder']
         dataDict['startStopHistogramPrefix']= data['startStopHistogramPrefix']
         dataDict['lifetimePrefix']= data['lifetimePrefix']
         dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
@@ -83,27 +93,9 @@ class createsavefile:
         documents_dir = os.path.join(pathlib.Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         folder_path = os.path.join(documents_dir, folder_name)
-        file_name = "data_constants.txt"
-        file_path = os.path.join(folder_path, file_name)
 
         try:
             os.makedirs(folder_path, exist_ok=True)
-            with open(file_path, "w") as file:
-                file.write(f"Folder Path: {folder_path}\n")
-                file.write(f"Default Histogram Name: histogram_data\n")
-                file.write(f"Default g2 Name: g2_data\n")
-                file.write(f"Default Lifetime Name: lifetime_data\n")
-            
-            # Ocultar el archivo de manera efectiva según el sistema operativo
-            if os.name == 'nt':  # Windows
-                import ctypes
-                FILE_ATTRIBUTE_HIDDEN = 0x02
-                ctypes.windll.kernel32.SetFileAttributesW(file_path, FILE_ATTRIBUTE_HIDDEN)
-                print(f"The folder '{folder_name}' and the hidden file '{file_name}' have been created in '{documents_dir}'.")
-            else:  # Unix-based (Linux, macOS)
-                hidden_file_path = os.path.join(folder_path, f".{file_name}")
-                os.rename(file_path, hidden_file_path)
-                print(f"The folder '{folder_name}' and the hidden file '.{file_name}' have been created in '{documents_dir}'.")
 
         except OSError as e:
             print(f"Error occurred while creating the folder and/or file: {e}")
