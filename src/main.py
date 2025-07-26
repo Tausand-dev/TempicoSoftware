@@ -23,6 +23,7 @@ from ui_LifeTimemeasurement import UiLifeTime
 from LifeTimeGraphics import LifeTimeGraphic
 from CountsEstimatedGraphics import CountEstimatedLogic
 from timeStampGraphics import TimeStampLogic
+from ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -174,6 +175,10 @@ class MainWindow(QMainWindow):
         change_parameters_action.triggered.connect(self.settings_clicked)
         general_settings_action=QAction("General settings",self)
         settings_menu.addAction(general_settings_action)
+        general_settings_action.triggered.connect(self.general_settings_clicked)
+        folder_prefix_settings_action=QAction("Save Path and Filename Settings",self)
+        settings_menu.addAction(folder_prefix_settings_action)
+        folder_prefix_settings_action.triggered.connect(self.folderPrefixClicked)
         general_settings_action.triggered.connect(self.general_settings_clicked)
         about_settings_action=QAction("About Tempico Software",self)
         about_settings_action.triggered.connect(self.about_settings)
@@ -756,6 +761,13 @@ class MainWindow(QMainWindow):
             message_box.setIcon(QMessageBox.Information)
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+    
+    def folderPrefixClicked(self):
+        self.prefixFolderDialog=QDialog(self)
+        self.uiFolderPrefix=Ui_DialogFolderPrefix()
+        self.uiFolderPrefix.setupUi(self.prefixFolderDialog)
+        self.prefixFolderDialog.exec_()
+        
 
     def enableSettings(self):
         """

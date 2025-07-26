@@ -392,6 +392,7 @@ class Ui_TimeStamping(object):
         self.totalMeasurementsLabel.setObjectName(u"totalMeasurementsLabel")
 
         self.verticalLayout_6.addWidget(self.totalMeasurementsLabel)
+        self.verticalLayout_6.setAlignment(Qt.AlignRight)
 
 
         self.horizontalLayout_4.addWidget(self.MeasurementsChannelsFrame)
@@ -426,6 +427,7 @@ class Ui_TimeStamping(object):
         self.valueTotalLabel.setObjectName(u"valueTotalLabel")
 
         self.verticalLayout_7.addWidget(self.valueTotalLabel)
+        self.verticalLayout_7.setAlignment(Qt.AlignRight)
 
 
         self.horizontalLayout_4.addWidget(self.MeasurementsValuesFrame)
@@ -535,7 +537,7 @@ class Ui_TimeStamping(object):
 
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
-
+        self.tableTimeStamp.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
@@ -585,11 +587,20 @@ class Ui_TimeStamping(object):
         self.valueChannelDLabel.setText(QCoreApplication.translate("Form", u"Values", None))
         self.valueTotalLabel.setText(QCoreApplication.translate("Form", u"Values", None))
         ___qtablewidgetitem = self.tableTimeStamp.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Start time (s)", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Start Time (Y-M-D H:M:S)", None))
+        font = ___qtablewidgetitem.font()
+        font.setBold(True)
+        ___qtablewidgetitem.setFont(font)
         ___qtablewidgetitem1 = self.tableTimeStamp.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"Stop time (ps)", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"Stop time (ps)", None))
+        font = ___qtablewidgetitem1.font()
+        font.setBold(True)
+        ___qtablewidgetitem1.setFont(font)
         ___qtablewidgetitem2 = self.tableTimeStamp.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"Channel", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"Channel", None))
+        font = ___qtablewidgetitem2.font()
+        font.setBold(True)
+        ___qtablewidgetitem2.setFont(font)
         self.stateLabe.setText(QCoreApplication.translate("Form", u"State:", None))
         self.valueStateLabel.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.labelColor.setText(QCoreApplication.translate("Form",u"N",None))

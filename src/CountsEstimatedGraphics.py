@@ -2070,6 +2070,9 @@ class CountEstimatedLogic():
         :return: None
         """
         try:
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["timeStampingPrefix"]
             graph_names=[]
             #Open select the format
             dialog = QDialog(self.mainWindow)
@@ -2136,10 +2139,9 @@ class CountEstimatedLogic():
                     exporter = pg.exporters.ImageExporter(winCopy.scene())
                     exporter.parameters()['width'] = 1200
                     exporter.parameters()['height'] = 800
-                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = 'Counts_ChannelA' + current_date_str
+                    graph_name = data_prefix+'ChannelA' + current_date_str
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2156,10 +2158,9 @@ class CountEstimatedLogic():
                     exporter = pg.exporters.ImageExporter(winCopy.scene())
                     exporter.parameters()['width'] = 1400
                     exporter.parameters()['height'] = 1000
-                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = 'Counts_ChannelB' + current_date_str
+                    graph_name = data_prefix+'ChannelB' + current_date_str
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2175,10 +2176,9 @@ class CountEstimatedLogic():
                     exporter = pg.exporters.ImageExporter(winCopy.scene())
                     exporter.parameters()['width'] = 1400
                     exporter.parameters()['height'] = 1000
-                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = 'Counts_ChannelC' + current_date_str
+                    graph_name = data_prefix+'ChannelC' + current_date_str
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2194,10 +2194,9 @@ class CountEstimatedLogic():
                     exporter = pg.exporters.ImageExporter(winCopy.scene())
                     exporter.parameters()['width'] = 1400
                     exporter.parameters()['height'] = 1000
-                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = 'Counts_ChannelD' + current_date_str
+                    graph_name = data_prefix+'ChannelD' + current_date_str
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2216,10 +2215,9 @@ class CountEstimatedLogic():
                     exporter = pg.exporters.ImageExporter(winCopy.scene())
                     exporter.parameters()['width'] = 1400
                     exporter.parameters()['height'] = 1000
-                    folder_path = self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = 'Counts_AllChannels' + current_date_str
+                    graph_name = data_prefix+'AllChannels' + current_date_str
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2294,7 +2292,9 @@ class CountEstimatedLogic():
         :return: None
         """
         
-        data_prefix="CountsEstimated"
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folder_path=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["countsEstimationPrefix"]
         current_date=datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
         #Init filenames and data list
@@ -2378,7 +2378,6 @@ class CountEstimatedLogic():
                     channels.append("D")
                     data.append(self.channelDValues)
                     dataUncertainties.append(self.channelDUncertainties)
-                folder_path=self.savefile.read_default_data()['Folder path']
                 
                 try:
                     

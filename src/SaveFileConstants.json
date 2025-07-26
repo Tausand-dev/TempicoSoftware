@@ -1,0 +1,7 @@
+{
+    "saveFolder": "G:/NuevosDatosPrueba",
+    "startStopHistogramPrefix": "graficasHist",
+    "lifetimePrefix": "LifetimePrueba",
+    "countsEstimationPrefix": "CountsEstimatedPruebaValor",
+    "timeStampingPrefix": "TimeStampingPrueba"
+}

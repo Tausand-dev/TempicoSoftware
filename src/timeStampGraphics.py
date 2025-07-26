@@ -697,6 +697,7 @@ class TimeStampLogic():
         
     
     def settingsBeforeMeasurement(self):
+        self.mainWindow.disconnectButton.setEnabled(False)
         self.saveDataComplete.setEnabled(False)
         self.autoSaveComboBox.setEnabled(False)
         self.saveDataButton.setEnabled(False)
@@ -723,6 +724,7 @@ class TimeStampLogic():
         
     
     def settingsAfterMeasurement(self):
+        self.mainWindow.disconnectButton.setEnabled(True)
         self.saveDataComplete.setEnabled(True)
         self.checkBoxSaveData()
         self.enableCheckBoxA.setEnabled(True)
@@ -880,56 +882,56 @@ class TimeStampLogic():
 
         generalSettings = (
             f"General Device configurations:\n"
-            f"Number of runs: {self.device.getNumberOfRuns()}, "
-            f"Threshold voltage: {self.device.getThresholdVoltage()}"
+            f"Number of runs\t{self.device.getNumberOfRuns()}\t"
+            f"Threshold voltage\t{self.device.getThresholdVoltage()}"
         )
 
         if self.channelASentinel:
             channelsList.append("A")
             channelASettings = (
                 f"Channel A:"
-                f"Average cycles: {self.device.ch1.getAverageCycles()}, "
-                f"number of stops: {self.device.ch1.getNumberOfStops()}, "
-                f"stop mask: {self.device.ch1.getStopMask()}, "
-                f"mode: {self.device.ch1.getMode()}, "
-                f"stop edge: {self.device.ch1.getStopEdge()}, "
-                f"start edge: {self.device.ch1.getStartEdge()}"
+                f"Average cycles\t{self.device.ch1.getAverageCycles()}\t"
+                f"number of stops\t{self.device.ch1.getNumberOfStops()}\t"
+                f"stop mask\t{self.device.ch1.getStopMask()}\t"
+                f"mode\t{self.device.ch1.getMode()}\t"
+                f"stop edge\t{self.device.ch1.getStopEdge()}\t"
+                f"start edge\t{self.device.ch1.getStartEdge()}"
             )
 
         if self.channelBSentinel:
             channelsList.append("B")
             channelBSettings = (
                 f"Channel B:"
-                f"Average cycles: {self.device.ch2.getAverageCycles()}, "
-                f"number of stops: {self.device.ch2.getNumberOfStops()}, "
-                f"stop mask: {self.device.ch2.getStopMask()}, "
-                f"mode: {self.device.ch2.getMode()}, "
-                f"stop edge: {self.device.ch2.getStopEdge()}, "
-                f"start edge: {self.device.ch2.getStartEdge()}"
+                f"Average cycles\t{self.device.ch2.getAverageCycles()}\t"
+                f"number of stops\t{self.device.ch2.getNumberOfStops()}\t"
+                f"stop mask\t{self.device.ch2.getStopMask()}\t"
+                f"mode\t{self.device.ch2.getMode()}\t"
+                f"stop edge\t{self.device.ch2.getStopEdge()}\t"
+                f"start edge\t{self.device.ch2.getStartEdge()}"
             )
 
         if self.channelCSentinel:
             channelsList.append("C")
             channelCSettings = (
                 f"Channel C:"
-                f"Average cycles: {self.device.ch3.getAverageCycles()}, "
-                f"number of stops: {self.device.ch3.getNumberOfStops()}, "
-                f"stop mask: {self.device.ch3.getStopMask()}, "
-                f"mode: {self.device.ch3.getMode()}, "
-                f"stop edge: {self.device.ch3.getStopEdge()}, "
-                f"start edge: {self.device.ch3.getStartEdge()}"
+                f"Average cycles\t{self.device.ch3.getAverageCycles()}\t"
+                f"number of stops\t{self.device.ch3.getNumberOfStops()}\t"
+                f"stop mask\t{self.device.ch3.getStopMask()}\t"
+                f"mode\t{self.device.ch3.getMode()}\t"
+                f"stop edge\t{self.device.ch3.getStopEdge()}\t"
+                f"start edge\t{self.device.ch3.getStartEdge()}"
             )
 
         if self.channelDSentinel:
             channelsList.append("D")
             channelDSettings = (
                 f"Channel D:"
-                f"Average cycles: {self.device.ch4.getAverageCycles()}, "
-                f"number of stops: {self.device.ch4.getNumberOfStops()}, "
-                f"stop mask: {self.device.ch4.getStopMask()}, "
-                f"mode: {self.device.ch4.getMode()}, "
-                f"stop edge: {self.device.ch4.getStopEdge()}, "
-                f"start edge: {self.device.ch4.getStartEdge()}"
+                f"Average cycles\t{self.device.ch4.getAverageCycles()}\t"
+                f"number of stops\t{self.device.ch4.getNumberOfStops()}\t"
+                f"stop mask\t{self.device.ch4.getStopMask()}\t"
+                f"mode\t{self.device.ch4.getMode()}\t"
+                f"stop edge\t{self.device.ch4.getStopEdge()}\t"
+                f"start edge\t{self.device.ch4.getStartEdge()}"
             )
 
         stringChannel = ", ".join(channelsList)
@@ -980,9 +982,15 @@ class TimeStampLogic():
             moreThan50000=True
         for tupleValueA in valuesA:
             self.tableTimeStamp.insertRow(0)
-            self.tableTimeStamp.setItem(0,0,QTableWidgetItem(tupleValueA[0]))
-            self.tableTimeStamp.setItem(0,1,QTableWidgetItem(str(tupleValueA[1])))
-            self.tableTimeStamp.setItem(0,2,QTableWidgetItem("A"))
+            item0=QTableWidgetItem(tupleValueA[0])
+            item0.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item1=QTableWidgetItem(str(tupleValueA[1]))
+            item1.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item2=QTableWidgetItem("A")
+            item2.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.tableTimeStamp.setItem(0,0,item0)
+            self.tableTimeStamp.setItem(0,1,item1)
+            self.tableTimeStamp.setItem(0,2,item2)
             self.dateTimeData.append(tupleValueA[0])
             self.stopData.append(tupleValueA[1])
             self.channelData.append(1)
@@ -990,9 +998,15 @@ class TimeStampLogic():
                  self.tableTimeStamp.removeRow(self.tableTimeStamp.rowCount() - 1)   
         for tupleValueB in valuesB:
             self.tableTimeStamp.insertRow(0)
-            self.tableTimeStamp.setItem(0,0,QTableWidgetItem(tupleValueB[0]))
-            self.tableTimeStamp.setItem(0,1,QTableWidgetItem(str(tupleValueB[1])))
-            self.tableTimeStamp.setItem(0,2,QTableWidgetItem("B"))
+            item0=QTableWidgetItem(tupleValueB[0])
+            item0.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item1=QTableWidgetItem(str(tupleValueB[1]))
+            item1.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item2=QTableWidgetItem("B")
+            item2.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.tableTimeStamp.setItem(0,0,item0)
+            self.tableTimeStamp.setItem(0,1,item1)
+            self.tableTimeStamp.setItem(0,2,item2)
             self.dateTimeData.append(tupleValueB[0])
             self.stopData.append(tupleValueB[1])
             self.channelData.append(2)
@@ -1000,9 +1014,15 @@ class TimeStampLogic():
                  self.tableTimeStamp.removeRow(self.tableTimeStamp.rowCount() - 1)
         for tupleValueC in valuesC:
             self.tableTimeStamp.insertRow(0)
-            self.tableTimeStamp.setItem(0,0,QTableWidgetItem(tupleValueC[0]))
-            self.tableTimeStamp.setItem(0,1,QTableWidgetItem(str(tupleValueC[1])))
-            self.tableTimeStamp.setItem(0,2,QTableWidgetItem("C"))
+            item0=QTableWidgetItem(tupleValueC[0])
+            item0.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item1=QTableWidgetItem(str(tupleValueC[1]))
+            item1.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item2=QTableWidgetItem("C")
+            item2.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.tableTimeStamp.setItem(0,0,item0)
+            self.tableTimeStamp.setItem(0,1,item1)
+            self.tableTimeStamp.setItem(0,2,item2)
             self.dateTimeData.append(tupleValueC[0])
             self.stopData.append(tupleValueC[1])
             self.channelData.append(3)
@@ -1010,9 +1030,15 @@ class TimeStampLogic():
                  self.tableTimeStamp.removeRow(self.tableTimeStamp.rowCount() - 1)
         for tupleValueD in valuesD:
             self.tableTimeStamp.insertRow(0)
-            self.tableTimeStamp.setItem(0,0,QTableWidgetItem(tupleValueD[0]))
-            self.tableTimeStamp.setItem(0,1,QTableWidgetItem(str(tupleValueD[1])))
-            self.tableTimeStamp.setItem(0,2,QTableWidgetItem("D"))
+            item0=QTableWidgetItem(tupleValueD[0])
+            item0.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item1=QTableWidgetItem(str(tupleValueD[1]))
+            item1.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item2=QTableWidgetItem("D")
+            item2.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.tableTimeStamp.setItem(0,0,item0)
+            self.tableTimeStamp.setItem(0,1,item1)
+            self.tableTimeStamp.setItem(0,2,item2)
             self.dateTimeData.append(tupleValueD[0])
             self.stopData.append(tupleValueD[1])
             self.channelData.append(4)
@@ -1020,9 +1046,15 @@ class TimeStampLogic():
                  self.tableTimeStamp.removeRow(self.tableTimeStamp.rowCount() - 1)
         for tupleValueStart in valuesStart:
             self.tableTimeStamp.insertRow(0)
-            self.tableTimeStamp.setItem(0,0,QTableWidgetItem(tupleValueStart))
-            self.tableTimeStamp.setItem(0,1,QTableWidgetItem("-1"))
-            self.tableTimeStamp.setItem(0,2,QTableWidgetItem("Start"))
+            item0=QTableWidgetItem(tupleValueStart)
+            item0.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item1=QTableWidgetItem("-1")
+            item1.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            item2=QTableWidgetItem("Start")
+            item2.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            self.tableTimeStamp.setItem(0,0,item0)
+            self.tableTimeStamp.setItem(0,1,item1)
+            self.tableTimeStamp.setItem(0,2,item2)
             self.dateTimeData.append(tupleValueStart)
             self.stopData.append(-1)
             self.channelData.append(0)
@@ -1031,14 +1063,14 @@ class TimeStampLogic():
         
         #Update labels
         if self.channelASentinel:
-            self.updateValuesMeasurementA(str(totalMeasurementsChannelA))
+            self.updateValuesMeasurementA(str(int(totalMeasurementsChannelA)))
         if self.channelBSentinel:
-            self.updateValuesMeasurementB(str(totalMeasurementsChannelB))
+            self.updateValuesMeasurementB(str(int(totalMeasurementsChannelB)))
         if self.channelCSentinel:
-            self.updateValuesMeasurementC(str(totalMeasurementsChannelC))
+            self.updateValuesMeasurementC(str(int(totalMeasurementsChannelC)))
         if self.channelDSentinel:
-            self.updateValuesMeasurementA(str(totalMeasurementsChannelD))
-        self.updateValueTotalMeasurements(str(totalMeasurements))
+            self.updateValuesMeasurementA(str(int(totalMeasurementsChannelD)))
+        self.updateValueTotalMeasurements(str(int(totalMeasurements)))
     
     #Dialog to select the format before measurement when auto save is selected}
     def dialogFormatStart(self,currentTab):
@@ -1128,7 +1160,9 @@ class TimeStampLogic():
         try:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Information)
-            folder_path=self.savefile.read_default_data()['Folder path']
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["timeStampingPrefix"]
             #If exits and autosaved version with txt format
             if self.dataAutoSavedTxt or self.dataAutoSavedCsv or self.dataAutoSavedDat:
                 if self.dataAutoSavedTxt and format=="txt":
@@ -1142,7 +1176,7 @@ class TimeStampLogic():
                     )
                     text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
                     currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    onlyFileName = f"TimeStamping{currentDateStr}.txt"
+                    onlyFileName = f"{data_prefix}{currentDateStr}.txt"
 
                     message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
                     message_box.setWindowTitle("Data Already Saved or Converted")
@@ -1159,7 +1193,7 @@ class TimeStampLogic():
                     )
                     text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
                     currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    onlyFileName = f"TimeStamping{currentDateStr}.csv"
+                    onlyFileName = f"{data_prefix}{currentDateStr}.csv"
 
                     message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
                     message_box.setWindowTitle("Data Already Saved or Converted")
@@ -1176,7 +1210,7 @@ class TimeStampLogic():
                     )
                     text_route = "Files were saved in the following path:\n\n" + str(folder_path) + "\n\nwith the following name:"
                     currentDateStr = self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    onlyFileName = f"TimeStamping{currentDateStr}.dat"
+                    onlyFileName = f"{data_prefix}{currentDateStr}.dat"
 
                     message_box.setText(inital_text + autosave_info + text_route + onlyFileName)
                     message_box.setWindowTitle("Data Already Saved or Converted")
@@ -1187,7 +1221,7 @@ class TimeStampLogic():
                     self.savefile.convertFileFormat(self.fileName,format)
                     inital_text=f"The files have been already saved with {format} format in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\nTimeStamping{dateAutoSaved}.{format}"
+                    name= f"\n\n{data_prefix}{dateAutoSaved}.{format}"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -1202,7 +1236,7 @@ class TimeStampLogic():
                 if format=="txt" and self.dataTxtSaved:
                     inital_text="The files have been already saved with txt format in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\nTimeStamping{self.dateTxtSaved}.txt"
+                    name= f"\n\n{data_prefix}{self.dateTxtSaved}.txt"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -1210,7 +1244,7 @@ class TimeStampLogic():
                 elif format=="csv" and self.dataCsvSaved:
                     inital_text="The files have been already saved with csv format in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\nTimeStamping{self.dateCsvSaved}.csv"
+                    name= f"\n\n{data_prefix}{self.dateCsvSaved}.csv"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -1218,13 +1252,12 @@ class TimeStampLogic():
                 elif format=="dat" and self.dataDatSaved:
                     inital_text="The files have been already saved with dat format in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\nTimeStamping{self.dateDatSaved}.dat"
+                    name= f"\n\n{data_prefix}{self.dateDatSaved}.dat"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
                 else:
-                    data_prefix="TimeStamping"
                     current_date_str=date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     filename=data_prefix+current_date_str
                     self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format, self.header)
@@ -1296,8 +1329,9 @@ class TimeStampLogic():
         QApplication.processEvents() 
         try:
             totalLenData=len(self.dateTimeData)
-            folder_path=self.savefile.read_default_data()['Folder path']
-            data_prefix="TimeStamping"
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["timeStampingPrefix"]
             current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
             filename=data_prefix+current_date_str
             self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
@@ -1324,8 +1358,9 @@ class TimeStampLogic():
         QApplication.processEvents() 
         try:
             totalLenData=len(self.dateTimeData)
-            folder_path=self.savefile.read_default_data()['Folder path']
-            data_prefix="TimeStamping"
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["timeStampingPrefix"]
             current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
             filename=data_prefix+current_date_str
             self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
@@ -1337,8 +1372,9 @@ class TimeStampLogic():
             print(e)
     
     def fileNameAutoSave(self):
-        folderpath=self.savefile.read_default_data()['Folder path']
-        data_prefix="TimeStamping"
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folderpath=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["timeStampingPrefix"]
         currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
         self.fileName = os.path.join(folderpath, f"{data_prefix}{currentDateStr}.{self.selectedFormat}")
     
@@ -1346,10 +1382,12 @@ class TimeStampLogic():
         message_box = QMessageBox(self.mainWindow)
         message_box.setIcon(QMessageBox.Information)
         inital_text="The files have been saved successfully in path folder: "
-        folderPath=self.savefile.read_default_data()['Folder path']
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folderPath=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["timeStampingPrefix"]
         text_route="\n\n"+ str(folderPath)+"\n\n"+"with the following name:"
         currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-        onlyFileName=f"TimeStamping{currentDateStr}.{self.selectedFormat}"
+        onlyFileName=f"{data_prefix}{currentDateStr}.{self.selectedFormat}"
         name= f"\n\n{onlyFileName}"
         message_box.setText(inital_text+text_route+name)
         message_box.setWindowTitle("Successful save")
@@ -1425,6 +1463,8 @@ class WorkerThreadTimeStamping(QThread):
         #Enable and disable the channels
         self.readyToReOrder=False
         self.enableDisableChannels()
+        
+        
     
     
     def run(self):
@@ -1514,7 +1554,7 @@ class WorkerThreadTimeStamping(QThread):
         dataFiltered.sort(key=lambda x: x[2])
         return dataFiltered
     
-    #Function to get the measurements
+            
     
     def getLimitedMeasurements(self):
         valueA=[]
@@ -1922,11 +1962,12 @@ class WorkerThreadTimeStamping(QThread):
             StartChannelRegister=False
             self.changeStatusText.emit(errorMessageInput)
             self.changeStatusColor.emit(3)
-        if totalNoStarts==len(measure):
-            errorMessageInput=f"The start channel is not taking measurements"
-            StartChannelRegister=False
-            self.changeStatusText.emit(errorMessageInput)
-            self.changeStatusColor.emit(3)
+        if measure:
+            if totalNoStarts==len(measure):
+                errorMessageInput=f"The start channel is not taking measurements"
+                StartChannelRegister=False
+                self.changeStatusText.emit(errorMessageInput)
+                self.changeStatusColor.emit(3)
         onlyStartsValues = [key for key, value in startValues.items() if value == 0]
         onlyStartMeasurements=onlyStartsValues
         self.totalMeasurements+=len(onlyStartMeasurements)

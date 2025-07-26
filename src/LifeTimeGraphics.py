@@ -1925,6 +1925,9 @@ class LifeTimeGraphic():
         :return: None
         """
         try:
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["lifetimePrefix"]
             graph_names=[]
             #Open select the format
             dialog =QDialog(self.mainWindow)    
@@ -1989,10 +1992,9 @@ class LifeTimeGraphic():
                 exporter=ImageExporter(copyWin.scene())
                 exporter.parameters()['width'] = 1000
                 exporter.parameters()['height'] = 700
-                folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                graph_name='LifeTimeMeasurement'+current_date_str
+                graph_name=data_prefix+current_date_str
                 exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                 initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
                 text_route="\n"+graph_name+"."+selected_format
@@ -2019,6 +2021,9 @@ class LifeTimeGraphic():
         :return: None
         """
         #Open select the format
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folder_path=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["lifetimePrefix"]
         dialog = QDialog(self.mainWindow)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
@@ -2051,7 +2056,6 @@ class LifeTimeGraphic():
             conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
             conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
             total_condition= conditiontxt or conditiondat or conditioncsv
-            folder_path=self.savefile.read_default_data()['Folder path']
             if not total_condition:
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
@@ -2073,7 +2077,7 @@ class LifeTimeGraphic():
                 
                 
                 #Put the settings and fit
-                filename="LifeTimeMeasurement"+current_date_str
+                filename=data_prefix+current_date_str
                 #Round the values in order to get a better txt files
                 newMeasuredTime=[]
                 for i in self.measuredTime:

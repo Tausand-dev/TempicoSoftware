@@ -1,7 +1,7 @@
 import os
 import pathlib
 from datetime import datetime
-
+import json
 
 
 
@@ -9,6 +9,54 @@ from datetime import datetime
 class createsavefile:
     def __init__(self):
         pass
+    
+    def createDefaultFolder(self):
+        with open("SaveFileConstants.json","r",encoding="utf-8") as file:
+            data = json.load(file)
+        if not data["saveFolder"] or not os.path.exists(data["saveFolder"]):
+            data["saveFolder"] = ""
+            with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            self.create_folder_and_file()
+    
+    def getDataFolderPrefix(self):
+        with open("SaveFileConstants.json","r",encoding="utf-8") as file:
+            data = json.load(file)
+        dataDict={}
+        documents_folder = os.path.join(os.path.expanduser("~"), "Documents")
+        default_save_folder = os.path.join(documents_folder, "TempicoSoftwareData")
+        self.create_folder_and_file()
+        if data['saveFolder']=="":
+            dataDict['saveFolder']= default_save_folder
+        else:
+            dataDict['saveFolder']= data['saveFolder'] 
+        dataDict['startStopHistogramPrefix']= data['startStopHistogramPrefix']
+        dataDict['lifetimePrefix']= data['lifetimePrefix']
+        dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
+        dataDict['timeStampingPrefix']= data['timeStampingPrefix'] 
+        return dataDict
+    
+    def changePrefix(self,tab, newPrefix):
+        with open("SaveFileConstants.json","r",encoding="utf-8") as file:
+            data = json.load(file)
+        if tab=="startStopHistogram":
+            data["startStopHistogramPrefix"]= newPrefix
+        elif tab=="Lifetime":
+            data["lifetimePrefix"]= newPrefix
+        elif tab=="CountsEstimated":
+            data["countsEstimationPrefix"]= newPrefix
+        elif tab=="TimeStamping":
+            data["timeStampingPrefix"]= newPrefix
+        with open("SaveFileConstants.json", "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+    
+    def changeFolder(self, newPath):
+        with open("SaveFileConstants.json","r",encoding="utf-8") as file:
+            data = json.load(file)
+        data["saveFolder"]= newPath
+        with open("SaveFileConstants.json", "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+        
 
     def create_folder_and_file(self):
         """
@@ -179,6 +227,14 @@ class createsavefile:
         :raises ValueError: If the lengths of data_lists, file_names, and column_names do not match.
         :returns: None
         """
+        if extension=="csv":
+            newSettings=[]
+            for setting in settings:
+                newSetting=setting.replace("\t",";")
+                newSettings.append(newSetting)
+            settings=newSettings
+                
+            
         if not os.path.exists(path):
             os.makedirs(path)
             
@@ -248,6 +304,11 @@ class createsavefile:
         :raises ValueError: If the lengths of the time and LifeTime value lists do not match.
         :returns: None
         """
+        if extension=="txt" or extension=="dat":
+            separator="\t"
+        else:
+            separator=";"
+            settings=settings.replace("\t",";")
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
@@ -260,11 +321,21 @@ class createsavefile:
             with open(full_path, 'w') as file:
                 file.write(settings + '\n')
                 
-                file.write(textLabel+"\tCounts LifeTime\n")
+                file.write(f"{textLabel}{separator}Counts LifeTime\n")
                 
                 for tau, LifeTimeValue in zip(data[0], data[1]):
-                    file.write(f"{tau}\t{LifeTimeValue}\n")
+                    file.write(f"{tau}{separator}{LifeTimeValue}\n")
     def save_counts_data(self,time_stamp,data,dataUncertainties,filenames,folder_path,settings, extension,channels):
+        if extension=="txt" or extension=="dat":
+            separator="\t"
+        else:
+            separator=";"
+            newSettings=[]
+            for setting in settings:
+                newSetting=setting.replace("\t",";")
+                newSettings.append(newSetting)
+            settings=newSettings
+            
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         if len(time_stamp)!= len(data):
@@ -275,7 +346,7 @@ class createsavefile:
                 
                 with open(full_path, 'w') as file:
                     file.write(setting_channel + '\n')
-                    file.write(f"Time (HH:MM:SS) \t Counts Channel {channel}(counts/sec) \t Uncertainties Channel {channel}(counts/sec) \t Mean time interval (us) \t Uncertainty mean time interval (us)\n")
+                    file.write(f"Time (HH:MM:SS) {separator} Counts Channel {channel}(counts/sec) {separator} Uncertainties Channel {channel}(counts/sec) {separator} Mean time interval (us) {separator} Uncertainty mean time interval (us)\n")
                     for timeStamp, countValue,uncertanty in zip(timeStamp,data_list,data_uncertainties):
                         valueFormated= f"{countValue:.5f}"
                         timeValue=(1/float(countValue))*(10**6)
@@ -283,10 +354,11 @@ class createsavefile:
                         timeFormated=f"{timeValue:.5f}"
                         uncertaintyTime=(float(uncertanty)/(float(countValue)**2))*(10**6)
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
-                        file.write(f"{timeStamp}\t{valueFormated}\t{uncertaintyFormated}\t{timeFormated}\t{uncertaintyTimeFormated}\n")
+                        file.write(f"{timeStamp}{separator}{valueFormated}{separator}{uncertaintyFormated}{separator}{timeFormated}{separator}{uncertaintyTimeFormated}\n")
 
     def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings):
         if extension=="csv":
+            settings=settings.replace("\t",";")
             separator=";"
         else:
             separator="\t"
@@ -362,6 +434,14 @@ class createsavefile:
             return  
 
         header = lines[:8]
+        newHeader=[]
+        for lineHead in header:
+            if new_extension=="csv":
+                newLineHead=lineHead.replace("\t",";")
+            else:
+                newLineHead=lineHead.replace(";","\t")
+            newHeader.append(newLineHead)
+        header=newHeader
         data = lines[8:]
 
 

@@ -781,7 +781,9 @@ class StartStopLogic():
         :return: None
         """
         
-        data_prefix=self.savefile.read_default_data()['Default Histogram Name']
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folder_path=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["startStopHistogramPrefix"]
         current_date=datetime.datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
         #Init filenames and data list
@@ -828,33 +830,32 @@ class StartStopLogic():
             if not total_condition:
                 if self.setinelSaveA:
                     filename1=data_prefix+current_date_str+'channelA'
-                    setting_A="Average cycles: "+str(self.channel1.getAverageCycles())+ "\nMode: "+str(self.channel1.getMode())+"\nNumber of stops:"+ str(self.channel1.getNumberOfStops())+"\nStop edge: "+str(self.channel1.getStopEdge())+ "\nStop mask: "+str(self.channel1.getStopMask())
+                    setting_A="Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
                     settings.append(setting_A)
                     filenames.append(filename1)
                     data.append(self.datapureA)
                     column_names.append('channelA_data (ps)')
                 if self.setinelSaveB:
                     filename2=data_prefix+current_date_str+'channelB'
-                    setting_B="Average cycles: "+str(self.channel2.getAverageCycles())+ "\nMode: "+str(self.channel2.getMode())+"\nNumber of stops:"+ str(self.channel2.getNumberOfStops())+"\nStop edge: "+str(self.channel2.getStopEdge())+ "\nStop mask: "+str(self.channel2.getStopMask())
+                    setting_B="Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
                     settings.append(setting_B)
                     filenames.append(filename2)
                     data.append(self.datapureB)
                     column_names.append('channelB_data (ps)')
                 if self.setinelSaveC:
                     filename3=data_prefix+current_date_str+'channelC'
-                    setting_C="Average cycles: "+str(self.channel3.getAverageCycles())+ "\nMode: "+str(self.channel3.getMode())+"\nNumber of stops:"+ str(self.channel3.getNumberOfStops())+"\nStop edge: "+str(self.channel3.getStopEdge())+ "\nStop mask: "+str(self.channel3.getStopMask())
+                    setting_C="Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
                     settings.append(setting_C)
                     filenames.append(filename3)
                     data.append(self.datapureC)
                     column_names.append('channelC_data (ps)')
                 if self.setinelSaveD:
                     filename4=data_prefix+current_date_str+'channelD'
-                    setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode: "+str(self.channel4.getMode())+"\nNumber of stops:"+ str(self.channel4.getNumberOfStops())+"\nStop edge: "+str(self.channel4.getStopEdge())+ "\nStop mask: "+str(self.channel4.getStopMask())
+                    setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
                     settings.append(setting_D)
                     filenames.append(filename4)
                     data.append(self.datapureD)
                     column_names.append('channelD_data (ps)')
-                folder_path=self.savefile.read_default_data()['Folder path']
                 
                 try:
                     
@@ -915,6 +916,9 @@ class StartStopLogic():
         :return: None
         """
         try:
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["startStopHistogramPrefix"]
             graph_names=[]
             #Open select the format
             dialog = QDialog(self.parent)
@@ -964,10 +968,9 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotA)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Measure_ChannelA'+current_date_str
+                    graph_name=data_prefix+'Measure_ChannelA'+current_date_str
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -977,10 +980,9 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotB)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Measure_ChannelB'+current_date_str
+                    graph_name=data_prefix+'Measure_ChannelB'+current_date_str
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -990,10 +992,9 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotC)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Measure_ChannelC'+current_date_str
+                    graph_name=data_prefix+'Measure_ChannelC'+current_date_str
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1003,10 +1004,9 @@ class StartStopLogic():
                     exporter= pg.exporters.ImageExporter(self.plotD)
                     exporter.parameters()['width'] = 800
                     exporter.parameters()['height'] = 600
-                    folder_path=self.savefile.read_default_data()['Folder path'].replace('\n', '')
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name='Measure_ChannelD'+current_date_str
+                    graph_name=data_prefix+'Measure_ChannelD'+current_date_str
                     exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                     
