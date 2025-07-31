@@ -170,13 +170,12 @@ class MainWindow(QMainWindow):
         #file_menu.addAction(new_action)
         #file_menu.addAction(Open_action)
         #-----Actions for settings--------#
-        change_parameters_action=QAction("Channels settings",self)
+        change_parameters_action=QAction("Channels",self)
         settings_menu.addAction(change_parameters_action)
         change_parameters_action.triggered.connect(self.settings_clicked)
-        general_settings_action=QAction("General settings",self)
+        general_settings_action=QAction("General",self)
         settings_menu.addAction(general_settings_action)
-        general_settings_action.triggered.connect(self.general_settings_clicked)
-        folder_prefix_settings_action=QAction("Save path and filename settings",self)
+        folder_prefix_settings_action=QAction("File path",self)
         settings_menu.addAction(folder_prefix_settings_action)
         folder_prefix_settings_action.triggered.connect(self.folderPrefixClicked)
         general_settings_action.triggered.connect(self.general_settings_clicked)
@@ -875,7 +874,7 @@ class MainWindow(QMainWindow):
         """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
-                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice,self)
                 self.settings_windows.getsettings()
                 self.openGeneralSettings=True
                 self.settings_windows.exec_()
@@ -889,7 +888,7 @@ class MainWindow(QMainWindow):
                 message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
-                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice,self)
                 self.settings_windows.preDefinedSettings(self.thresholdVoltage, self.numberRuns)
                 self.settings_windows.disableSettings()
                 self.openGeneralSettings=True

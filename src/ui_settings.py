@@ -533,7 +533,7 @@ class Ui_settings(object):
         self.retranslateUi(Dialog)
         self.AplicarCambios.clicked.connect(self.save_changes)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Dialog)

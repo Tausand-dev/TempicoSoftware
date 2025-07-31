@@ -15,6 +15,7 @@ from PySide2.QtWidgets import QStyle
 from createsavefile import createsavefile
 import json
 import os
+from pathlib import Path
 
 
 class Ui_DialogFolderPrefix(object):
@@ -161,14 +162,24 @@ class Ui_DialogFolderPrefix(object):
         self.horizontalLayout_6 = QHBoxLayout(self.ApplyChangesFrame)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.applyChangesButton = QPushButton(self.ApplyChangesFrame)
+        self.cancelButton = QPushButton(self.ApplyChangesFrame)
+        self.defaultValuesButton = QPushButton(self.ApplyChangesFrame)
         self.applyChangesButton.setObjectName(u"applyChangesButton")
+        self.cancelButton.setText("Cancel")
+        self.defaultValuesButton.setText("Default values")
         sizePolicy3 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy3.setHorizontalStretch(7)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.applyChangesButton.sizePolicy().hasHeightForWidth())
         self.applyChangesButton.setSizePolicy(sizePolicy3)
+        self.cancelButton.setSizePolicy(sizePolicy3)
+        self.defaultValuesButton.setSizePolicy(sizePolicy3)
+        self.cancelButton.clicked.connect(self.cancelChanges)
+        self.defaultValuesButton.clicked.connect(self.defaultValues)
 
         self.horizontalLayout_6.addWidget(self.applyChangesButton)
+        self.horizontalLayout_6.addWidget(self.cancelButton)
+        self.horizontalLayout_6.addWidget(self.defaultValuesButton)
 
 
         self.verticalLayout.addWidget(self.ApplyChangesFrame)
@@ -182,7 +193,7 @@ class Ui_DialogFolderPrefix(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Save path and filename settings", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"File path settings", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Save folder path:", None))
         self.startStopHistogramPrefix.setText(QCoreApplication.translate("Dialog", u"Start-stop histogram prefix:", None))
         self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
@@ -236,7 +247,19 @@ class Ui_DialogFolderPrefix(object):
             
     
     
+    def defaultValues(self):
+        documentsDir = QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation)
+        targetPath = Path(documentsDir) / "TempicoSoftwareData"
+        self.folderPathLineEdit.setText(str(targetPath))
+        documentsDir = Path.home() / "Documents"
+        targetPath = documentsDir / "TempicoSoftwareData"
+        self.startStopHistogramLineEdit.setText("StartStopHistogram")
+        self.countsEstimationLineEdit.setText("CountsEstimation")
+        self.lifetimeLineEdit.setText("Lifetime")
+        self.lineEdit.setText("TimeStamping")
     
+    def cancelChanges(self):
+        self.dialog.close()
     
     def dialogShowingProblems(self, prefix):
         invalid_chars = r'\/:*?"<>|'

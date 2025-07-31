@@ -14,8 +14,8 @@ class GeneralSettingsWindow(QDialog):
     :param device: The Tempico device instance that the settings will apply to.
     :type device: object
     """
-    def __init__(self, device):
-        super().__init__()
+    def __init__(self, device, parent):
+        super().__init__(parent)
         self.device = device
 
         self.setWindowTitle("General settings")

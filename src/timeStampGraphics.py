@@ -18,6 +18,8 @@ from pyqtgraph import mkPen
 from datetime import time as dtime
 import os
 import numpy as np
+import sys
+import io
 class TimeStampLogic():
     def __init__(self,enableCheckBoxA: QCheckBox,enableCheckBoxB: QCheckBox,enableCheckBoxC: QCheckBox,enableCheckBoxD: QCheckBox, startNormalButton: QPushButton, pauseNormalButton: QPushButton, stopNormalButton: QPushButton ,
                  startScheduleButton: QPushButton, pauseScheduleButton: QPushButton, stopScheduleButton: QPushButton,startLimitedButton: QPushButton, pauseLimitedButton: QPushButton, stopLimitedButton: QPushButton
@@ -348,7 +350,6 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
-            self.mainWindow.activeMeasurement()
             dateInit = self.startDate.date()
             hourInit = self.startTime.time()
             dateInitDateFormat = dateInit.toPython()
@@ -536,7 +537,6 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,True)
             self.mainWindow.tabs.setTabEnabled(1,True)
             self.mainWindow.tabs.setTabEnabled(2,True)
-            self.mainWindow.enableSettings()
             self.mainWindow.noMeasurement()
             self.mainWindow.enableSettings()
             self.settingsAfterMeasurement()
@@ -564,7 +564,6 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
-            self.mainWindow.activeMeasurement()
             self.startLimitedButton.setEnabled(False)
             self.pauseLimitedButton.setEnabled(True)
             self.stopLimitedButton.setEnabled(True)
@@ -620,7 +619,6 @@ class TimeStampLogic():
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
-        self.mainWindow.enableSettings()
         self.mainWindow.noMeasurement()
         self.mainWindow.enableSettings()
         self.settingsAfterMeasurement()
@@ -889,7 +887,7 @@ class TimeStampLogic():
         if self.channelASentinel:
             channelsList.append("A")
             channelASettings = (
-                f"Channel A:"
+                f"Channel A:\t"
                 f"Average cycles\t{self.device.ch1.getAverageCycles()}\t"
                 f"number of stops\t{self.device.ch1.getNumberOfStops()}\t"
                 f"stop mask\t{self.device.ch1.getStopMask()}\t"
@@ -901,7 +899,7 @@ class TimeStampLogic():
         if self.channelBSentinel:
             channelsList.append("B")
             channelBSettings = (
-                f"Channel B:"
+                f"Channel B:\t"
                 f"Average cycles\t{self.device.ch2.getAverageCycles()}\t"
                 f"number of stops\t{self.device.ch2.getNumberOfStops()}\t"
                 f"stop mask\t{self.device.ch2.getStopMask()}\t"
@@ -913,7 +911,7 @@ class TimeStampLogic():
         if self.channelCSentinel:
             channelsList.append("C")
             channelCSettings = (
-                f"Channel C:"
+                f"Channel C:\t"
                 f"Average cycles\t{self.device.ch3.getAverageCycles()}\t"
                 f"number of stops\t{self.device.ch3.getNumberOfStops()}\t"
                 f"stop mask\t{self.device.ch3.getStopMask()}\t"
@@ -925,7 +923,7 @@ class TimeStampLogic():
         if self.channelDSentinel:
             channelsList.append("D")
             channelDSettings = (
-                f"Channel D:"
+                f"Channel D:\t"
                 f"Average cycles\t{self.device.ch4.getAverageCycles()}\t"
                 f"number of stops\t{self.device.ch4.getNumberOfStops()}\t"
                 f"stop mask\t{self.device.ch4.getStopMask()}\t"
@@ -943,28 +941,24 @@ class TimeStampLogic():
         header += channelDSettings + "\n"
 
         self.header = header
-    
-    
-        
-        
-        
-        
-            
         
         
     def finishedThread(self):
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
+        self.currenSaving=False
         self.stopNormalMeasurement()
     
     def finishedThreadSchedule(self):
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
+        self.currenSaving=False
         self.stopScheduledMeasurement()
     
     def finishedThreadLimited(self):
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
+        self.currenSaving=False
         self.stopLimitedMeasurement()
     
     def finishedMeasurements(self):
@@ -978,7 +972,7 @@ class TimeStampLogic():
         moreThan50000=False
         #Get the channel index
         #Update table
-        if self.tableTimeStamp.rowCount()>50000:
+        if totalMeasurements>50000:
             moreThan50000=True
         for tupleValueA in valuesA:
             self.tableTimeStamp.insertRow(0)
@@ -996,6 +990,7 @@ class TimeStampLogic():
             self.channelData.append(1)
             if moreThan50000:
                  self.tableTimeStamp.removeRow(self.tableTimeStamp.rowCount() - 1)   
+            
         for tupleValueB in valuesB:
             self.tableTimeStamp.insertRow(0)
             item0=QTableWidgetItem(tupleValueB[0])
@@ -1463,6 +1458,10 @@ class WorkerThreadTimeStamping(QThread):
         #Enable and disable the channels
         self.readyToReOrder=False
         self.enableDisableChannels()
+        #Sentinel to know how many measurements are registered
+        self.noMeasurementsSequent=0
+        self.noAbortsSequent=0
+        self.saveCurrentMeasurements()
         
         
     
@@ -1557,446 +1556,537 @@ class WorkerThreadTimeStamping(QThread):
             
     
     def getLimitedMeasurements(self):
-        valueA=[]
-        valueB=[]
-        valueC=[]
-        valueD=[]
-        onlyStartMeasurements=[]
-        measure=self.device.measure()
-        if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
+        try:
+            valueA=[]
+            valueB=[]
+            valueC=[]
+            valueD=[]
+            onlyStartMeasurements=[]
+            startValues={}
+            originalConsole=sys.stdout
+            sys.stdout=io.StringIO()
+            measure=self.device.measure()
+            printedDeviceCommunication=sys.stdout.getvalue()
+            sys.stdout=originalConsole
+            finishedMeasurement=False
+            if "Timeout reached" in printedDeviceCommunication:
+                while not finishedMeasurement:
+                    newFetch=self.device.fetch()
+                    if (newFetch==measure):
+                        finishedMeasurement=True
+                        measure=newFetch
+                        self.device.abort()
+                        QThread.msleep(200)
+                    else:
+                        measure=newFetch
+            
+            if not measure and self.noMeasurementsSequent <3:
+                #Counter to know how many not measurements are registered
+                self.noMeasurementsSequent+=1
+                
+            elif not measure and self.noAbortsSequent>=10:
+                self.device.reset()
+                #Wait at least 20 ms
+                time.sleep(20/1000)
+                self.applyCurrentSettings()
+                print("Entra al reset de la medición")
+                #Wait at least 20 ms 
+                time.sleep(20/1000)
+            elif not measure and self.noMeasurementsSequent >=3:
+                #Set timeout to finish abort
+                self.noAbortsSequent+=1
+                self.device.abort()
+                QThread.msleep(200)
+                print("Entra al abort por que no hay medicion")
+                #Wait at least 10 ms
+                
+            
+            if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
+                if measure:
+                    measure=self.sortMeasurementByStart(measure)
+            startValues={}
+            totalNoStarts=0
+            StartChannelRegister=True
             if measure:
-                measure=self.sortMeasurementByStart(measure)
-        startValues={}
-        totalNoStarts=0
-        StartChannelRegister=True
-        if measure:
-            for channelMeasure in measure:
-                if channelMeasure:
-                    startValue=channelMeasure[2]
-                    startValue= str(datetime.fromtimestamp(startValue))
-                    startValues[startValue]=0  
-                    if self.channelASentinel:
-                        if channelMeasure[0]==1:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueA.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelA+=1
-                                if self.totalMeasurements>=self.maximumMeasurements:
-                                    self.allMeasurementsComplete=True
-                                    break
-                            if self.numberStopsA>1:
-                                if channelMeasure[4]!=-1:
+                for channelMeasure in measure:
+                    if channelMeasure:
+                        startValue=channelMeasure[2]
+                        startValue= str(datetime.fromtimestamp(startValue))
+                        startValues[startValue]=0  
+                        if self.channelASentinel:
+                            if channelMeasure[0]==1:
+                                if channelMeasure[3]!=-1:
                                     startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[4]))
+                                    valueA.append((startValue,channelMeasure[3]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelA+=1
                                     if self.totalMeasurements>=self.maximumMeasurements:
                                         self.allMeasurementsComplete=True
                                         break
-                            if self.numberStopsA>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsA>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsA>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            
+                                if self.numberStopsA>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsA>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsA>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsA>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
                                 
-                    if self.channelBSentinel:
-                        if channelMeasure[0]==2:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueB.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelB+=1
-                                if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsB>1:
-                                if channelMeasure[4]!=-1:
+                                    
+                        if self.channelBSentinel:
+                            if channelMeasure[0]==2:
+                                if channelMeasure[3]!=-1:
                                     startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[4]))
+                                    valueB.append((startValue,channelMeasure[3]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                                     if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsB>2:
-                                if channelMeasure[5]!=-1:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsB>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsB>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsB>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsB>4: 
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                        if self.channelCSentinel:
+                            if channelMeasure[0]==3:
+                                if channelMeasure[3]!=-1:
                                     startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[5]))
+                                    valueC.append((startValue,channelMeasure[3]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelB+=1
                                     if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsB>3:
-                                if channelMeasure[6]!=-1:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsC>1: 
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsC>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsC>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsC>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                        if self.channelDSentinel:
+                            if channelMeasure[0]==4:
+                                if channelMeasure[3]!=-1:
                                     startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsB>4: 
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                    if self.channelCSentinel:
-                        if channelMeasure[0]==3:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueC.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelB+=1
-                                if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsC>1: 
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[4]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsC>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsC>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsC>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                    if self.channelDSentinel:
-                        if channelMeasure[0]==4:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueD.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelD+=1
-                                if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsD>1:
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[4]))
+                                    valueD.append((startValue,channelMeasure[3]))
                                     self.totalMeasurements+=1
                                     self.totalMeasurementsChannelD+=1
                                     if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsD>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsD>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                            if self.numberStopsD>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                else:
-                    totalNoStarts+=1
-        else:
-            errorMessageInput=f"The start channel is not taking measurements"
-            StartChannelRegister=False
-            self.changeStatusText.emit(errorMessageInput)
-            self.changeStatusColor.emit(3)
-        if totalNoStarts==len(measure):
-            errorMessageInput=f"The start channel is not taking measurements"
-            StartChannelRegister=False
-            self.changeStatusText.emit(errorMessageInput)
-            self.changeStatusColor.emit(3)  
-        for key, value in startValues.items():
-            if self.totalMeasurements>= self.maximumMeasurements:
-                self.allMeasurementsComplete=True
-                break
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsD>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsD>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsD>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if self.numberStopsD>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                    else:
+                        totalNoStarts+=1
             else:
-                if value==0:
-                    onlyStartMeasurements.append(key)
-                    self.totalMeasurements+=1
-        channelStringList=[]
-        if self.channelASentinel and not valueA and StartChannelRegister:
-            channelStringList.append("A")
-        if self.channelBSentinel and not valueB and StartChannelRegister:
-            channelStringList.append("B")
-        if self.channelCSentinel and not valueC and StartChannelRegister:
-            channelStringList.append("C")
-        if self.channelDSentinel and not valueD and StartChannelRegister:
-            channelStringList.append("D")
-        percentage=round((self.totalMeasurements/self.maximumMeasurements)*100,2)
-        if channelStringList:
-            channelErrorString=", ".join(channelStringList)
-            if len(channelStringList)==1:
-                errorMessage=f"The channnel {channelErrorString} is not taking measurements {percentage} %"
-            else:
-                errorMessage=f"The channnels {channelErrorString} are not taking measurements {percentage} %"
-            
-            self.changeStatusText.emit(errorMessage)
-            self.changeStatusColor.emit(3)
-        elif not StartChannelRegister:
-            pass
-        else:
-            message=f"Running measurement {percentage} %"
-            
-            self.changeStatusText.emit(message)
-            self.changeStatusColor.emit(1)  
-        #Emitir lista de tuplas de valores
-        self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
-                                 self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
-        
-    
-    def getMeasurement(self):
-        valueA=[]
-        valueB=[]
-        valueC=[]
-        valueD=[]
-        onlyStartMeasurements=[]
-        startValues={}
-        measure=self.device.measure()
-        totalNoStarts=0
-        StartChannelRegister=True
-        if measure:
-            for channelMeasure in measure:
-                if channelMeasure:
-                    #New start algo
-                    startValue=channelMeasure[2]
-                    startValue= str(datetime.fromtimestamp(startValue))
-                    startValues[startValue]=0
-                    if self.channelASentinel:
-                        if channelMeasure[0]==1:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueA.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelA+=1
-                            if self.numberStopsA>1:
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[4]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                            if self.numberStopsA>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                            if self.numberStopsA>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                            if self.numberStopsA>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                            
-                                
-                    if self.channelBSentinel:
-                        if channelMeasure[0]==2:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueB.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelB+=1
-                            if self.numberStopsB>1:
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[4]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                            if self.numberStopsB>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                            if self.numberStopsB>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                            if self.numberStopsB>4: 
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                    if self.channelCSentinel:
-                        if channelMeasure[0]==3:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueC.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelB+=1
-                            if self.numberStopsC>1: 
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[4]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                            if self.numberStopsC>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                            if self.numberStopsC>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                            if self.numberStopsC>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelC+=1
-                    if self.channelDSentinel:
-                        if channelMeasure[0]==4:
-                            if channelMeasure[3]!=-1:
-                                startValues[startValue]+=1
-                                valueD.append((startValue,channelMeasure[3]))
-                                self.totalMeasurements+=1
-                                self.totalMeasurementsChannelD+=1
-                            if self.numberStopsD>1:
-                                if channelMeasure[4]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[4]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                            if self.numberStopsD>2:
-                                if channelMeasure[5]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[5]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                            if self.numberStopsD>3:
-                                if channelMeasure[6]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[6]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                            if self.numberStopsD>4:
-                                if channelMeasure[7]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[7]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                else:
-                    totalNoStarts+=1
-        else:
-            errorMessageInput=f"The start channel is not taking measurements"
-            StartChannelRegister=False
-            self.changeStatusText.emit(errorMessageInput)
-            self.changeStatusColor.emit(3)
-        if measure:
-            if totalNoStarts==len(measure):
                 errorMessageInput=f"The start channel is not taking measurements"
                 StartChannelRegister=False
                 self.changeStatusText.emit(errorMessageInput)
                 self.changeStatusColor.emit(3)
-        onlyStartsValues = [key for key, value in startValues.items() if value == 0]
-        onlyStartMeasurements=onlyStartsValues
-        self.totalMeasurements+=len(onlyStartMeasurements)
-        channelStringList=[]
-        if self.channelASentinel and (not valueA) and StartChannelRegister: 
-            channelStringList.append("A")
-        if self.channelBSentinel and (not valueB) and StartChannelRegister:
-            channelStringList.append("B")
-        if self.channelCSentinel and (not valueC) and StartChannelRegister:
-            channelStringList.append("C")
-        if self.channelDSentinel and (not valueD) and StartChannelRegister:
-            channelStringList.append("D")
-        if channelStringList:
-            channelErrorString=", ".join(channelStringList)
-            if len(channelStringList)==1:
-                errorMessage=f"The channnel {channelErrorString} is not taking measurements"
+            if totalNoStarts==len(measure):
+                errorMessageInput=f"The start channel is not taking measurements"
+                StartChannelRegister=False
+                self.changeStatusText.emit(errorMessageInput)
+                self.changeStatusColor.emit(3)  
+            for key, value in startValues.items():
+                if self.totalMeasurements>= self.maximumMeasurements:
+                    self.allMeasurementsComplete=True
+                    break
+                else:
+                    if value==0:
+                        onlyStartMeasurements.append(key)
+                        self.totalMeasurements+=1
+            channelStringList=[]
+            if self.channelASentinel and not valueA and StartChannelRegister:
+                channelStringList.append("A")
+            if self.channelBSentinel and not valueB and StartChannelRegister:
+                channelStringList.append("B")
+            if self.channelCSentinel and not valueC and StartChannelRegister:
+                channelStringList.append("C")
+            if self.channelDSentinel and not valueD and StartChannelRegister:
+                channelStringList.append("D")
+            percentage=round((self.totalMeasurements/self.maximumMeasurements)*100,2)
+            if channelStringList:
+                channelErrorString=", ".join(channelStringList)
+                if len(channelStringList)==1:
+                    errorMessage=f"The channnel {channelErrorString} is not taking measurements {percentage} %"
+                else:
+                    errorMessage=f"The channnels {channelErrorString} are not taking measurements {percentage} %"
+                
+                self.changeStatusText.emit(errorMessage)
+                self.changeStatusColor.emit(3)
+            elif not StartChannelRegister:
+                pass
             else:
-                errorMessage=f"The channnels {channelErrorString} are not taking measurements"
+                message=f"Running measurement {percentage} %"
+                
+                self.changeStatusText.emit(message)
+                self.changeStatusColor.emit(1)  
+            #Emitir lista de tuplas de valores
+            self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
+                                    self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
+        except NameError as e:
+            print(e)
+        
+    
+    def getMeasurement(self):
+        try:
+            valueA=[]
+            valueB=[]
+            valueC=[]
+            valueD=[]
+            onlyStartMeasurements=[]
+            startValues={}
+            originalConsole=sys.stdout
+            sys.stdout=io.StringIO()
+            measure=self.device.measure()
+            printedDeviceCommunication=sys.stdout.getvalue()
+            sys.stdout=originalConsole
+            finishedMeasurement=False
+            if "Timeout reached" in printedDeviceCommunication:
+                while not finishedMeasurement:
+                    newFetch=self.device.fetch()
+                    if (newFetch==measure):
+                        finishedMeasurement=True
+                        measure=newFetch
+                        self.device.abort()
+                        QThread.msleep(200)
+                    else:
+                        measure=newFetch
             
-            self.changeStatusText.emit(errorMessage)
-            self.changeStatusColor.emit(3)
-        elif not StartChannelRegister:
-            pass
-        else:
-            self.changeStatusText.emit("Running measurement")
-            self.changeStatusColor.emit(1)  
-        #Emitir lista de tuplas de valores
-        self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
-                                 self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
+            if not measure and self.noMeasurementsSequent <3:
+                #Counter to know how many not measurements are registered
+                self.noMeasurementsSequent+=1
+                
+            elif not measure and self.noAbortsSequent>=10:
+                self.device.reset()
+                #Wait at leat 20 ms
+                QThread.msleep(20)
+                self.applyCurrentSettings()
+                print("Entra al reset de la medición")
+                #Wait at leat 20 ms 
+                QThread.msleep(20)
+            elif not measure and self.noMeasurementsSequent >=3:
+                #Set timeout to finish abort
+                self.noAbortsSequent+=1
+                self.device.abort()
+                QThread.msleep(200)
+                print("Entra al abort por que no hay medicion")
+                #Wait at leat 10 ms
+                
+            
+                
+            
+            if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
+                if measure:
+                    measure=self.sortMeasurementByStart(measure)
+            totalNoStarts=0
+            StartChannelRegister=True
+            if measure:
+                self.noMeasurementsSequent=0
+                self.noAbortsSequent=0
+                for channelMeasure in measure:
+                    if channelMeasure:
+                        #New start algo
+                        startValue=channelMeasure[2]
+                        startValue= str(datetime.fromtimestamp(startValue))
+                        startValues[startValue]=0
+                        if self.channelASentinel:
+                            if channelMeasure[0]==1:
+                                if channelMeasure[3]!=-1:
+                                    startValues[startValue]+=1
+                                    valueA.append((startValue,channelMeasure[3]))
+                                    self.totalMeasurements+=1
+                                    self.totalMeasurementsChannelA+=1
+                                if self.numberStopsA>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                if self.numberStopsA>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                if self.numberStopsA>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                if self.numberStopsA>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                
+                                    
+                        if self.channelBSentinel:
+                            if channelMeasure[0]==2:
+                                if channelMeasure[3]!=-1:
+                                    startValues[startValue]+=1
+                                    valueB.append((startValue,channelMeasure[3]))
+                                    self.totalMeasurements+=1
+                                    self.totalMeasurementsChannelB+=1
+                                if self.numberStopsB>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                if self.numberStopsB>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                if self.numberStopsB>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                if self.numberStopsB>4: 
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                        if self.channelCSentinel:
+                            if channelMeasure[0]==3:
+                                if channelMeasure[3]!=-1:
+                                    startValues[startValue]+=1
+                                    valueC.append((startValue,channelMeasure[3]))
+                                    self.totalMeasurements+=1
+                                    self.totalMeasurementsChannelB+=1
+                                if self.numberStopsC>1: 
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                if self.numberStopsC>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                if self.numberStopsC>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                if self.numberStopsC>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                        if self.channelDSentinel:
+                            if channelMeasure[0]==4:
+                                if channelMeasure[3]!=-1:
+                                    startValues[startValue]+=1
+                                    valueD.append((startValue,channelMeasure[3]))
+                                    self.totalMeasurements+=1
+                                    self.totalMeasurementsChannelD+=1
+                                if self.numberStopsD>1:
+                                    if channelMeasure[4]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[4]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                if self.numberStopsD>2:
+                                    if channelMeasure[5]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[5]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                if self.numberStopsD>3:
+                                    if channelMeasure[6]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[6]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                if self.numberStopsD>4:
+                                    if channelMeasure[7]!=-1:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[7]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                    else:
+                        totalNoStarts+=1
+            else:
+                errorMessageInput=f"The start channel is not taking measurements"
+                StartChannelRegister=False
+                self.changeStatusText.emit(errorMessageInput)
+                self.changeStatusColor.emit(3)
+            if measure:
+                if totalNoStarts==len(measure):
+                    errorMessageInput=f"The start channel is not taking measurements"
+                    StartChannelRegister=False
+                    self.changeStatusText.emit(errorMessageInput)
+                    self.changeStatusColor.emit(3)
+            onlyStartsValues = [key for key, value in startValues.items() if value == 0]
+            onlyStartMeasurements=onlyStartsValues
+            self.totalMeasurements+=len(onlyStartMeasurements)
+            channelStringList=[]
+            if self.channelASentinel and (not valueA) and StartChannelRegister: 
+                channelStringList.append("A")
+            if self.channelBSentinel and (not valueB) and StartChannelRegister:
+                channelStringList.append("B")
+            if self.channelCSentinel and (not valueC) and StartChannelRegister:
+                channelStringList.append("C")
+            if self.channelDSentinel and (not valueD) and StartChannelRegister:
+                channelStringList.append("D")
+            if channelStringList:
+                channelErrorString=", ".join(channelStringList)
+                if len(channelStringList)==1:
+                    errorMessage=f"The channnel {channelErrorString} is not taking measurements"
+                else:
+                    errorMessage=f"The channnels {channelErrorString} are not taking measurements"
+                
+                self.changeStatusText.emit(errorMessage)
+                self.changeStatusColor.emit(3)
+            elif not StartChannelRegister:
+                pass
+            else:
+                self.changeStatusText.emit("Running measurement")
+                self.changeStatusColor.emit(1)  
+            #Emitir lista de tuplas de valores
+            self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
+                                    self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
+        except Exception as e:
+            # If this happen corrupted data was found
+            if isinstance(e, PermissionError) or "PermissionError" in str(e):
+                print("Dispositivo desconectado")
+            
         
     
     
@@ -2056,6 +2146,78 @@ class WorkerThreadTimeStamping(QThread):
 
         self.changeStatusText.emit("Processing complete.")
     
+    def saveCurrentMeasurements(self):
+        #General settings
+        self.numberRunsSetting=self.device.getNumberOfRuns()
+        self.thresholdVoltage=self.device.getThresholdVoltage()
+        #Channel A
+        self.averageCyclesChannelA= self.device.ch1.getAverageCycles()
+        self.modeChannelA= self.device.ch1.getMode()
+        self.numberStopsChannelA = self.device.ch1.getNumberOfStops()
+        self.stopEdgeTypeChannelA= self.device.ch1.getStopEdge()
+        self.stopMaskChannelA=self.device.ch1.getStopMask()
+        #ChannelB
+        self.averageCyclesChannelB= self.device.ch2.getAverageCycles()
+        self.modeChannelB= self.device.ch2.getMode()
+        self.numberStopsChannelB = self.device.ch2.getNumberOfStops()
+        self.stopEdgeTypeChannelB= self.device.ch2.getStopEdge()
+        self.stopMaskChannelB=self.device.ch2.getStopMask()
+        #ChannelC
+        self.averageCyclesChannelC= self.device.ch3.getAverageCycles()
+        self.modeChannelC= self.device.ch3.getMode()
+        self.numberStopsChannelC = self.device.ch3.getNumberOfStops()
+        self.stopEdgeTypeChannelC= self.device.ch3.getStopEdge()
+        self.stopMaskChannelC=self.device.ch3.getStopMask()
+        #ChannelD
+        self.averageCyclesChannelD= self.device.ch4.getAverageCycles()
+        self.modeChannelD= self.device.ch4.getMode()
+        self.numberStopsChannelD = self.device.ch4.getNumberOfStops()
+        self.stopEdgeTypeChannelD= self.device.ch4.getStopEdge()
+        self.stopMaskChannelD=self.device.ch4.getStopMask()
+    
+    def applyCurrentSettings(self):
+        #Settings to general device
+        self.device.setNumberOfRuns(self.numberRunsSetting)
+        self.device.setThresholdVoltage(self.thresholdVoltage)
+        #Settings to channelA
+        self.device.ch1.setAverageCycles(self.averageCyclesChannelA)
+        self.device.ch1.setMode(self.modeChannelA)
+        self.device.ch1.setNumberOfStops(self.numberStopsChannelA)
+        self.device.ch1.setStopEdge(self.stopEdgeTypeChannelA)
+        self.device.ch1.setStopMask(self.stopMaskChannelA)
+        #Settings to channelB
+        self.device.ch2.setAverageCycles(self.averageCyclesChannelB)
+        self.device.ch2.setMode(self.modeChannelB)
+        self.device.ch2.setNumberOfStops(self.numberStopsChannelB)
+        self.device.ch2.setStopEdge(self.stopEdgeTypeChannelB)
+        self.device.ch2.setStopMask(self.stopMaskChannelB)
+        #Settings to channelC
+        self.device.ch3.setAverageCycles(self.averageCyclesChannelC)
+        self.device.ch3.setMode(self.modeChannelC)
+        self.device.ch3.setNumberOfStops(self.numberStopsChannelC)
+        self.device.ch3.setStopEdge(self.stopEdgeTypeChannelC)
+        self.device.ch3.setStopMask(self.stopMaskChannelC)
+        #Settings to channelD
+        self.device.ch4.setAverageCycles(self.averageCyclesChannelD)
+        self.device.ch4.setMode(self.modeChannelD)
+        self.device.ch4.setNumberOfStops(self.numberStopsChannelD)
+        self.device.ch4.setStopEdge(self.stopEdgeTypeChannelD)
+        self.device.ch4.setStopMask(self.stopMaskChannelD)
+        #Enable disable channels to continue measurements
+        self.device.ch1.disableChannel()
+        self.device.ch2.disableChannel()
+        self.device.ch3.disableChannel()
+        self.device.ch4.disableChannel()
+        if self.channelASentinel:
+            self.device.ch1.enableChannel()
+        if self.channelBSentinel:
+            self.device.ch2.enableChannel()
+        if self.channelCSentinel:
+            self.device.ch3.enableChannel()
+        if self.channelDSentinel:
+            self.device.ch4.enableChannel()
+        
+        
     @Slot()   
     def stop(self):
         self.running=False    
@@ -2119,6 +2281,8 @@ class ProcessingDataSaved(QThread):
                     self.changeProgress.emit(percent)
 
         self.changeProgress.emit(100)
+    
+    
 
         
         
