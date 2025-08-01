@@ -196,6 +196,9 @@ class TimeStampLogic():
         self.startLimitedButton.setEnabled(True)
     
     def disconnectedDevice(self):
+        self.currenSaving=False
+        self.changeStatusColor(0)
+        self.changeStatusLabel("No measurement running")
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         self.startNormalButton.setEnabled(False)
@@ -315,6 +318,7 @@ class TimeStampLogic():
     def stopNormalMeasurement(self):
         self.measurementMade=True
         self.worker.stop()
+        self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
         if self.pauseNormalButton.text()=="Continue adquisition":
@@ -333,6 +337,7 @@ class TimeStampLogic():
         self.mainWindow.enableSettings()
         
     def notSelectedFormatNormalStop(self):
+        self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
         self.startNormalButton.setEnabled(True)
@@ -511,6 +516,7 @@ class TimeStampLogic():
     def stopScheduledMeasurement(self):
          
         if self.isWaiting:
+            self.currenSaving=False
             self.changeStatusColor(0)
             self.changeStatusLabel("No measurement running")
             self.timerBeginMeasurement.stop()
@@ -529,6 +535,7 @@ class TimeStampLogic():
             self.settingsAfterMeasurement()
         else:
             self.measurementMade=True
+            self.currenSaving=False
             self.changeStatusColor(0)
             self.changeStatusLabel("No measurement running")
             self.timerToStopMeasurement.stop()
@@ -549,6 +556,7 @@ class TimeStampLogic():
         self.startTimerConnection()
     
     def notSelectedFormatScheduledStop(self):
+        self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
         self.startScheduleButton.setEnabled(True)
@@ -612,6 +620,7 @@ class TimeStampLogic():
     def stopLimitedMeasurement(self):
         self.measurementMade=True
         self.worker.stop()
+        self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
         if self.pauseLimitedButton.text()=="Continue":
@@ -631,6 +640,7 @@ class TimeStampLogic():
         self.startTimerConnection()
     
     def notSelectedFormatLimitedStop(self):
+        self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
         self.startLimitedButton.setEnabled(True)
@@ -1496,6 +1506,7 @@ class WorkerThreadTimeStamping(QThread):
         #Sentinel to know how many measurements are registered
         self.noMeasurementsSequent=0
         self.noAbortsSequent=0
+        self.consecutiveErrors=0
         self.saveCurrentMeasurements()
         
         
@@ -1506,6 +1517,8 @@ class WorkerThreadTimeStamping(QThread):
         self.syncTime()
         if self.normalMeasurementSentinel:
             while self.running:
+                if self.consecutiveErrors>=50:
+                    self.running=False
                 if self.isPause:    
                     self.changeStatusText.emit("Paused measurement")
                     self.changeStatusColor.emit(2)
@@ -1515,6 +1528,8 @@ class WorkerThreadTimeStamping(QThread):
                 
         elif self.scheduleMeasurementSentinel:
             while self.running:
+                if self.consecutiveErrors>=50:
+                    self.running=False
                 if self.isPause:
                     self.changeStatusText.emit("Paused measurement")
                     self.changeStatusColor.emit(2)
@@ -1523,6 +1538,8 @@ class WorkerThreadTimeStamping(QThread):
                     self.getMeasurement()
         if self.limitMeasurementSentinel:
             while self.running and (not self.allMeasurementsComplete):
+                if self.consecutiveErrors>=50:
+                    self.running=False
                 if self.isPause:
                     percentage=round((self.totalMeasurements/self.maximumMeasurements)*100,2)
                     message=f"Paused measurement {percentage} %"
@@ -1883,8 +1900,11 @@ class WorkerThreadTimeStamping(QThread):
             #Emitir lista de tuplas de valores
             self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
                                     self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
-        except NameError as e:
-            print(e)
+        except Exception as e:
+            # If this happen corrupted data was found
+            if isinstance(e, PermissionError) or "PermissionError" in str(e):
+                self.consecutiveErrors+=1
+                
         
     
     def getMeasurement(self):
@@ -2115,12 +2135,14 @@ class WorkerThreadTimeStamping(QThread):
                 self.changeStatusText.emit("Running measurement")
                 self.changeStatusColor.emit(1)  
             #Emitir lista de tuplas de valores
+            self.consecutiveErrors=0
             self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
                                     self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
         except Exception as e:
             # If this happen corrupted data was found
             if isinstance(e, PermissionError) or "PermissionError" in str(e):
-                print("Dispositivo desconectado")
+                self.consecutiveErrors+=1
+                
             
         
     
