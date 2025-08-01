@@ -854,6 +854,7 @@ class CountEstimatedLogic():
             #Disable other tabs while the software is taking measurements
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.saveSettings()
             self.saveSettings()
             self.stopTimerConnection()
@@ -899,6 +900,7 @@ class CountEstimatedLogic():
         """
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.resetSentinels()
         self.stopButton.setEnabled(False)
         self.worker.stop()
@@ -1323,6 +1325,12 @@ class CountEstimatedLogic():
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
+    
+    def resetSaveSentinels(self):
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0
+        
         
 
     
@@ -2262,6 +2270,8 @@ class CountEstimatedLogic():
         :return: None
         """
         self.finalDate=date
+    
+    
     
     
     def saveData(self):

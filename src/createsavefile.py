@@ -18,10 +18,32 @@ class createsavefile:
             with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             self.create_folder_and_file()
+            self.createTempFileData()
     
     def getExistenceCurrentFolder(self, data):
         folderPath=data['saveFolder']
         return os.path.isdir(folderPath)
+    
+    def createTempFileData(self):
+        folderName="TempData"
+        fileData="AutoSaveData.txt"
+        os.makedirs(folderName, exist_ok=True)
+        pathFile=os.path.join(folderName,fileData)
+        with open(pathFile,"w") as f:
+            pass
+    
+    def clearDataAutoSave(self):
+        folderName="TempData"
+        fileData="AutoSaveData.txt"
+        pathFile=os.path.join(folderName,fileData)
+        with open(pathFile,"w") as f:
+            f.truncate(0)
+            
+        
+    
+    
+        
+        
             
         
     
@@ -348,6 +370,29 @@ class createsavefile:
                         uncertaintyTimeFormated= f"{uncertaintyTime:.5f}"
                         file.write(f"{timeStamp}{separator}{valueFormated}{separator}{uncertaintyFormated}{separator}{timeFormated}{separator}{uncertaintyTimeFormated}\n")
 
+    def save_time_stamp_autosave(self, startValues, stopValues, channels, settings):
+        channelList = ["Start", "A", "B", "C", "D"]
+
+        if not os.path.exists("./TempData"):
+            os.makedirs("./TempData")
+
+        if len(startValues) != len(stopValues) or len(stopValues) != len(channels):
+            raise ValueError("Start times, stop times and channels list must have the same length")
+
+        full_path = os.path.join("./TempData", "AutoSaveData.txt")
+
+        # Verificar si el archivo existe Y está vacío
+        archivo_vacio = not os.path.exists(full_path) or os.path.getsize(full_path) == 0
+
+        with open(full_path, 'a') as file:
+            if archivo_vacio:
+                file.write(settings)
+                file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
+            for startTime, stopTime, channel in zip(startValues, stopValues, channels):
+                file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
+        
+    
+    
     def save_time_stamp(self, startValues, stopValues, channels, filename, folder_path, extension, settings):
         if extension=="csv":
             settings=settings.replace("\t",";")
@@ -375,8 +420,13 @@ class createsavefile:
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}{separator}{stopTime}{separator}{channelList[channel]}\n")
     
-    def sort_time_stamps(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
+    def sort_time_stamps(self, file_path,autoSave):
+        if autoSave:
+            originalPath = os.path.join("./TempData", f"AutoSaveData.txt")
+        else:
+            originalPath = file_path
+            
+        with open(originalPath, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
         if not lines:
@@ -395,21 +445,37 @@ class createsavefile:
                     parsed_data.append((start_time, stop_time, channel))
                 except ValueError:
                     continue  # Skip malformed lines
-
+        extension=file_path.split(".")[-1]
+        if extension=="csv":
+            separator=";"
+        else:
+            separator="\t"
+        #replace separator header
+        newHeader=[]
+        for lineSettings in header:
+            newLineSettings=lineSettings.replace("\t",separator)
+            newHeader.append(newLineSettings)
+        header=newLineSettings
         sorted_data = sorted(parsed_data, key=lambda x: x[0])
 
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(header)
             for start_time, stop_time, channel in sorted_data:
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}\t{stop_time}\t{channel}\n")
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}{separator}{stop_time}{separator}{channel}\n")
     
-    def convertFileFormat(self,file_path, new_extension):
-        current_ext = file_path.split(".")[-1].lower()
+    def convertFileFormat(self,file_path, new_extension, autoSaved):
+        if autoSaved:
+            originalPath = os.path.join("./TempData", f"AutoSaveData.txt")
+        else:
+            originalPath= file_path
+        current_ext = originalPath.split(".")[-1].lower()
         base_path = ".".join(file_path.split(".")[:-1])
         new_file_path = base_path + "." + new_extension.lower()
-
-        if current_ext == "csv":
-            current_sep = ";"
+        if not autoSaved:
+            if current_ext == "csv":
+                current_sep = ";"
+            else:
+                current_sep = "\t"
         else:
             current_sep = "\t"
 
@@ -419,7 +485,7 @@ class createsavefile:
             new_sep = "\t"
 
 
-        with open(file_path, 'r', encoding='utf-8') as infile:
+        with open(originalPath, 'r', encoding='utf-8') as infile:
             lines = infile.readlines()
 
         if not lines:
@@ -435,8 +501,8 @@ class createsavefile:
             newHeader.append(newLineHead)
         header=newHeader
         data = lines[8:]
-
-
+        print(new_file_path)
+        os.makedirs(os.path.dirname(new_file_path), exist_ok=True)
         with open(new_file_path, 'w', encoding='utf-8') as outfile:
             for line in header:
                 outfile.write(line)
@@ -446,7 +512,61 @@ class createsavefile:
                     outfile.write(new_sep.join(parts) + "\n")
                 else:
                     outfile.write(line)
+    
+    def convertFileFromOldFile(self, file_path, new_folder, new_extension):
+        if not os.path.exists(file_path):
+            return False
+
         
+        os.makedirs(new_folder, exist_ok=True)
+
+        
+        file_name = os.path.basename(file_path)
+        base_name = ".".join(file_name.split(".")[:-1])
+        current_ext = file_path.split(".")[-1].lower()
+        new_file_name = base_name + "." + new_extension.lower()
+        new_file_path = os.path.join(new_folder, new_file_name)
+
+        
+        if current_ext == "csv":
+            current_sep = ";"
+        else:
+            current_sep = "\t"
+
+        if new_extension.lower() == "csv":
+            new_sep = ";"
+        else:
+            new_sep = "\t"
+
+        
+        with open(file_path, 'r', encoding='utf-8') as infile:
+            lines = infile.readlines()
+
+        if not lines:
+            return False
+
+        header = lines[:8]
+        data = lines[8:]
+
+        
+        converted_header = []
+        for line in header:
+            if current_sep != new_sep:
+                line = line.replace(current_sep, new_sep)
+            converted_header.append(line)
+
+        
+        with open(new_file_path, 'w', encoding='utf-8') as outfile:
+            for line in converted_header:
+                outfile.write(line)
+            for line in data:
+                if current_sep != new_sep:
+                    parts = line.strip().split(current_sep)
+                    outfile.write(new_sep.join(parts) + "\n")
+                else:
+                    outfile.write(line)
+
+        return True
                 
     
 

@@ -764,7 +764,7 @@ class MainWindow(QMainWindow):
     def folderPrefixClicked(self):
         self.prefixFolderDialog=QDialog(self)
         self.uiFolderPrefix=Ui_DialogFolderPrefix()
-        self.uiFolderPrefix.setupUi(self.prefixFolderDialog)
+        self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
         self.prefixFolderDialog.exec_()
         
 
@@ -1076,6 +1076,18 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.currentMeasurement=False
+    
+    def resetSaveSentinelsAllWindows(self):
+        print("Se resetean los sentinelas")
+        if self.timeStampGraphic!=None:
+            self.timeStampGraphic.resetSaveSentinels()
+        if self.countsEstimatedGraphic!=None:
+            self.countsEstimatedGraphic.resetSaveSentinels()
+        if self.LifeTimeGraphic!=None:
+            self.LifeTimeGraphic.resetSaveSentinels()
+        if self.grafico!=None:
+            self.grafico.resetSaveSentinels()
+        
 
 
 

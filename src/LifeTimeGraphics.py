@@ -278,6 +278,7 @@ class LifeTimeGraphic():
         self.numberBins.setEnabled(False)
         self.mainWindow.tabs.setTabEnabled(0,False)
         self.mainWindow.tabs.setTabEnabled(2,False)
+        self.mainWindow.tabs.setTabEnabled(3,False)
         self.mainWindow.saveSettings()
         self.mainWindow.disconnectButton.setEnabled(False)
         self.stopTimerConnection()
@@ -352,7 +353,10 @@ class LifeTimeGraphic():
         elif value < 1e12:
             return ["ms",10**9]
         
-        
+    def resetSaveSentinels(self):
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0    
     
     #Function to catch the stop button action
     def stopMeasurement(self):
@@ -404,6 +408,7 @@ class LifeTimeGraphic():
         self.numberMeasurementsSpinBox.setEnabled(True)
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.changeStatusLabel("No measurement running")
         self.changeStatusColor(0)
         self.threadCreated=False

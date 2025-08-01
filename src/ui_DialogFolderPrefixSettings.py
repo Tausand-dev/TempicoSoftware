@@ -19,10 +19,11 @@ from pathlib import Path
 
 
 class Ui_DialogFolderPrefix(object):
-    def setupUi(self, Dialog):
+    def setupUi(self, Dialog, mainWindow):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
         self.dialog=Dialog
+        self.mainWIndow=mainWindow
         Dialog.resize(496, 336)
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -178,8 +179,9 @@ class Ui_DialogFolderPrefix(object):
         self.defaultValuesButton.clicked.connect(self.defaultValues)
 
         self.horizontalLayout_6.addWidget(self.applyChangesButton)
-        self.horizontalLayout_6.addWidget(self.cancelButton)
+        
         self.horizontalLayout_6.addWidget(self.defaultValuesButton)
+        self.horizontalLayout_6.addWidget(self.cancelButton)
 
 
         self.verticalLayout.addWidget(self.ApplyChangesFrame)
@@ -216,15 +218,19 @@ class Ui_DialogFolderPrefix(object):
         default_save_folder = os.path.join(documents_folder, "TempicoSoftwareData")
         if data["saveFolder"]=="":
             self.folderPathLineEdit.setText(default_save_folder)
+            self.initialFolderPath=default_save_folder
         else:
             self.folderPathLineEdit.setText(data["saveFolder"])
+            self.initialFolderPath=data["saveFolder"]
         self.startStopHistogramLineEdit.setText(data["startStopHistogramPrefix"])
         self.lifetimeLineEdit.setText(data["lifetimePrefix"])
         self.countsEstimationLineEdit.setText(data["countsEstimationPrefix"])
-        self.lineEdit.setText(data["timeStampingPrefix"])  
+        self.lineEdit.setText(data["timeStampingPrefix"])
+        
         
         
     def applySettings(self):
+        
         if any(c in self.startStopHistogramLineEdit.text() for c in r'\/:*?"<>|'):
             self.dialogShowingProblems("Start-stop histogram prefix")
         elif any(c in self.lifetimeLineEdit.text() for c in r'\/:*?"<>|'):
@@ -243,6 +249,8 @@ class Ui_DialogFolderPrefix(object):
             data["timeStampingPrefix"]=self.lineEdit.text()
             with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
+            if self.folderPathLineEdit!=self.initialFolderPath:
+                self.mainWIndow.resetSaveSentinelsAllWindows()
             self.dialog.close()
             
     

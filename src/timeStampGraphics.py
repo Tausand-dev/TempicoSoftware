@@ -125,6 +125,10 @@ class TimeStampLogic():
         self.dateTxtSaved=""
         self.dateCsvSaved=""
         self.dateDatSaved=""
+        self.changedFolder=False
+        #Sentinels to know if data needs to be re saved
+        self.dataNeedResaved=False
+        
         #Sentinel to know if the software is saving
         self.currenSaving=False
         #Set the current date to date time and hour
@@ -135,6 +139,7 @@ class TimeStampLogic():
         self.startTime.setTime(self.currentTimeSet)
         self.finishDate.setDate(self.currentDateSet)
         self.finishTime.setTime(self.currentTimeSet)
+        
         #Status value for scheduled measurements
         self.statusValueMeasurements="Running measurement"
         #Device
@@ -340,7 +345,7 @@ class TimeStampLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         
-        
+      
     
     def startScheduledMeasurement(self):
         #Check if any channel is selected 
@@ -404,6 +409,7 @@ class TimeStampLogic():
             
         else:
             self.showDialogNoChannels()
+    
     
     def formatWaitingTime(self,secondsTotal):
         days = secondsTotal // 86400
@@ -692,6 +698,17 @@ class TimeStampLogic():
         self.channelBSentinel=False
         self.channelCSentinel=False
         self.channelDSentinel=False
+    
+    def resetSaveSentinels(self):
+        self.changedFolder=True
+        self.dataCsvSaved=False
+        self.dataTxtSaved=False
+        self.dataDatSaved=False
+        if (self.dataAutoSavedCsv or self.dataAutoSavedTxt or self.dataAutoSavedDat):
+            self.dataAutoSavedCsv= False
+            self.dataAutoSavedTxt= False
+            self.dataAutoSavedDat= False
+            self.dataNeedResaved=True
         
     
     def settingsBeforeMeasurement(self):
@@ -703,8 +720,10 @@ class TimeStampLogic():
         self.enableCheckBoxB.setEnabled(False)
         self.enableCheckBoxC.setEnabled(False)
         self.enableCheckBoxD.setEnabled(False)
+        
     
     def clearData(self):
+        self.dataNeedResaved=False
         self.dataAutoSavedTxt=False
         self.dataAutoSavedCsv=False
         self.dataAutoSavedDat=False
@@ -719,6 +738,7 @@ class TimeStampLogic():
         self.dateTimeData=[]
         self.stopData=[]
         self.channelData=[]
+        self.savefile.clearDataAutoSave()
         
     
     def settingsAfterMeasurement(self):
@@ -741,7 +761,7 @@ class TimeStampLogic():
         #Get the miliseconds to init timer
         if self.autoSaveComboBox.currentText()=="30 Minutes":
             milisecondsToInit=60000
-            # milisecondsToInit=1800000
+            #milisecondsToInit=1800000
         elif self.autoSaveComboBox.currentText()=="1 Hour":
             milisecondsToInit=3600000
         elif self.autoSaveComboBox.currentText()=="2 Hours":
@@ -1150,6 +1170,11 @@ class TimeStampLogic():
             self.saveDataAction(selected_format,currentDate)
     
     
+
+
+        
+        
+    
     #This function will save data in txt file (TO DO: Put other formats)
     def saveDataAction(self,format,date): 
         try:
@@ -1159,7 +1184,27 @@ class TimeStampLogic():
             folder_path=dataFolderPrefix["saveFolder"]
             data_prefix=dataFolderPrefix["timeStampingPrefix"]
             #If exits and autosaved version with txt format
-            if self.dataAutoSavedTxt or self.dataAutoSavedCsv or self.dataAutoSavedDat:
+            if self.dataNeedResaved:
+                dateAutoSaved=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                self.fileName=os.path.join(folder_path, f"{data_prefix}{currentDateStr}.{self.selectedFormat}")
+                self.savefile.convertFileFormat(self.fileName,format,True)
+                inital_text=f"The files have been saved with {format} format in path folder: "
+                text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
+                name= f"\n\n{data_prefix}{dateAutoSaved}.{format}"
+                message_box.setText(inital_text+text_route+name)
+                message_box.setWindowTitle("Data Saved")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+                self.dataNeedResaved=False
+                if format=="txt":
+                    self.dataAutoSavedTxt=True
+                elif format=="csv":
+                    self.dataAutoSavedCsv=True
+                elif format=="dat":
+                    self.dataAutoSavedDat=True
+                
+            elif self.dataAutoSavedTxt or self.dataAutoSavedCsv or self.dataAutoSavedDat:
                 if self.dataAutoSavedTxt and format=="txt":
                     inital_text = (
                         "The autosave feature has already preserved your data.\n"
@@ -1213,12 +1258,12 @@ class TimeStampLogic():
                     message_box.exec_()
                 elif (self.dataAutoSavedTxt and format!="txt") or (self.dataAutoSavedCsv and format!="csv") or (self.dataAutoSavedDat and format!="dat"):
                     dateAutoSaved=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    self.savefile.convertFileFormat(self.fileName,format)
-                    inital_text=f"The files have been already saved with {format} format in path folder: "
+                    self.savefile.convertFileFormat(self.fileName,format,False)
+                    inital_text=f"The files have been saved with {format} format in path folder: "
                     text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
                     name= f"\n\n{data_prefix}{dateAutoSaved}.{format}"
                     message_box.setText(inital_text+text_route+name)
-                    message_box.setWindowTitle("Data Already Saved")
+                    message_box.setWindowTitle("Data Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
                     if format=="txt":
@@ -1324,12 +1369,7 @@ class TimeStampLogic():
         QApplication.processEvents() 
         try:
             totalLenData=len(self.dateTimeData)
-            dataFolderPrefix=self.savefile.getDataFolderPrefix()
-            folder_path=dataFolderPrefix["saveFolder"]
-            data_prefix=dataFolderPrefix["timeStampingPrefix"]
-            current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-            filename=data_prefix+current_date_str
-            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
+            self.savefile.save_time_stamp_autosave(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData], self.header)
             self.dateTimeData=self.dateTimeData[totalLenData:]
             self.stopData=self.stopData[totalLenData:]
             self.channelData=self.channelData[totalLenData:]
@@ -1353,12 +1393,7 @@ class TimeStampLogic():
         QApplication.processEvents() 
         try:
             totalLenData=len(self.dateTimeData)
-            dataFolderPrefix=self.savefile.getDataFolderPrefix()
-            folder_path=dataFolderPrefix["saveFolder"]
-            data_prefix=dataFolderPrefix["timeStampingPrefix"]
-            current_date_str=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-            filename=data_prefix+current_date_str
-            self.savefile.save_time_stamp(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData],filename,folder_path,self.selectedFormat, self.header)
+            self.savefile.save_time_stamp_autosave(self.dateTimeData[:totalLenData],self.stopData[:totalLenData],self.channelData[:totalLenData], self.header)
             self.dateTimeData=self.dateTimeData[totalLenData:]
             self.stopData=self.stopData[totalLenData:]
             self.channelData=self.channelData[totalLenData:]
@@ -1576,7 +1611,7 @@ class WorkerThreadTimeStamping(QThread):
                         finishedMeasurement=True
                         measure=newFetch
                         self.device.abort()
-                        QThread.msleep(200)
+                        QThread.msleep(20)
                     else:
                         measure=newFetch
             
@@ -1587,16 +1622,16 @@ class WorkerThreadTimeStamping(QThread):
             elif not measure and self.noAbortsSequent>=10:
                 self.device.reset()
                 #Wait at least 20 ms
-                time.sleep(20/1000)
+                QThread.msleep(20)
                 self.applyCurrentSettings()
                 print("Entra al reset de la medición")
                 #Wait at least 20 ms 
-                time.sleep(20/1000)
+                QThread.msleep(20)
             elif not measure and self.noMeasurementsSequent >=3:
                 #Set timeout to finish abort
                 self.noAbortsSequent+=1
                 self.device.abort()
-                QThread.msleep(200)
+                QThread.msleep(20)
                 print("Entra al abort por que no hay medicion")
                 #Wait at least 10 ms
                 
@@ -1873,7 +1908,7 @@ class WorkerThreadTimeStamping(QThread):
                         finishedMeasurement=True
                         measure=newFetch
                         self.device.abort()
-                        QThread.msleep(200)
+                        QThread.msleep(20)
                     else:
                         measure=newFetch
             
@@ -1893,7 +1928,7 @@ class WorkerThreadTimeStamping(QThread):
                 #Set timeout to finish abort
                 self.noAbortsSequent+=1
                 self.device.abort()
-                QThread.msleep(200)
+                QThread.msleep(20)
                 print("Entra al abort por que no hay medicion")
                 #Wait at leat 10 ms
                 
@@ -2098,10 +2133,13 @@ class WorkerThreadTimeStamping(QThread):
     
     def changeReadyToReorder(self):
         self.readyToReOrder=True
-        
+    
+    
+       
     # Function to reorder data
     def sortTimeStamps(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
+        tempDataPath = os.path.join("./TempData", f"AutoSaveData.txt")
+        with open(tempDataPath, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
         if not lines:
@@ -2116,8 +2154,15 @@ class WorkerThreadTimeStamping(QThread):
             separator=";"
         else:
             separator="\t"
+        #Change the header
+        newHeader=[]
+        for lineSettings in header:
+            newLineSetting= lineSettings.replace("\t",separator)
+            newHeader.append(newLineSetting)
+        header=newHeader
+            
         for idx, line in enumerate(data_lines):
-            parts = line.strip().split(separator)
+            parts = line.strip().split("\t")
             if len(parts) == 3:
                 start_time_str, stop_time, channel = parts
                 try:

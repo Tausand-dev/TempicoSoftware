@@ -350,6 +350,9 @@ class StartStopLogic():
     ##---------------------------------##  
     
     
+    
+    
+    
     def start_graphic(self):
         """
         Starts the graphical representation of the measurement based on the selected channels.
@@ -378,6 +381,7 @@ class StartStopLogic():
             self.sentinelZoomChangedD=0
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
+            self.mainWindow.tabs.setTabEnabled(3,False)
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
             self.create_graphs()
@@ -461,6 +465,7 @@ class StartStopLogic():
         self.changeStatusColor(0)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
@@ -488,6 +493,7 @@ class StartStopLogic():
         """
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.threadCreated=False
         self.stop_graphic()
     
@@ -1197,7 +1203,10 @@ class StartStopLogic():
         painter.end()
         self.statusPoint.setPixmap(pixmap)
         
-        
+    def resetSaveSentinels(self):
+        self.sentinelsavetxt=0
+        self.sentinelsavecsv=0
+        self.sentinelsavedat=0  
     
     def changeStatusThread(self, newText):
         """
