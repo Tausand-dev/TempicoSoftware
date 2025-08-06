@@ -10,6 +10,9 @@ import time
 from createsavefile import createsavefile as savefile
 import datetime
 import os
+import io
+import pyTempico as tempico
+import sys
 
 #Create graphic design#
 class StartStopLogic():
@@ -329,7 +332,7 @@ class StartStopLogic():
             self.gridlayout.addWidget(widgets[3], 1, 1)
             
         #Crete the worker Thread
-        self.worker=WorkerThreadStartStopHistogram(self.parent,self.device,self.setinelSaveA,self.setinelSaveB,self.setinelSaveC,self.setinelSaveD)
+        self.worker=WorkerThreadStartStopHistogram(self.parent,self.device,self.setinelSaveA,self.setinelSaveB,self.setinelSaveC,self.setinelSaveD,self.checkA.isChecked(),self.checkB.isChecked(),self.checkC.isChecked(),self.checkD.isChecked())
         self.worker.finished.connect(self.threadComplete)
         self.worker.dataPureSignal.connect(self.updateDataPure)
         self.worker.dataSignal.connect(self.updateSignal)
@@ -339,6 +342,7 @@ class StartStopLogic():
         self.worker.stringValue.connect(self.changeStatusThread)
         self.worker.dialogSignal.connect(self.dialogChangeMode)
         self.worker.newMaxValueSignal.connect(self.changeZoomMax)
+        self.worker.dataBashSignal.connect(self.updateBashSignal)
         self.worker.start()
         
     
@@ -1067,6 +1071,25 @@ class StartStopLogic():
             self.dataD.append(value)
             self.update_histogram(self.dataD,self.curveD,"D")
     
+    def updateBashSignal(self,valueListA,valueListB,valueListC,valueListD):
+        for value in valueListA:
+            self.dataA.append(value)
+        if self.dataA:
+            self.update_histogram(self.dataA,self.curveA,"A")
+        for value in valueListB:
+            self.dataB.append(value)
+        if self.dataB:
+            self.update_histogram(self.dataB,self.curveB,"B")
+        for value in valueListC:
+            self.dataC.append(value)
+        if self.dataC:
+            self.update_histogram(self.dataC,self.curveC,"C")
+        for value in valueListD:
+            self.dataD.append(value)
+        if self.dataD:
+            self.update_histogram(self.dataD,self.curveD,"D")
+        
+    
     #Update dataPure
     def updateDataPure(self,value,channel):
         """
@@ -1252,7 +1275,7 @@ class StartStopLogic():
                     temporalDataA.append(self.datapureA[i]/(10**9))
                 self.dataA=temporalDataA
                 self.update_histogram(self.dataA,self.curveA,"A")
-                maxValue=max(self.dataA)
+                maxValue=0
                 self.zoomCodeA=True
                 self.changeZoomMax(maxValue,'A')
                 self.worker.changeMaxValue('A',maxValue)
@@ -1268,7 +1291,7 @@ class StartStopLogic():
                 self.dataB=[]
                 self.dataB=temporalDataB
                 self.update_histogram(self.dataB,self.curveB,"B")
-                maxValue=max(self.dataB)
+                maxValue=0
                 self.zoomCodeB=True
                 self.changeZoomMax(maxValue,'B')
                 self.worker.changeMaxValue('B',maxValue)
@@ -1282,7 +1305,7 @@ class StartStopLogic():
                     temporalDataC.append(self.datapureC[i]/(10**9))
                 self.dataC=temporalDataC
                 self.update_histogram(self.dataC,self.curveC,"C")
-                maxValue=max(self.dataC)
+                maxValue=0
                 self.changeZoomMax(maxValue,'C')
                 self.worker.changeMaxValue('C',maxValue)
             elif channel=='channel D':
@@ -1295,7 +1318,7 @@ class StartStopLogic():
                     temporalDataD.append(self.datapureD[i]/(10**9))
                 self.dataD=temporalDataD
                 self.update_histogram(self.dataD,self.curveD,"D")
-                maxValue=max(self.dataD)
+                maxValue=0
                 self.zoomCodeD=True
                 self.changeZoomMax(maxValue,'D')
                 self.worker.changeMaxValue('D',maxValue)
@@ -1474,9 +1497,10 @@ class WorkerThreadStartStopHistogram(QThread):
     stringValue=Signal(str)
     dialogSignal=Signal(str)
     newMaxValueSignal=Signal(float,str)
+    dataBashSignal=Signal(list,list,list,list)
     
     
-    def __init__(self,parent,device,sentinelSaveA,sentinelSaveB,sentinelSaveC,sentinelSaveD):
+    def __init__(self,parent,device: tempico.TempicoDevice,sentinelSaveA,sentinelSaveB,sentinelSaveC,sentinelSaveD,checkA,checkB,checkC,checkD):
         super().__init__()
         self.totalA=0
         self.outOfRangeA=0
@@ -1494,10 +1518,11 @@ class WorkerThreadStartStopHistogram(QThread):
         self.setinelSaveD=sentinelSaveD
         #Sentinel to know if the thread stil running
         self.itsRunning=True
-        self.device.ch1.enableChannel()
-        self.device.ch2.enableChannel()
-        self.device.ch3.enableChannel()
-        self.device.ch4.enableChannel()
+        self.checkA=checkA
+        self.checkB=checkB
+        self.checkC=checkC
+        self.checkD=checkD
+        self.enableDisableChannels()
         #Check if the dialog was opened before
         self.sentinelDialogA=False
         self.sentinelDialogB=False
@@ -1524,6 +1549,12 @@ class WorkerThreadStartStopHistogram(QThread):
         self.noMeasurementB=0
         self.noMeasurementC=0
         self.noMeasurementD=0
+        self.noMeasurementsSequent=0
+        self.noAbortsSequent=0
+        self.consecutiveErrors=0
+        self.saveCurrentSettings()
+        self.isBashedMeasurement()
+        
 
 
         
@@ -1540,11 +1571,26 @@ class WorkerThreadStartStopHistogram(QThread):
         """
         self.threadCreated.emit(0)
         while self.itsRunning:
-             self.update()
-             time.sleep(0.5)
-        
+             self.getMeasurements()
+             time.sleep(0.1)
+        self.device.ch1.enableChannel()
+        self.device.ch2.enableChannel()
+        self.device.ch3.enableChannel()
+        self.device.ch4.enableChannel()
     
-    
+    def enableDisableChannels(self):
+        self.device.ch1.disableChannel()
+        self.device.ch2.disableChannel()
+        self.device.ch3.disableChannel()
+        self.device.ch4.disableChannel()
+        if self.checkA:
+            self.device.ch1.enableChannel()
+        if self.checkB:
+            self.device.ch2.enableChannel()
+        if self.checkC:
+            self.device.ch3.enableChannel()
+        if self.checkD:
+            self.device.ch4.enableChannel()
     ##---------------------------------##
     ##---------------------------------##
     ##--------Update function----------##
@@ -1764,7 +1810,6 @@ class WorkerThreadStartStopHistogram(QThread):
                 
                                   
         except:
-            self.dialogInit.emit()
             self.stop()
              
     ##---------------------------------##
@@ -1784,95 +1829,410 @@ class WorkerThreadStartStopHistogram(QThread):
         :param stopNumber: The stop number to obtain the corresponding measurement (int).
         :return: The average measurement in milliseconds if data is available; otherwise, returns None (float or None).
         """
-        measurements=self.device.measure()
-        if measurements==None:
-            return None
-        if len(measurements)==0:
-            number_runs=self.device.getNumberOfRuns()
-            self.totalStarts+=number_runs
-        
-
-        if len(measurements)!=0:
-            if len(measurements[0])!=0:
-                self.totalStarts=0
-                
-                number_runs=self.device.getNumberOfRuns()
-                if channelIndex=="A":
-                    self.noMeasurementA+=1
-                    index_measurement=0    
-                elif channelIndex=="B":
-                    self.noMeasurementB+=1
-                    index_measurement=number_runs
-                elif channelIndex=="C":
-                    self.noMeasurementC+=1
-                    index_measurement=number_runs*2
-                elif channelIndex=="D":
-                    self.noMeasurementD+=1
-                    index_measurement=number_runs*3
-                    
-                total_measurement=0
-                total_points=0
-                for i in range(number_runs):
-                    if measurements[i+index_measurement][3+stopNumber]!=-1:
-                        total_measurement+=measurements[i+index_measurement][3+stopNumber]
-                        total_points+=1
-                if total_points!=0:    
-                    if channelIndex=='A':
-                        self.noMeasurementA=0
-                    elif channelIndex=='B':
-                        self.noMeasurementB=0
-                    elif channelIndex=='C':
-                        self.noMeasurementC=0
-                    elif channelIndex=='D':
-                        self.noMeasurementD=0
-                    average_measurement=total_measurement/total_points
-                    if channel.getMode()==2:
-                        miliseconds_measurement=average_measurement/(10**9)
+        try:
+            #Enable disable channel
+            originalConsole=sys.stdout
+            sys.stdout=io.StringIO()
+            measurements=self.device.measure()
+            printedDeviceCommunication=sys.stdout.getvalue()
+            sys.stdout=originalConsole
+            finishedMeasurement=False
+            if "Timeout reached" in printedDeviceCommunication:
+                while not finishedMeasurement:
+                    newFetch=self.device.fetch()
+                    if (newFetch==measurements):
+                        finishedMeasurement=True
+                        measurements=newFetch
+                        self.device.abort()
+                        QThread.msleep(20)
                     else:
-                        if average_measurement>800000:
-                            if channelIndex=='A':
-                                self.outOfRangeA+=1
-                            elif channelIndex=='B':
-                                self.outOfRangeB+=1
-                            elif channelIndex=='C':
-                                self.outOfRangeC+=1
-                            elif channelIndex=='D':
-                                self.outOfRangeD+=1
-                        miliseconds_measurement=average_measurement/(10**3) 
+                        measurements=newFetch
+            print(measurements)
+            if not measurements and self.noMeasurementsSequent <3:
+                self.noMeasurementsSequent+=1
+                
+            elif not measurements and self.noAbortsSequent>=10:
+                self.device.reset()
+                QThread.msleep(20)
+                self.applyCurrentSettings()
+                print("Entra al reset de la medición")
+                QThread.msleep(20)
+            elif not measurements and self.noMeasurementsSequent >=3:
+                self.noAbortsSequent+=1
+                self.device.abort()
+                QThread.msleep(20)
+                print("Entra al abort por que no hay medicion")
+                
+            
+            if measurements==None:
+                return None
+            if len(measurements)==0:
+                number_runs=self.device.getNumberOfRuns()
+                self.totalStarts+=number_runs
+            
+
+            if len(measurements)!=0:
+                self.noMeasurementsSequent=0
+                self.noAbortsSequent=0
+                if len(measurements[0])!=0:
+                    self.totalStarts=0
                     
-                    #Change the histogram range according to max Value
-                    if channelIndex=='A' and miliseconds_measurement>self.currentMaxValueA:
-                        self.currentMaxValueA=miliseconds_measurement
-                        self.newMaxValueSignal.emit(miliseconds_measurement,'A')
-                    elif channelIndex=='B' and miliseconds_measurement>self.currentMaxValueB:
-                        self.currentMaxValueB=miliseconds_measurement
-                        self.newMaxValueSignal.emit(miliseconds_measurement,'B')
-                    elif channelIndex=='C' and miliseconds_measurement>self.currentMaxValueC:
-                        self.currentMaxValueC=miliseconds_measurement
-                        self.newMaxValueSignal.emit(miliseconds_measurement,'C')
-                    elif channelIndex=='D' and miliseconds_measurement>self.currentMaxValueD:
-                        self.currentMaxValueD=miliseconds_measurement
-                        self.newMaxValueSignal.emit(miliseconds_measurement,'D')
+                    number_runs=self.device.getNumberOfRuns()
+                    if channelIndex=="A":
+                        self.noMeasurementA+=1
+                        index_measurement=0    
+                    elif channelIndex=="B":
+                        self.noMeasurementB+=1
+                        index_measurement=number_runs
+                    elif channelIndex=="C":
+                        self.noMeasurementC+=1
+                        index_measurement=number_runs*2
+                    elif channelIndex=="D":
+                        self.noMeasurementD+=1
+                        index_measurement=number_runs*3
                         
-                    if channelIndex=='A':
-                        self.totalA+=1    
-                    elif channelIndex=='B':
-                        self.totalB+=1    
-                    elif channelIndex=='C':
-                        self.totalC+=1    
-                    elif channelIndex=='D':
-                        self.totalD+=1   
-                    average_measurement=average_measurement/(10**9)
-                    self.dataPureSignal.emit(average_measurement,channelIndex)
-                    return miliseconds_measurement
+                    total_measurement=0
+                    total_points=0
+                    for i in range(number_runs):
+                        if measurements[i+index_measurement][3+stopNumber]!=-1:
+                            total_measurement+=measurements[i+index_measurement][3+stopNumber]
+                            total_points+=1
+                    if total_points!=0:    
+                        if channelIndex=='A':
+                            self.noMeasurementA=0
+                        elif channelIndex=='B':
+                            self.noMeasurementB=0
+                        elif channelIndex=='C':
+                            self.noMeasurementC=0
+                        elif channelIndex=='D':
+                            self.noMeasurementD=0
+                        average_measurement=total_measurement/total_points
+                        if channel.getMode()==2:
+                            miliseconds_measurement=average_measurement/(10**9)
+                        else:
+                            if average_measurement>800000:
+                                if channelIndex=='A':
+                                    self.outOfRangeA+=1
+                                elif channelIndex=='B':
+                                    self.outOfRangeB+=1
+                                elif channelIndex=='C':
+                                    self.outOfRangeC+=1
+                                elif channelIndex=='D':
+                                    self.outOfRangeD+=1
+                            miliseconds_measurement=average_measurement/(10**3) 
+                        
+                        #Change the histogram range according to max Value
+                        if channelIndex=='A' and miliseconds_measurement>self.currentMaxValueA:
+                            self.currentMaxValueA=miliseconds_measurement
+                            self.newMaxValueSignal.emit(miliseconds_measurement,'A')
+                        elif channelIndex=='B' and miliseconds_measurement>self.currentMaxValueB:
+                            self.currentMaxValueB=miliseconds_measurement
+                            self.newMaxValueSignal.emit(miliseconds_measurement,'B')
+                        elif channelIndex=='C' and miliseconds_measurement>self.currentMaxValueC:
+                            self.currentMaxValueC=miliseconds_measurement
+                            self.newMaxValueSignal.emit(miliseconds_measurement,'C')
+                        elif channelIndex=='D' and miliseconds_measurement>self.currentMaxValueD:
+                            self.currentMaxValueD=miliseconds_measurement
+                            self.newMaxValueSignal.emit(miliseconds_measurement,'D')
+                            
+                        if channelIndex=='A':
+                            self.totalA+=1    
+                        elif channelIndex=='B':
+                            self.totalB+=1    
+                        elif channelIndex=='C':
+                            self.totalC+=1    
+                        elif channelIndex=='D':
+                            self.totalD+=1   
+                        average_measurement=average_measurement/(10**9)
+                        self.dataPureSignal.emit(average_measurement,channelIndex)
+                        self.consecutiveErrors=0
+                        return miliseconds_measurement
+                    else:
+                        self.consecutiveErrors=0
+                        return None
                 else:
+                    self.consecutiveErrors=0
                     return None
             else:
+                self.consecutiveErrors=0
                 return None
-        else:
+        except Exception as e:
+            if isinstance(e, PermissionError) or "PermissionError" in str(e):
+                self.consecutiveErrors+=1
+            if self.consecutiveErrors>10:
+                self.stop()
             return None
     
+    def getMeasurements(self):
+        
+        valuesA=[]
+        valuesB=[]
+        valuesC=[]
+        valuesD=[]
+        
+        #TODO algo to implement fetch data for big number of runs
+                    #Enable disable channel
+        try:
+            originalConsole=sys.stdout
+            sys.stdout=io.StringIO()
+            measurement=self.device.measure()
+            printedDeviceCommunication=sys.stdout.getvalue()
+            sys.stdout=originalConsole
+            finishedMeasurement=False
+            if "Timeout reached" in printedDeviceCommunication:
+                while not finishedMeasurement:
+                    newFetch=self.device.fetch()
+                    if (newFetch==measurement):
+                        finishedMeasurement=True
+                        measurement=newFetch
+                        self.device.abort()
+                        QThread.msleep(20)
+                    else:
+                        measurement=newFetch
+            if not measurement and self.noMeasurementsSequent <3:
+                self.noMeasurementsSequent+=1
+                
+            elif not measurement and self.noAbortsSequent>=10:
+                self.device.reset()
+                QThread.msleep(20)
+                self.applyCurrentSettings()
+                print("Entra al reset de la medición")
+                QThread.msleep(20)
+            elif not measurement and self.noMeasurementsSequent >=3:
+                self.noAbortsSequent+=1
+                self.device.abort()
+                QThread.msleep(20)
+                print("Entra al abort por que no hay medicion")
 
+            if measurement:
+                for run in measurement:
+                    if run:
+                        if "Start" in self.channelsNM:
+                            self.channelsNM.remove("Start")
+                        #Channel A
+                        if run[0]==1:
+                            for i in range(self.numberStopsChannelA):
+                                if run[3+i]!=-1:
+                                    if "A" in self.channelsNM:
+                                        self.channelsNM.remove("A")
+                                    self.totalA+=1
+                                    if self.modeChannelA==2:
+                                        correctedUnitsMeasurement=run[3+i]/(10**9)
+                                        self.emitOrSaveMeasurement(valuesA,correctedUnitsMeasurement,"A")   
+                                    else:
+                                        correctedUnitsMeasurement=run[3+i]/(10**3)
+                                        print(correctedUnitsMeasurement)
+                                        if run[3+i]>800000:
+                                            self.outOfRangeA+=1
+                                        if self.totalA>10 and (self.outOfRangeA/self.totalA)>0.6:
+                                            if not self.sentinelDialogA:
+                                                self.openDialog=True
+                                                self.sentinelDialogA=True
+                                                self.dialogSignal.emit("channel A")
+                                                while (self.openDialog):
+                                                    time.sleep(1)
+                                                self.modeChannelA=self.device.ch1.getMode()
+                                                if self.modeChannelA==1:
+                                                    self.emitOrSaveMeasurement(valuesA,correctedUnitsMeasurement,"A")
+                                                    
+                                            else:
+                                                self.emitOrSaveMeasurement(valuesA,correctedUnitsMeasurement,"A")
+                                                
+                                        else:
+                                            self.emitOrSaveMeasurement(valuesA,correctedUnitsMeasurement,"A")
+                                            
+                                            if "A" in self.channelsToChange:
+                                                self.channelsToChange.remove("A")
+                                else:
+                                    if "A" not in self.channelsNM:
+                                        self.channelsNM.append("A")
+                                                
+                        #Channel B
+                        elif run[0]==2:
+                            for i in range(self.numberStopsChannelB):
+                                if run[3+i]!=-1:
+                                    if "B" in self.channelsNM:
+                                        self.channelsNM.remove("B")
+                                    self.totalB+=1
+                                    if self.modeChannelB==2:
+                                        correctedUnitsMeasurement=run[3+i]/(10**9)
+                                        self.emitOrSaveMeasurement(valuesB,correctedUnitsMeasurement,"B")    
+                                    else:
+                                        correctedUnitsMeasurement=run[3+i]/(10**3)
+                                        if run[3+i]>800000:
+                                            self.outOfRangeB+=1
+                                        if self.totalB>10 and (self.outOfRangeB/self.totalB)>0.6:
+                                            if not self.sentinelDialogB:
+                                                self.openDialog=True
+                                                self.sentinelDialogB=True
+                                                self.dialogSignal.emit("channel B")
+                                                while (self.openDialog):
+                                                    time.sleep(1)
+                                                self.modeChannelB=self.device.ch2.getMode()
+                                                if self.modeChannelB==1:
+                                                    self.emitOrSaveMeasurement(valuesB,correctedUnitsMeasurement,"B")
+                                            else:
+                                                self.emitOrSaveMeasurement(valuesB,correctedUnitsMeasurement,"B")
+                                        else:
+                                            self.emitOrSaveMeasurement(valuesB,correctedUnitsMeasurement,"B")
+                                            if "B" in self.channelsToChange:
+                                                self.channelsToChange.remove("B")
+                                else:
+                                    if "B" not in self.channelsNM:
+                                        self.channelsNM.append("B")
+                        #Channel C
+                        elif run[0]==3:
+                            for i in range(self.numberStopsChannelC):
+                                if run[3+i]!=-1:
+                                    if "C" in self.channelsNM:
+                                        self.channelsNM.remove("C")
+                                    self.totalC+=1
+                                    if self.modeChannelC==2:
+                                        correctedUnitsMeasurement=run[3+i]/(10**9)
+                                        self.emitOrSaveMeasurement(valuesC,correctedUnitsMeasurement,"C")
+                                    else:
+                                        correctedUnitsMeasurement=run[3+i]/(10**3)
+                                        if run[3+i]>800000:
+                                            self.outOfRangeC+=1
+                                        if self.totalC>10 and (self.outOfRangeC/self.totalC)>0.6:
+                                            if not self.sentinelDialogC:
+                                                self.openDialog=True
+                                                self.sentinelDialogC=True
+                                                self.dialogSignal.emit("channel C")
+                                                while (self.openDialog):
+                                                    time.sleep(1)
+                                                self.modeChannelC=self.device.ch3.getMode()
+                                                if self.modeChannelC==1:
+                                                    self.emitOrSaveMeasurement(valuesC,correctedUnitsMeasurement,"C")
+                                            else:
+                                                self.emitOrSaveMeasurement(valuesC,correctedUnitsMeasurement,"C")
+                                        else:
+                                            self.emitOrSaveMeasurement(valuesC,correctedUnitsMeasurement,"C")
+                                            if "C" in self.channelsToChange:
+                                                self.channelsToChange.remove("C")
+                                else:
+                                    if "C" not in self.channelsNM:
+                                        self.channelsNM.append("C")
+                        #Channel D
+                        elif run[0]==4:
+                            for i in range(self.numberStopsChannelD):
+                                if run[3+i]!=-1:
+                                    if "D" in self.channelsNM:
+                                        self.channelsNM.remove("D")
+                                    self.totalD+=1
+                                    if self.modeChannelD==2:
+                                        correctedUnitsMeasurement=run[3+i]/(10**9)
+                                        self.emitOrSaveMeasurement(valuesD,correctedUnitsMeasurement,"D")
+                                    else:
+                                        correctedUnitsMeasurement=run[3+i]/(10**3)
+                                        if run[3+i]>800000:
+                                            self.outOfRangeD+=1
+                                        if self.totalD>10 and (self.outOfRangeD/self.totalD)>0.6:
+                                            if not self.sentinelDialogD:
+                                                self.openDialog=True
+                                                self.sentinelDialogD=True
+                                                self.dialogSignal.emit("channel D")
+                                                while (self.openDialog):
+                                                    time.sleep(1)
+                                                self.modeChannelD=self.device.ch4.getMode()
+                                                if self.modeChannelD==1:
+                                                    self.emitOrSaveMeasurement(valuesD,correctedUnitsMeasurement,"D")
+                                            else:
+                                                self.emitOrSaveMeasurement(valuesD,correctedUnitsMeasurement,"D")
+                                        else:
+                                            self.emitOrSaveMeasurement(valuesD,correctedUnitsMeasurement,"D")
+                                            if "D" in self.channelsToChange:
+                                                self.channelsToChange.remove("D")
+                                else:
+                                    if "D" not in self.channelsNM:
+                                        self.channelsNM.append("D")
+                    else:
+                        if "Start" not in self.channelsNM:
+                            self.channelsNM=[]
+                            self.channelsNM.append("Start")    
+            else:
+                if "Start" not in self.channelsNM:
+                    self.channelsNM=[]
+                    self.channelsNM.append("Start")
+               
+            if self.isBashed:
+                if valuesA:
+                    self.newMaxValueSignal.emit(self.currentMaxValueA,"A")
+                if valuesB:
+                    self.newMaxValueSignal.emit(self.currentMaxValueB,"B")
+                if valuesC:
+                    self.newMaxValueSignal.emit(self.currentMaxValueC,"C")
+                if valuesD:
+                    self.newMaxValueSignal.emit(self.currentMaxValueD,"D")
+                self.dataBashSignal.emit(valuesA,valuesB,valuesC,valuesD)
+            if len(self.channelsToChange)>0 and len(self.channelsNM)==0:
+                stringEmit="Consider changing mode of the channels:"
+                for i in range(len(self.channelsToChange)):
+                    if i==0:
+                        stringEmit+=" "+self.channelsToChange[i]
+                    else:
+                        stringEmit+=", "+self.channelsToChange[i]
+                self.currentState= stringEmit
+                self.colorValue.emit(3)
+                self.stringValue.emit(self.currentState)
+            elif len(self.channelsNM)>0:
+                stringEmit="No measurements in channels: "
+                for i in range(len(self.channelsNM)):
+                    if i==0:
+                        stringEmit+=" "+self.channelsNM[i] 
+                    else:
+                        stringEmit+=", "+self.channelsNM[i] 
+                self.currentNM=stringEmit
+                emitStringProblems=self.currentNM
+                self.colorValue.emit(3)
+                self.stringValue.emit(emitStringProblems)
+            elif len(self.channelsNM)==0 and len(self.channelsToChange)==0:
+                self.colorValue.emit(1)
+                self.stringValue.emit("Measurement running")
+            self.consecutiveErrors=0
+        except Exception as e:
+            if isinstance(e, PermissionError) or "PermissionError" in str(e):
+                self.consecutiveErrors+=1
+            if self.consecutiveErrors>10:
+                self.stop()
+
+
+    def emitOrSaveMeasurement(self,listValues,measurement,channel):
+        if self.isBashed:
+            listValues.append(measurement)
+            if measurement>self.currentMaxValueA:
+                self.currentMaxValueA=measurement
+        else:
+            self.compareMaxValue(measurement,channel)
+            self.dataSignal.emit(measurement,channel)
+            
+            
+            
+    
+    def isBashedMeasurement(self):
+        if self.numberRunsSetting>50:
+            self.isBashed=True
+        else:
+            self.isBashed=False
+        
+    def compareMaxValue(self,newValue,channel):
+        if channel=="A": 
+            if newValue>self.currentMaxValueA:
+                self.currentMaxValueA=newValue
+                self.newMaxValueSignal.emit(newValue,"A")
+        elif channel=="B": 
+            if newValue>self.currentMaxValueB:
+                self.currentMaxValueB=newValue
+                self.newMaxValueSignal.emit(newValue,"B")
+        elif channel=="C": 
+            print(newValue)
+            if newValue>self.currentMaxValueC:
+                self.currentMaxValueC=newValue
+                self.newMaxValueSignal.emit(newValue,"C")
+        elif channel=="D": 
+            if newValue>self.currentMaxValueD:
+                self.currentMaxValueD=newValue
+                self.newMaxValueSignal.emit(newValue,"D")
     #Function to know if a dialog is open
     def dialogIsOpen(self):
         """
@@ -1917,7 +2277,66 @@ class WorkerThreadStartStopHistogram(QThread):
         elif channel=='D':
             self.channelsToChange.append('D')
 
-
+    def saveCurrentSettings(self):
+        #General settings
+        self.numberRunsSetting=self.device.getNumberOfRuns()
+        self.thresholdVoltage=self.device.getThresholdVoltage()
+        #Channel A
+        self.averageCyclesChannelA= self.device.ch1.getAverageCycles()
+        self.modeChannelA= self.device.ch1.getMode()
+        self.numberStopsChannelA = self.device.ch1.getNumberOfStops()
+        self.stopEdgeTypeChannelA= self.device.ch1.getStopEdge()
+        self.stopMaskChannelA=self.device.ch1.getStopMask()
+        #ChannelB
+        self.averageCyclesChannelB= self.device.ch2.getAverageCycles()
+        self.modeChannelB= self.device.ch2.getMode()
+        self.numberStopsChannelB = self.device.ch2.getNumberOfStops()
+        self.stopEdgeTypeChannelB= self.device.ch2.getStopEdge()
+        self.stopMaskChannelB=self.device.ch2.getStopMask()
+        #ChannelC
+        self.averageCyclesChannelC= self.device.ch3.getAverageCycles()
+        self.modeChannelC= self.device.ch3.getMode()
+        self.numberStopsChannelC = self.device.ch3.getNumberOfStops()
+        self.stopEdgeTypeChannelC= self.device.ch3.getStopEdge()
+        self.stopMaskChannelC=self.device.ch3.getStopMask()
+        #ChannelD
+        self.averageCyclesChannelD= self.device.ch4.getAverageCycles()
+        self.modeChannelD= self.device.ch4.getMode()
+        self.numberStopsChannelD = self.device.ch4.getNumberOfStops()
+        self.stopEdgeTypeChannelD= self.device.ch4.getStopEdge()
+        self.stopMaskChannelD=self.device.ch4.getStopMask()
+    
+    def applyCurrentSettings(self):
+        #Settings to general device
+        self.device.setNumberOfRuns(self.numberRunsSetting)
+        self.device.setThresholdVoltage(self.thresholdVoltage)
+        #Settings to channelA
+        self.device.ch1.setAverageCycles(self.averageCyclesChannelA)
+        self.device.ch1.setMode(self.modeChannelA)
+        self.device.ch1.setNumberOfStops(self.numberStopsChannelA)
+        self.device.ch1.setStopEdge(self.stopEdgeTypeChannelA)
+        self.device.ch1.setStopMask(self.stopMaskChannelA)
+        #Settings to channelB
+        self.device.ch2.setAverageCycles(self.averageCyclesChannelB)
+        self.device.ch2.setMode(self.modeChannelB)
+        self.device.ch2.setNumberOfStops(self.numberStopsChannelB)
+        self.device.ch2.setStopEdge(self.stopEdgeTypeChannelB)
+        self.device.ch2.setStopMask(self.stopMaskChannelB)
+        #Settings to channelC
+        self.device.ch3.setAverageCycles(self.averageCyclesChannelC)
+        self.device.ch3.setMode(self.modeChannelC)
+        self.device.ch3.setNumberOfStops(self.numberStopsChannelC)
+        self.device.ch3.setStopEdge(self.stopEdgeTypeChannelC)
+        self.device.ch3.setStopMask(self.stopMaskChannelC)
+        #Settings to channelD
+        self.device.ch4.setAverageCycles(self.averageCyclesChannelD)
+        self.device.ch4.setMode(self.modeChannelD)
+        self.device.ch4.setNumberOfStops(self.numberStopsChannelD)
+        self.device.ch4.setStopEdge(self.stopEdgeTypeChannelD)
+        self.device.ch4.setStopMask(self.stopMaskChannelD)
+        self.enableDisableChannels()
+        
+        
 
     @Slot()
     def stop(self):

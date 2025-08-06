@@ -21,6 +21,69 @@ import numpy as np
 import sys
 import io
 class TimeStampLogic():
+    """
+    Class responsible for managing the logic and interface of the TimeStamp measurement tab.
+
+    This class handles long-duration timestamp measurements across different operational modes, including:
+    - **Normal** mode: Starts and stops measurements manually.
+    - **Scheduled** mode: Automatically starts/stops measurements based on configured start and end date-times.
+    - **Limited** mode: Runs measurements until a predefined number of events is recorded.
+
+    It provides real-time updates of the measurement status, displays results in a table, and supports manual and automatic data saving in multiple formats. It also offers visual feedback, per-channel control, and user configuration for saving behaviors.
+
+    The main responsibilities include:
+    - Managing three measurement modes: normal, scheduled, and limited.
+    - Displaying measurement data in a table, including per-channel and total counts.
+    - Handling delayed start and stop based on date and time settings.
+    - Enabling saving of data manually or automatically in `.txt`, `.csv`, and `.dat` formats.
+    - Tracking system and measurement status through visual and textual indicators.
+    - Controlling visibility and behavior of measurement labels and checkboxes.
+    - Providing help dialogs and UI feedback during configuration.
+
+    :param enableCheckBoxA: Checkbox to enable/disable channel A (QCheckBox).
+    :param enableCheckBoxB: Checkbox to enable/disable channel B (QCheckBox).
+    :param enableCheckBoxC: Checkbox to enable/disable channel C (QCheckBox).
+    :param enableCheckBoxD: Checkbox to enable/disable channel D (QCheckBox).
+    :param startNormalButton: Button to start normal measurement mode (QPushButton).
+    :param pauseNormalButton: Button to pause normal measurement mode (QPushButton).
+    :param stopNormalButton: Button to stop normal measurement mode (QPushButton).
+    :param startScheduleButton: Button to start scheduled measurement mode (QPushButton).
+    :param pauseScheduleButton: Button to pause scheduled measurement mode (QPushButton).
+    :param stopScheduleButton: Button to stop scheduled measurement mode (QPushButton).
+    :param startLimitedButton: Button to start limited measurement mode (QPushButton).
+    :param pauseLimitedButton: Button to pause limited measurement mode (QPushButton).
+    :param stopLimitedButton: Button to stop limited measurement mode (QPushButton).
+    :param startDate: Date selector for scheduled start date (QDateEdit).
+    :param startTime: Time selector for scheduled start time (QTimeEdit).
+    :param finishDate: Date selector for scheduled end date (QDateEdit).
+    :param finishTime: Time selector for scheduled end time (QTimeEdit).
+    :param numberMeasurementsSpinBox: Spin box to configure number of measurements in limited mode (QSpinBox).
+    :param showTableCheckBox: Checkbox to show/hide the measurement table (QCheckBox).
+    :param measurementLabelA: Label title for channel A measurement (QLabel).
+    :param measurementLabelB: Label title for channel B measurement (QLabel).
+    :param measurementLabelC: Label title for channel C measurement (QLabel).
+    :param measurementLabelD: Label title for channel D measurement (QLabel).
+    :param valueMeasurementA: Label showing count value for channel A (QLabel).
+    :param valueMeasurementB: Label showing count value for channel B (QLabel).
+    :param valueMeasurementC: Label showing count value for channel C (QLabel).
+    :param valueMeasurementD: Label showing count value for channel D (QLabel).
+    :param valueTotalMeasurement: Label showing total count value (QLabel).
+    :param tableTimeStamp: Table displaying recorded timestamp data (QTableWidget).
+    :param statusLabel: Label showing current system status (QLabel).
+    :param colorLabel: Color-coded label to indicate measurement state (QLabel).
+    :param saveDataComplete: Checkbox to toggle full data saving after measurement (QCheckBox).
+    :param tabNormalMeasurement: Tab widget for normal measurement UI (QWidget).
+    :param tabScheduleMeasurement: Tab widget for scheduled measurement UI (QWidget).
+    :param tabLimitedMeasurement: Tab widget for limited measurement UI (QWidget).
+    :param saveDataButton: Button to manually save timestamp data (QPushButton).
+    :param tabs: Main tab widget that hosts all measurement tabs (QTabWidget).
+    :param autoSaveComboBox: Combo box to select preferred format for automatic saving (QComboBox).
+    :param helpSaveButton: Button to show help dialog for save options (QPushButton).
+    :param parent: The parent UI element containing this tab (usually QMainWindow).
+    :param device: The connected TempicoDevice used for timestamp acquisition.
+    :param timerConnection: Timer object for device connection polling (QTimer).
+    :return: None
+    """
     def __init__(self,enableCheckBoxA: QCheckBox,enableCheckBoxB: QCheckBox,enableCheckBoxC: QCheckBox,enableCheckBoxD: QCheckBox, startNormalButton: QPushButton, pauseNormalButton: QPushButton, stopNormalButton: QPushButton ,
                  startScheduleButton: QPushButton, pauseScheduleButton: QPushButton, stopScheduleButton: QPushButton,startLimitedButton: QPushButton, pauseLimitedButton: QPushButton, stopLimitedButton: QPushButton
                  ,startDate: QDateEdit,startTime: QTimeEdit,finishDate: QDateEdit,finishTime: QTimeEdit, numberMeasurementsSpinBox: QSpinBox, showTableCheckBox: QCheckBox,measurementLabelA: QLabel,measurementLabelB: QLabel,
@@ -187,6 +250,18 @@ class TimeStampLogic():
     
     # Functions to connect and disconnect device
     def connectedDevice(self,device):
+        """
+        Handles UI and internal state updates when the device is connected in the TimeStamp logic tab.
+
+        This function performs the following actions:
+        - Enables the disconnect button and disables the connect button in the main window.
+        - Updates the internal sentinel to indicate the device is now connected.
+        - Stores the reference to the connected device instance.
+        - Enables the start buttons for normal, scheduled, and limited measurement modes.
+
+        :param device: The connected device instance.
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
         self.disconnectedMeasurement=False
@@ -196,6 +271,17 @@ class TimeStampLogic():
         self.startLimitedButton.setEnabled(True)
     
     def disconnectedDevice(self):
+        """
+        Handles UI and internal state updates when the device is disconnected.
+
+        This function performs the following actions:
+        - Resets the internal sentinel indicating whether data is currently being saved.
+        - Updates the status label and color to reflect that no measurement is running.
+        - Disables the disconnect button and enables the connect button in the main window.
+        - Disables the start buttons for normal, scheduled, and limited measurement modes.
+
+        :return: None
+        """
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
@@ -207,6 +293,15 @@ class TimeStampLogic():
     
     #Functions graphic interface
     def updateShowTable(self):
+        """
+        Toggles the visibility of the timestamp data table based on the checkbox state.
+
+        This function performs the following actions:
+        - If the "Show Table" checkbox is checked, the timestamp data table is displayed.
+        - If the checkbox is unchecked, the table is hidden.
+
+        :return: None
+        """
         if self.showTableCheckBox.isChecked():
             self.tableTimeStamp.setVisible(True)
         else:
@@ -214,6 +309,18 @@ class TimeStampLogic():
             
     
     def updateCheckBoxLabels(self):
+        """
+        Updates the visibility of measurement labels and values based on each channel's checkbox state.
+
+        This function performs the following actions:
+        - For each channel (A, B, C, D), if its corresponding checkbox is checked:
+        - The label and value indicator showing the number of measurements for that channel are made visible.
+        - If unchecked, both elements are hidden.
+
+        This allows dynamic feedback on active channels during timestamp measurements.
+
+        :return: None
+        """
         if self.enableCheckBoxA.isChecked():
             self.valueMeasurementA.setVisible(True)
             self.measurementLabelA.setVisible(True)
@@ -244,6 +351,23 @@ class TimeStampLogic():
     
     
     def startNormalMeasurement(self):
+        """
+        Starts a normal timestamp measurement.
+
+        Normal measurements begin immediately when the user presses "Start" and continue until manually stopped. 
+        This function performs the following actions:
+        - Validates that at least one channel (A, B, C, or D) is selected.
+        - If no channels are selected, an alert dialog is displayed and the measurement is not started.
+        - If valid:
+            - Disables the start button and enables pause/stop controls.
+            - Disables other measurement tabs to prevent mode changes mid-measurement.
+            - Saves pre-measurement settings and prepares auto-save behavior if selected.
+            - Updates UI labels and status indicators to reflect active measurement.
+            - Creates and starts a background thread (`WorkerThreadTimeStamping`) to handle the measurement process.
+            - Connects worker signals to UI update slots.
+
+        :return: None
+        """
         self.resetValuesSentinels()
         if self.enableCheckBoxA.isChecked() or self.enableCheckBoxB.isChecked() or self.enableCheckBoxC.isChecked() or self.enableCheckBoxD.isChecked():
             #Disable enable buttons
@@ -268,25 +392,10 @@ class TimeStampLogic():
             if self.saveDataComplete.isChecked():
                 autoSaved=True
                 self.autoSaveSettings("Normal")
-            #Test performance in saving data
-            N = 2_000_000  # 2 millones
             if self.isSelectedFormat:
                 self.clearData()
                 self.changeStatusLabel("Running measurement")
                 self.changeStatusColor(1)
-                # start_date = datetime(2024, 1, 1)
-                # end_date = datetime.now()
-                # delta_seconds = int((end_date - start_date).total_seconds())
-
-                # # Generar datetimes aleatorios y convertirlos a string con milisegundos
-                # self.dateTimeData = [
-                #     (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
-                #     .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
-                #     for _ in range(N)
-                # ]
-                # self.stopData = [1] * N
-                # self.channelData = [1] * N
-                #Set the name for the file
                 if self.saveDataComplete.isChecked():
                     self.fileNameAutoSave()
                 #Init thread
@@ -302,7 +411,24 @@ class TimeStampLogic():
         else:
             self.showDialogNoChannels()      
     
-    def pauseNormalMeasurement(self):    
+    def pauseNormalMeasurement(self):
+        """
+        Toggles the pause/resume state of a normal measurement.
+
+        This function allows the user to pause and later resume an ongoing normal measurement.
+        It interacts with the background worker thread to suspend or resume data acquisition accordingly.
+
+        The function performs the following actions:
+        - If the current state is "Pause acquisition":
+        - Sends a signal to the worker thread to pause the measurement.
+        - Updates the button text to "Continue acquisition".
+        - If the current state is "Continue acquisition":
+        - Temporarily disables the button to avoid duplicate clicks.
+        - Sends a signal to the worker thread to resume the measurement.
+        - Restores the button text to "Pause acquisition" and re-enables it.
+
+        :return: None
+        """   
         if self.pauseNormalButton.text()=="Pause adquisition":
             self.worker.changeIsPauseTrue()
             self.pauseNormalButton.setText("Continue adquisition")
@@ -316,6 +442,20 @@ class TimeStampLogic():
         
     
     def stopNormalMeasurement(self):
+        """
+        Stops an ongoing normal measurement and resets the interface to its default state.
+
+        This function performs the following actions:
+        - Marks the measurement as completed by setting the corresponding sentinel.
+        - Sends a stop signal to the background worker thread.
+        - Updates the UI to reflect that no measurement is running (label, color, buttons).
+        - If the measurement was paused, resets the pause button text to "Pause acquisition".
+        - Re-enables tab switching and restores the initial measurement configuration.
+        - Restarts the timer for checking device connection.
+        - Notifies the main window to reflect the updated system state and re-enable settings.
+
+        :return: None
+        """
         self.measurementMade=True
         self.worker.stop()
         self.currenSaving=False
@@ -337,6 +477,21 @@ class TimeStampLogic():
         self.mainWindow.enableSettings()
         
     def notSelectedFormatNormalStop(self):
+        """
+        Cancels the normal measurement initialization when no save format is selected while auto-save is enabled.
+
+        This function is triggered when the user attempts to start a normal measurement with auto-save enabled
+        but closes the format selection dialog without choosing any format (e.g., pressing the X).
+
+        It performs the following actions:
+        - Stops any saving process and resets saving state.
+        - Updates UI labels and colors to indicate no measurement is running.
+        - Re-enables the start button and disables pause/stop buttons.
+        - Re-enables all measurement tabs and resumes connection monitoring.
+        - Restores main window tab interactivity.
+
+        :return: None
+        """
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
@@ -353,7 +508,26 @@ class TimeStampLogic():
       
     
     def startScheduledMeasurement(self):
-        #Check if any channel is selected 
+        """
+        Initiates a scheduled timestamp measurement with start and end times defined by the user.
+
+        Scheduled measurements begin at a future time and automatically stop at the configured end time.
+        This function performs the following actions:
+        - Verifies that at least one channel is selected for measurement.
+        - Disables tab navigation to prevent mode switching.
+        - Retrieves and converts the start and end date-time values from the UI fields.
+        - Validates:
+            - That the start time is not in the past.
+            - That the end time is after the start time.
+        - If validation fails, corresponding alert dialogs are shown.
+        - If validation passes:
+            - Initializes auto-save format selection if enabled.
+            - Configures a countdown timer (`timerBeginMeasurement`) to wait until the scheduled start time.
+            - Updates the UI to reflect the waiting state with remaining time.
+            - Begins measurement immediately if the scheduled start time is now or has passed.
+
+        :return: None
+        """
         self.resetValuesSentinels()
         if self.enableCheckBoxA.isChecked() or self.enableCheckBoxB.isChecked() or self.enableCheckBoxC.isChecked() or self.enableCheckBoxD.isChecked():
             
@@ -410,13 +584,26 @@ class TimeStampLogic():
                     else:
                         self.beginMeasurementTime()
             else:
-                print("Try again")
+                pass
             
         else:
             self.showDialogNoChannels()
     
     
     def formatWaitingTime(self,secondsTotal):
+        """
+        Formats a time duration (in seconds) into a human-readable string for countdown display.
+
+        This function is used to show the remaining time before a scheduled measurement starts or ends.
+        The format adapts depending on the total duration:
+        - If more than one day: `"Xd HH:MM:SS"`
+        - If more than one hour: `"H:MM:SS"`
+        - If less than one hour: `"M:SS"`
+
+        :param secondsTotal: Total time in seconds to format.
+        :return: A formatted string representing the remaining time.
+        :rtype: str
+        """
         days = secondsTotal // 86400
         hours = (secondsTotal % 86400) // 3600
         minutes = (secondsTotal % 3600) // 60
@@ -430,6 +617,20 @@ class TimeStampLogic():
             return f"{minutes}:{seconds:02d}"
         
     def beginMeasurementTime(self):
+        """
+        Starts the scheduled timestamp measurement when the countdown timer reaches zero.
+
+        This function is automatically called after the waiting period in a scheduled measurement.
+        It performs the following actions:
+        - Clears previous data and resets internal sentinels.
+        - Sets up pre-measurement values and stops the device connection timer.
+        - Applies auto-save settings and generates the file name if needed.
+        - Initializes the measurement worker thread in "scheduled" mode.
+        - Starts a timer to monitor when the measurement should stop automatically.
+        - Updates the UI to reflect that the measurement is now running.
+
+        :return: None
+        """
         self.isReordering=False
         self.isWaiting=False
         self.pauseScheduleButton.setEnabled(True)
@@ -445,20 +646,6 @@ class TimeStampLogic():
         if self.saveDataComplete.isChecked():
             self.autoSaveSettings("Scheduled")
             autoSaved=True
-        # N=2_000_000
-        # start_date = datetime(2024, 1, 1)
-        # end_date = datetime.now()
-        # delta_seconds = int((end_date - start_date).total_seconds())
-
-        # # Generar datetimes aleatorios y convertirlos a string con milisegundos
-        # self.dateTimeData = [
-        #     (start_date + timedelta(seconds=random.randint(0, delta_seconds), milliseconds=random.randint(0, 999)))
-        #     .strftime('%Y-%m-%d %H:%M:%S.') + f"{random.randint(0, 999):03d}"
-        #     for _ in range(N)
-        # ]
-        # self.stopData = [1] * N
-        # self.channelData = [1] * N
-        #Set the file name for auto save
         if self.saveDataComplete.isChecked():
             self.fileNameAutoSave()
         
@@ -480,6 +667,20 @@ class TimeStampLogic():
     
     
     def countToBegin(self):
+        """
+        Updates the countdown status before the scheduled measurement begins.
+
+        This function is called periodically by a QTimer during the waiting period before a scheduled measurement starts.
+        It performs the following actions:
+        - Calculates the remaining time until the scheduled start.
+        - If time is still remaining:
+        - Updates the status label and color with a formatted countdown.
+        - If the start time has been reached or passed:
+        - Stops the timer.
+        - Calls the function to begin the actual measurement (`beginMeasurementTime`).
+
+        :return: None
+        """
         currentDate=datetime.now()
         timerTimeSeconds=int((self.dateTimeInit-currentDate).total_seconds())
         if timerTimeSeconds>0:
@@ -492,6 +693,19 @@ class TimeStampLogic():
             
     
     def countToStop(self):
+        """
+        Updates the countdown status until the scheduled measurement ends.
+
+        This function is called periodically by a QTimer during an active scheduled measurement.
+        It performs the following actions:
+        - Calculates the remaining time until the configured end time.
+        - If time is still remaining:
+        - Updates the status label with the current measurement state and formatted time.
+        - If the end time has been reached or passed:
+        - Automatically stops the scheduled measurement by calling `stopScheduledMeasurement()`.
+
+        :return: None
+        """
         currentText=self.statusValueMeasurements
         currentDate=datetime.now()
         timerTimeSeconds=int((self.dateTimeFinal-currentDate).total_seconds())
@@ -503,6 +717,23 @@ class TimeStampLogic():
             self.stopScheduledMeasurement()
     
     def pauseScheduledMeasurement(self):
+        """
+        Toggles the pause/resume state of a scheduled measurement.
+
+        This function allows the user to pause or resume an ongoing scheduled measurement.
+        It communicates with the background worker thread to suspend or resume the acquisition process.
+
+        The function performs the following actions:
+        - If the current button text is "Pause":
+        - Sends a pause signal to the worker thread.
+        - Updates the button text to "Continue".
+        - If the current button text is "Continue":
+        - Temporarily disables the button to prevent multiple clicks.
+        - Sends a resume signal to the worker thread.
+        - Updates the button text back to "Pause" and re-enables the button.
+
+        :return: None
+        """
         if self.pauseScheduleButton.text()=="Pause":
             self.worker.changeIsPauseTrue()
             self.pauseScheduleButton.setText("Continue")
@@ -514,7 +745,24 @@ class TimeStampLogic():
         
     
     def stopScheduledMeasurement(self):
-         
+        """
+        Stops a scheduled measurement at any point — before it starts (waiting phase) or during execution.
+
+        This function handles both scenarios:
+        - If the measurement hasn't started yet and is waiting for the scheduled start time:
+            - Cancels the countdown timer and resets all UI elements to their default state.
+        - If the measurement is already running:
+            - Stops the data acquisition thread and the timer responsible for countdown to the end.
+            - Updates the internal state and UI accordingly.
+
+        In both cases, the function:
+        - Resets saving state and UI labels.
+        - Restores tab and button availability.
+        - Notifies the main window to re-enable configuration options.
+        - Calls post-measurement cleanup logic.
+
+        :return: None
+        """
         if self.isWaiting:
             self.currenSaving=False
             self.changeStatusColor(0)
@@ -556,6 +804,21 @@ class TimeStampLogic():
         self.startTimerConnection()
     
     def notSelectedFormatScheduledStop(self):
+        """
+        Cancels the scheduled measurement setup when no save format is selected while auto-save is enabled.
+
+        This function is triggered when the user attempts to start a scheduled measurement with auto-save enabled
+        but closes the format selection dialog without choosing a format (e.g., presses the close [X] button).
+
+        It performs the following actions:
+        - Stops any saving operation and resets saving state.
+        - Updates UI status and color to indicate no measurement is running.
+        - Re-enables the start button and disables pause/stop buttons.
+        - Restores tab interactivity for other measurement modes and the main window.
+        - Resumes the timer for monitoring device connection.
+
+        :return: None
+        """
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
@@ -571,6 +834,24 @@ class TimeStampLogic():
             
     
     def startLimitedMeasurement(self):
+        """
+        Starts a limited timestamp measurement based on a fixed number of measurement cycles.
+
+        This mode runs the acquisition process until the user-defined number of measurements is reached.
+        The function performs the following actions:
+        - Verifies that at least one channel (A, B, C, or D) is selected.
+        - If none are selected, shows an alert and aborts the start.
+        - If valid:
+        - Disables other measurement tabs to prevent mode switching.
+        - Disables the start button and enables pause/stop controls.
+        - Prepares measurement parameters and auto-save options.
+        - Generates the filename if auto-save is active.
+        - Initializes the worker thread in "limited" mode, passing the number of desired measurements.
+        - Connects thread signals to appropriate UI update handlers.
+        - Starts the background thread and updates the UI to reflect the running state.
+
+        :return: None
+        """
         self.resetValuesSentinels()
         if self.enableCheckBoxA.isChecked() or self.enableCheckBoxB.isChecked() or self.enableCheckBoxC.isChecked() or self.enableCheckBoxD.isChecked():
             #Disable enable buttons
@@ -618,6 +899,23 @@ class TimeStampLogic():
             self.showDialogNoChannels()  
             
     def stopLimitedMeasurement(self):
+        """
+        Stops the limited measurement process, regardless of whether the target number of measurements has been reached.
+
+        This function can be used by the user to interrupt the measurement at any point.
+        It performs the following actions:
+        - Marks the measurement as completed (even if prematurely).
+        - Stops the background worker thread.
+        - Updates the UI status and color to reflect that no measurement is running.
+        - Resets the pause button state (if previously in "Continue" mode).
+        - Re-enables the start button and disables pause/stop buttons.
+        - Re-enables the measurement count spinbox for further configuration.
+        - Restores tab navigation for both the local interface and main window.
+        - Signals the main window to re-enable settings and perform cleanup.
+        - Restarts the timer that monitors device connection.
+
+        :return: None
+        """
         self.measurementMade=True
         self.worker.stop()
         self.currenSaving=False
@@ -640,6 +938,22 @@ class TimeStampLogic():
         self.startTimerConnection()
     
     def notSelectedFormatLimitedStop(self):
+        """
+        Cancels the limited measurement setup when no save format is selected while auto-save is enabled.
+
+        This function is triggered when the user initiates a limited measurement with auto-save enabled
+        but closes the format selection dialog without choosing a file format.
+
+        It performs the following actions:
+        - Aborts the measurement setup and resets saving state.
+        - Updates the status label and color to indicate no measurement is running.
+        - Re-enables the start button and disables pause/stop controls.
+        - Re-enables the measurement count spinbox.
+        - Restores tab access for the local interface and main window.
+        - Resumes the device connection timer.
+
+        :return: None
+        """
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
@@ -657,6 +971,23 @@ class TimeStampLogic():
         
     
     def pauseLimitedMeasurement(self):
+        """
+        Toggles the pause/resume state of a limited measurement based on number of events.
+
+        This function allows the user to temporarily pause or resume a limited measurement in progress.
+        It communicates with the background worker thread to suspend or resume data acquisition accordingly.
+
+        The function performs the following actions:
+        - If the current button text is "Pause":
+        - Sends a pause signal to the worker thread.
+        - Updates the button text to "Continue".
+        - If the current button text is "Continue":
+        - Temporarily disables the button to avoid duplicate clicks.
+        - Sends a resume signal to the worker thread.
+        - Updates the button text back to "Pause" and re-enables it.
+
+        :return: None
+        """
         if self.pauseLimitedButton.text()=="Pause":
             self.worker.changeIsPauseTrue()
             self.pauseLimitedButton.setText("Continue")
@@ -667,6 +998,19 @@ class TimeStampLogic():
             self.pauseLimitedButton.setEnabled(True)
         
     def checkBoxSaveData(self):
+        """
+        Handles the behavior of the "Save Data" checkbox for enabling or disabling auto-save options.
+
+        This function performs the following actions:
+        - If the checkbox is checked (auto-save enabled):
+        - Enables the combo box to allow the user to select the auto-save interval.
+        - Disables the manual save button.
+        - If the checkbox is unchecked (manual save mode):
+        - Disables the auto-save interval combo box.
+        - Enables the manual save button only if a measurement has already been completed.
+
+        :return: None
+        """
         if self.saveDataComplete.isChecked():
             self.autoSaveComboBox.setEnabled(True)
             self.saveDataButton.setEnabled(False)
@@ -677,6 +1021,11 @@ class TimeStampLogic():
             
             
     def dialogHelpSaveButton(self):
+        """
+        Opens a help dialog explaining how autosave works.
+
+        :return: None
+        """
         QMessageBox.information(
             self.mainWindow,
             "What does autosave do?",
@@ -694,6 +1043,11 @@ class TimeStampLogic():
         
     
     def setValuesBeforeMeasurement(self):
+        """
+        Activates channel sentinels based on the selected checkboxes.
+
+        :return: None
+        """
         if self.enableCheckBoxA.isChecked():
             self.channelASentinel=True
         if self.enableCheckBoxB.isChecked():
@@ -704,12 +1058,25 @@ class TimeStampLogic():
             self.channelDSentinel=True
         
     def resetValuesSentinels(self):
+        """
+        Resets all channel sentinels to False.
+
+        :return: None
+        """
         self.channelASentinel=False
         self.channelBSentinel=False
         self.channelCSentinel=False
         self.channelDSentinel=False
     
     def resetSaveSentinels(self):
+        """
+        Resets all save-related sentinels when the save folder is changed.
+
+        This ensures that previously saved or autosaved data is marked as outdated,
+        so it can be saved again in the new location if necessary.
+
+        :return: None
+        """
         self.changedFolder=True
         self.dataCsvSaved=False
         self.dataTxtSaved=False
@@ -722,6 +1089,13 @@ class TimeStampLogic():
         
     
     def settingsBeforeMeasurement(self):
+        """
+        Applies common UI settings before starting any type of measurement.
+
+        Disables save options and channel checkboxes to prevent changes during acquisition.
+
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.saveDataComplete.setEnabled(False)
         self.autoSaveComboBox.setEnabled(False)
@@ -733,6 +1107,17 @@ class TimeStampLogic():
         
     
     def clearData(self):
+        """
+        Clears all data and resets save-related sentinels from the previous measurement.
+
+        This includes:
+        - Resetting autosave and manual save flags.
+        - Clearing stored measurement data and timestamps.
+        - Resetting the display table.
+        - Clearing internal autosave buffer via `savefile`.
+
+        :return: None
+        """
         self.dataNeedResaved=False
         self.dataAutoSavedTxt=False
         self.dataAutoSavedCsv=False
@@ -770,8 +1155,7 @@ class TimeStampLogic():
         self.startDateToSave=datetime.now()
         #Get the miliseconds to init timer
         if self.autoSaveComboBox.currentText()=="30 Minutes":
-            milisecondsToInit=60000
-            #milisecondsToInit=1800000
+            milisecondsToInit=1800000
         elif self.autoSaveComboBox.currentText()=="1 Hour":
             milisecondsToInit=3600000
         elif self.autoSaveComboBox.currentText()=="2 Hours":
@@ -1327,8 +1711,13 @@ class TimeStampLogic():
                         self.dataDatSaved=True
                         self.dateDatSaved=current_date_str        
                     
-        except NameError as e:
-            print(e)
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The changes could not be saved.")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
             
     def showProgressDialog(self,filename):
         
@@ -2168,7 +2557,7 @@ class WorkerThreadTimeStamping(QThread):
             return
 
         header = lines[:8]
-        data_lines = lines[7:]
+        data_lines = lines[8:]
         total_lines = len(data_lines)
         parsed_data = []
         selectedFormat=file_path.split(".")[-1]
@@ -2201,14 +2590,26 @@ class WorkerThreadTimeStamping(QThread):
         sorted_data = sorted(parsed_data, key=lambda x: x[0])
 
         self.changeStatusText.emit("Processing data 70%...")
+        with open(tempDataPath, 'w', encoding='utf-8') as file:
+            for headerValue in header:
+                file.write(headerValue)
+            for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
+                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}\t{stop_time}\t{channel}\n")
+                if idx % max(1, len(sorted_data) // 15) == 0:
+                    percent = 70 + int((idx + 1) / len(sorted_data) * 15)
+                    self.changeStatusText.emit(f"Processing data {percent}%")
+        
+        
+        
+        self.changeStatusText.emit("Processing data 85%...")
         with open(file_path, 'w', encoding='utf-8') as file:
             for headerValue in header:
                 file.write(headerValue)
             for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
                 file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}{separator}{stop_time}{separator}{channel}\n")
 
-                if idx % max(1, len(sorted_data) // 30) == 0:
-                    percent = 70 + int((idx + 1) / len(sorted_data) * 30)
+                if idx % max(1, len(sorted_data) // 15) == 0:
+                    percent = 85 + int((idx + 1) / len(sorted_data) * 15)
                     self.changeStatusText.emit(f"Processing data {percent}%")
 
         self.changeStatusText.emit("Processing complete.")

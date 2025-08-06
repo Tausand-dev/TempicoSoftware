@@ -11,14 +11,25 @@ class createsavefile:
         pass
     
     def createDefaultFolder(self):
-        with open("SaveFileConstants.json","r",encoding="utf-8") as file:
+        if not os.path.exists("SaveFileConstants.json"):
+            default_data = {
+                "saveFolder": "",
+                "startStopHistogramPrefix": "StartStopHistogram",
+                "lifetimePrefix": "Lifetime",
+                "countsEstimationPrefix": "CountsEstimation",
+                "timeStampingPrefix": "TimeStamping"
+            }
+            with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
+                json.dump(default_data, f, indent=4, ensure_ascii=False)
+
+        with open("SaveFileConstants.json", "r", encoding="utf-8") as file:
             data = json.load(file)
-        if not data["saveFolder"] or not os.path.exists(data["saveFolder"]):
+        if not data.get("saveFolder") or not os.path.exists(data["saveFolder"]):
             data["saveFolder"] = ""
             with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             self.create_folder_and_file()
-            self.createTempFileData()
+        self.createTempFileData()
     
     def getExistenceCurrentFolder(self, data):
         folderPath=data['saveFolder']
