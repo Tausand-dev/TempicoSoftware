@@ -1,25 +1,17 @@
-from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QThread, Signal, Slot
-from PySide2.QtGui import QPixmap, QPainter, QColor, QFont
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QCheckBox, QRadioButton,QLabel, QWidget, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QHeaderView,QAbstractItemView, QApplication, QHBoxLayout, QDateEdit, QTimeEdit, QSpinBox, QTabWidget, QProgressBar
-import pyqtgraph as pg
-from numpy import mean, sqrt, exp, array, sum, arange, histogram, linspace, std
-from numpy import append as appnd
+from PySide2.QtCore import QTimer, Qt, QMetaObject, QThread, Signal, Slot
+from PySide2.QtGui import QPixmap, QPainter, QColor
+from PySide2.QtWidgets import QComboBox, QPushButton, QCheckBox,QLabel, QWidget, QTableWidget, QTableWidgetItem, QDialog, QVBoxLayout, QMessageBox, QApplication, QDateEdit, QTimeEdit, QSpinBox, QTabWidget, QProgressBar
 from createsavefile import createsavefile as savefile
-from datetime import datetime, date, timedelta
-from scipy.optimize import curve_fit
-import math
-import re
-from pyqtgraph.exporters import ImageExporter
+from datetime import datetime
 import pyTempico as tempico
 import time
-import random
-import threading
-from pyqtgraph import mkPen
 from datetime import time as dtime
 import os
-import numpy as np
+import random
 import sys
 import io
+from itertools import islice
+import shutil
 class TimeStampLogic():
     """
     Class responsible for managing the logic and interface of the TimeStamp measurement tab.
@@ -380,6 +372,7 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
+            
             #Set values 
             self.setValuesBeforeMeasurement()
             self.stopTimerConnection()
@@ -400,6 +393,17 @@ class TimeStampLogic():
                     self.fileNameAutoSave()
                 #Init thread
                 self.saveSettings()
+                # timestamps = [
+                #     datetime.fromtimestamp(
+                #         random.randint(946684800, 1735689600)  # Año 2000 a 2025
+                #     ).strftime("%Y-%m-%d %H:%M:%S.%f")
+                #     for _ in range(9_000_000)
+                # ]
+                # stopDataTest=[810702361]*9_000_000
+                # channels=[1]*9_000_000
+                # self.dateTimeData=timestamps
+                # self.stopData=stopDataTest
+                # self.channelData=channels
                 self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,True,False,False, self.device, self.savefile, self.fileName, autoSaved)
                 self.worker.finished.connect(self.finishedThread)
                 self.worker.newMeasurement.connect(self.captureMeasurement)
@@ -1137,6 +1141,11 @@ class TimeStampLogic():
         
     
     def settingsAfterMeasurement(self):
+        """
+        Restores common UI controls after completing any measurement type.
+
+        Re-enables connection, save options, and channel selection checkboxes.
+        """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.saveDataComplete.setEnabled(True)
         self.checkBoxSaveData()
@@ -1149,6 +1158,11 @@ class TimeStampLogic():
         
     
     def autoSaveSettings(self,currentTab):
+        """
+        Configures and starts the autosave timer based on the user's interval selection.
+
+        If not in the "Scheduled" tab, prompts the user to select the save format.
+        """
         #Execute window to select the format
         if currentTab!="Scheduled":
             self.dialogFormatStart(currentTab)
@@ -1176,6 +1190,9 @@ class TimeStampLogic():
         
     
     def showDialogNoChannels(self):
+        """
+        Shows a warning dialog if no channels are selected for measurement.
+        """
         QMessageBox.warning(
             self.mainWindow,  
             "Not selected channels",
@@ -1184,6 +1201,9 @@ class TimeStampLogic():
     
     
     def showDialogIncorrectDates(self):
+        """
+        Shows a warning dialog if the end date is earlier than the start date in a scheduled measurement.
+        """
         QMessageBox.warning(
             self.mainWindow,
             "Invalid Date Range",
@@ -1191,6 +1211,9 @@ class TimeStampLogic():
         )
     
     def showDialogIncorrectInitDate(self):
+        """
+        Shows a warning dialog if the start date is earlier than the current date and time.
+        """
         QMessageBox.warning(
             self.mainWindow,
             "Invalid Start Date",
@@ -1221,18 +1244,33 @@ class TimeStampLogic():
         self.timerConnection.start(500)
     
     def updateValuesMeasurementA(self,text):
+        """
+        Updates the label showing the measurement value for channel A.
+        """
         self.valueMeasurementA.setText(text)
     
     def updateValuesMeasurementB(self,text):
+        """
+        Updates the label showing the measurement value for channel B.
+        """
         self.valueMeasurementB.setText(text)
     
     def updateValuesMeasurementC(self,text):
+        """
+        Updates the label showing the measurement value for channel C.
+        """
         self.valueMeasurementC.setText(text)
     
     def updateValuesMeasurementD(self,text):
+        """
+        Updates the label showing the measurement value for channel D.
+        """
         self.valueMeasurementD.setText(text)
     
     def updateValueTotalMeasurements(self,text):
+        """
+        Updates the label showing the total measurements.
+        """
         self.valueTotalMeasurement.setText(text)
         
     def changeStatusColor(self, color):
@@ -1271,6 +1309,15 @@ class TimeStampLogic():
         self.colorLabel.setPixmap(pixmap)
 
     def changeStatusLabel(self, textValue):
+        """
+        Updates the status label text unless a save operation is in progress.
+
+        If a save is occurring, the label is set to "Saving Data" instead.
+
+        :param textValue: The text to display if not currently saving.
+        :type textValue: str
+        :return: None
+        """
         if not self.currenSaving:
             self.statusLabel.setText(textValue)
         else:
@@ -1278,6 +1325,16 @@ class TimeStampLogic():
             
 
     def changeLabelToUpdate(self, textValue):
+        """
+        Updates the status label or measurement status value depending on the reordering state.
+
+        If not currently reordering, updates `statusValueMeasurements`.
+        If reordering, updates the `statusLabel` text directly.
+
+        :param textValue: The text to display.
+        :type textValue: str
+        :return: None
+        """
         if not self.isReordering:
             self.statusValueMeasurements=textValue
         else:
@@ -1285,6 +1342,14 @@ class TimeStampLogic():
     
     #Function to know settings of device
     def saveSettings(self):
+        """
+        Builds and stores the header for the data file, including device and active channel settings.
+
+        The header contains:
+        - Active channels in the measurement.
+        - General device configurations.
+        - Per-channel settings for each active channel.
+        """
         header = "Channels in measurement: "
         channelsList = []
         channelASettings = ""
@@ -1358,6 +1423,12 @@ class TimeStampLogic():
         
         
     def finishedThread(self):
+        """
+        Handles post-measurement actions after the normal measurement thread finishes.
+
+        If autosave is enabled, prompts the user to save.
+        Then resets saving state and stops the normal measurement.
+        """
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
         self.currenSaving=False
@@ -1383,6 +1454,17 @@ class TimeStampLogic():
         
     
     def captureMeasurement(self, valuesA, valuesB,valuesC,valuesD, valuesStart, totalMeasurementsChannelA,totalMeasurementsChannelB,totalMeasurementsChannelC,totalMeasurementsChannelD,totalMeasurements):
+        """
+        Inserts new measurement data into the table, updates the internal data structures,
+        and refreshes channel/total measurement labels.
+
+        Called when the worker thread emits new measurement values for each channel.
+
+        - Adds rows for each measurement (A, B, C, D, and Start events) at the top of the table.
+        - Stores timestamps, stop values, and channel IDs in internal lists.
+        - Limits table size to 50,000 rows.
+        - Updates labels showing total measurements per channel and overall.
+        """
         moreThan50000=False
         #Get the channel index
         #Update table
@@ -1478,11 +1560,24 @@ class TimeStampLogic():
         if self.channelCSentinel:
             self.updateValuesMeasurementC(str(int(totalMeasurementsChannelC)))
         if self.channelDSentinel:
-            self.updateValuesMeasurementA(str(int(totalMeasurementsChannelD)))
+            self.updateValuesMeasurementD(str(int(totalMeasurementsChannelD)))
         self.updateValueTotalMeasurements(str(int(totalMeasurements)))
     
     #Dialog to select the format before measurement when auto save is selected}
     def dialogFormatStart(self,currentTab):
+        """
+        Displays a dialog for selecting the file format when autosave is enabled.
+
+        This function is called at the start of a measurement to let the user choose 
+        the file format (`txt`, `csv`, or `dat`) for automatic data saving.
+        If the user accepts, the selection is stored and measurement continues.
+        If the user cancels, the measurement is stopped according to the current tab 
+        (`Normal`, `Scheduled`, or `Limited`) and common post-measurement settings 
+        are restored.
+
+        :param currentTab: The tab where the measurement was started ("Normal", "Scheduled", or "Limited").
+        :type currentTab: str
+        """
         #Open select the format
         self.isSelectedFormat=False
         dialog = QDialog(self.mainWindow)
@@ -1531,6 +1626,16 @@ class TimeStampLogic():
     
     #This function will activate the window when save data button is clicked
     def saveDataButtonAction(self):
+        """
+        Opens a dialog for selecting the file format when saving data manually.
+
+        This function is triggered when the user clicks the manual "Save" button.
+        It displays a dialog with available formats (`txt`, `csv`, `dat`) and, 
+        upon acceptance, calls `saveDataAction` with the selected format and the 
+        current date and time.
+
+        :return: None
+        """
         #Open select the format
         dialog = QDialog(self.mainWindow)
         dialog.setObjectName("TextFormat")
@@ -1571,6 +1676,24 @@ class TimeStampLogic():
     
     #This function will save data in txt file (TO DO: Put other formats)
     def saveDataAction(self,format,date): 
+        """
+        Handles the logic for saving measurement data, either from autosave 
+        or manual save.
+
+        This function determines if the data has already been saved in the 
+        requested format. If so, it notifies the user without duplicating the file. 
+        If the data was autosaved in a different format, it converts the temporary 
+        file to the selected format and saves it. If the data has not been saved yet, 
+        it creates a new file with the current measurement data.
+
+        Additionally, it displays informational dialogs to confirm the save 
+        or alert the user if the process fails.
+
+        :param format: The desired file format to save (`"txt"`, `"csv"`, or `"dat"`).
+        :type format: str
+        :param date: The date and time used to generate the filename for saving.
+        :type date: datetime
+        """
         try:
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Information)
@@ -1720,6 +1843,18 @@ class TimeStampLogic():
             message_box.exec_()
             
     def showProgressDialog(self,filename):
+        """
+        Displays a modal dialog showing the progress of the file saving process.
+
+        This function creates and shows a progress dialog with a label and a 
+        progress bar. It starts a background worker (`ProcessingDataSaved`) to 
+        process the file saving and updates the progress bar in real time via 
+        signals. When the process finishes, it triggers the final confirmation 
+        message.
+
+        :param filename: The full path of the file being saved.
+        :type filename: str
+        """
         
         self.progressDialog = QDialog(self.mainWindow)
         self.progressDialog.setWindowTitle("Progress")
@@ -1743,6 +1878,14 @@ class TimeStampLogic():
         self.workerUpdate.start()
         
     def finalMessageAfterSave(self):
+        """
+        Displays a confirmation dialog indicating that the file was saved successfully.
+
+        This function shows an information message box with the final save message 
+        (`self.saveFinalText`), informing the user of the file's location and name.
+
+        :return: None
+        """
         message_box = QMessageBox(self.mainWindow)
         message_box.setIcon(QMessageBox.Information)
         message_box.setText(self.saveFinalText)
@@ -1752,6 +1895,17 @@ class TimeStampLogic():
         
     
     def updateProgressDialog(self, percent):
+        """
+        Updates the progress dialog during the save process.
+
+        This function updates the progress bar and label to reflect the current 
+        progress percentage. If the progress reaches or exceeds 100%, the dialog 
+        is automatically closed.
+
+        :param percent: The current progress percentage (0 to 100).
+        :type percent: int
+        :return: None
+        """
         self.progressBar.setValue(percent)
         self.progressLabel.setText(f"Processing data {percent}%")
         QApplication.processEvents()
@@ -1761,6 +1915,17 @@ class TimeStampLogic():
     
 
     def autoSaveActionRoute(self):
+        """
+        Performs the final autosave when a measurement ends.
+
+        This function is executed as the last step of a measurement when either the 
+        user stops it manually or the scheduled time finishes. It saves all remaining 
+        measurement data to a file using the selected autosave format (`txt`, `csv`, 
+        or `dat`), clears the in-memory data lists, and updates the corresponding 
+        flags indicating that the data has been saved.
+
+        :return: None
+        """
         self.isReordering=True
         self.currenSaving=True
         self.changeStatusLabel("Saving data")
@@ -1786,6 +1951,16 @@ class TimeStampLogic():
         
     
     def autoSaveAction(self):
+        """
+        Performs periodic autosave during a measurement.
+
+        This function is triggered automatically at regular intervals while a 
+        measurement is running. It saves the current batch of measurement data 
+        to a file using the predefined autosave format, then clears the saved 
+        data from memory to free resources.
+
+        :return: None
+        """
         self.currenSaving=True
         self.changeStatusLabel("Saving data")
         self.changeStatusColor(2)
@@ -1801,6 +1976,16 @@ class TimeStampLogic():
             print(e)
     
     def fileNameAutoSave(self):
+        """
+        Generates and stores the autosave file name.
+
+        This function builds the complete file path for the autosave operation 
+        based on the save folder, file prefix, measurement start date, and 
+        selected file format. The resulting path is stored in the `fileName` 
+        class attribute for later use.
+
+        :return: None
+        """
         dataFolderPrefix=self.savefile.getDataFolderPrefix()
         folderpath=dataFolderPrefix["saveFolder"]
         data_prefix=dataFolderPrefix["timeStampingPrefix"]
@@ -1808,6 +1993,15 @@ class TimeStampLogic():
         self.fileName = os.path.join(folderpath, f"{data_prefix}{currentDateStr}.{self.selectedFormat}")
     
     def dialogToShowSave(self):
+        """
+        Displays a confirmation dialog for a successful save operation.
+
+        This function shows an information dialog indicating that the files have 
+        been saved successfully. It includes the save folder path and the generated 
+        file name based on the measurement start date and selected format.
+
+        :return: None
+        """
         message_box = QMessageBox(self.mainWindow)
         message_box.setIcon(QMessageBox.Information)
         inital_text="The files have been saved successfully in path folder: "
@@ -1824,12 +2018,30 @@ class TimeStampLogic():
         message_box.exec_()
     
     def stopNormalButtonAction(self):
+        """
+        Stops an ongoing normal measurement.
+
+        This function disables the pause and stop buttons for the normal 
+        measurement mode and sends a stop signal to the worker thread.
+
+        :return: None
+        """
         self.pauseNormalButton.setEnabled(False)
         self.stopNormalButton.setEnabled(False)
         self.worker.stop()
         
 
     def stopScyheduledButtonAction(self):
+        """
+        Stops an ongoing scheduled measurement.
+
+        If the measurement is still in the waiting state, it calls 
+        `stopScheduledMeasurement()` directly. Otherwise, it stops the 
+        scheduled timer, disables the pause and stop buttons, and sends 
+        a stop signal to the worker thread.
+
+        :return: None
+        """
         if self.isWaiting:
             self.stopScheduledMeasurement()
         else:
@@ -1839,6 +2051,14 @@ class TimeStampLogic():
             self.worker.stop()
     
     def stopLimitedButtonAction(self):
+        """
+        Stops an ongoing limited measurement.
+
+        This function disables the pause and stop buttons for the limited 
+        measurement mode and sends a stop signal to the worker thread.
+
+        :return: None
+        """
         self.pauseLimitedButton.setEnabled(False)
         self.stopLimitedButton.setEnabled(False)
         self.worker.stop()
@@ -1849,6 +2069,50 @@ class TimeStampLogic():
 
 
 class WorkerThreadTimeStamping(QThread):
+    """
+    Thread class responsible for executing and managing timestamp measurements in the background.
+
+    This class extends `QThread` to handle real-time acquisition of timestamp data from a
+    `TempicoDevice` without blocking the main UI thread. It supports three operational modes:
+    - **Normal**: Manual start/stop by the user.
+    - **Scheduled**: Automatic start/stop based on configured start and end times.
+    - **Limited**: Stops automatically after a predefined number of measurements.
+
+    The class collects data from up to four independent channels (A–D), tracks total and per-channel
+    counts, and emits signals to update the user interface with measurement data, status text, and
+    status colors. It also handles autosaving of data to files in supported formats.
+
+    Main responsibilities:
+    - Continuously acquire timestamp measurements while the thread is running.
+    - Track total measurements and per-channel statistics.
+    - Handle sentinel flags for pausing, stopping, and controlling measurement flow.
+    - Emit signals to update UI components with real-time measurement and status information.
+    - Save measurement data automatically or manually based on user settings.
+    - Enable or disable specific channels based on configuration.
+
+    Signals:
+        newMeasurement (tuple, tuple, tuple, tuple, tuple, float, float, float, float, float):
+            Emitted when new measurement data is available, including per-channel and total counts.
+        changeStatusText (str):
+            Emitted to update the UI status text.
+        changeStatusColor (int):
+            Emitted to update the UI status color (e.g., ready, running, saving).
+        finishedMeasurements ():
+            Emitted when the measurement process is complete.
+
+    :param channelASentinel: Flag to enable/disable channel A measurements.
+    :param channelBSentinel: Flag to enable/disable channel B measurements.
+    :param channelCSentinel: Flag to enable/disable channel C measurements.
+    :param channelDSentinel: Flag to enable/disable channel D measurements.
+    :param normalMeasurementSentinel: Flag to control normal mode execution.
+    :param scheduleMeasurementSentinel: Flag to control scheduled mode execution.
+    :param limitMeasurementSentinel: Flag to control limited mode execution.
+    :param device: Instance of `tempico.TempicoDevice` used to acquire timestamp data.
+    :param savefile: Object responsible for handling file-saving operations.
+    :param filename: File path or name to save measurement data.
+    :param isAutoSave: Boolean indicating whether autosave is enabled.
+    :param maximumMeasurements: Maximum number of measurements in limited mode (default 0).
+    """
     newMeasurement=Signal(tuple,tuple,tuple,tuple,tuple,float,float,float,float,float)
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
@@ -1897,6 +2161,8 @@ class WorkerThreadTimeStamping(QThread):
         self.noAbortsSequent=0
         self.consecutiveErrors=0
         self.saveCurrentMeasurements()
+        #Maximum value
+        self.maximumValueMeasurement=5000000000
         
         
     
@@ -1948,6 +2214,14 @@ class WorkerThreadTimeStamping(QThread):
             self.sortTimeStamps(self.filename)
                 
     def enableDisableChannels(self):
+        """
+        Configures the device channels according to the user's selection.
+
+        This function enables or disables each measurement channel (A–D) based on
+        the sentinel values provided at initialization. It also retrieves the
+        number of stops for each active channel and calculates the total possible
+        measurements for a single run, storing it in `totalDataPerMeasurement`.
+        """
         self.totalDataPerMeasurement=0
         if self.channelASentinel:
             self.device.ch1.enableChannel()
@@ -1978,15 +2252,35 @@ class WorkerThreadTimeStamping(QThread):
             self.device.ch4.disableChannel()
     
     def enableChannelsAfterFinishedMeasurement(self):
+        """
+        Enables all measurement channels on the device.
+
+        """
         self.device.ch1.enableChannel()
         self.device.ch2.enableChannel()
         self.device.ch3.enableChannel()
         self.device.ch4.enableChannel()
     
     def syncTime(self):
+        """
+        Synchronizes the system time with the connected device.
+        """
         self.device.setDateTime()
     
     def sortMeasurementByStart(self, measurement):
+        """
+        Sorts measurement records by their start time.
+
+        Filters out empty runs from the provided measurement list and sorts the 
+        remaining entries in ascending order based on the third element of each record 
+        (start time).
+
+        :param measurement: List of measurement records, where each record is an iterable 
+                            containing at least three elements.
+        :type measurement: list
+        :return: A list of filtered and sorted measurement records.
+        :rtype: list
+        """
         dataFiltered=[]
         for run in measurement:
             if run:
@@ -1997,6 +2291,34 @@ class WorkerThreadTimeStamping(QThread):
             
     
     def getLimitedMeasurements(self):
+        """
+        Acquires, processes, and validates measurements from the device in limited mode, 
+        stopping once the configured maximum number of measurements is reached.
+
+        This method:
+        1. Solicits a measurement from the device and captures any console output.
+        2. Handles timeouts by attempting additional fetches, aborting when data is stagnant, 
+        or resetting the device after repeated failures.
+        3. Sorts the retrieved measurements by start time when applicable.
+        4. Iterates through the measurements and:
+        - Detects and skips corrupt data sequences.
+        - Assigns valid measurement values to their respective channels (A, B, C, D) based 
+            on enabled channel sentinels.
+        - Verifies that values fall within the allowed measurement range.
+        - Updates total and per-channel measurement counters.
+        - Stops processing immediately if the maximum limit is reached.
+        5. Identifies active channels producing no valid data and emits user warnings.
+        6. Detects and records start-only measurements (with no corresponding stop values).
+        7. Emits the processed results to the main thread, including:
+        - Tuples of `(start_time, value)` for each channel.
+        - List of start-only measurement timestamps.
+        - Per-channel totals and overall total.
+        8. Sends progress updates and status messages to the GUI.
+
+        If no measurements are available or a start channel is inactive, a warning is emitted 
+        to the main thread.
+        """
+        
         try:
             valueA=[]
             valueB=[]
@@ -2048,23 +2370,33 @@ class WorkerThreadTimeStamping(QThread):
             startValues={}
             totalNoStarts=0
             StartChannelRegister=True
+            totalLenMeasure=len(measure)
             if measure:
-                for channelMeasure in measure:
+                for measureIndex in range(totalLenMeasure):
+                    channelMeasure=measure[measureIndex]
                     if channelMeasure:
+                        if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
+                            nextMeasure=measure[measureIndex+1]
+                            valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
+                        if valuesToSkip>0:
+                            valuesToSkip-=1
+                            continue  
                         startValue=channelMeasure[2]
                         startValue= str(datetime.fromtimestamp(startValue))
                         startValues[startValue]=0  
                         if self.channelASentinel:
                             if channelMeasure[0]==1:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                        self.allMeasurementsComplete=True
-                                        break
-                                if self.numberStopsA>1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsA)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                            self.allMeasurementsComplete=True
+                                            break
+                                if totalRange>1:
                                     if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[4]))
@@ -2073,7 +2405,7 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsA>2:
+                                if totalRange>2:
                                     if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[5]))
@@ -2082,7 +2414,7 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsA>3:
+                                if totalRange>3:
                                     if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[6]))
@@ -2091,7 +2423,7 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsA>4:
+                                if totalRange>4:
                                     if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[7]))
@@ -2104,16 +2436,18 @@ class WorkerThreadTimeStamping(QThread):
                                     
                         if self.channelBSentinel:
                             if channelMeasure[0]==2:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                            self.allMeasurementsComplete=True
-                                            break
-                                if self.numberStopsB>1:
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsB)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                                self.allMeasurementsComplete=True
+                                                break
+                                if totalRange>1:
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -2121,8 +2455,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsB>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -2130,8 +2464,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsB>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -2139,8 +2473,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsB>4: 
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4: 
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -2150,16 +2484,18 @@ class WorkerThreadTimeStamping(QThread):
                                             break
                         if self.channelCSentinel:
                             if channelMeasure[0]==3:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                            self.allMeasurementsComplete=True
-                                            break
-                                if self.numberStopsC>1: 
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsC)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                                self.allMeasurementsComplete=True
+                                                break
+                                if totalRange>1: 
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -2167,8 +2503,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsC>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -2176,8 +2512,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsC>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -2185,8 +2521,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsC>4:
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4:
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -2196,16 +2532,18 @@ class WorkerThreadTimeStamping(QThread):
                                             break
                         if self.channelDSentinel:
                             if channelMeasure[0]==4:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                                    if self.totalMeasurements>=self.maximumMeasurements:
-                                            self.allMeasurementsComplete=True
-                                            break
-                                if self.numberStopsD>1:
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsD)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                        if self.totalMeasurements>=self.maximumMeasurements:
+                                                self.allMeasurementsComplete=True
+                                                break
+                                if totalRange>1:
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -2213,8 +2551,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsD>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -2222,8 +2560,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsD>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -2231,8 +2569,8 @@ class WorkerThreadTimeStamping(QThread):
                                         if self.totalMeasurements>=self.maximumMeasurements:
                                             self.allMeasurementsComplete=True
                                             break
-                                if self.numberStopsD>4:
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4:
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -2297,6 +2635,31 @@ class WorkerThreadTimeStamping(QThread):
         
     
     def getMeasurement(self):
+        """
+        Acquires, processes, and validates measurements from the device, assigning 
+        them to their corresponding channels and emitting results to the main thread.
+
+        This method:
+        1. Solicits a measurement from the device.
+        2. Handles timeouts by attempting additional fetches and aborting if needed.
+        3. Verifies measurement integrity:
+        - Detects and skips corrupt data sequences.
+        - Confirms that the device returns complete measurements.
+        4. Organizes measurements by channel (A, B, C, D) according to the channel 
+        sentinels enabled in the worker.
+        5. Validates that each enabled channel is actually producing measurements, 
+        generating user warnings if not.
+        6. Detects and reports cases where only start values are recorded without 
+        associated stop measurements.
+        7. Updates internal counters for total and per-channel measurements.
+        8. Emits the processed measurement data, including:
+        - Tuples for each channel with `(start_time, value)`.
+        - List of start-only measurements.
+        - Totals per channel and global total.
+
+        If no measurements are available or a start channel is inactive, a warning 
+        is emitted to the main thread.
+        """
         try:
             valueA=[]
             valueB=[]
@@ -2312,6 +2675,7 @@ class WorkerThreadTimeStamping(QThread):
             finishedMeasurement=False
             if "Timeout reached" in printedDeviceCommunication:
                 while not finishedMeasurement:
+                    time.sleep(1)
                     newFetch=self.device.fetch()
                     if (newFetch==measure):
                         finishedMeasurement=True
@@ -2330,7 +2694,6 @@ class WorkerThreadTimeStamping(QThread):
                 #Wait at leat 20 ms
                 QThread.msleep(20)
                 self.applyCurrentSettings()
-                print("Entra al reset de la medición")
                 #Wait at leat 20 ms 
                 QThread.msleep(20)
             elif not measure and self.noMeasurementsSequent >=3:
@@ -2338,53 +2701,59 @@ class WorkerThreadTimeStamping(QThread):
                 self.noAbortsSequent+=1
                 self.device.abort()
                 QThread.msleep(20)
-                print("Entra al abort por que no hay medicion")
                 #Wait at leat 10 ms
-                
-            
-                
-            
+            valuesToSkip=0 
             if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
                 if measure:
                     measure=self.sortMeasurementByStart(measure)
             totalNoStarts=0
             StartChannelRegister=True
+            totalLenMeasure=len(measure)
             if measure:
                 self.noMeasurementsSequent=0
                 self.noAbortsSequent=0
-                for channelMeasure in measure:
+                for measureIndex in range(totalLenMeasure):
+                    channelMeasure=measure[measureIndex]                        
                     if channelMeasure:
+                        if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
+                            nextMeasure=measure[measureIndex+1]
+                            valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
+                        if valuesToSkip>0:
+                            valuesToSkip-=1
+                            continue    
                         #New start algo
                         startValue=channelMeasure[2]
                         startValue= str(datetime.fromtimestamp(startValue))
                         startValues[startValue]=0
                         if self.channelASentinel:
                             if channelMeasure[0]==1:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueA.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelA+=1
-                                if self.numberStopsA>1:
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsA)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueA.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelA+=1
+                                if totalRange>1:
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
-                                if self.numberStopsA>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
-                                if self.numberStopsA>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
-                                if self.numberStopsA>4:
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4:
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -2393,93 +2762,99 @@ class WorkerThreadTimeStamping(QThread):
                                     
                         if self.channelBSentinel:
                             if channelMeasure[0]==2:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueB.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                if self.numberStopsB>1:
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsB)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueB.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelB+=1
+                                if totalRange>1:
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
-                                if self.numberStopsB>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
-                                if self.numberStopsB>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
-                                if self.numberStopsB>4: 
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4: 
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                         if self.channelCSentinel:
                             if channelMeasure[0]==3:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueC.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelB+=1
-                                if self.numberStopsC>1: 
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsC)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueC.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelC+=1
+                                if totalRange>1: 
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
-                                if self.numberStopsC>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
-                                if self.numberStopsC>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
-                                if self.numberStopsC>4:
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4:
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                         if self.channelDSentinel:
                             if channelMeasure[0]==4:
-                                if channelMeasure[3]!=-1:
-                                    startValues[startValue]+=1
-                                    valueD.append((startValue,channelMeasure[3]))
-                                    self.totalMeasurements+=1
-                                    self.totalMeasurementsChannelD+=1
-                                if self.numberStopsD>1:
-                                    if channelMeasure[4]!=-1:
+                                totalRange=self.getRange(channelMeasure,self.numberStopsD)
+                                if totalRange>0:
+                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                        startValues[startValue]+=1
+                                        valueD.append((startValue,channelMeasure[3]))
+                                        self.totalMeasurements+=1
+                                        self.totalMeasurementsChannelD+=1
+                                if totalRange>1:
+                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
-                                if self.numberStopsD>2:
-                                    if channelMeasure[5]!=-1:
+                                if totalRange>2:
+                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
-                                if self.numberStopsD>3:
-                                    if channelMeasure[6]!=-1:
+                                if totalRange>3:
+                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
-                                if self.numberStopsD>4:
-                                    if channelMeasure[7]!=-1:
+                                if totalRange>4:
+                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -2525,6 +2900,7 @@ class WorkerThreadTimeStamping(QThread):
                 self.changeStatusColor.emit(1)  
             #Emitir lista de tuplas de valores
             self.consecutiveErrors=0
+            
             self.newMeasurement.emit(valueA,valueB,valueC,valueD,onlyStartMeasurements, self.totalMeasurementsChannelA,
                                     self.totalMeasurementsChannelB,self.totalMeasurementsChannelC, self.totalMeasurementsChannelD, self.totalMeasurements)
         except Exception as e:
@@ -2534,87 +2910,146 @@ class WorkerThreadTimeStamping(QThread):
                 
             
         
+    def getRange(self, currentMeasurement,stopNumber):
+        """
+        Determines the valid range of stops in a measurement.
+
+        This function checks the length of the provided measurement list to ensure
+        it is not corrupted. If the length is smaller than expected, the range is 
+        adjusted to avoid out-of-bounds errors when processing the data.
+
+        :param currentMeasurement: The current measurement data as a list.
+        :param stopNumber: The expected number of stops.
+        :return: The validated number of stops to iterate over.
+        """
+        totalRange=0
+        correctRange=stopNumber
+        totalLenMeasurement=len(currentMeasurement)
+        if totalLenMeasurement>=4:
+            if totalLenMeasurement-3<correctRange:
+                totalRange=totalLenMeasurement-3
+            else:
+                totalRange=correctRange
+        return totalRange
+
+    
+    def checkCorruptData(self, currentMeasurement, nextMeasurement):
+        """
+        Checks if the current measurement should be skipped due to data corruption.
+
+        This function compares the sequence index of the current measurement with 
+        the next one. If the sequence does not follow the expected order, it 
+        determines that the current measurement is corrupt and should be skipped.
+
+        :param currentMeasurement: The current measurement data as a list.
+        :param nextMeasurement: The following measurement data as a list.
+        :return: 1 if the current measurement should be skipped, 0 otherwise.
+        """
+        finalToSkip=0
+        if nextMeasurement:
+            if (currentMeasurement[1]+1)!=nextMeasurement[1] and ((currentMeasurement[1])!=nextMeasurement[1]):
+                finalToSkip=1
+        return finalToSkip
     
     
     def changeIsPauseTrue(self):
+        """
+        Sets the pause sentinel to True.
+
+        :return: None
+        """
         self.isPause= True
     
     def changeIsPauseFalse(self):
+        """
+        Sets the pause sentinel to False.
+
+        :return: None
+        """
         self.isPause= False
     
     def changeReadyToReorder(self):
+        """
+        Sets the ready-to-reorder sentinel to True.
+
+        :return: None
+        """
         self.readyToReOrder=True
     
     
-       
-    # Function to reorder data
-    def sortTimeStamps(self, file_path):
+    def sortTimeStamps(self,filePath):
+        """
+        Sorts a timestamp file by start times and moves the processed data to the user-selected folder.
+
+        This function reads a temporary autosave file containing timestamp data,
+        sorts the entries by their start time, and writes the sorted data both back
+        to the temporary file and to the final file in the user-selected save
+        location. The function also updates the processing progress via status
+        signals.
+
+        :param file_path: The destination file path where the sorted data will be saved.
+        :return: None
+        """
         tempDataPath = os.path.join("./TempData", f"AutoSaveData.txt")
+        tempDataOrder= os.path.join("./TempData", f"AutoSaveDataSorted.txt")
+        selectedFormat= filePath.split(".")[-1]
+        newSeparator= ";" if selectedFormat == "csv" else "\t"
+        chunkSize=30000
+        overlapSize=3000
+        self.changeStatusText.emit(f"Processing data 0%")
+        currentAdvance=0
         with open(tempDataPath, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
+            header = list(islice(file, 8))
+            with open(tempDataOrder, 'w', encoding='utf-8') as out:
+                for headLine in header:
+                    newheadLine=headLine.replace("\t",newSeparator)
+                    out.write(newheadLine)
+            with open(tempDataOrder, 'a', encoding='utf-8') as outFile:
+                isFinished=False
+                currentOverlapValues=[]
+                while not isFinished:
+                    currentChunk=currentOverlapValues+list(islice(file, chunkSize-len(currentOverlapValues)))
+                    if not currentChunk:
+                        isFinished=True
+                    else:
+                        dataToOrder=[]
+                        for line in currentChunk:
+                            parts = line.strip().split("\t")
+                            if len(parts) == 3:
+                                start_time_str, stop_time, channel = parts
+                                try:
+                                    dataToOrder.append((start_time_str, stop_time, channel))
+                                except ValueError:
+                                    continue
 
-        if not lines:
-            return
-
-        header = lines[:8]
-        data_lines = lines[8:]
-        total_lines = len(data_lines)
-        parsed_data = []
-        selectedFormat=file_path.split(".")[-1]
-        if selectedFormat=="csv":
-            separator=";"
-        else:
-            separator="\t"
-        #Change the header
-        newHeader=[]
-        for lineSettings in header:
-            newLineSetting= lineSettings.replace("\t",separator)
-            newHeader.append(newLineSetting)
-        header=newHeader
-            
-        for idx, line in enumerate(data_lines):
-            parts = line.strip().split("\t")
-            if len(parts) == 3:
-                start_time_str, stop_time, channel = parts
-                try:
-                    start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S.%f")
-                    parsed_data.append((start_time, stop_time, channel))
-                except ValueError:
-                    continue
-
-            if idx % max(1, total_lines // 30) == 0:
-                percent = int((idx + 1) / total_lines * 30)
-                self.changeStatusText.emit(f"Processing data {percent}%")
-
-        self.changeStatusText.emit("Processing timestamps 70%")
-        sorted_data = sorted(parsed_data, key=lambda x: x[0])
-
-        self.changeStatusText.emit("Processing data 70%...")
-        with open(tempDataPath, 'w', encoding='utf-8') as file:
-            for headerValue in header:
-                file.write(headerValue)
-            for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}\t{stop_time}\t{channel}\n")
-                if idx % max(1, len(sorted_data) // 15) == 0:
-                    percent = 70 + int((idx + 1) / len(sorted_data) * 15)
-                    self.changeStatusText.emit(f"Processing data {percent}%")
-        
-        
-        
-        self.changeStatusText.emit("Processing data 85%...")
-        with open(file_path, 'w', encoding='utf-8') as file:
-            for headerValue in header:
-                file.write(headerValue)
-            for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}{separator}{stop_time}{separator}{channel}\n")
-
-                if idx % max(1, len(sorted_data) // 15) == 0:
-                    percent = 85 + int((idx + 1) / len(sorted_data) * 15)
-                    self.changeStatusText.emit(f"Processing data {percent}%")
-
-        self.changeStatusText.emit("Processing complete.")
+                        dataToOrder.sort(key=lambda x: x[0])
+                        totalLenChunk=len(currentChunk)
+                        currentAdvance+=totalLenChunk-overlapSize
+                        percent = int(currentAdvance / (self.totalMeasurements))
+                        self.changeStatusText.emit(f"Processing data {percent}%")
+                        if totalLenChunk < chunkSize:
+                            currentOverlapValues=[]
+                            for line in dataToOrder:
+                                outFile.write(f"{line[0]}{newSeparator}{line[1]}{newSeparator}{line[2]}\n")
+                        else:
+                            currentOverlapValues=currentChunk[-overlapSize:]
+                            for line in dataToOrder[:-overlapSize]:
+                                outFile.write(f"{line[0]}{newSeparator}{line[1]}{newSeparator}{line[2]}\n")
+        os.replace(tempDataOrder, tempDataPath)
+        shutil.copy2(tempDataPath, filePath)
+        self.changeStatusText.emit(f"Processing data 100%")
     
     def saveCurrentMeasurements(self):
+        """
+        Saves the current device configuration settings.
+
+        This function retrieves the general and per-channel configuration 
+        parameters from the connected device and stores them in the corresponding 
+        instance variables. These values represent the active measurement 
+        settings, such as run counts, thresholds, modes, and stop configurations.
+
+        :return: None
+        """
         #General settings
         self.numberRunsSetting=self.device.getNumberOfRuns()
         self.thresholdVoltage=self.device.getThresholdVoltage()
@@ -2643,7 +3078,18 @@ class WorkerThreadTimeStamping(QThread):
         self.stopEdgeTypeChannelD= self.device.ch4.getStopEdge()
         self.stopMaskChannelD=self.device.ch4.getStopMask()
     
+    
     def applyCurrentSettings(self):
+        """
+        Applies the previously saved device configuration.
+
+        This function restores the general and per-channel configuration 
+        parameters that were saved from the device, and reconfigures the device 
+        accordingly. It also enables or disables channels based on sentinel values 
+        to continue measurements.
+
+        :return: None
+        """
         #Settings to general device
         self.device.setNumberOfRuns(self.numberRunsSetting)
         self.device.setThresholdVoltage(self.thresholdVoltage)
@@ -2688,10 +3134,33 @@ class WorkerThreadTimeStamping(QThread):
         
     @Slot()   
     def stop(self):
+        """
+        Sets the running sentinel to False to indicate that the thread has finished.
+
+        :return: None
+        """
         self.running=False    
 
 
 class ProcessingDataSaved(QThread):
+    """
+    Thread class responsible for processing saved measurement files when autosave is not enabled.
+
+    This class runs in a separate thread to avoid blocking the main UI while
+    processing data from a previously saved file. It emits progress updates so
+    the user interface can reflect the current status of the processing task.
+
+    Main responsibilities:
+    - Read and process the specified saved data file.
+    - Emit progress updates during the processing.
+    - Operate independently from the main thread to keep the UI responsive.
+
+    Signals:
+        changeProgress (float):
+            Emitted to update the processing progress in the UI as a percentage.
+
+    :param filename: Path to the saved measurement file to be processed.
+    """
     changeProgress=Signal(float)
     def __init__(self, filename):
         super().__init__()
@@ -2701,6 +3170,17 @@ class ProcessingDataSaved(QThread):
         self.sortTimeStamps(self.filename)
     
     def sortTimeStamps(self, file_path):
+        """
+        Sorts a saved timestamp file by start times and emits progress updates during processing.
+
+        This function reads the specified measurement file, parses its data entries,
+        sorts them chronologically by start time, and writes the sorted content back
+        to the same file. Progress updates are emitted throughout the process to
+        inform the UI of the current completion percentage.
+
+        :param file_path: Path to the saved measurement file to be sorted.
+        :return: None
+        """
         with open(file_path, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
@@ -2723,8 +3203,7 @@ class ProcessingDataSaved(QThread):
             if len(parts) == 3:
                 start_time_str, stop_time, channel = parts
                 try:
-                    start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S.%f")
-                    parsed_data.append((start_time, stop_time, channel))
+                    parsed_data.append((start_time_str, stop_time, channel))
                 except ValueError:
                     continue
 
@@ -2742,7 +3221,7 @@ class ProcessingDataSaved(QThread):
             for headerValue in header:
                 file.write(headerValue)
             for idx, (start_time, stop_time, channel) in enumerate(sorted_data):
-                file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}{separator}{stop_time}{separator}{channel}\n")
+                file.write(f"{start_time}{separator}{stop_time}{separator}{channel}\n")
 
                 if idx % max(1, len(sorted_data) // 30) == 0:
                     percent = 70 + int((idx + 1) / len(sorted_data) * 30)

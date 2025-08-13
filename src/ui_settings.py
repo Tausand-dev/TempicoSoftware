@@ -265,7 +265,7 @@ class Ui_settings(object):
 
         self.StopMaskValueChannelB = QSpinBox(self.StopMaskChannelB)
         self.StopMaskValueChannelB.setObjectName(u"StopMaskValueChannelB")
-        self.StopMaskValueChannelB.setMaximum(1000)
+        self.StopMaskValueChannelB.setMaximum(4000)
 
         self.horizontalLayout_10.addWidget(self.StopMaskValueChannelB)
 
@@ -383,7 +383,7 @@ class Ui_settings(object):
 
         self.StopMaskValueChannelC = QSpinBox(self.StopMaskChannelC)
         self.StopMaskValueChannelC.setObjectName(u"StopMaskValueChannelC")
-        self.StopMaskValueChannelC.setMaximum(1000)
+        self.StopMaskValueChannelC.setMaximum(4000)
 
         self.horizontalLayout_15.addWidget(self.StopMaskValueChannelC)
 
@@ -501,7 +501,7 @@ class Ui_settings(object):
 
         self.StopMaskValueChannelD = QSpinBox(self.StopMaskChannelD)
         self.StopMaskValueChannelD.setObjectName(u"StopMaskValueChannelD")
-        self.StopMaskValueChannelD.setMaximum(1000)
+        self.StopMaskValueChannelD.setMaximum(4000)
 
         self.horizontalLayout_20.addWidget(self.StopMaskValueChannelD)
 

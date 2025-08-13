@@ -135,6 +135,7 @@ class MainWindow(QMainWindow):
         ##
         self.openSettings=False
         self.openGeneralSettings=False
+        self.openPrefixSettings=False
         ## general settings
         self.thresholdVoltage=0
         self.numberRuns=0
@@ -762,10 +763,29 @@ class MainWindow(QMainWindow):
             message_box.exec_()
     
     def folderPrefixClicked(self):
-        self.prefixFolderDialog=QDialog(self)
-        self.uiFolderPrefix=Ui_DialogFolderPrefix()
-        self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
-        self.prefixFolderDialog.exec_()
+        if not self.currentMeasurement:
+            self.openPrefixSettings=True
+            self.prefixFolderDialog=QDialog(self)
+            self.uiFolderPrefix=Ui_DialogFolderPrefix()
+            self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
+            self.prefixFolderDialog.exec_()
+        else:
+            #Open warning dialog
+            message_box = QMessageBox(self)
+            message_box.setWindowTitle("Running measurement")
+            message_box.setText("The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.")
+            pixmap= QPixmap(ICON_LOCATION)
+            message_box.setIconPixmap(pixmap)
+            message_box.setIcon(QMessageBox.Information)
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            self.openPrefixSettings=True
+            self.prefixFolderDialog=QDialog(self)
+            self.uiFolderPrefix=Ui_DialogFolderPrefix()
+            self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
+            self.uiFolderPrefix.onlyReading()
+            self.prefixFolderDialog.exec_()
+            
         
 
     def enableSettings(self):
@@ -786,7 +806,9 @@ class MainWindow(QMainWindow):
             if self.settings_windows.isVisible():
                 self.settings_windows.getsettings()
                 self.settings_windows.enableSettings()
-
+        if self.openPrefixSettings:
+            if self.prefixFolderDialog.isVisible():
+                self.uiFolderPrefix.enableEditing()
 
     def saveSettings(self):
         """

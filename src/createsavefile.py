@@ -474,14 +474,16 @@ class createsavefile:
             for start_time, stop_time, channel in sorted_data:
                 file.write(f"{start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}{separator}{stop_time}{separator}{channel}\n")
     
-    def convertFileFormat(self,file_path, new_extension, autoSaved):
+    def convertFileFormat(self, file_path, new_extension, autoSaved):
         if autoSaved:
-            originalPath = os.path.join("./TempData", f"AutoSaveData.txt")
+            originalPath = os.path.join("./TempData", "AutoSaveData.txt")
         else:
-            originalPath= file_path
+            originalPath = file_path
+
         current_ext = originalPath.split(".")[-1].lower()
         base_path = ".".join(file_path.split(".")[:-1])
         new_file_path = base_path + "." + new_extension.lower()
+
         if not autoSaved:
             if current_ext == "csv":
                 current_sep = ";"
@@ -495,29 +497,23 @@ class createsavefile:
         else:
             new_sep = "\t"
 
-
-        with open(originalPath, 'r', encoding='utf-8') as infile:
-            lines = infile.readlines()
-
-        if not lines:
-            return  
-
-        header = lines[:8]
-        newHeader=[]
-        for lineHead in header:
-            if new_extension=="csv":
-                newLineHead=lineHead.replace("\t",";")
-            else:
-                newLineHead=lineHead.replace(";","\t")
-            newHeader.append(newLineHead)
-        header=newHeader
-        data = lines[8:]
-        print(new_file_path)
         os.makedirs(os.path.dirname(new_file_path), exist_ok=True)
-        with open(new_file_path, 'w', encoding='utf-8') as outfile:
-            for line in header:
-                outfile.write(line)
-            for line in data:
+
+        with open(originalPath, 'r', encoding='utf-8') as infile, \
+            open(new_file_path, 'w', encoding='utf-8') as outfile:
+
+            # Procesar header (primeras 8 líneas)
+            for i in range(8):
+                line = infile.readline()
+                if not line:
+                    break
+                if new_extension.lower() == "csv":
+                    outfile.write(line.replace("\t", ";"))
+                else:
+                    outfile.write(line.replace(";", "\t"))
+
+            # Procesar resto del archivo línea a línea
+            for line in infile:
                 if current_sep != new_sep:
                     parts = line.strip().split(current_sep)
                     outfile.write(new_sep.join(parts) + "\n")
@@ -528,17 +524,14 @@ class createsavefile:
         if not os.path.exists(file_path):
             return False
 
-        
         os.makedirs(new_folder, exist_ok=True)
 
-        
         file_name = os.path.basename(file_path)
         base_name = ".".join(file_name.split(".")[:-1])
         current_ext = file_path.split(".")[-1].lower()
         new_file_name = base_name + "." + new_extension.lower()
         new_file_path = os.path.join(new_folder, new_file_name)
 
-        
         if current_ext == "csv":
             current_sep = ";"
         else:
@@ -549,28 +542,21 @@ class createsavefile:
         else:
             new_sep = "\t"
 
-        
-        with open(file_path, 'r', encoding='utf-8') as infile:
-            lines = infile.readlines()
+        with open(file_path, 'r', encoding='utf-8') as infile, \
+            open(new_file_path, 'w', encoding='utf-8') as outfile:
 
-        if not lines:
-            return False
+            # Procesar header (primeras 8 líneas)
+            for i in range(8):
+                line = infile.readline()
+                if not line:
+                    break
+                if current_sep != new_sep:
+                    outfile.write(line.replace(current_sep, new_sep))
+                else:
+                    outfile.write(line)
 
-        header = lines[:8]
-        data = lines[8:]
-
-        
-        converted_header = []
-        for line in header:
-            if current_sep != new_sep:
-                line = line.replace(current_sep, new_sep)
-            converted_header.append(line)
-
-        
-        with open(new_file_path, 'w', encoding='utf-8') as outfile:
-            for line in converted_header:
-                outfile.write(line)
-            for line in data:
+            # Procesar resto del archivo línea por línea
+            for line in infile:
                 if current_sep != new_sep:
                     parts = line.strip().split(current_sep)
                     outfile.write(new_sep.join(parts) + "\n")

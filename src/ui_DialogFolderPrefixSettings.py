@@ -279,4 +279,24 @@ class Ui_DialogFolderPrefix(object):
             f"{invalid_chars}\n\n"
             f"These characters are not allowed in file names."
         )
+    
+    def onlyReading(self):
+        self.folderPathLineEdit.setEnabled(False)
+        self.startStopHistogramLineEdit.setEnabled(False)
+        self.lifetimeLineEdit.setEnabled(False)
+        self.countsEstimationLineEdit.setEnabled(False)
+        self.lineEdit.setEnabled(False)
+        self.applyChangesButton.setEnabled(False)
+        self.cancelButton.setEnabled(False)
+        self.defaultValuesButton.setEnabled(False)
         
+
+    def enableEditing(self):
+        self.folderPathLineEdit.setEnabled(True)
+        self.startStopHistogramLineEdit.setEnabled(True)
+        self.lifetimeLineEdit.setEnabled(True)
+        self.countsEstimationLineEdit.setEnabled(True)
+        self.lineEdit.setEnabled(True)
+        self.applyChangesButton.setEnabled(True)
+        self.cancelButton.setEnabled(True)
+        self.defaultValuesButton.setEnabled(True)

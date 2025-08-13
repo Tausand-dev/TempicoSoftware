@@ -42,7 +42,7 @@ class GeneralSettingsWindow(QDialog):
         self.numberofruns = QLabel("Number of runs:", self)
         self.spinboxNumerOfStops = QSpinBox(self)
         self.spinboxNumerOfStops.setMinimum(1)
-        self.spinboxNumerOfStops.setMaximum(1000)
+        self.spinboxNumerOfStops.setMaximum(100)
         self.spinboxNumerOfStops.setSingleStep(1)
         self.spinboxNumerOfStops.setWrapping(True)
         self.spinboxNumerOfStops.setButtonSymbols(QSpinBox.PlusMinus)
