@@ -8,6 +8,7 @@ src
    StartStopHist
    aboutDialog
    CountsEstimatedGraphics
+   timeStampGraphics
    createsavefile
    findDevices
    generalsettings

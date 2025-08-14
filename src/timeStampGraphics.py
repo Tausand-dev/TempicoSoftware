@@ -10,6 +10,9 @@ import os
 import random
 import sys
 import io
+import platform
+import struct
+import psutil
 from itertools import islice
 import shutil
 class TimeStampLogic():
@@ -161,6 +164,7 @@ class TimeStampLogic():
         self.stopLimitedButton.clicked.connect(self.stopLimitedButtonAction)
         self.helpSaveButton.clicked.connect(self.dialogHelpSaveButton)
         self.saveDataButton.clicked.connect(self.saveDataButtonAction)
+        self.autoSaveComboBox.currentIndexChanged.connect(self.onAutoSaveIntervalChanged)
         #Sentinels
         self.channelASentinel=False
         self.channelBSentinel=False
@@ -169,6 +173,7 @@ class TimeStampLogic():
         self.isWaiting=False
         #Sentinel to know if a measurement was made in order to enable the save data button
         self.measurementMade=False
+        self.errorSaving=False
         #Sentinel to know if data is already saved
         self.dataAutoSavedTxt=False
         self.dataAutoSavedCsv=False
@@ -409,6 +414,7 @@ class TimeStampLogic():
                 self.worker.newMeasurement.connect(self.captureMeasurement)
                 self.worker.changeStatusColor.connect(self.changeStatusColor)
                 self.worker.changeStatusText.connect(self.changeStatusLabel)
+                self.worker.detectedErrorSaving.connect(self.setErrorAutoSaving)
                 self.worker.finishedMeasurements.connect(self.finishedMeasurements)
                 self.isWaiting=True
                 self.worker.start()
@@ -575,8 +581,6 @@ class TimeStampLogic():
                     self.timerBeginMeasurement=QTimer()
                     self.timerBeginMeasurement.timeout.connect(self.countToBegin)
                     timerTimeSeconds=int((self.dateTimeInit-currentDate).total_seconds())
-                    print(self.dateTimeInit)
-                    print(currentDate)
                     if timerTimeSeconds>0:
                         self.isWaiting=True
                         self.changeStatusColor(2)
@@ -662,6 +666,7 @@ class TimeStampLogic():
         self.worker.newMeasurement.connect(self.captureMeasurement)
         self.worker.changeStatusColor.connect(self.changeStatusColor)
         self.worker.changeStatusText.connect(self.changeLabelToUpdate)
+        self.worker.detectedErrorSaving.connect(self.setErrorAutoSaving)
         self.worker.finishedMeasurements.connect(self.finishedMeasurements)
         self.worker.start()
         self.timerToStopMeasurement.start(1000)
@@ -896,6 +901,7 @@ class TimeStampLogic():
                 self.worker.newMeasurement.connect(self.captureMeasurement)
                 self.worker.changeStatusColor.connect(self.changeStatusColor)
                 self.worker.changeStatusText.connect(self.changeStatusLabel)
+                self.worker.detectedErrorSaving.connect(self.setErrorAutoSaving)
                 self.worker.finishedMeasurements.connect(self.finishedMeasurements)
                 self.isWaiting=True
                 self.worker.start()
@@ -1004,24 +1010,89 @@ class TimeStampLogic():
     def checkBoxSaveData(self):
         """
         Handles the behavior of the "Save Data" checkbox for enabling or disabling auto-save options.
-
-        This function performs the following actions:
-        - If the checkbox is checked (auto-save enabled):
-        - Enables the combo box to allow the user to select the auto-save interval.
-        - Disables the manual save button.
-        - If the checkbox is unchecked (manual save mode):
-        - Disables the auto-save interval combo box.
-        - Enables the manual save button only if a measurement has already been completed.
-
-        :return: None
+        Includes a confirmation dialog when disabling auto-save.
         """
         if self.saveDataComplete.isChecked():
             self.autoSaveComboBox.setEnabled(True)
             self.saveDataButton.setEnabled(False)
         else:
-            self.autoSaveComboBox.setEnabled(False)
-            if self.measurementMade:
-                self.saveDataButton.setEnabled(True)
+            available_ram_mb = self.getAvailableRam()
+            approx_measurements = self.getAproxTotalData(available_ram_mb)
+
+            msg = QMessageBox(self.mainWindow)
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("Confirm Disable Auto-Save")
+            msg.setText(
+                f"Do you want to disable auto-save?\n\n"
+                f"Please note that this feature is intended to prevent the program from crashing "
+                f"due to insufficient memory. We recommend keeping it enabled with the lowest possible interval.\n\n"
+                f"If you still wish to disable it, be aware that you currently have "
+                f"{available_ram_mb:.2f} MB of available memory, which can store approximately "
+                f"{approx_measurements} measurements."
+            )
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setDefaultButton(QMessageBox.No)
+
+            choice = msg.exec_()
+
+            if choice == QMessageBox.Yes:
+                self.autoSaveComboBox.setEnabled(False)
+                if self.measurementMade:
+                    self.saveDataButton.setEnabled(True)
+            else:
+                self.saveDataComplete.setChecked(True)
+    def onAutoSaveIntervalChanged(self):
+        """
+        Warns the user if they change the auto-save interval from index 0 to any other value.
+        """
+        current_index = self.autoSaveComboBox.currentIndex()
+
+        if current_index != 0:
+            msg = QMessageBox(self.mainWindow)
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("Auto-Save Interval Warning")
+            msg.setText(
+                "It is recommended to keep this value at the minimum.\n\n"
+                "Increasing the interval means more data will be stored in RAM before saving, "
+                "which may cause the system to run out of memory and crash.\n\n"
+                "Do you still want to proceed?"
+            )
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setDefaultButton(QMessageBox.No)
+
+            choice = msg.exec_()
+
+            if choice == QMessageBox.No:
+                # Revert back to index 0
+                self.autoSaveComboBox.blockSignals(True)  # Evitar que se dispare de nuevo el evento
+                self.autoSaveComboBox.setCurrentIndex(0)
+                self.autoSaveComboBox.blockSignals(False)
+    
+    def getAvailableRam(self):
+        if platform.machine().endswith('64'):
+            system_bits = "64bit"
+        else:
+            system_bits = "32bit"
+        python_bits = struct.calcsize("P") * 8  
+        proc = psutil.Process(os.getpid())
+        used_by_process = proc.memory_info().rss
+        if system_bits == '32bit' and python_bits == 32:
+            PROCESS_LIMIT = 2 * 1024 ** 3
+        elif system_bits == '64bit' and python_bits == 32:
+            PROCESS_LIMIT = 4 * 1024 ** 3
+        else:
+            PROCESS_LIMIT = psutil.virtual_memory().total
+        system_available = psutil.virtual_memory().available
+        available_for_process = min(PROCESS_LIMIT - used_by_process, system_available)
+        available_for_process_mb = available_for_process / (1024 ** 2)
+        return available_for_process_mb
+
+    def getAproxTotalData(self, availableRamMb):
+        totalValuesMemory=int((22000000*availableRamMb)/4000)
+        return totalValuesMemory
+
+        
+        
             
             
     def dialogHelpSaveButton(self):
@@ -1122,6 +1193,7 @@ class TimeStampLogic():
 
         :return: None
         """
+        self.errorSaving=False
         self.dataNeedResaved=False
         self.dataAutoSavedTxt=False
         self.dataAutoSavedCsv=False
@@ -1168,20 +1240,20 @@ class TimeStampLogic():
             self.dialogFormatStart(currentTab)
         self.startDateToSave=datetime.now()
         #Get the miliseconds to init timer
-        if self.autoSaveComboBox.currentText()=="30 Minutes":
+        if self.autoSaveComboBox.currentText()=="5 Minutes":
+            milisecondsToInit=300000
+        elif self.autoSaveComboBox.currentText()=="10 Minutes":
+            milisecondsToInit=600000
+        elif self.autoSaveComboBox.currentText()=="15 Minutes":
+            milisecondsToInit=900000
+        elif self.autoSaveComboBox.currentText()=="20 Minutes":
+            milisecondsToInit=1200000
+        elif self.autoSaveComboBox.currentText()=="30 Minutes":
             milisecondsToInit=1800000
+        elif self.autoSaveComboBox.currentText()=="45 Minutes":
+            milisecondsToInit=2700000
         elif self.autoSaveComboBox.currentText()=="1 Hour":
             milisecondsToInit=3600000
-        elif self.autoSaveComboBox.currentText()=="2 Hours":
-            milisecondsToInit=7200000
-        elif self.autoSaveComboBox.currentText()=="3 Hours":
-            milisecondsToInit=7200000
-        elif self.autoSaveComboBox.currentText()=="4 Hours":
-            milisecondsToInit=10800000
-        elif self.autoSaveComboBox.currentText()=="5 Hours":
-            milisecondsToInit=14400000
-        elif self.autoSaveComboBox.currentText()=="6 Hours":
-            milisecondsToInit=18000000
         #Set the timer to save
         self.autoSaveTimer.timeout.connect(self.autoSaveAction)
         self.autoSaveTimer.start(milisecondsToInit)
@@ -1886,12 +1958,29 @@ class TimeStampLogic():
 
         :return: None
         """
-        message_box = QMessageBox(self.mainWindow)
-        message_box.setIcon(QMessageBox.Information)
-        message_box.setText(self.saveFinalText)
-        message_box.setWindowTitle("Successful save")
-        message_box.setStandardButtons(QMessageBox.Ok)
-        message_box.exec_()
+        if not self.errorSaving:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Information)
+            message_box.setText(self.saveFinalText)
+            message_box.setWindowTitle("Successful save")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+        else:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setWindowTitle("Data Processing Error")
+            message_box.setText(
+                f"An error occurred while processing the data. "
+                f"The saved file may be incomplete:\n\n"
+                f"{self.fileName}\n\n"
+                f"However, the unprocessed raw data is still available here:\n"
+                f"TempData/AutoSavedData.txt\n\n"
+                f"Before starting a new measurement, please copy this file to a safe location "
+                f"to prevent it from being overwritten."
+            )
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            
         
     
     def updateProgressDialog(self, percent):
@@ -2062,8 +2151,10 @@ class TimeStampLogic():
         self.pauseLimitedButton.setEnabled(False)
         self.stopLimitedButton.setEnabled(False)
         self.worker.stop()
+    
+    def setErrorAutoSaving(self):
+        self.errorSaving=True
 
-        
      
         
 
@@ -2117,6 +2208,7 @@ class WorkerThreadTimeStamping(QThread):
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
     finishedMeasurements=Signal()
+    detectedErrorSaving=Signal()
     
     def __init__(self, channelASentinel, channelBSentinel, channelCSentinel, channelDSentinel,normalMeasurementSentinel, scheduleMeasurementSentinel,limitMeasurementSentinel,
                  device: tempico.TempicoDevice,savefile,filename,isAutoSave,maximumMeasurements=0):
@@ -2143,7 +2235,6 @@ class WorkerThreadTimeStamping(QThread):
         self.numberStopsD=0
         #Value for limited measurements
         self.maximumMeasurements=maximumMeasurements
-        print(self.maximumMeasurements)
         self.allMeasurementsComplete=False
         #Sentinel to pause thread
         self.isPause=False
@@ -2334,6 +2425,7 @@ class WorkerThreadTimeStamping(QThread):
             finishedMeasurement=False
             if "Timeout reached" in printedDeviceCommunication:
                 while not finishedMeasurement:
+                    time.sleep(1)
                     newFetch=self.device.fetch()
                     if (newFetch==measure):
                         finishedMeasurement=True
@@ -2352,7 +2444,6 @@ class WorkerThreadTimeStamping(QThread):
                 #Wait at least 20 ms
                 QThread.msleep(20)
                 self.applyCurrentSettings()
-                print("Entra al reset de la medición")
                 #Wait at least 20 ms 
                 QThread.msleep(20)
             elif not measure and self.noMeasurementsSequent >=3:
@@ -2360,10 +2451,10 @@ class WorkerThreadTimeStamping(QThread):
                 self.noAbortsSequent+=1
                 self.device.abort()
                 QThread.msleep(20)
-                print("Entra al abort por que no hay medicion")
+                
                 #Wait at least 10 ms
                 
-            
+            valuesToSkip=0
             if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
                 if measure:
                     measure=self.sortMeasurementByStart(measure)
@@ -2372,6 +2463,8 @@ class WorkerThreadTimeStamping(QThread):
             StartChannelRegister=True
             totalLenMeasure=len(measure)
             if measure:
+                self.noMeasurementsSequent=0
+                self.noAbortsSequent=0
                 for measureIndex in range(totalLenMeasure):
                     channelMeasure=measure[measureIndex]
                     if channelMeasure:
@@ -2703,9 +2796,6 @@ class WorkerThreadTimeStamping(QThread):
                 QThread.msleep(20)
                 #Wait at leat 10 ms
             valuesToSkip=0 
-            if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
-                if measure:
-                    measure=self.sortMeasurementByStart(measure)
             totalNoStarts=0
             StartChannelRegister=True
             totalLenMeasure=len(measure)
@@ -2995,7 +3085,8 @@ class WorkerThreadTimeStamping(QThread):
         selectedFormat= filePath.split(".")[-1]
         newSeparator= ";" if selectedFormat == "csv" else "\t"
         chunkSize=30000
-        overlapSize=3000
+        #1000 Margin
+        overlapSize=self.totalDataPerMeasurement+1000
         self.changeStatusText.emit(f"Processing data 0%")
         currentAdvance=0
         with open(tempDataPath, 'r', encoding='utf-8') as file:
@@ -3008,11 +3099,11 @@ class WorkerThreadTimeStamping(QThread):
                 isFinished=False
                 currentOverlapValues=[]
                 while not isFinished:
-                    currentChunk=currentOverlapValues+list(islice(file, chunkSize-len(currentOverlapValues)))
-                    if not currentChunk:
+                    currentChunk=list(islice(file, chunkSize-len(currentOverlapValues)))
+                    if not currentChunk and len(currentOverlapValues) == 0:
                         isFinished=True
                     else:
-                        dataToOrder=[]
+                        dataToOrder=currentOverlapValues
                         for line in currentChunk:
                             parts = line.strip().split("\t")
                             if len(parts) == 3:
@@ -3020,10 +3111,10 @@ class WorkerThreadTimeStamping(QThread):
                                 try:
                                     dataToOrder.append((start_time_str, stop_time, channel))
                                 except ValueError:
+                                    self.detectedErrorSaving.emit()
                                     continue
-
                         dataToOrder.sort(key=lambda x: x[0])
-                        totalLenChunk=len(currentChunk)
+                        totalLenChunk=len(dataToOrder)
                         currentAdvance+=totalLenChunk-overlapSize
                         percent = int(currentAdvance / (self.totalMeasurements))
                         self.changeStatusText.emit(f"Processing data {percent}%")
@@ -3032,9 +3123,10 @@ class WorkerThreadTimeStamping(QThread):
                             for line in dataToOrder:
                                 outFile.write(f"{line[0]}{newSeparator}{line[1]}{newSeparator}{line[2]}\n")
                         else:
-                            currentOverlapValues=currentChunk[-overlapSize:]
+                            #TO DO USE dataOrder
                             for line in dataToOrder[:-overlapSize]:
                                 outFile.write(f"{line[0]}{newSeparator}{line[1]}{newSeparator}{line[2]}\n")
+                            currentOverlapValues=dataToOrder[-overlapSize:]
         os.replace(tempDataOrder, tempDataPath)
         shutil.copy2(tempDataPath, filePath)
         self.changeStatusText.emit(f"Processing data 100%")

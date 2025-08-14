@@ -1,21 +1,20 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aboutDialog module &mdash; Tempico Software 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-
+  <title>aboutDialog module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,15 +27,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            Tempico Software
+            <a href="index.html" class="icon icon-home"> Tempico Software
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -46,19 +41,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">aboutDialog module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#aboutDialog.Ui_AboutDialog"><code class="docutils literal notranslate"><span class="pre">Ui_AboutDialog</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#aboutDialog.Ui_AboutDialog.acceptButton"><code class="docutils literal notranslate"><span class="pre">Ui_AboutDialog.acceptButton()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#aboutDialog.Ui_AboutDialog.open_link"><code class="docutils literal notranslate"><span class="pre">Ui_AboutDialog.open_link()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#aboutDialog.Ui_AboutDialog.setupUi"><code class="docutils literal notranslate"><span class="pre">Ui_AboutDialog.setupUi()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">aboutDialog module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeStampGraphics.html">timeStampGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
@@ -75,8 +63,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">aboutDialog module</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>aboutDialog module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/aboutDialog.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,10 +75,10 @@
            <div itemprop="articleBody">
              
   <section id="module-aboutDialog">
-<span id="aboutdialog-module"></span><h1>aboutDialog module<a class="headerlink" href="#module-aboutDialog" title="Permalink to this heading"></a></h1>
+<span id="aboutdialog-module"></span><h1>aboutDialog module<a class="headerlink" href="#module-aboutDialog" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aboutDialog.</span></span><span class="sig-name descname"><span class="pre">Ui_AboutDialog</span></span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aboutDialog.</span></span><span class="sig-name descname"><span class="pre">Ui_AboutDialog</span></span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog.acceptButton">
@@ -104,10 +92,10 @@
 <p>This function is triggered when a link is clicked and opens the provided URL 
 using the system’s default web browser.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>link</strong> (<em>str</em>) – The URL to be opened.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>

@@ -1742,7 +1742,6 @@ class WorkerThreadStartStopHistogram(QThread):
                                         self.emitOrSaveMeasurement(valuesA,correctedUnitsMeasurement,run[3+i],dataPureValuesA,"A")
                                     else:
                                         correctedUnitsMeasurement=run[3+i]/(10**3)
-                                        print(correctedUnitsMeasurement)
                                         if run[3+i]>800000:
                                             self.outOfRangeA+=1
                                         if self.totalA>10 and (self.outOfRangeA/self.totalA)>0.6:
@@ -2030,8 +2029,7 @@ class WorkerThreadStartStopHistogram(QThread):
             if newValue>self.currentMaxValueB:
                 self.currentMaxValueB=newValue
                 self.newMaxValueSignal.emit(newValue,"B")
-        elif channel=="C": 
-            print(newValue)
+        elif channel=="C":
             if newValue>self.currentMaxValueC:
                 self.currentMaxValueC=newValue
                 self.newMaxValueSignal.emit(newValue,"C")

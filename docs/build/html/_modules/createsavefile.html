@@ -1,20 +1,19 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>createsavefile &mdash; Tempico Software 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-
+  <title>createsavefile &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -25,15 +24,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Tempico Software
+            <a href="../index.html" class="icon icon-home"> Tempico Software
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -48,6 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timeStampGraphics.html">timeStampGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 </ul>
 
@@ -64,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
-      <li class="breadcrumb-item active">createsavefile</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      <li>createsavefile</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -78,7 +74,8 @@
   <h1>Source code for createsavefile</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
-
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 
 
@@ -86,6 +83,97 @@
 <div class="viewcode-block" id="createsavefile"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile">[docs]</a><span class="k">class</span> <span class="nc">createsavefile</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
+    
+<div class="viewcode-block" id="createsavefile.createDefaultFolder"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.createDefaultFolder">[docs]</a>    <span class="k">def</span> <span class="nf">createDefaultFolder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">):</span>
+            <span class="n">default_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;saveFolder&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;startStopHistogramPrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;StartStopHistogram&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;lifetimePrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;Lifetime&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;countsEstimationPrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;CountsEstimation&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;timeStampingPrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;TimeStamping&quot;</span>
+            <span class="p">}</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">default_data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;saveFolder&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;saveFolder&quot;</span><span class="p">]):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;saveFolder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_folder_and_file</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">createTempFileData</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="createsavefile.getExistenceCurrentFolder"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.getExistenceCurrentFolder">[docs]</a>    <span class="k">def</span> <span class="nf">getExistenceCurrentFolder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">folderPath</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folderPath</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="createsavefile.createTempFileData"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.createTempFileData">[docs]</a>    <span class="k">def</span> <span class="nf">createTempFileData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">folderName</span><span class="o">=</span><span class="s2">&quot;TempData&quot;</span>
+        <span class="n">fileData</span><span class="o">=</span><span class="s2">&quot;AutoSaveData.txt&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folderName</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pathFile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folderName</span><span class="p">,</span><span class="n">fileData</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pathFile</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+    
+<div class="viewcode-block" id="createsavefile.clearDataAutoSave"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.clearDataAutoSave">[docs]</a>    <span class="k">def</span> <span class="nf">clearDataAutoSave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">folderName</span><span class="o">=</span><span class="s2">&quot;TempData&quot;</span>
+        <span class="n">fileData</span><span class="o">=</span><span class="s2">&quot;AutoSaveData.txt&quot;</span>
+        <span class="n">pathFile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folderName</span><span class="p">,</span><span class="n">fileData</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pathFile</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+            
+        
+    
+    
+        
+        
+            
+        
+    
+<div class="viewcode-block" id="createsavefile.getDataFolderPrefix"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.getDataFolderPrefix">[docs]</a>    <span class="k">def</span> <span class="nf">getDataFolderPrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">dataDict</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">documents_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
+        <span class="n">default_save_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_folder</span><span class="p">,</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span><span class="p">)</span>
+        <span class="n">existFolder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getExistenceCurrentFolder</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">existFolder</span><span class="p">:</span>
+           <span class="n">data</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_folder_and_file</span><span class="p">()</span>
+            <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">default_save_folder</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changeFolder</span><span class="p">(</span><span class="n">default_save_folder</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;saveFolder&#39;</span><span class="p">]</span>
+        <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;startStopHistogramPrefix&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;startStopHistogramPrefix&#39;</span><span class="p">]</span>
+        <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;lifetimePrefix&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lifetimePrefix&#39;</span><span class="p">]</span>
+        <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;countsEstimationPrefix&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;countsEstimationPrefix&#39;</span><span class="p">]</span>
+        <span class="n">dataDict</span><span class="p">[</span><span class="s1">&#39;timeStampingPrefix&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;timeStampingPrefix&#39;</span><span class="p">]</span> 
+        <span class="k">return</span> <span class="n">dataDict</span></div>
+    
+<div class="viewcode-block" id="createsavefile.changePrefix"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.changePrefix">[docs]</a>    <span class="k">def</span> <span class="nf">changePrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tab</span><span class="p">,</span> <span class="n">newPrefix</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tab</span><span class="o">==</span><span class="s2">&quot;startStopHistogram&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;startStopHistogramPrefix&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">newPrefix</span>
+        <span class="k">elif</span> <span class="n">tab</span><span class="o">==</span><span class="s2">&quot;Lifetime&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lifetimePrefix&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">newPrefix</span>
+        <span class="k">elif</span> <span class="n">tab</span><span class="o">==</span><span class="s2">&quot;CountsEstimated&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;countsEstimationPrefix&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">newPrefix</span>
+        <span class="k">elif</span> <span class="n">tab</span><span class="o">==</span><span class="s2">&quot;TimeStamping&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;timeStampingPrefix&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">newPrefix</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="createsavefile.changeFolder"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.changeFolder">[docs]</a>    <span class="k">def</span> <span class="nf">changeFolder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPath</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;saveFolder&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">newPath</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;SaveFileConstants.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        
 
 <div class="viewcode-block" id="createsavefile.create_folder_and_file"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.create_folder_and_file">[docs]</a>    <span class="k">def</span> <span class="nf">create_folder_and_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -112,27 +200,9 @@
         <span class="n">documents_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">(),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">)</span>
         <span class="n">folder_name</span> <span class="o">=</span> <span class="s2">&quot;TempicoSoftwareData&quot;</span>
         <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documents_dir</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">)</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;data_constants.txt&quot;</span>
-        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder Path: </span><span class="si">{</span><span class="n">folder_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Histogram Name: histogram_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default g2 Name: g2_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default Lifetime Name: lifetime_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            
-            <span class="c1"># Ocultar el archivo de manera efectiva según el sistema operativo</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>  <span class="c1"># Windows</span>
-                <span class="kn">import</span> <span class="nn">ctypes</span>
-                <span class="n">FILE_ATTRIBUTE_HIDDEN</span> <span class="o">=</span> <span class="mh">0x02</span>
-                <span class="n">ctypes</span><span class="o">.</span><span class="n">windll</span><span class="o">.</span><span class="n">kernel32</span><span class="o">.</span><span class="n">SetFileAttributesW</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">FILE_ATTRIBUTE_HIDDEN</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The folder &#39;</span><span class="si">{</span><span class="n">folder_name</span><span class="si">}</span><span class="s2">&#39; and the hidden file &#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&#39; have been created in &#39;</span><span class="si">{</span><span class="n">documents_dir</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Unix-based (Linux, macOS)</span>
-                <span class="n">hidden_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">hidden_file_path</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The folder &#39;</span><span class="si">{</span><span class="n">folder_name</span><span class="si">}</span><span class="s2">&#39; and the hidden file &#39;.</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&#39; have been created in &#39;</span><span class="si">{</span><span class="n">documents_dir</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred while creating the folder and/or file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
@@ -256,6 +326,14 @@
 <span class="sd">        :raises ValueError: If the lengths of data_lists, file_names, and column_names do not match.</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">newSettings</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">for</span> <span class="n">setting</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+                <span class="n">newSetting</span><span class="o">=</span><span class="n">setting</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">newSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newSetting</span><span class="p">)</span>
+            <span class="n">settings</span><span class="o">=</span><span class="n">newSettings</span>
+                
+            
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
             
@@ -325,6 +403,11 @@
 <span class="sd">        :raises ValueError: If the lengths of the time and LifeTime value lists do not match.</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;txt&quot;</span> <span class="ow">or</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;dat&quot;</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;;&quot;</span>
+            <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
         
@@ -337,11 +420,21 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textLabel</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Counts LifeTime</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">textLabel</span><span class="si">}{</span><span class="n">separator</span><span class="si">}</span><span class="s2">Counts LifeTime</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 
                 <span class="k">for</span> <span class="n">tau</span><span class="p">,</span> <span class="n">LifeTimeValue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">LifeTimeValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tau</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">LifeTimeValue</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="createsavefile.save_counts_data"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_counts_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_counts_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time_stamp</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">dataUncertainties</span><span class="p">,</span><span class="n">filenames</span><span class="p">,</span><span class="n">folder_path</span><span class="p">,</span><span class="n">settings</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span><span class="n">channels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;txt&quot;</span> <span class="ow">or</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;dat&quot;</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;;&quot;</span>
+            <span class="n">newSettings</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">for</span> <span class="n">setting</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+                <span class="n">newSetting</span><span class="o">=</span><span class="n">setting</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">newSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newSetting</span><span class="p">)</span>
+            <span class="n">settings</span><span class="o">=</span><span class="n">newSettings</span>
+            
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">)</span><span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -352,7 +445,7 @@
                 
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">setting_channel</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hour (HH:MM:SS) </span><span class="se">\t</span><span class="s2"> Counts Channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">(counts/sec) </span><span class="se">\t</span><span class="s2"> Uncertainties Channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">(counts/sec) </span><span class="se">\t</span><span class="s2"> Mean Time (us) </span><span class="se">\t</span><span class="s2"> Uncertainty Time (us)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time (HH:MM:SS) </span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2"> Counts Channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">(counts/sec) </span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2"> Uncertainties Channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">(counts/sec) </span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2"> Mean time interval (us) </span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2"> Uncertainty mean time interval (us)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">timeStamp</span><span class="p">,</span> <span class="n">countValue</span><span class="p">,</span><span class="n">uncertanty</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">timeStamp</span><span class="p">,</span><span class="n">data_list</span><span class="p">,</span><span class="n">data_uncertainties</span><span class="p">):</span>
                         <span class="n">valueFormated</span><span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">countValue</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="n">timeValue</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">countValue</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">)</span>
@@ -360,9 +453,192 @@
                         <span class="n">timeFormated</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeValue</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="n">uncertaintyTime</span><span class="o">=</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">uncertanty</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">countValue</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">)</span>
                         <span class="n">uncertaintyTimeFormated</span><span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">uncertaintyTime</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
-                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeStamp</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">valueFormated</span><span class="si">}</span><span class="se">\t\t</span><span class="si">{</span><span class="n">uncertaintyFormated</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">timeFormated</span><span class="si">}</span><span class="se">\t\t</span><span class="si">{</span><span class="n">uncertaintyTimeFormated</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timeStamp</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">valueFormated</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">uncertaintyFormated</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">timeFormated</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">uncertaintyTimeFormated</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="createsavefile.save_time_stamp_autosave"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_time_stamp_autosave">[docs]</a>    <span class="k">def</span> <span class="nf">save_time_stamp_autosave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startValues</span><span class="p">,</span> <span class="n">stopValues</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+        <span class="n">channelList</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Start&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./TempData&quot;</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;./TempData&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">startValues</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stopValues</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">stopValues</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Start times, stop times and channels list must have the same length&quot;</span><span class="p">)</span>
+
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./TempData&quot;</span><span class="p">,</span> <span class="s2">&quot;AutoSaveData.txt&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Verificar si el archivo existe Y está vacío</span>
+        <span class="n">archivo_vacio</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">archivo_vacio</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Start Time (YY:MM:DD:HH:MM:SS)</span><span class="se">\t</span><span class="s2">Stop Time (ps)</span><span class="se">\t</span><span class="s2">Channel</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">stopTime</span><span class="p">,</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">startValues</span><span class="p">,</span> <span class="n">stopValues</span><span class="p">,</span> <span class="n">channels</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">startTime</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">stopTime</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">channelList</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        
     
+    
+<div class="viewcode-block" id="createsavefile.save_time_stamp"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.save_time_stamp">[docs]</a>    <span class="k">def</span> <span class="nf">save_time_stamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startValues</span><span class="p">,</span> <span class="n">stopValues</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+            
+        <span class="n">channelList</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Start&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">startValues</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stopValues</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">stopValues</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Start times, stop times and channels list must have the same length&quot;</span><span class="p">)</span>
+
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">file_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+
+        
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>    
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">file_exists</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start Time (YY:MM:DD:HH:MM:SS)</span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2">Stop Time (ps)</span><span class="si">{</span><span class="n">separator</span><span class="si">}</span><span class="s2">Channel</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">stopTime</span><span class="p">,</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">startValues</span><span class="p">,</span> <span class="n">stopValues</span><span class="p">,</span> <span class="n">channels</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">startTime</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">stopTime</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">channelList</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="createsavefile.sort_time_stamps"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.sort_time_stamps">[docs]</a>    <span class="k">def</span> <span class="nf">sort_time_stamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span><span class="n">autoSave</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">autoSave</span><span class="p">:</span>
+            <span class="n">originalPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./TempData&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;AutoSaveData.txt&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">originalPath</span> <span class="o">=</span> <span class="n">file_path</span>
+            
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">originalPath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">header</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="n">data_lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">7</span><span class="p">:]</span>
+
+        <span class="n">parsed_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data_lines</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">start_time_str</span><span class="p">,</span> <span class="n">stop_time</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">parts</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_time_str</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">parsed_data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start_time</span><span class="p">,</span> <span class="n">stop_time</span><span class="p">,</span> <span class="n">channel</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">continue</span>  <span class="c1"># Skip malformed lines</span>
+        <span class="n">extension</span><span class="o">=</span><span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">extension</span><span class="o">==</span><span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="c1">#replace separator header</span>
+        <span class="n">newHeader</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">lineSettings</span> <span class="ow">in</span> <span class="n">header</span><span class="p">:</span>
+            <span class="n">newLineSettings</span><span class="o">=</span><span class="n">lineSettings</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">separator</span><span class="p">)</span>
+            <span class="n">newHeader</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newLineSettings</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">newLineSettings</span>
+        <span class="n">sorted_data</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">stop_time</span><span class="p">,</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">sorted_data</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">stop_time</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">channel</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="createsavefile.convertFileFormat"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.convertFileFormat">[docs]</a>    <span class="k">def</span> <span class="nf">convertFileFormat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">new_extension</span><span class="p">,</span> <span class="n">autoSaved</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">autoSaved</span><span class="p">:</span>
+            <span class="n">originalPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./TempData&quot;</span><span class="p">,</span> <span class="s2">&quot;AutoSaveData.txt&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">originalPath</span> <span class="o">=</span> <span class="n">file_path</span>
+
+        <span class="n">current_ext</span> <span class="o">=</span> <span class="n">originalPath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">new_file_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">new_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">autoSaved</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">current_ext</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+                <span class="n">current_sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">new_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">new_sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">new_file_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">originalPath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> \
+            <span class="nb">open</span><span class="p">(</span><span class="n">new_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+
+            <span class="c1"># Procesar header (primeras 8 líneas)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">new_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">))</span>
+
+            <span class="c1"># Procesar resto del archivo línea a línea</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">current_sep</span> <span class="o">!=</span> <span class="n">new_sep</span><span class="p">:</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">current_sep</span><span class="p">)</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="createsavefile.convertFileFromOldFile"><a class="viewcode-back" href="../createsavefile.html#createsavefile.createsavefile.convertFileFromOldFile">[docs]</a>    <span class="k">def</span> <span class="nf">convertFileFromOldFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">new_folder</span><span class="p">,</span> <span class="n">new_extension</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">new_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">base_name</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">current_ext</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">new_file_name</span> <span class="o">=</span> <span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">new_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">new_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_folder</span><span class="p">,</span> <span class="n">new_file_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">current_ext</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">current_sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">new_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">new_sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> \
+            <span class="nb">open</span><span class="p">(</span><span class="n">new_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+
+            <span class="c1"># Procesar header (primeras 8 líneas)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">current_sep</span> <span class="o">!=</span> <span class="n">new_sep</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">current_sep</span><span class="p">,</span> <span class="n">new_sep</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="c1"># Procesar resto del archivo línea por línea</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">current_sep</span> <span class="o">!=</span> <span class="n">new_sep</span><span class="p">:</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">current_sep</span><span class="p">)</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+                
     
 
 </pre></div>

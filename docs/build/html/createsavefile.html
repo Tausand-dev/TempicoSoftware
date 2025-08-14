@@ -1,21 +1,20 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>createsavefile module &mdash; Tempico Software 1.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-
+  <title>createsavefile module &mdash; Tempico Software 1.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,15 +27,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            Tempico Software
+            <a href="index.html" class="icon icon-home"> Tempico Software
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -48,22 +43,10 @@
 <li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">createsavefile module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#createsavefile.createsavefile"><code class="docutils literal notranslate"><span class="pre">createsavefile</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.check_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.check_folder_and_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.create_folder_and_file"><code class="docutils literal notranslate"><span class="pre">createsavefile.create_folder_and_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.read_default_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.read_default_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_LifeTime_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_LifeTime_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_counts_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_counts_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_g2_data"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_g2_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#createsavefile.createsavefile.save_lists_as_columns_txt"><code class="docutils literal notranslate"><span class="pre">createsavefile.save_lists_as_columns_txt()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">createsavefile module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeStampGraphics.html">timeStampGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
@@ -80,8 +63,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">createsavefile module</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>createsavefile module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/createsavefile.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,11 +75,21 @@
            <div itemprop="articleBody">
              
   <section id="module-createsavefile">
-<span id="createsavefile-module"></span><h1>createsavefile module<a class="headerlink" href="#module-createsavefile" title="Permalink to this heading"></a></h1>
+<span id="createsavefile-module"></span><h1>createsavefile module<a class="headerlink" href="#module-createsavefile" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="createsavefile.createsavefile">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createsavefile.</span></span><span class="sig-name descname"><span class="pre">createsavefile</span></span><a class="reference internal" href="_modules/createsavefile.html#createsavefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createsavefile.</span></span><span class="sig-name descname"><span class="pre">createsavefile</span></span><a class="reference internal" href="_modules/createsavefile.html#createsavefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.changeFolder">
+<span class="sig-name descname"><span class="pre">changeFolder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newPath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.changeFolder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.changeFolder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.changePrefix">
+<span class="sig-name descname"><span class="pre">changePrefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newPrefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.changePrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.changePrefix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="createsavefile.createsavefile.check_folder_and_file">
 <span class="sig-name descname"><span class="pre">check_folder_and_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.check_folder_and_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.check_folder_and_file" title="Permalink to this definition"></a></dt>
@@ -107,11 +100,36 @@ exist in the user’s ‘Documents’ directory.</p>
 - File name: data_constants.txt</p>
 <p>If both the folder and the file exist, the function returns True. Otherwise, it returns False.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>bool: True if the folder and file exist, False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.clearDataAutoSave">
+<span class="sig-name descname"><span class="pre">clearDataAutoSave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.clearDataAutoSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.clearDataAutoSave" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.convertFileFormat">
+<span class="sig-name descname"><span class="pre">convertFileFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoSaved</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.convertFileFormat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.convertFileFormat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.convertFileFromOldFile">
+<span class="sig-name descname"><span class="pre">convertFileFromOldFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_extension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.convertFileFromOldFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.convertFileFromOldFile" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.createDefaultFolder">
+<span class="sig-name descname"><span class="pre">createDefaultFolder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.createDefaultFolder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.createDefaultFolder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.createTempFileData">
+<span class="sig-name descname"><span class="pre">createTempFileData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.createTempFileData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.createTempFileData" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="createsavefile.createsavefile.create_folder">
@@ -119,7 +137,7 @@ exist in the user’s ‘Documents’ directory.</p>
 <dd><p>Checks if the specified folder and file already exist. If they do exist, it creates 
 the folder and file by calling the ‘create_folder_and_file’ function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -143,14 +161,24 @@ The file is hidden depending on the operating system.</p>
 <p>In case of a Windows system, the file is made hidden using the Windows API. For Unix-based systems (Linux, macOS), 
 the file is renamed to be hidden by adding a dot (‘.’) before the filename.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><strong>OSError</strong> – If an error occurs during folder or file creation, or when accessing the filesystem.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.getDataFolderPrefix">
+<span class="sig-name descname"><span class="pre">getDataFolderPrefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.getDataFolderPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.getDataFolderPrefix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.getExistenceCurrentFolder">
+<span class="sig-name descname"><span class="pre">getExistenceCurrentFolder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.getExistenceCurrentFolder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.getExistenceCurrentFolder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="createsavefile.createsavefile.read_default_data">
@@ -164,7 +192,7 @@ which is returned as the output.</p>
 <p>If the file is not found or an error occurs while reading the file, the function
 returns None.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>dict or None: A dictionary containing the data from the file, or None if 
 an error occurred.</p>
 </dd>
@@ -179,7 +207,7 @@ ensures that the provided time and LifeTime values have the same length and writ
 a file along with specified settings and a label for the LifeTime values.</p>
 <p>The file is saved in the specified folder path, with the provided file name and extension.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – A tuple where the first element is a list of time values and the second 
 element is a list of corresponding LifeTime values (tuple of lists).</p></li>
@@ -190,10 +218,10 @@ element is a list of corresponding LifeTime values (tuple of lists).</p></li>
 <li><p><strong>textLabel</strong> – A label to be written before the LifeTime values in the file (str).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the time and LifeTime value lists do not match.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -212,7 +240,7 @@ ensures that the provided tau and g2 values have the same length and writes them
 a file along with specified settings and a label for the g2 values.</p>
 <p>The file is saved in the specified folder path, with the provided file name and extension.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – A tuple where the first element is a list of tau values and the second 
 element is a list of corresponding g2 values (tuple of lists).</p></li>
@@ -223,10 +251,10 @@ element is a list of corresponding g2 values (tuple of lists).</p></li>
 <li><p><strong>textLabel</strong> – A label to be written before the g2 values in the file (str).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the lengths of the tau and g2 value lists do not match.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -241,7 +269,7 @@ provided file names, and the columns are named based on the given column names.<
 <p>This function ensures that the specified directory exists, and raises an error if 
 the lengths of the input lists do not match.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data_lists</strong> – A list of lists, where each list contains the data to be written to a file (list).</p></li>
 <li><p><strong>file_names</strong> – A list of strings specifying the names of the output files (list of str).</p></li>
@@ -251,14 +279,29 @@ the lengths of the input lists do not match.</p>
 <li><p><strong>extension</strong> – The file extension for the output files (str).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the lengths of data_lists, file_names, and column_names do not match.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_time_stamp">
+<span class="sig-name descname"><span class="pre">save_time_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_time_stamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_time_stamp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.save_time_stamp_autosave">
+<span class="sig-name descname"><span class="pre">save_time_stamp_autosave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.save_time_stamp_autosave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.save_time_stamp_autosave" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createsavefile.createsavefile.sort_time_stamps">
+<span class="sig-name descname"><span class="pre">sort_time_stamps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoSave</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/createsavefile.html#createsavefile.sort_time_stamps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#createsavefile.createsavefile.sort_time_stamps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
