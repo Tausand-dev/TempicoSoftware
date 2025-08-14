@@ -384,8 +384,6 @@ class TimeStampLogic():
             #Auto save settings
             self.settingsBeforeMeasurement()
             #Save settings and beggin measurements for main window
-            self.mainWindow.saveSettings()
-            self.mainWindow.activeMeasurement()
             autoSaved=False
             if self.saveDataComplete.isChecked():
                 autoSaved=True
@@ -409,6 +407,8 @@ class TimeStampLogic():
                 # self.dateTimeData=timestamps
                 # self.stopData=stopDataTest
                 # self.channelData=channels
+                self.mainWindow.saveSettings()
+                self.mainWindow.activeMeasurement()
                 self.worker= WorkerThreadTimeStamping(self.channelASentinel,self.channelBSentinel, self.channelCSentinel, self.channelDSentinel,True,False,False, self.device, self.savefile, self.fileName, autoSaved)
                 self.worker.finished.connect(self.finishedThread)
                 self.worker.newMeasurement.connect(self.captureMeasurement)
