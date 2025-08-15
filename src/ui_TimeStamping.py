@@ -61,9 +61,10 @@ class Ui_TimeStamping(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.EnableChannelsFrame = QFrame(self.SettingsFrame)
         self.EnableChannelsFrame.setObjectName(u"EnableChannelsFrame")
+        self.EnableChannelsFrame.setContentsMargins(0, 0, 0, 0)
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(2)
+        sizePolicy2.setVerticalStretch(1)
         sizePolicy2.setHeightForWidth(self.EnableChannelsFrame.sizePolicy().hasHeightForWidth())
         self.EnableChannelsFrame.setSizePolicy(sizePolicy2)
         self.EnableChannelsFrame.setFrameShape(QFrame.StyledPanel)
@@ -107,7 +108,7 @@ class Ui_TimeStamping(object):
         self.frameStartStop.setObjectName(u"frameStartStop")
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(6)
+        sizePolicy4.setVerticalStretch(7)
         sizePolicy4.setHeightForWidth(self.frameStartStop.sizePolicy().hasHeightForWidth())
         self.frameStartStop.setSizePolicy(sizePolicy4)
         self.frameStartStop.setFrameShape(QFrame.StyledPanel)
@@ -538,7 +539,17 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
         self.tableTimeStamp.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.verticalLayout_2.setStretch(0, 0)  # EnableChannelsFrame → muy poco alto
+        self.verticalLayout_2.setStretch(1, 5)  # frameStartStop     → mucho alto
+        self.verticalLayout_2.setStretch(2, 0)
+        self._cleanLeftPanel(self.SettingsMeasurementsFrame)
 
+        # Marcar estéticamente AutoSave y Measurements
+        self.SaveDataFrame.setFrameShape(QFrame.Panel)
+        self.SaveDataFrame.setFrameShadow(QFrame.Sunken)
+
+        self.MeasurementsFrame.setFrameShape(QFrame.Panel)
+        self.MeasurementsFrame.setFrameShadow(QFrame.Sunken)
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
@@ -638,3 +649,51 @@ class Ui_TimeStamping(object):
         self.numberMeasurementsSpinBox.setMinimum(1)
         self.numberMeasurementsSpinBox.setMaximum(2**28)
         self.numberMeasurementsSpinBox.setValue(1000)
+    
+    def _cleanLeftPanel(self, widget):
+        # Quitar bordes a todo, excepto SaveDataFrame y MeasurementsFrame
+        if isinstance(widget, QFrame):
+            if widget in (self.SaveDataFrame, self.MeasurementsFrame):
+                widget.setFrameShape(QFrame.Panel)
+                widget.setFrameShadow(QFrame.Sunken)
+                widget.setContentsMargins(4, 4, 4, 4)  # margen sutil
+            else:
+                widget.setFrameShape(QFrame.NoFrame)
+                widget.setContentsMargins(0, 0, 0, 0)
+
+        # Si es layout
+        if isinstance(widget, QLayout):
+            # Si es el layout que contiene Auto save data
+            if widget is self.verticalLayout_4:
+                widget.setContentsMargins(4, 4, 4, 4)
+                widget.setSpacing(8)  # más espacio vertical
+            else:
+                widget.setContentsMargins(0, 0, 0, 0)
+                widget.setSpacing(0)
+
+            for i in range(widget.count()):
+                child = widget.itemAt(i)
+                if child.widget():
+                    self._cleanLeftPanel(child.widget())
+                elif child.layout():
+                    self._cleanLeftPanel(child.layout())
+
+        # Si es widget con layout
+        layout = widget.layout() if not isinstance(widget, QLayout) else None
+        if layout:
+            if layout is self.verticalLayout_4:
+                layout.setContentsMargins(4, 4, 4, 4)
+                layout.setSpacing(8)
+            else:
+                layout.setContentsMargins(0, 0, 0, 0)
+                layout.setSpacing(0)
+
+            for i in range(layout.count()):
+                child = layout.itemAt(i)
+                if child.widget():
+                    self._cleanLeftPanel(child.widget())
+                elif child.layout():
+                    self._cleanLeftPanel(child.layout())
+
+    
+
