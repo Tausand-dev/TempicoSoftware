@@ -502,7 +502,6 @@ class createsavefile:
         with open(originalPath, 'r', encoding='utf-8') as infile, \
             open(new_file_path, 'w', encoding='utf-8') as outfile:
 
-            # Procesar header (primeras 8 líneas)
             for i in range(8):
                 line = infile.readline()
                 if not line:
@@ -512,7 +511,7 @@ class createsavefile:
                 else:
                     outfile.write(line.replace(";", "\t"))
 
-            # Procesar resto del archivo línea a línea
+            
             for line in infile:
                 if current_sep != new_sep:
                     parts = line.strip().split(current_sep)
@@ -545,7 +544,6 @@ class createsavefile:
         with open(file_path, 'r', encoding='utf-8') as infile, \
             open(new_file_path, 'w', encoding='utf-8') as outfile:
 
-            # Procesar header (primeras 8 líneas)
             for i in range(8):
                 line = infile.readline()
                 if not line:
@@ -555,7 +553,7 @@ class createsavefile:
                 else:
                     outfile.write(line)
 
-            # Procesar resto del archivo línea por línea
+
             for line in infile:
                 if current_sep != new_sep:
                     parts = line.strip().split(current_sep)

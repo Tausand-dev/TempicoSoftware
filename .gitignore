@@ -11,9 +11,11 @@
 /WindowsInstaller/
 /WindowsInstaller1.2/
 /WindowsInstaller1.2.1/
+/WindowsInstaller1.3.0/
 /src/TestVenv/
 /src/dist/
 /src/build/
+/dist/
 /src/InstallerEnvironment/
 
 

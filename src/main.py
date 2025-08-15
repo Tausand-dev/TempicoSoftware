@@ -1100,7 +1100,6 @@ class MainWindow(QMainWindow):
         self.currentMeasurement=False
     
     def resetSaveSentinelsAllWindows(self):
-        print("Se resetean los sentinelas")
         if self.timeStampGraphic!=None:
             self.timeStampGraphic.resetSaveSentinels()
         if self.countsEstimatedGraphic!=None:

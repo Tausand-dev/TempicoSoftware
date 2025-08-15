@@ -133,6 +133,7 @@ class TimeStampLogic():
         self.colorLabel=colorLabel
         self.mainWindow= parent
         self.tabs=tabs
+        self.oldIndex=0
         #Connect checkBox
         self.showTableCheckBox.stateChanged.connect(self.updateShowTable)
         self.enableCheckBoxA.stateChanged.connect(self.updateCheckBoxLabels)
@@ -1026,8 +1027,8 @@ class TimeStampLogic():
                 f"Do you want to disable auto-save?\n\n"
                 f"Please note that this feature is intended to prevent the program from crashing "
                 f"due to insufficient memory. We recommend keeping it enabled with the lowest possible interval.\n\n"
-                f"If you still wish to disable it, be aware that you currently have "
-                f"{available_ram_mb:.2f} MB of available memory, which can store approximately "
+                f"If you still wish to disable it, be aware that you currently have available to the process"
+                f"{available_ram_mb:.2f} MB of RAM memory, which can store approximately "
                 f"{approx_measurements} measurements."
             )
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
@@ -1046,15 +1047,15 @@ class TimeStampLogic():
         Warns the user if they change the auto-save interval from index 0 to any other value.
         """
         current_index = self.autoSaveComboBox.currentIndex()
-
-        if current_index != 0:
+        
+        if current_index > self.oldIndex:
             msg = QMessageBox(self.mainWindow)
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowTitle("Auto-Save Interval Warning")
             msg.setText(
                 "It is recommended to keep this value at the minimum.\n\n"
                 "Increasing the interval means more data will be stored in RAM before saving, "
-                "which may cause the system to run out of memory and crash.\n\n"
+                "which may cause the system to run out of memory.\n\n"
                 "Do you still want to proceed?"
             )
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
@@ -1065,8 +1066,11 @@ class TimeStampLogic():
             if choice == QMessageBox.No:
                 # Revert back to index 0
                 self.autoSaveComboBox.blockSignals(True)  # Evitar que se dispare de nuevo el evento
-                self.autoSaveComboBox.setCurrentIndex(0)
+                self.autoSaveComboBox.setCurrentIndex(self.oldIndex)
                 self.autoSaveComboBox.blockSignals(False)
+            else:
+                self.oldIndex=current_index        
+        self.oldIndex=current_index
     
     def getAvailableRam(self):
         if platform.machine().endswith('64'):
@@ -1088,7 +1092,10 @@ class TimeStampLogic():
         return available_for_process_mb
 
     def getAproxTotalData(self, availableRamMb):
-        totalValuesMemory=int((22000000*availableRamMb)/4000)
+        totalValuesMemory = int((22000000 * availableRamMb) / 4000)
+        potencia = 10 ** (len(str(totalValuesMemory)) - 1)
+        totalValuesMemory = (totalValuesMemory // potencia) * potencia
+
         return totalValuesMemory
 
         
