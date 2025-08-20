@@ -122,8 +122,14 @@ class PyTempicoManager:
                     if len(values_packet) == 2:
                         value = self.verify_pyTempico(values_packet)
                         if value == True and os.name!="posix":
-                            ports.append(puerto.name)
+                            serialNumber=puerto.serial_number.split("-")
+                            reference=serialNumber[0]
+                            serialManufacturer=serialNumber[1]
+                            ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.name})")
                 if "Tempico" in description:
-                    ports.append(puerto.device)
+                    serialNumber=puerto.serial_number.split("-")
+                    reference=serialNumber[0]
+                    serialManufacturer=serialNumber[1]
+                    ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.device})")
         return ports
 

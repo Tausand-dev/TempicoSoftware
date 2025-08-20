@@ -2,28 +2,28 @@ from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushBut
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
-from generalsettings import GeneralSettingsWindow
-from aboutDialog import Ui_AboutDialog
-from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_g2measurement import Ui_G2
-from ui_devicesDialog import Ui_Devices
+from Utils.generalsettings import GeneralSettingsWindow
+from Utils.aboutDialog import Ui_AboutDialog
+from Views.ui_StarStopHistogram import Ui_HistogramaStartStop
+from Views.ui_g2measurement import Ui_G2
+from Views.ui_devicesDialog import Ui_Devices
 import time
 from PySide2.QtCore import QTimer
 import time
-from ui_CountsEstimated import Ui_CountsEstimated
-from ui_TimeStamping import Ui_TimeStamping
+from Views.ui_CountsEstimated import Ui_CountsEstimated
+from Views.ui_TimeStamping import Ui_TimeStamping
 #To do eliminate import
-from createsavefile import createsavefile as savefile
-from ui_settings import Ui_settings
-from uiParametersDialog import UiParameters
-from ParametersDialog import CountParameters
-from StartStopHist import StartStopLogic
-from constants import *
-from ui_LifeTimemeasurement import UiLifeTime
-from LifeTimeGraphics import LifeTimeGraphic
-from CountsEstimatedGraphics import CountEstimatedLogic
-from timeStampGraphics import TimeStampLogic
-from ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
+from Utils.createsavefile import createsavefile as savefile
+from Views.ui_settings import Ui_settings
+from Views.uiParametersDialog import UiParameters
+from Utils.ParametersDialog import CountParameters
+from Logic.StartStopLogic import StartStopLogic
+from Utils.constants import *
+from Views.ui_LifeTimemeasurement import UiLifeTime
+from Logic.LifeTimeLogic import LifeTimeLogic
+from Logic.CountsEstimatedLogic import CountEstimatedLogic
+from Logic.TimeStampLogic import TimeStampLogic
+from Views.ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Tempico Software")
         self.setGeometry(100,100,1000,700)
         self.setWindowIcon(QIcon(ICON_LOCATION))
-        self.setMinimumSize(1100,800)
+        self.setMinimumSize(800,600)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
@@ -556,7 +556,7 @@ class MainWindow(QMainWindow):
                   self.parametersTable=parametersTable
                   timeRange=self.uiLifeTime.timeRangeValue
                   numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
-                  self.LifeTimeGraphic=LifeTimeGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
+                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
                                                applyButton,parametersTable,self,self.LifeTimeTimer)

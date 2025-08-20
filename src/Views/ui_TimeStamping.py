@@ -39,6 +39,8 @@ class Ui_TimeStamping(object):
         self.SettingsMeasurementsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_5 = QVBoxLayout(self.SettingsMeasurementsFrame)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_5.setSpacing(0)
         self.SettingsFrame = QFrame(self.SettingsMeasurementsFrame)
         self.SettingsFrame.setObjectName(u"SettingsFrame")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -59,6 +61,8 @@ class Ui_TimeStamping(object):
         self.SettingsFrame.setFrameShadow(QFrame.Sunken)
         self.verticalLayout_2 = QVBoxLayout(self.SettingsFrame)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_2.setSpacing(0)
         self.EnableChannelsFrame = QFrame(self.SettingsFrame)
         self.EnableChannelsFrame.setObjectName(u"EnableChannelsFrame")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -70,6 +74,8 @@ class Ui_TimeStamping(object):
         self.EnableChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.EnableChannelsFrame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_3.setSpacing(0)
         self.enableChannelsLabel = QLabel(self.EnableChannelsFrame)
         self.enableChannelsLabel.setObjectName(u"enableChannelsLabel")
         sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -114,9 +120,11 @@ class Ui_TimeStamping(object):
         self.frameStartStop.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_8.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_8.setSpacing(0)
         self.showTableCheckBox = QCheckBox(self.frameStartStop)
         self.showTableCheckBox.setObjectName(u"showTableCheckBox")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         sizePolicy5.setHorizontalStretch(0)
         sizePolicy5.setVerticalStretch(1)
         sizePolicy5.setHeightForWidth(self.showTableCheckBox.sizePolicy().hasHeightForWidth())
@@ -160,14 +168,18 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.addTab(self.tabNormalMeasurement, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.verticalLayout_11 = QVBoxLayout(self.tab_2)
+        
+        self.scrollScheduled=QScrollArea()
+        self.scrollScheduled.setWidgetResizable(True)
+        self.scrollContent=QWidget()
+        self.verticalLayout_11 = QVBoxLayout(self.scrollContent)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.labelStartSchedule = QLabel(self.tab_2)
+        self.labelStartSchedule = QLabel(self.scrollContent)
         self.labelStartSchedule.setObjectName(u"labelStartSchedule")
 
         self.verticalLayout_11.addWidget(self.labelStartSchedule)
 
-        self.frameStartDateTime = QFrame(self.tab_2)
+        self.frameStartDateTime = QFrame(self.scrollContent)
         self.frameStartDateTime.setObjectName(u"frameStartDateTime")
         self.frameStartDateTime.setFrameShape(QFrame.StyledPanel)
         self.frameStartDateTime.setFrameShadow(QFrame.Raised)
@@ -176,7 +188,7 @@ class Ui_TimeStamping(object):
         self.startDate = QDateEdit(self.frameStartDateTime)
         self.startDate.setObjectName(u"startDate")
         self.startDate.setCalendarPopup(True)
-        self.tab_2.setAutoFillBackground(True)
+        self.scrollContent.setAutoFillBackground(True)
 
         self.horizontalLayout_5.addWidget(self.startDate)
 
@@ -189,12 +201,12 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_11.addWidget(self.frameStartDateTime)
 
-        self.labelStopSchedule = QLabel(self.tab_2)
+        self.labelStopSchedule = QLabel(self.scrollContent)
         self.labelStopSchedule.setObjectName(u"labelStopSchedule")
 
         self.verticalLayout_11.addWidget(self.labelStopSchedule)
 
-        self.frameStopDateTime = QFrame(self.tab_2)
+        self.frameStopDateTime = QFrame(self.scrollContent)
         self.frameStopDateTime.setObjectName(u"frameStopDateTime")
         self.frameStopDateTime.setFrameShape(QFrame.StyledPanel)
         self.frameStopDateTime.setFrameShadow(QFrame.Raised)
@@ -214,7 +226,7 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_11.addWidget(self.frameStopDateTime)
 
-        self.frameStartStopPauseButtons = QFrame(self.tab_2)
+        self.frameStartStopPauseButtons = QFrame(self.scrollContent)
         self.frameStartStopPauseButtons.setObjectName(u"frameStartStopPauseButtons")
         self.frameStartStopPauseButtons.setFrameShape(QFrame.StyledPanel)
         self.frameStartStopPauseButtons.setFrameShadow(QFrame.Raised)
@@ -237,7 +249,11 @@ class Ui_TimeStamping(object):
 
 
         self.verticalLayout_11.addWidget(self.frameStartStopPauseButtons)
-
+        self.scrollScheduled.setWidget(self.scrollContent)
+        self.verticalLayoutScroll=QVBoxLayout(self.tab_2)
+        self.verticalLayoutScroll.addWidget(self.scrollScheduled)
+        self.verticalLayoutScroll.setContentsMargins(0, 0, 0, 0)
+        self.scrollScheduled.setFrameShape(QFrame.NoFrame)
         self.tabStartStopTypes.addTab(self.tab_2, "")
         self.limitedMeasurementsFrame = QWidget()
         self.limitedMeasurementsFrame.setObjectName(u"limitedMeasurementsFrame")
@@ -292,6 +308,8 @@ class Ui_TimeStamping(object):
         self.SaveDataFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_4 = QVBoxLayout(self.SaveDataFrame)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_4.setSpacing(0)
         self.saveDataAfterCompleteCheckBox = QCheckBox(self.SaveDataFrame)
         self.saveDataAfterCompleteCheckBox.setObjectName(u"saveDataAfterCompleteCheckBox")
 
@@ -538,7 +556,6 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
         self.tableTimeStamp.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
@@ -638,3 +655,4 @@ class Ui_TimeStamping(object):
         self.numberMeasurementsSpinBox.setMinimum(1)
         self.numberMeasurementsSpinBox.setMaximum(2**28)
         self.numberMeasurementsSpinBox.setValue(1000)
+

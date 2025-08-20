@@ -10,7 +10,7 @@
 
 from PySide2.QtCore import Qt, QMetaObject, QCoreApplication
 from PySide2.QtWidgets import QVBoxLayout, QFrame, QLabel, QHBoxLayout, QComboBox, QPushButton
-from findDevices import PyTempicoManager 
+from Utils.findDevices import PyTempicoManager 
 import pyTempico as tempico
 
 
@@ -111,7 +111,8 @@ class Ui_Devices(object):
         self.Dialog.close()
 
     def connectClick(self):
-        com_value=self.DevicesComboBox.currentText()
+        dev_value=self.DevicesComboBox.currentText()
+        com_value=dev_value.split("(")[-1].replace(")","")
         self.deviceConnected=tempico.TempicoDevice(com_value)
         self.Dialog.close()
         

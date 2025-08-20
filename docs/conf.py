@@ -10,7 +10,7 @@ import sys
 
 
 sys.path.insert(0, os.path.abspath('../src'))   
-import constants
+import Utils.constants as constants
 
 project = 'Tempico Software'
 copyright = '2025,Tausand Electronics'
