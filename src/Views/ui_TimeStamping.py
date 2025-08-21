@@ -551,7 +551,21 @@ class Ui_TimeStamping(object):
         self.retranslateUi(Form)
 
         self.drawColorPoint()
-        self.tableTimeStamp.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        
+
+        header = self.tableTimeStamp.horizontalHeader()
+        header.setStretchLastSection(False)
+
+        # Primero: calcular tamaño mínimo necesario
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.tableTimeStamp.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.tableTimeStamp.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
+        
+
+        
 
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
