@@ -145,6 +145,7 @@ class UiLifeTime(object):
         self.startStopClearFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.startStopClearFrame)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0,0,0,0)
         self.startButton = QPushButton(self.startStopClearFrame)
         self.startButton.setObjectName(u"startButton")
 
@@ -169,6 +170,7 @@ class UiLifeTime(object):
         self.saveDataPlotFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_3 = QHBoxLayout(self.saveDataPlotFrame)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(0,0,0,0)
         self.saveDataFileButton = QPushButton(self.saveDataPlotFrame)
         self.saveDataFileButton.setObjectName(u"saveDataFileButton")
 

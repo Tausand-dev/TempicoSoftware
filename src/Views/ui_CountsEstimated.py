@@ -32,17 +32,22 @@ class Ui_CountsEstimated(object):
         self.GraphicSettingFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout = QHBoxLayout(self.GraphicSettingFrame)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.SettingsFrame = QFrame(self.GraphicSettingFrame)
+        self.scrollSettings=QScrollArea(self.GraphicSettingFrame)
+        self.SettingsFrame = QFrame()
         self.SettingsFrame.setObjectName(u"SettingsFrame")
-        self.scrollSettings=QScrollArea()
-        self.scrollSettings.setWidgetResizable(True)
+        self.scrollSettings.setWidgetResizable(True)  
+        self.scrollSettings.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.scrollSettings.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy1.setHorizontalStretch(4)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.SettingsFrame.sizePolicy().hasHeightForWidth())
         self.scrollSettings.setSizePolicy(sizePolicy1)
+        sizePolicySettings= QSizePolicy(QSizePolicy.Preferred,QSizePolicy.Preferred)
+        sizePolicySettings.setHeightForWidth(self.SettingsFrame.sizePolicy().hasHeightForWidth())
+        self.SettingsFrame.setMinimumWidth(0)
         self.SettingsFrame.setFrameShape(QFrame.Panel)
         self.SettingsFrame.setFrameShadow(QFrame.Sunken)
+        self.SettingsFrame.setSizePolicy(sizePolicySettings)
         self.verticalLayout_2 = QVBoxLayout(self.SettingsFrame)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.channelLabel = QLabel(self.SettingsFrame)
@@ -56,6 +61,7 @@ class Ui_CountsEstimated(object):
         self.frame_7.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_3 = QHBoxLayout(self.frame_7)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(8,4,8,4)
         self.channelACheckBox = QCheckBox(self.frame_7)
         self.channelACheckBox.setObjectName(u"channelACheckBox")
 
@@ -85,6 +91,7 @@ class Ui_CountsEstimated(object):
         self.StartStopButtonsFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_4 = QHBoxLayout(self.StartStopButtonsFrame)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(8,4,8,4)
         self.startMeasurementButton = QPushButton(self.StartStopButtonsFrame)
         self.startMeasurementButton.setObjectName(u"startMeasurementButton")
 
@@ -109,6 +116,7 @@ class Ui_CountsEstimated(object):
         self.SelectGraphFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.SelectGraphFrame)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(8,4,8,4)
         self.mergeGraphicButton = QRadioButton(self.SelectGraphFrame)
         self.mergeGraphicButton.setObjectName(u"mergeGraphicButton")
 
@@ -134,7 +142,7 @@ class Ui_CountsEstimated(object):
         self.verticalLayout_2.addWidget(self.tableDeatachedFrame)
         #Horizontallayout
         self.horizontalLayoutDeatached= QHBoxLayout(self.tableDeatachedFrame)
-        
+        self.horizontalLayoutDeatached.setContentsMargins(8,4,8,4)
         #CheckBoxDeatached Table 
         self.tableCheckBox= QCheckBox()
         self.tableCheckBox.setText("Detached table")
@@ -155,6 +163,7 @@ class Ui_CountsEstimated(object):
         self.ComboBoxTimeRangeFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_6 = QHBoxLayout(self.ComboBoxTimeRangeFrame)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(8,4,8,4)
         self.comboBoxTimeRange = QComboBox(self.ComboBoxTimeRangeFrame)
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
@@ -188,6 +197,7 @@ class Ui_CountsEstimated(object):
         self.ChannelABButtonFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_7 = QHBoxLayout(self.ChannelABButtonFrame)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(8,4,8,4)
         self.channelAClearButton = QPushButton(self.ChannelABButtonFrame)
         self.channelAClearButton.setObjectName(u"channelAClearButton")
 
@@ -217,6 +227,7 @@ class Ui_CountsEstimated(object):
         self.SaveDataPlotsFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_9 = QHBoxLayout(self.SaveDataPlotsFrame)
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(8,4,8,4)
         self.saveDataButton = QPushButton(self.SaveDataPlotsFrame)
         self.saveDataButton.setObjectName(u"saveDataButton")
 
@@ -231,8 +242,6 @@ class Ui_CountsEstimated(object):
         self.verticalLayout_2.addWidget(self.SaveDataPlotsFrame)
 
         self.scrollSettings.setWidget(self.SettingsFrame)
-        self.scrollSettings.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollSettings.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.horizontalLayout.addWidget(self.scrollSettings)
 
         self.GraphicsFrame = QFrame(self.GraphicSettingFrame)
