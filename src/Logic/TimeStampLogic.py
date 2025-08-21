@@ -1004,6 +1004,21 @@ class TimeStampLogic():
             self.pauseLimitedButton.setText("Pause")
             self.pauseLimitedButton.setEnabled(True)
         
+    def checkBoxSaveDataAfterMeasurement(self):
+        """
+        Handles the behavior of the "Save Data" checkbox for enabling or disabling auto-save options.
+        Includes a confirmation dialog when disabling auto-save.
+        """
+        if self.saveDataComplete.isChecked():
+            self.autoSaveComboBox.setEnabled(True)
+            self.saveDataButton.setEnabled(False)
+        else:           
+            self.autoSaveComboBox.setEnabled(False)
+            if self.measurementMade:
+                self.saveDataButton.setEnabled(True)
+
+
+    
     def checkBoxSaveData(self):
         """
         Handles the behavior of the "Save Data" checkbox for enabling or disabling auto-save options.
@@ -1023,7 +1038,7 @@ class TimeStampLogic():
                 f"Do you want to disable auto-save?\n\n"
                 f"Please note that this feature is intended to prevent the program from crashing "
                 f"due to insufficient memory. We recommend keeping it enabled with the lowest possible interval.\n\n"
-                f"If you still wish to disable it, be aware that you currently have available to the process"
+                f"If you still wish to disable it, be aware that you currently have available to the process "
                 f"{available_ram_mb:.2f} MB of RAM memory, which can store approximately "
                 f"{approx_measurements} measurements."
             )
@@ -1223,7 +1238,7 @@ class TimeStampLogic():
         """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.saveDataComplete.setEnabled(True)
-        self.checkBoxSaveData()
+        self.checkBoxSaveDataAfterMeasurement()
         self.enableCheckBoxA.setEnabled(True)
         self.enableCheckBoxB.setEnabled(True)
         self.enableCheckBoxC.setEnabled(True)
