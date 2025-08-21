@@ -559,7 +559,7 @@ class TimeStampLogic():
                 correctInit=True
             correctFinal=False
             if correctInit: 
-                if self.dateTimeFinal<self.dateTimeInit:
+                if self.dateTimeFinal<=self.dateTimeInit:
                     self.showDialogIncorrectDates()
                 else:
                     correctFinal=True
