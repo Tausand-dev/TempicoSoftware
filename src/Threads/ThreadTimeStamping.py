@@ -279,7 +279,6 @@ class WorkerThreadTimeStamping(QThread):
                         finishedMeasurement=True
                         measure=newFetch
                         self.device.abort()
-                        QThread.msleep(20)
                     else:
                         measure=newFetch
             
@@ -289,8 +288,6 @@ class WorkerThreadTimeStamping(QThread):
                 
             elif not measure and self.noAbortsSequent>=10:
                 self.device.reset()
-                #Wait at least 20 ms
-                QThread.msleep(20)
                 self.applyCurrentSettings()
                 #Wait at least 20 ms 
                 QThread.msleep(20)
@@ -298,9 +295,6 @@ class WorkerThreadTimeStamping(QThread):
                 #Set timeout to finish abort
                 self.noAbortsSequent+=1
                 self.device.abort()
-                QThread.msleep(20)
-                
-                #Wait at least 10 ms
                 
             valuesToSkip=0
             if self.totalDataPerMeasurement+self.totalMeasurements>=self.maximumMeasurements:
@@ -316,12 +310,12 @@ class WorkerThreadTimeStamping(QThread):
                 for measureIndex in range(totalLenMeasure):
                     channelMeasure=measure[measureIndex]
                     if channelMeasure:
-                        if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
-                            nextMeasure=measure[measureIndex+1]
-                            valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
-                        if valuesToSkip>0:
-                            valuesToSkip-=1
-                            continue  
+                        # if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
+                        #     nextMeasure=measure[measureIndex+1]
+                        #     valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
+                        # if valuesToSkip>0:
+                        #     valuesToSkip-=1
+                        #     continue
                         startValue=channelMeasure[2]
                         startValue= str(datetime.fromtimestamp(startValue))
                         startValues[startValue]=0  
@@ -379,7 +373,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==2:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsB)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -388,7 +382,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -397,7 +391,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -406,7 +400,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -415,7 +409,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4: 
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -427,7 +421,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==3:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsC)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -436,7 +430,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1: 
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -445,7 +439,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -454,7 +448,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -463,7 +457,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -475,7 +469,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==4:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsD)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -484,7 +478,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -493,7 +487,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -502,7 +496,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -511,7 +505,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -632,17 +626,12 @@ class WorkerThreadTimeStamping(QThread):
                 
             elif not measure and self.noAbortsSequent>=10:
                 self.device.reset()
-                #Wait at leat 20 ms
-                QThread.msleep(20)
-                self.applyCurrentSettings()
-                #Wait at leat 20 ms 
+                self.applyCurrentSettings() 
                 QThread.msleep(20)
             elif not measure and self.noMeasurementsSequent >=3:
                 #Set timeout to finish abort
                 self.noAbortsSequent+=1
                 self.device.abort()
-                QThread.msleep(20)
-                #Wait at leat 10 ms
             valuesToSkip=0 
             totalNoStarts=0
             StartChannelRegister=True
@@ -653,12 +642,12 @@ class WorkerThreadTimeStamping(QThread):
                 for measureIndex in range(totalLenMeasure):
                     channelMeasure=measure[measureIndex]                        
                     if channelMeasure:
-                        if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
-                            nextMeasure=measure[measureIndex+1]
-                            valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
-                        if valuesToSkip>0:
-                            valuesToSkip-=1
-                            continue    
+                        # if measureIndex<totalLenMeasure-2 and valuesToSkip<1:
+                        #     nextMeasure=measure[measureIndex+1]
+                        #     valuesToSkip=self.checkCorruptData(channelMeasure,nextMeasure)
+                        # if valuesToSkip>0:
+                        #     valuesToSkip-=1
+                        #     continue    
                         #New start algo
                         startValue=channelMeasure[2]
                         startValue= str(datetime.fromtimestamp(startValue))
@@ -667,31 +656,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==1:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsA)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -702,31 +691,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==2:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsB)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>4: 
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -735,31 +724,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==3:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsC)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>1: 
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -768,31 +757,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==4:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsD)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1 and channelMeasure[3]<self.maximumValueMeasurement:
+                                    if channelMeasure[3]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1 and channelMeasure[4]<self.maximumValueMeasurement:
+                                    if channelMeasure[4]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1 and channelMeasure[5]<self.maximumValueMeasurement:
+                                    if channelMeasure[5]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1 and channelMeasure[6]<self.maximumValueMeasurement:
+                                    if channelMeasure[6]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1 and channelMeasure[7]<self.maximumValueMeasurement:
+                                    if channelMeasure[7]!=-1:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1

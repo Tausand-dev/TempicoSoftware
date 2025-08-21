@@ -217,27 +217,26 @@ class WorkerThreadStartStopHistogram(QThread):
                 
             elif not measurement and self.noAbortsSequent>=10:
                 self.device.reset()
-                QThread.msleep(20)
                 self.applyCurrentSettings()
                 QThread.msleep(20)
             elif not measurement and self.noMeasurementsSequent >=3:
                 self.noAbortsSequent+=1
                 self.device.abort()
-                QThread.msleep(20)
-            valuesToSkip=0
+                
+            # valuesToSkip=0
             
             if measurement:
                 totalLenMeasurement= len(measurement)
                 self.noAbortsSequent=0
                 for indexRun in range(totalLenMeasurement):
                     run=measurement[indexRun]
-                    
-                    if indexRun<(totalLenMeasurement-2) and valuesToSkip<1:
-                        nextRun=measurement[indexRun+1]
-                        valuesToSkip=self.checkCorruptData(run,nextRun)
-                    if valuesToSkip>0:
-                        valuesToSkip-=1
-                        continue
+                    # TODO: Test if this is not neccesary
+                    # if indexRun<(totalLenMeasurement-2) and valuesToSkip<1:
+                    #     nextRun=measurement[indexRun+1]
+                    #     valuesToSkip=self.checkCorruptData(run,nextRun)
+                    # if valuesToSkip>0:
+                    #     valuesToSkip-=1
+                    #     continue
                     if run:
                         if "Start" in self.channelsNM:
                             self.channelsNM.remove("Start")
@@ -452,16 +451,21 @@ class WorkerThreadStartStopHistogram(QThread):
         :param channel: Channel identifier for the measurement.
         :return: None
         """
-        if pureMeasurement<5000000000:
-            if self.isBashed:
-                listValues.append(measurement)
-                pureList.append(pureMeasurement)
-                if measurement>self.currentMaxValueA:
-                    self.currentMaxValueA=measurement
-            else:
-                self.compareMaxValue(measurement,channel)
-                self.dataSignal.emit(measurement,channel)
-                self.dataPureSignal.emit(pureMeasurement,channel)
+        if self.isBashed:
+            listValues.append(measurement)
+            pureList.append(pureMeasurement)
+            if channel=="A" and measurement>self.currentMaxValueA:
+                self.currentMaxValueA=measurement
+            if channel=="B" and measurement>self.currentMaxValueB:
+                self.currentMaxValueB=measurement
+            if channel=="C" and measurement>self.currentMaxValueC:
+                self.currentMaxValueC=measurement
+            if channel=="D" and measurement>self.currentMaxValueD:
+                self.currentMaxValueD=measurement
+        else:
+            self.compareMaxValue(measurement,channel)
+            self.dataSignal.emit(measurement,channel)
+            self.dataPureSignal.emit(pureMeasurement,channel)
             
             
     def checkCorruptData(self, currentMeasurement, nextMeasurement):
