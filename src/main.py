@@ -193,10 +193,12 @@ class MainWindow(QMainWindow):
         self.tab2=QWidget()
         self.tab3=QWidget()
         self.tab4=QWidget()
+        self.tab5=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
         self.tabs.addTab(self.tab4,"Time stamping")
+        self.tabs.addTab(self.tab5,"g2 measurements")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -247,6 +249,8 @@ class MainWindow(QMainWindow):
         self.sentinel2=0
         self.sentinel3=0
         self.sentinel4=0
+        self.sentinel5=0
+
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
         self.open_dialog()
@@ -344,10 +348,10 @@ class MainWindow(QMainWindow):
         :type parent: QWidget
         :returns: None
         """
-        if self.sentinel3==0:
+        if self.sentinel5==0:
             self.uig2 = Ui_G2()
             self.uig2.setupUi(parent)
-            self.sentinel3=1
+            self.sentinel5=1
 
     def open_dialog(self):
         """
@@ -655,7 +659,9 @@ class MainWindow(QMainWindow):
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
                                                      tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
                 
-
+          elif valor_padre==4:
+              padre=self.tab5
+              self.construct_g2(padre)
         #   elif valor_padre==1:
 
         #       padre=self.tab3
