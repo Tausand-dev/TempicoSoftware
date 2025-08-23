@@ -11,7 +11,6 @@
 from PySide2.QtCore import Qt, QMetaObject, QCoreApplication
 from PySide2.QtWidgets import QHBoxLayout, QFrame, QSizePolicy, QVBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QTableWidget, QTableWidgetItem
 from PySide2.QtGui import QPixmap, QPainter, QColor
-import matplotlib.pyplot as plt
 import io
 import sys
 

@@ -81,7 +81,7 @@ class LifeTimeLogic():
         #Initialize the spinBox
         self.numberMeasurementsSpinBox=numberMeasurementsSpinBox
         #Fix the original value of Channels comboBox
-        self.comboBoxStopChannel.setCurrentIndex(1)
+        self.comboBoxStopChannel.setCurrentIndex(0)
         self.comboBoxStartChannel.currentIndexChanged.connect(self.indexChangeStartChannel)
         self.comboBoxStopChannel.currentIndexChanged.connect(self.indexChangeStopChannel)
         #Set the enable init Buttons
