@@ -17,6 +17,8 @@
 /src/build/
 /dist/
 /src/InstallerEnvironment/
+/src/TempData/*
+/src/SaveFileConstants.json
 
 
 # Byte-compiled / optimized / DLL files
