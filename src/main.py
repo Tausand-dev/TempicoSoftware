@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction
+from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction,QDesktopWidget
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
@@ -100,7 +100,17 @@ class MainWindow(QMainWindow):
         self.savefile=savefile()
         self.savefile.createDefaultFolder()
         self.setWindowTitle("Tempico Software")
-        self.setGeometry(100,100,1000,700)
+        primary_screen = QApplication.instance().primaryScreen()
+        screen_geometry = primary_screen.geometry()
+        width, height = screen_geometry.width(), screen_geometry.height()
+        if width<1000 or height<700:
+            xPosition=int(width/2)-400
+            yPosition=int(height/2)-300
+            self.setGeometry(xPosition,yPosition,800,600)
+        else:
+            xPosition=int(width/2)-500
+            yPosition=int(height/2)-350
+            self.setGeometry(xPosition,yPosition,1000,700)  
         self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(800,600)
         self.conectedDevice=None
