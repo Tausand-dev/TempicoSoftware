@@ -20,6 +20,7 @@ class UiLifeTime(object):
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(922, 772)
+        self.chargePixMaps()
         self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.ConfigurationRunParameters = QFrame(Form)
@@ -510,7 +511,7 @@ class UiLifeTime(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start Channel:", None))
-        self.set_latex_to_label('I<sub>0</sub> e<sup>−t / τ<sub>0</sub></sup>')
+        self.set_latex_to_label('exponential')
         self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Start channel", None))
         self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel A", None))
         self.startChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel B", None))
@@ -562,6 +563,7 @@ class UiLifeTime(object):
         self.parametersTable.setItem(2,2,QTableWidgetItem(""))
         self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         #Set the row Height
+        
         for row in range(self.parametersTable.rowCount()):
             self.parametersTable.setRowHeight(row, 15)
     
@@ -594,14 +596,27 @@ class UiLifeTime(object):
         self.drawPointLabel.setPixmap(pixmap)
         
     def set_latex_to_label(self, text):
-        self.equationLabel.setStyleSheet("font-size: 14pt;") 
-        self.equationLabel.setText(text)
+        if text=="exponential":
+            self.equationLabel.setPixmap(self.exponentialPixMap)
+        elif text=="kohlrausch":
+            self.equationLabel.setPixmap(self.kohlrauschPixMap)
+        elif text=="shifted":
+            self.equationLabel.setPixmap(self.shiftedExponentialPixMap)
+        elif text=="double":
+            self.equationLabel.setPixmap(self.doubleExponentialPixMap)
+    
+    def chargePixMaps(self):
+        self.exponentialPixMap=QPixmap("./Sources/ExponentialEquation.png")
+        self.kohlrauschPixMap=QPixmap("./Sources/KohlrauschEquation.png")
+        self.shiftedExponentialPixMap=QPixmap("./Sources/ShiftedExponential.png")
+        self.doubleExponentialPixMap=QPixmap("./Sources/DoubleExponential.png")
+        
     
 
     
     def functionChange(self):
         if self.functionComboBox.currentText()=="Exponential":
-            self.set_latex_to_label('I<sub>0</sub> e<sup>−t / τ<sub>0</sub></sup>')
+            self.set_latex_to_label('exponential')
             self.parametersTable.setRowCount(3)
             #R^2 Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("R^2"))
@@ -612,7 +627,7 @@ class UiLifeTime(object):
             for row in range(self.parametersTable.rowCount()):
                 self.parametersTable.setRowHeight(row, 15)
         elif self.functionComboBox.currentText()=="Kohlrausch":
-            self.set_latex_to_label('I<sub>0</sub> e<sup>(−t / τ<sub>0</sub>)<sup>β</sup></sup>')
+            self.set_latex_to_label('kohlrausch')
             self.parametersTable.setRowCount(4)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("β"))
@@ -629,7 +644,7 @@ class UiLifeTime(object):
                 self.parametersTable.setRowHeight(row, 15)
 
         elif self.functionComboBox.currentText()=="Shifted exponential":
-            self.set_latex_to_label('I<sub>0</sub> e<sup>(−t + α) / τ<sub>0</sub></sup> + b')
+            self.set_latex_to_label('shifted')
             self.parametersTable.setRowCount(5)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("α"))
@@ -650,7 +665,7 @@ class UiLifeTime(object):
             for row in range(self.parametersTable.rowCount()):
                 self.parametersTable.setRowHeight(row, 15)
         elif self.functionComboBox.currentText()=="Double exponential":
-            self.set_latex_to_label('I<sub>0</sub>(α e<sup>−t / τ<sub>0</sub></sup> + (1 − α)e<sup>−t / τ<sub>1</sub></sup>)')
+            self.set_latex_to_label('double')
             self.parametersTable.setRowCount(5)
             #Third Parameter
             self.parametersTable.setItem(2,0,QTableWidgetItem("τ1"))
