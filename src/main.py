@@ -209,7 +209,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
         self.tabs.addTab(self.tab4,"Time stamping")
-        self.tabs.addTab(self.tab5,"g2 measurements")
+        self.tabs.addTab(self.tab5,"g2 HBT")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -674,9 +674,9 @@ class MainWindow(QMainWindow):
             self.construct_g2(padre)
             if self.g2Graphic==None:
                 stopChannelComboBox=self.uig2.stopChannelComboBox
-                coincidenceWindowSpinBox=self.uig2.coincidenceWindowSpinBox
+                coincidenceWindowComboBox=self.uig2.coincidenceWindowComboBox
                 numberMeasurementsSpinBoxg2=self.uig2.numberMeasurementsSpinBox
-                timeRangeSpinBox=self.uig2.timeRangeSpinBox
+                numberBinsComboBox=self.uig2.numberBinsComboBox
                 startButtong2=self.uig2.startButton
                 stopButtong2=self.uig2.stopButton
                 clearButtong2= self.uig2.clearButton
@@ -685,22 +685,28 @@ class MainWindow(QMainWindow):
                 comboBoxEquation=self.uig2.equationComboBox
                 applyFitButton=self.uig2.applyFitButton
                 externalDelaySpinBox=self.uig2.externalDelaySpinBox
-                applyExternalDelayButton=self.uig2.applyDelayButton
                 parametersTableg2=self.uig2.parametersTable
                 initialParametersButton=self.uig2.initialParametersButton
                 statusValueLabel=self.uig2.stateValueLabel
                 statusColorLabel=self.uig2.colorLabel
-                totalStartsLabel=self.uig2.totalStartsLabel
-                totalStopsLabel=self.uig2.totalStopsLabel
+                totalStartsLabel=self.uig2.totalStartsValue
+                totalStopsLabel=self.uig2.totalStopsValue
                 calculatedParameter=self.uig2.estimateValueLabel
                 helButtong2=self.uig2.helpButton
                 graphicFrameg2=self.uig2.GraphicFrame
-                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowSpinBox,numberMeasurementsSpinBoxg2,timeRangeSpinBox,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
-                                    externalDelaySpinBox,applyExternalDelayButton,parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
-                                    graphicFrameg2,self.conectedDevice,self,self.connectedTimer)
-                 
-                
-              
+                startLimitedButtong2=self.uig2.startLimitedButton
+                stopLimitedButtong2=self.uig2.stopLimitedButton
+                clearLimitedButtong2=self.uig2.clearLimitedButton
+                autoClearSpinBox=self.uig2.autoClearSpinBox
+                startAutoClearButton=self.uig2.startAutoClearButton
+                stopAutoClearButton=self.uig2.stopAutoClearButton
+                clearAutoClearButton=self.uig2.cleanAutoClearButton
+                tabSettingsg2=self.uig2.tabWidget
+                maximumTimeRange=self.uig2.maximumTimeValue
+                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsComboBox,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
+                                    externalDelaySpinBox,parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
+                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRange,tabSettingsg2,self.conectedDevice,self,self.connectedTimer)
+                       
 
     def Helpg2Button(self):
         message_box = QMessageBox(self)
