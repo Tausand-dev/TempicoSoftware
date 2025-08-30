@@ -60,11 +60,18 @@ class G2Logic():
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
+        self.currentMeasurement=False
         #Connect elements
         self.stopChannelComboBox.currentIndexChanged.connect(self.stopChannelChanged)
         self.comboBoxEquation.currentIndexChanged.connect(self.changeTableParameters)
         self.startManualButton.clicked.connect(self.startManualMeasurement)
         self.stopManualButton.clicked.connect(self.stopManualMeasurement)
+        self.clearButton.clicked.connect(self.clearManualMeasurement)
+        self.startLimitedButtonG2.clicked.connect(self.startLimitedMeasurement)
+        self.stopLimitedButtonG2.clicked.connect(self.stopLimitedMeasurement)
+        self.clearLimitedButtonG2.clicked.connect(self.clearManualMeasurement)
+        self.clearAutoClearButton.clicked.connect(self.clearManualMeasurement)
+        #self.externalDelaySpinBox.valueChanged.connect(self.changeExternalDelay)
         self.initialConfigs()
         self.createGraphic()
     
@@ -315,6 +322,7 @@ class G2Logic():
     def startManualMeasurement(self):
         self.stopManualButton.setEnabled(True)
         self.startManualButton.setEnabled(False)
+        self.clearButton.setEnabled(True)
         self.stopTimerConnection()
         self.applyFitButton.setEnabled(False)
         self.stopChannelComboBox.setEnabled(False)
@@ -326,10 +334,12 @@ class G2Logic():
         self.savePlotButton.setEnabled(False)
         self.tauValues=[]
         self.determinedParameters=False
+        self.currentMeasurement=True
         channelSelected=self.getChannelComboBox()
         coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
         maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
         numberBins=int(self.numberBinsComboBox.currentText())
+        self.externalDelaySpinBox.setEnabled(False)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device)
         self.worker.updateStatusLabel.connect(self.changeStatus)
         self.worker.updateColorLabel.connect(self.changeStatusColor)
@@ -358,34 +368,96 @@ class G2Logic():
         return value
         
     
-    def cleanManualMeasurement(self):
-        pass
-    
+    def clearManualMeasurement(self):
+        self.worker.clearG2()
+        
+     
     #By size measurement
     def startLimitedMeasurement(self):
-        pass
+        self.stopLimitedButtonG2.setEnabled(True)
+        self.startLimitedButtonG2.setEnabled(False)
+        self.clearLimitedButtonG2.setEnabled(True)
+        self.numberMeasurementsSpinBox.setEnabled(False)
+        self.stopTimerConnection()
+        self.applyFitButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(False)
+        self.coincidenceWindowComboBox.setEnabled(False)
+        self.numberBinsComboBox.setEnabled(False)
+        self.tabSettings.setTabEnabled(0,False)
+        self.tabSettings.setTabEnabled(2,False)
+        self.saveDataButton.setEnabled(False)
+        self.savePlotButton.setEnabled(False)
+        self.tauValues=[]
+        self.determinedParameters=False
+        self.currentMeasurement=True
+        channelSelected=self.getChannelComboBox()
+        coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
+        maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
+        numberBins=int(self.numberBinsComboBox.currentText())
+        numberMeasurements=int(self.numberMeasurementsSpinBox.value())
+        self.timerAutoClear = QTimer()
+        self.timerAutoClear.timeout.connect(self.clearManualMeasurement)
+        self.externalDelaySpinBox.setEnabled(False)
+        self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device, True, numberMeasurements)
+        self.worker.updateStatusLabel.connect(self.changeStatus)
+        self.worker.updateColorLabel.connect(self.changeStatusColor)
+        self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
+        self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
+        self.worker.updateTauValues.connect(self.captureTauValues)
+        self.worker.updateMeasurement.connect(self.captureMeasurement)
+        self.worker.finished.connect(self.finishLimitedMeasurement)
+        self.worker.start()
+        
     
     def stopLimitedMeasurement(self):
-        pass
+        self.worker.stop()
+        self.stopLimitedButtonG2.setEnabled(False)
     
-    def cleanLimitedMeasurement(self):
-        pass
+    
     
     #Auto clear measurement
     def startAutoClearMeasurement(self):
-        pass
+        self.stopAutoClearButton.setEnabled(True)
+        self.startAutoClearButton.setEnabled(False)
+        self.clearAutoClearButton.setEnabled(True)
+        self.stopTimerConnection()
+        self.applyFitButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(False)
+        self.coincidenceWindowComboBox.setEnabled(False)
+        self.autoClearSpinBox.setEnabled(False)
+        self.tabSettings.setTabEnabled(0,False)
+        self.tabSettings.setTabEnabled(1,False)
+        self.saveDataButton.setEnabled(False)
+        self.savePlotButton.setEnabled(False)
+        self.tauValues=[]
+        self.determinedParameters=False
+        self.currentMeasurement=True
+        channelSelected=self.getChannelComboBox()
+        coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
+        maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
+        numberBins=int(self.numberBinsComboBox.currentText())
+        self.externalDelaySpinBox.setEnabled(False)
+        self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device)
+        self.worker.updateStatusLabel.connect(self.changeStatus)
+        self.worker.updateColorLabel.connect(self.changeStatusColor)
+        self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
+        self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
+        self.worker.updateTauValues.connect(self.captureTauValues)
+        self.worker.updateMeasurement.connect(self.captureMeasurement)
+        self.worker.finished.connect(self.finishManualMeasurement)
+        self.worker.start()
+    
     
     def stopAutoClearMeasurement(self):
         pass
     
-    def cleanAutoClearMeasurement(self):
-        pass
     
     def finishManualMeasurement(self):
         if not self.determinedParameters:
             self.showDialogNoParameters()
         self.stopManualButton.setEnabled(False)
         self.startManualButton.setEnabled(True)
+        self.clearButton.setEnabled(False)
         self.startTimerConnection()
         self.applyFitButton.setEnabled(True)
         self.stopChannelComboBox.setEnabled(True)
@@ -397,6 +469,28 @@ class G2Logic():
         self.savePlotButton.setEnabled(True)
         self.changeStatus("No running measurement")
         self.changeStatusColor(0)
+        self.currentMeasurement=False
+    
+    def finishLimitedMeasurement(self):
+        if not self.determinedParameters:
+            self.showDialogNoParameters()
+        self.stopLimitedButtonG2.setEnabled(False)
+        self.startLimitedButtonG2.setEnabled(True)
+        self.clearLimitedButtonG2.setEnabled(False)
+        self.startTimerConnection()
+        self.applyFitButton.setEnabled(True)
+        self.stopChannelComboBox.setEnabled(True)
+        self.coincidenceWindowComboBox.setEnabled(True)
+        self.numberBinsComboBox.setEnabled(True)
+        self.tabSettings.setTabEnabled(0,True)
+        self.tabSettings.setTabEnabled(2,True)
+        self.saveDataButton.setEnabled(True)
+        self.savePlotButton.setEnabled(True)
+        self.numberMeasurementsSpinBox.setEnabled(True)
+        self.changeStatus("No running measurement")
+        self.changeStatusColor(0)
+        self.currentMeasurement=False
+    
     
     def showDialogNoParameters(self):
         QMessageBox.warning(
@@ -459,11 +553,24 @@ class G2Logic():
     
     def captureTauValues(self, tauValues):
         self.tauValues=tauValues
+        self.externalDelaySpinBox.setEnabled(True)
+    
+    def changeExternalDelay(self):
+        if self.currentMeasurement:
+            externalDelayUs=self.externalDelaySpinBox.value()
+            externalValueMs=externalDelayUs/(10**3)
+            newTauValues=[]
+            for tau in self.tauValues:
+                newTau=tau-externalValueMs
+                newTauValues.append(newTau)
+            self.tauValues=np.array(newTauValues)
     
     def captureMeasurement(self, g2Values, totalStarts, totalStops):
         self.curveG2.setData(self.tauValues, g2Values)
         self.totalStartsLabel.setText(str(totalStarts))
         self.totalStopsLabel.setText(str(totalStops))
+    
+    
         
     
     
@@ -475,7 +582,7 @@ class WorkerThreadG2(QThread):
     updateColorLabel=Signal(int)
     updateEstimatedParameter=Signal(str)
     updateDeterminedParameters=Signal()
-    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice):
+    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice,limitedMeasurement=False,numberOfMeasurements=0):
         super().__init__()
         self.totalStarts=0
         self.totalStops=0
@@ -484,10 +591,12 @@ class WorkerThreadG2(QThread):
         self.maximumTime=maximumTime
         self.numberBins=numberBins
         self.coincidenceWindow=self.psToS(coincidenceWindow)
+        self.isLimitedMeasurement=limitedMeasurement
+        self.numberMeasurements=numberOfMeasurements
         self.device=device
         self.totalTimeIntegration=0
         self.bins=self.generateBinList()
-        self.TauValues = 0.5 * (self.bins[:-1] + self.bins[1:])/(10**9)
+        self.TauValues = (0.5 * (self.bins[:-1] + self.bins[1:])/(10**9))
         self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
         self.saveSettings()
         self.settingsForEstimate()
@@ -638,30 +747,56 @@ class WorkerThreadG2(QThread):
     
     def getMeasurement(self):
         measurement = self.device.measure()
-        print(len(measurement))
+        totalStopPerMeasurement=0
         sortedMeasurement = self.sortByStart(measurement)
         timeDifferences, stopDifferences = [], []
+        notStartsMeasurement=0
         for run in sortedMeasurement:
             if not run:
+                notStartsMeasurement+=1
                 continue
-            self.processRun(run, timeDifferences, stopDifferences)
-        g2Values=self.buildG2Histogram(timeDifferences)
-        self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
+            totalStopPerMeasurement+=self.processRun(run, timeDifferences, stopDifferences)
+            if self.isLimitedMeasurement and self.totalStops>=self.numberMeasurements:
+                self.updateDeterminedParameters.emit()
+                self.running=False
+                break 
+        if self.totalTimeIntegration>0:
+            g2Values=self.buildG2Histogram(timeDifferences)
+            self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
+        else:
+            self.updateMeasurement.emit(self.g2Histogram, self.totalStarts,self.totalStops)
         if stopDifferences:
             self.estimatedParameter=self.getCountPerSecondParameter(stopDifferences)
             self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
+        if len(measurement)==0:
+            self.updateStatusLabel.emit(f"No measurements in start channel")
+            self.updateColorLabel.emit(3)
+        elif notStartsMeasurement>70:
+            self.updateStatusLabel.emit(f"No measurements in start channel")
+            self.updateColorLabel.emit(3)
+        elif totalStopPerMeasurement>70:
+            self.updateStatusLabel.emit(f"No measurements in channels {self.stopChannel}")
+            self.updateColorLabel.emit(3)
+        else:
+            self.updateStatusLabel.emit(f"Running measurement")
+            self.updateColorLabel.emit(1)
+            
+        
+            
     
     
     def processRun(self, run, timeDifferences, stopDifferences):
         self.totalStarts += 1
         if run[3] == -1:
-            return
+            
+            return 1
         self.totalStops += 1
         timeDifferences.append(run[3])
         self.totalTimeIntegration += run[3]
 
         if len(run) > 4 and run[4] != -1:
             stopDifferences.append(run[4] - run[3])
+        return 0
 
  
     def getCountPerSecondParameter(self,estimatedDifferences):
@@ -707,6 +842,13 @@ class WorkerThreadG2(QThread):
     
     def psToS(self,picoseconds):
         return picoseconds * 1e-12
+
+    def clearG2(self):
+        self.totalTimeIntegration=0
+        self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
+        self.totalStarts=0
+        self.totalStops=0
+        
     
     def stop(self):
         self.updateDeterminedParameters.emit()
