@@ -633,26 +633,41 @@ class WorkerThreadG2(QThread):
         if notRegisteredMeasurements>700:
             return -1
         else:
-            meanDifferences=np.mean(estimatedDifferences)
-            estimatedValue= (10**(12))/meanDifferences
-            return round(estimatedValue,0)
+            return self.getCountPerSecondParameter(estimatedDifferences)
+    
     
     def getMeasurement(self):
-        #First we take 100 measurements and get the total integration time with starts
-        measurement=self.device.measure()
+        measurement = self.device.measure()
         print(len(measurement))
-        sortedMeasurement=self.sortByStart(measurement)
-        timeDifferences=[]
-        if len(sortedMeasurement)>=2:
-            self.totalTimeIntegration+=sortedMeasurement[-1][2]-sortedMeasurement[0][2]
-            for run in sortedMeasurement:
-                if run:
-                    self.totalStarts+=1
-                    if run[3]!=-1:
-                        self.totalStops+=1
-                        timeDifferences.append(run[3])
-            g2Values=self.buildG2Histogram(timeDifferences)
-            self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
+        sortedMeasurement = self.sortByStart(measurement)
+        timeDifferences, stopDifferences = [], []
+        for run in sortedMeasurement:
+            if not run:
+                continue
+            self.processRun(run, timeDifferences, stopDifferences)
+        g2Values=self.buildG2Histogram(timeDifferences)
+        self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
+        if stopDifferences:
+            self.estimatedParameter=self.getCountPerSecondParameter(stopDifferences)
+            self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
+    
+    
+    def processRun(self, run, timeDifferences, stopDifferences):
+        self.totalStarts += 1
+        if run[3] == -1:
+            return
+        self.totalStops += 1
+        timeDifferences.append(run[3])
+        self.totalTimeIntegration += run[3]
+
+        if len(run) > 4 and run[4] != -1:
+            stopDifferences.append(run[4] - run[3])
+
+ 
+    def getCountPerSecondParameter(self,estimatedDifferences):
+        meanDifferences=np.mean(estimatedDifferences)
+        estimatedValue= (10**(12))/meanDifferences
+        return round(estimatedValue,0)
 
     
     def buildG2Histogram(self,timeDifferences):
@@ -661,13 +676,15 @@ class WorkerThreadG2(QThread):
             self.g2Histogram=self.g2Histogram+ g2TemporalHistogram
         else:
             self.g2Histogram=g2TemporalHistogram
-        normalizedParameter=1/((self.estimatedParameter**2)*self.totalTimeIntegration*self.coincidenceWindow)
+        integrationTimeS=self.psToS(self.totalTimeIntegration)
+        normalizedParameter=1/((self.estimatedParameter**2)*integrationTimeS*self.coincidenceWindow)
         histogramToEmit=self.g2Histogram*normalizedParameter
         return histogramToEmit
         
         
     def generateBinList(self):
         return np.linspace(0, self.maximumTime, self.numberBins + 1)
+    
                     
     
     def sortByStart(self, measurement):
