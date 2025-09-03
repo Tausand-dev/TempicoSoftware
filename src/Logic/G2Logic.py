@@ -70,6 +70,8 @@ class G2Logic():
         self.startLimitedButtonG2.clicked.connect(self.startLimitedMeasurement)
         self.stopLimitedButtonG2.clicked.connect(self.stopLimitedMeasurement)
         self.clearLimitedButtonG2.clicked.connect(self.clearManualMeasurement)
+        self.startAutoClearButton.clicked.connect(self.startAutoClearMeasurement)
+        self.stopAutoClearButton.clicked.connect(self.stopAutoClearMeasurement)
         self.clearAutoClearButton.clicked.connect(self.clearManualMeasurement)
         #self.externalDelaySpinBox.valueChanged.connect(self.changeExternalDelay)
         self.initialConfigs()
@@ -79,15 +81,24 @@ class G2Logic():
     def initialConfigs(self):
         if self.device==None:
             self.startManualButton.setEnabled(False)
+            self.startLimitedButtonG2.setEnabled(False)
+            self.startAutoClearButton.setEnabled(False)
         self.stopManualButton.setEnabled(False)
-        self.clearButton.setEnabled(False)    
+        self.stopLimitedButtonG2.setEnabled(False)
+        self.stopAutoClearButton.setEnabled(False)
+        self.clearButton.setEnabled(False)
+        self.clearLimitedButtonG2.setEnabled(False)    
+        self.clearAutoClearButton.setEnabled(False)
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.applyFitButton.setEnabled(False)
-        self.initParametersEquationThermal()
+        self.initParametersEquationThermalGaussian()
+        self.initParametersEquationThermalGaussianShift()
+        self.initParametersEquationThermalLorentzian()
+        self.initParametersEquationThermalLorentzianShift()
         self.initParametersEquationAntiBunching()
-        self.initParametersEquationThreeLevel()
-        self.changeTermalTableParameters()
+        self.initParametersEquationAntiBunchingShift()
+        self.changeTermalGaussianTableParameters()
     
     def connectedDevice(self, device):
         self.mainWindow.disconnectButton.setEnabled(True)
@@ -138,217 +149,353 @@ class G2Logic():
     def stopTimerConnection(self):
         self.connectedTimer.stop()
     
-    def initParametersEquationThermal(self):
-        self.thermalParameterAValue="nan"
-        self.thermalParameterAStd="nan"
-        self.thermalParameterAUnits="nan"
-        self.thermalParametercValue="nan"
-        self.thermalParametercStd="nan"
-        self.thermalParametercUnits="nan"
-        self.thermalParameterBValue="nan"
-        self.thermalParameterBStd="nan"
-        self.thermalParameterBUnits="nan"
-        self.thermalParameterR2="nan"
+    def initParametersEquationThermalGaussian(self):
+        self.thermalGaussianTcValue="nan"
+        self.thermalGaussianTcStd="nan"
+        self.thermalGaussianTcUnits="nan"
+        self.thermalGaussianR2="nan"
+    
+    def initParametersEquationThermalGaussianShift(self):
+        self.thermalGaussianShiftTcValue="nan"
+        self.thermalGaussianShiftTcStd="nan"
+        self.thermalGaussianShiftTcUnits="nan"
+        self.thermalGaussianShiftTdValue="nan"
+        self.thermalGaussianShiftTdStd="nan"
+        self.thermalGaussianShiftTdUnits="nan"
+        self.thermalGaussianShiftBValue="nan"
+        self.thermalGaussianShiftBStd="nan"
+        self.thermalGaussianShiftBUnits="nan"
+        self.thermalGaussianShiftR2="nan"
+    
+    def initParametersEquationThermalLorentzian(self):
+        self.thermalLorentzianT0Value="nan"
+        self.thermalLorentzianT0Std="nan"
+        self.thermalLorentzianT0Units="nan"
+        self.thermalLorentzianR2="nan"
+    
+    def initParametersEquationThermalLorentzianShift(self):
+        self.thermalLorentzianShiftT0Value="nan"
+        self.thermalLorentzianShiftT0Std="nan"
+        self.thermalLorentzianShiftT0Units="nan"
+        self.thermalLorentzianShiftTdValue="nan"
+        self.thermalLorentzianShiftTdStd="nan"
+        self.thermalLorentzianShiftTdUnits="nan"
+        self.thermalLorentzianShiftBValue="nan"
+        self.thermalLorentzianShiftBStd="nan"
+        self.thermalLorentzianShiftBUnits="nan"
+        self.thermalLorentzianShiftR2="nan"
+        
     
     def initParametersEquationAntiBunching(self):
-        self.antiBunchingParameterTauAValue="nan"
-        self.antiBunchingParameterTauAStd="nan"
-        self.antiBunchingParameterTauAUnits="nan"
-        self.antiBunchingParameterR2="nan"
+        self.antiBunchingTauAValue="nan"
+        self.antiBunchingTauAStd="nan"
+        self.antiBunchingTauAUnits="nan"
+        self.antiBunchingR2="nan"
     
-    def initParametersEquationThreeLevel(self):
-        self.threeLevelParameterPfSValue="nan"
-        self.threeLevelParameterPfSStd="nan"
-        self.threeLevelParameterPfSUnits="nan"
-        self.threeLevelParameterCValue="nan"
-        self.threeLevelParameterCStd="nan"
-        self.threeLevelParameterCUnits="nan"
-        self.threeLevelParameterTbValue="nan"
-        self.threeLevelParameterTbStd="nan"
-        self.threeLevelParameterTbUnits="nan"
-        self.threeLevelParameterTaValue="nan"
-        self.threeLevelParameterTaStd="nan"
-        self.threeLevelParameterTaUnits="nan"
-        self.threeLevelParameterR2="nan"
-        
-        
+    def initParametersEquationAntiBunchingShift(self):
+        self.antiBunchingShiftTauAValue="nan"
+        self.antiBunchingShiftTauAStd="nan"
+        self.antiBunchingShiftTauAUnits="nan"
+        self.antiBunchingShiftTaudValue="nan"
+        self.antiBunchingShiftTaudStd="nan"
+        self.antiBunchingShiftTaudUnits="nan"
+        self.antiBunchingShiftBValue="nan"
+        self.antiBunchingShiftBStd="nan"
+        self.antiBunchingShiftBUnits="nan"
+        self.antiBunchingShiftR2="nan"
     
     def changeTableParameters(self):
         self.parametersTable.setRowCount(0)
         if self.comboBoxEquation.currentIndex()==0:
-            self.changeTermalTableParameters()
+            self.changeTermalGaussianTableParameters()
         elif self.comboBoxEquation.currentIndex()==1:
-            self.changeAntiBunchingTableParameters()
+            self.changeTermalGaussianShiftTableParameters()
         elif self.comboBoxEquation.currentIndex()==2:
-            self.changeThreeLevelTableParameters()
+            self.changeTermalLorentzianTableParameters()
+        elif self.comboBoxEquation.currentIndex()==3:
+            self.changeTermalLorentzianShiftTableParameters()
+        elif self.comboBoxEquation.currentIndex()==4:
+            self.changeAntiBunchingTableParameters()
+        elif self.comboBoxEquation.currentIndex()==5:
+            self.changeAntibunchingShiftTableParameters()
+
     
-    def changeTermalTableParameters(self):
+    
+    def changeTermalGaussianTableParameters(self):
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
-        self.parametersTable.insertRow(2)
-        self.parametersTable.insertRow(3)
-        if self.thermalParameterAStd=="nan":
-            self.parametersTable.setItem(0,0,QTableWidgetItem("A"))
+        if self.thermalGaussianTcValue=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
             self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(0,2,QTableWidgetItem(""))
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(0,0,QTableWidgetItem("A"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalParameterAValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalParameterAStd)))
-            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalParameterAUnits)))
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalGaussianTcValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalGaussianTcStd)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalGaussianTcUnits)))
             
-        if self.thermalParametercValue=="nan":
-            self.parametersTable.setItem(1,0,QTableWidgetItem("c"))
+        if self.thermalGaussianR2=="nan":
+            self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
             self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(1,0,QTableWidgetItem("c"))
-            self.parametersTable.setItem(1,0,QTableWidgetItem(str(self.thermalParametercValue)))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalParametercStd)))
-            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.thermalParametercUnits)))
+            self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.thermalGaussianR2))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+    
+    
+    def changeTermalGaussianShiftTableParameters(self):
+        self.parametersTable.insertRow(0)
+        self.parametersTable.insertRow(1)
+        self.parametersTable.insertRow(2)
+        self.parametersTable.insertRow(3)
+        if self.thermalGaussianTcValue=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalGaussianTcValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalGaussianTcStd)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalGaussianTcUnits)))
         
-        if self.thermalParameterBValue=="nan":
-            self.parametersTable.setItem(2,0,QTableWidgetItem("B"))
+        
+        if self.thermalGaussianShiftTdValue=="nan":
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalGaussianShiftTdValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.thermalGaussianShiftTdStd)))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.thermalGaussianShiftTdUnits)))
+        
+        if self.thermalGaussianShiftBValue=="nan":
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(2,2,QTableWidgetItem(""))
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(2,0,QTableWidgetItem("B"))
-            self.parametersTable.setItem(2,0,QTableWidgetItem(str(self.thermalParameterBValue)))
-            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.thermalParameterBStd)))
-            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.thermalParameterBUnits)))
-        if self.thermalParameterR2=="nan":
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.thermalGaussianShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.thermalGaussianShiftBStd)))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.thermalGaussianShiftBUnits)))
+        
+        
+        if self.thermalGaussianShiftR2=="nan":
             self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
             self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(3,1,QTableWidgetItem(self.thermalParameterR2))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(self.thermalGaussianShiftR2))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+    
+    
+    def changeTermalLorentzianTableParameters(self):
+        self.parametersTable.insertRow(0)
+        self.parametersTable.insertRow(1)
+        if self.thermalLorentzianT0Value=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalLorentzianT0Value)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalLorentzianT0Std)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalLorentzianT0Units)))
             
+        if self.thermalLorentzianR2=="nan":
+            self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.thermalLorentzianR2))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+    
+    def changeTermalLorentzianShiftTableParameters(self):
+        self.parametersTable.insertRow(0)
+        self.parametersTable.insertRow(1)
+        self.parametersTable.insertRow(2)
+        self.parametersTable.insertRow(3)
+        if self.thermalLorentzianShiftT0Value=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalLorentzianShiftT0Value)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalLorentzianShiftT0Std)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalLorentzianShiftT0Units)))
+        
+        
+        if self.thermalLorentzianShiftTdValue=="nan":
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalLorentzianShiftTdValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.thermalLorentzianShiftTdStd)))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.thermalLorentzianShiftTdUnits)))
+        
+        if self.thermalLorentzianShiftBValue=="nan":
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.thermalLorentzianShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.thermalLorentzianShiftBStd)))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.thermalLorentzianShiftBUnits)))
+        
+        
+        if self.thermalLorentzianShiftR2=="nan":
+            self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+        else:
+            self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(self.thermalLorentzianShiftR2))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+    
     
     def changeAntiBunchingTableParameters(self):
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
-        if self.antiBunchingParameterTauAValue=="nan":
-            self.parametersTable.setItem(0,0,QTableWidgetItem("T_a"))
+        if self.antiBunchingTauAValue=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
             self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(0,2,QTableWidgetItem(""))
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(0,0,QTableWidgetItem("T_a"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.antiBunchingParameterTauAValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.antiBunchingParameterTauAStd)))
-            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.antiBunchingParameterTauAUnits)))
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.antiBunchingTauAValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.antiBunchingTauAStd)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.antiBunchingTauAUnits)))
             
-
-        if self.antiBunchingParameterR2=="nan":
+        if self.antiBunchingR2=="nan":
             self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
             self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(self.antiBunchingParameterR2))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.antiBunchingR2))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
-
-    def changeThreeLevelTableParameters(self):
+    
+    
+    def changeAntibunchingShiftTableParameters(self):
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         self.parametersTable.insertRow(2)
         self.parametersTable.insertRow(3)
-        self.parametersTable.insertRow(4)
-        if self.threeLevelParameterPfSValue=="nan":
-            self.parametersTable.setItem(0,0,QTableWidgetItem("Pf^2"))
+        if self.antiBunchingShiftTauAValue=="nan":
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
             self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(0,2,QTableWidgetItem(""))
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(0,0,QTableWidgetItem("Pf^2"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.threeLevelParameterPfSValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.threeLevelParameterPfSStd)))
-            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.threeLevelParameterPfSUnits)))
-            
-        if self.threeLevelParameterCValue=="nan":
-            self.parametersTable.setItem(1,0,QTableWidgetItem("c"))
+            self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.antiBunchingShiftTauAValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.antiBunchingShiftTauAStd)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.antiBunchingShiftTauAUnits)))
+        
+        
+        if self.antiBunchingShiftTaudValue=="nan":
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
             self.parametersTable.setItem(1,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(1,0,QTableWidgetItem("c"))
-            self.parametersTable.setItem(1,0,QTableWidgetItem(str(self.threeLevelParameterCValue)))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.threeLevelParameterCStd)))
-            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.threeLevelParameterCUnits)))
+            self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.antiBunchingShiftTaudValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.antiBunchingShiftTaudStd)))
+            self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.antiBunchingShiftTaudUnits)))
         
-        if self.threeLevelParameterTbValue=="nan":
-            self.parametersTable.setItem(2,0,QTableWidgetItem("T_b"))
+        if self.antiBunchingShiftBValue=="nan":
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
             self.parametersTable.setItem(2,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(2,2,QTableWidgetItem(""))
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(2,0,QTableWidgetItem("T_b"))
-            self.parametersTable.setItem(2,0,QTableWidgetItem(str(self.threeLevelParameterTbValue)))
-            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.threeLevelParameterTbStd)))
-            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.threeLevelParameterTbUnits)))
+            self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.antiBunchingShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.antiBunchingShiftBStd)))
+            self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.antiBunchingShiftBUnits)))
         
-        if self.threeLevelParameterTaValue=="nan":
-            self.parametersTable.setItem(3,0,QTableWidgetItem("T_a"))
+        
+        if self.antiBunchingShiftR2=="nan":
+            self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
             self.parametersTable.setItem(3,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         else:
-            self.parametersTable.setItem(3,0,QTableWidgetItem("T_a"))
-            self.parametersTable.setItem(3,0,QTableWidgetItem(str(self.threeLevelParameterTaValue)))
-            self.parametersTable.setItem(3,1,QTableWidgetItem(str(self.threeLevelParameterTaStd)))
-            self.parametersTable.setItem(3,2,QTableWidgetItem(str(self.threeLevelParameterTaUnits)))
-            
-        if self.threeLevelParameterR2=="nan":
-            self.parametersTable.setItem(4,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(4,1,QTableWidgetItem("Undefined"))
-            self.parametersTable.setItem(4,2,QTableWidgetItem(""))
-            self.parametersTable.setItem(4,3,QTableWidgetItem(""))
-        else:
-            self.parametersTable.setItem(4,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(4,1,QTableWidgetItem(self.threeLevelParameterR2))
-            self.parametersTable.setItem(4,2,QTableWidgetItem(""))
-            self.parametersTable.setItem(4,3,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(self.antiBunchingShiftR2))
+            self.parametersTable.setItem(3,2,QTableWidgetItem(""))
+            self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+    
+    def thermalGaussian(self,t,T_c):
+        return 1+exp(-np.pi*((t/T_c)**2))
+
+    def thermalGaussianShift(self,t,T_c,T_d,b):
+        return 1+exp(-np.pi*((abs(t-T_d)/T_c)**2))+b
+    
+    def thermalLorentzian(self,t,T_0):
+        return 1+exp(-2*(abs(t)/T_0))
+    
+    def thermalLorentzianShift(self,t,T_0,T_d,b):
+        return 1+exp(-2*(abs(t-T_d)/T_0))+b
+    
+    def antiBunching(self,t,T_c):
+        return 1+exp(-1*((t/T_c)))
+    
+    def antiBunchingShift(self,t,T_c,T_d,b):
+        return 1+exp(-1*((abs(t-T_d)/T_c)))+b
     
     #Manual measurement 
     def startManualMeasurement(self):
         self.stopManualButton.setEnabled(True)
         self.startManualButton.setEnabled(False)
         self.clearButton.setEnabled(True)
-        self.stopTimerConnection()
-        self.applyFitButton.setEnabled(False)
-        self.stopChannelComboBox.setEnabled(False)
-        self.coincidenceWindowComboBox.setEnabled(False)
-        self.numberBinsComboBox.setEnabled(False)
-        self.tabSettings.setTabEnabled(1,False)
-        self.tabSettings.setTabEnabled(2,False)
-        self.saveDataButton.setEnabled(False)
-        self.savePlotButton.setEnabled(False)
-        self.tauValues=[]
-        self.determinedParameters=False
-        self.currentMeasurement=True
+        self.generalSettingsBeforeMeasurement(0)
         channelSelected=self.getChannelComboBox()
         coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
         maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
         numberBins=int(self.numberBinsComboBox.currentText())
+        self.checkRangesMode(channelSelected,maximumTime)
         self.externalDelaySpinBox.setEnabled(False)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device)
-        self.worker.updateStatusLabel.connect(self.changeStatus)
-        self.worker.updateColorLabel.connect(self.changeStatusColor)
-        self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
-        self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
-        self.worker.updateTauValues.connect(self.captureTauValues)
-        self.worker.updateMeasurement.connect(self.captureMeasurement)
-        self.worker.finished.connect(self.finishManualMeasurement)
+        self.threadSettingsBeforeMeasurement(0)
         self.worker.start()
+    
+    def checkRangesMode(self,channel, maximumTime):
+        modeChannelSelected=self.device.getMode(channel)
+        if modeChannelSelected==1 and maximumTime>500000:
+            self.showDialogChangeMode(channel)
+        elif modeChannelSelected==2 and maximumTime<125000:
+            self.showDialogChangeMode(channel)
+            
+            
+        
     
     def stopManualMeasurement(self):
         self.worker.stop()
@@ -378,34 +525,16 @@ class G2Logic():
         self.startLimitedButtonG2.setEnabled(False)
         self.clearLimitedButtonG2.setEnabled(True)
         self.numberMeasurementsSpinBox.setEnabled(False)
-        self.stopTimerConnection()
-        self.applyFitButton.setEnabled(False)
-        self.stopChannelComboBox.setEnabled(False)
-        self.coincidenceWindowComboBox.setEnabled(False)
-        self.numberBinsComboBox.setEnabled(False)
-        self.tabSettings.setTabEnabled(0,False)
-        self.tabSettings.setTabEnabled(2,False)
-        self.saveDataButton.setEnabled(False)
-        self.savePlotButton.setEnabled(False)
-        self.tauValues=[]
-        self.determinedParameters=False
-        self.currentMeasurement=True
+        self.generalSettingsBeforeMeasurement(1)
         channelSelected=self.getChannelComboBox()
         coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
         maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
         numberBins=int(self.numberBinsComboBox.currentText())
         numberMeasurements=int(self.numberMeasurementsSpinBox.value())
-        self.timerAutoClear = QTimer()
-        self.timerAutoClear.timeout.connect(self.clearManualMeasurement)
+        self.checkRangesMode(channelSelected,maximumTime)
         self.externalDelaySpinBox.setEnabled(False)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device, True, numberMeasurements)
-        self.worker.updateStatusLabel.connect(self.changeStatus)
-        self.worker.updateColorLabel.connect(self.changeStatusColor)
-        self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
-        self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
-        self.worker.updateTauValues.connect(self.captureTauValues)
-        self.worker.updateMeasurement.connect(self.captureMeasurement)
-        self.worker.finished.connect(self.finishLimitedMeasurement)
+        self.threadSettingsBeforeMeasurement(1)
         self.worker.start()
         
     
@@ -413,83 +542,116 @@ class G2Logic():
         self.worker.stop()
         self.stopLimitedButtonG2.setEnabled(False)
     
-    
+    def stopAutoClearMeasurement(self):
+        self.worker.stop()
+        self.autoClearTimer.stop()
+        self.stopAutoClearButton.setEnabled(False)
+        
     
     #Auto clear measurement
     def startAutoClearMeasurement(self):
         self.stopAutoClearButton.setEnabled(True)
         self.startAutoClearButton.setEnabled(False)
         self.clearAutoClearButton.setEnabled(True)
-        self.stopTimerConnection()
-        self.applyFitButton.setEnabled(False)
-        self.stopChannelComboBox.setEnabled(False)
-        self.coincidenceWindowComboBox.setEnabled(False)
         self.autoClearSpinBox.setEnabled(False)
-        self.tabSettings.setTabEnabled(0,False)
-        self.tabSettings.setTabEnabled(1,False)
-        self.saveDataButton.setEnabled(False)
-        self.savePlotButton.setEnabled(False)
-        self.tauValues=[]
-        self.determinedParameters=False
-        self.currentMeasurement=True
+        self.generalSettingsBeforeMeasurement(2)
+        self.autoClearTimer=QTimer()
+        self.autoClearTimer.timeout.connect(self.clearManualMeasurement)
         channelSelected=self.getChannelComboBox()
         coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
         maximumTime=self.getPicoSecondsValue(self.maximumTimeLabel.text())
         numberBins=int(self.numberBinsComboBox.currentText())
         self.externalDelaySpinBox.setEnabled(False)
-        self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device)
+        self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device,False,0,True)
+        self.threadSettingsBeforeMeasurement(2)
+        self.worker.start()
+    
+    def generalSettingsBeforeMeasurement(self, tab):
+        self.stopTimerConnection()
+        self.applyFitButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(False)
+        self.coincidenceWindowComboBox.setEnabled(False)
+        self.numberBinsComboBox.setEnabled(False)
+        self.saveDataButton.setEnabled(False)
+        self.savePlotButton.setEnabled(False)
+        self.tauValues=[]
+        self.determinedParameters=False
+        self.currentMeasurement=True
+        if tab==0:
+            self.tabSettings.setTabEnabled(1,False)
+            self.tabSettings.setTabEnabled(2,False)
+        elif tab==1:
+            self.tabSettings.setTabEnabled(0,False)
+            self.tabSettings.setTabEnabled(2,False)
+        else:
+            self.tabSettings.setTabEnabled(0,False)
+            self.tabSettings.setTabEnabled(1,False)
+    
+    def threadSettingsBeforeMeasurement(self, tab):
         self.worker.updateStatusLabel.connect(self.changeStatus)
         self.worker.updateColorLabel.connect(self.changeStatusColor)
         self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
         self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
         self.worker.updateTauValues.connect(self.captureTauValues)
         self.worker.updateMeasurement.connect(self.captureMeasurement)
-        self.worker.finished.connect(self.finishManualMeasurement)
-        self.worker.start()
+        if tab==0:
+            self.worker.finished.connect(self.finishManualMeasurement)
+        elif tab==1:
+            self.worker.finished.connect(self.finishLimitedMeasurement)
+        elif tab==2:
+            self.worker.updateFirstParameter.connect(self.changeEstimatedParameterStartTimer)
+            self.worker.finished.connect(self.finishAutoClearMeasurement)
+            
+    
+    def generalSettingsAfterMeasurement(self, channel):
+        if not self.determinedParameters:
+            self.showDialogNoParameters()
+        self.startTimerConnection()
+        self.applyFitButton.setEnabled(True)
+        self.stopChannelComboBox.setEnabled(True)
+        self.coincidenceWindowComboBox.setEnabled(True)
+        self.numberBinsComboBox.setEnabled(True)
+        self.saveDataButton.setEnabled(True)
+        self.savePlotButton.setEnabled(True)
+        self.changeStatus("No running measurement")
+        self.changeStatusColor(0)
+        self.currentMeasurement=False
+        if channel==0:
+            self.tabSettings.setTabEnabled(1,True)
+            self.tabSettings.setTabEnabled(2,True)
+        elif channel==1:
+            self.tabSettings.setTabEnabled(0,True)
+            self.tabSettings.setTabEnabled(2,True)
+        elif channel==2:
+            self.tabSettings.setTabEnabled(0,True)
+            self.tabSettings.setTabEnabled(1,True)
     
     
-    def stopAutoClearMeasurement(self):
-        pass
     
     
     def finishManualMeasurement(self):
-        if not self.determinedParameters:
-            self.showDialogNoParameters()
+        self.generalSettingsAfterMeasurement(0)
         self.stopManualButton.setEnabled(False)
         self.startManualButton.setEnabled(True)
         self.clearButton.setEnabled(False)
-        self.startTimerConnection()
-        self.applyFitButton.setEnabled(True)
-        self.stopChannelComboBox.setEnabled(True)
-        self.coincidenceWindowComboBox.setEnabled(True)
-        self.numberBinsComboBox.setEnabled(True)
-        self.tabSettings.setTabEnabled(1,True)
-        self.tabSettings.setTabEnabled(2,True)
-        self.saveDataButton.setEnabled(True)
-        self.savePlotButton.setEnabled(True)
-        self.changeStatus("No running measurement")
-        self.changeStatusColor(0)
-        self.currentMeasurement=False
+        
+        
     
     def finishLimitedMeasurement(self):
-        if not self.determinedParameters:
-            self.showDialogNoParameters()
+        self.generalSettingsAfterMeasurement(1)
         self.stopLimitedButtonG2.setEnabled(False)
         self.startLimitedButtonG2.setEnabled(True)
         self.clearLimitedButtonG2.setEnabled(False)
-        self.startTimerConnection()
-        self.applyFitButton.setEnabled(True)
-        self.stopChannelComboBox.setEnabled(True)
-        self.coincidenceWindowComboBox.setEnabled(True)
-        self.numberBinsComboBox.setEnabled(True)
-        self.tabSettings.setTabEnabled(0,True)
-        self.tabSettings.setTabEnabled(2,True)
-        self.saveDataButton.setEnabled(True)
-        self.savePlotButton.setEnabled(True)
         self.numberMeasurementsSpinBox.setEnabled(True)
-        self.changeStatus("No running measurement")
-        self.changeStatusColor(0)
-        self.currentMeasurement=False
+    
+    
+    def finishAutoClearMeasurement(self):
+        self.generalSettingsAfterMeasurement(2)
+        self.stopAutoClearButton.setEnabled(False)
+        self.startAutoClearButton.setEnabled(True)
+        self.clearAutoClearButton.setEnabled(False)
+        self.autoClearSpinBox.setEnabled(True)
+        
     
     
     def showDialogNoParameters(self):
@@ -500,6 +662,31 @@ class G2Logic():
             "Therefore, it is not possible to determine the parameters required "
             "to correctly calculate g²."
         )
+    
+    def showDialogChangeMode(self, channel):
+        currentMode=self.device.getMode(channel)
+        suggestedMode=((currentMode)%2)+1
+        if suggestedMode==1:
+            ranges="12ns-500ns"
+            rangeLine="(below 125 ns)"
+        else:
+            ranges="125ns-4ms"
+            rangeLine="(above 500 ns)"
+        msg = QMessageBox(self.mainWindow)
+        msg.setWindowTitle("Mode Selection")
+        msg.setText(
+            f"Due to the maximum measurement range, mode {currentMode} "
+            f"cannot obtain measurements for this range in channel {channel} {rangeLine}. "
+            f"Mode {suggestedMode} supports the ranges {ranges}. "
+            f"Do you want to switch to mode {suggestedMode} in channel {channel}?"
+        )
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Ok)
+        result = msg.exec_()
+        if result == QMessageBox.Ok:
+            self.device.setMode(channel,suggestedMode)
+        
+        
     
     def getChannelComboBox(self):
         if self.stopChannelComboBox.currentText()=="Channel A":
@@ -547,6 +734,11 @@ class G2Logic():
     
     def changeEstimatedParameter(self, text):
         self.calculatedParameter.setText(text)
+    
+    def changeEstimatedParameterStartTimer(self,text):
+        self.calculatedParameter.setText(text)
+        everyValue=self.autoClearSpinBox.value()
+        self.autoClearTimer.start(everyValue*1000)
         
     def changeDeterminedParameters(self):
         self.determinedParameters=True
@@ -582,7 +774,8 @@ class WorkerThreadG2(QThread):
     updateColorLabel=Signal(int)
     updateEstimatedParameter=Signal(str)
     updateDeterminedParameters=Signal()
-    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice,limitedMeasurement=False,numberOfMeasurements=0):
+    updateFirstParameter=Signal(str)
+    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice,limitedMeasurement=False,numberOfMeasurements=0,autoclearMeasure=False):
         super().__init__()
         self.totalStarts=0
         self.totalStops=0
@@ -593,6 +786,7 @@ class WorkerThreadG2(QThread):
         self.coincidenceWindow=self.psToS(coincidenceWindow)
         self.isLimitedMeasurement=limitedMeasurement
         self.numberMeasurements=numberOfMeasurements
+        self.autoclearMeasure=autoclearMeasure
         self.device=device
         self.totalTimeIntegration=0
         self.bins=self.generateBinList()
@@ -607,7 +801,10 @@ class WorkerThreadG2(QThread):
         if self.estimatedParameter==-1 and self.running:
             print("Cannot estimated due to low number of values")
         elif self.estimatedParameter!=-1 and self.running:
-            self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
+            if not self.autoclearMeasure:
+                self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
+            else:
+                self.updateFirstParameter.emit(str(int(self.estimatedParameter)))
             self.updateDeterminedParameters.emit()
             self.updateTauValues.emit(self.TauValues)
         self.settingsForMeasurement()
@@ -748,10 +945,9 @@ class WorkerThreadG2(QThread):
     def getMeasurement(self):
         measurement = self.device.measure()
         totalStopPerMeasurement=0
-        sortedMeasurement = self.sortByStart(measurement)
         timeDifferences, stopDifferences = [], []
         notStartsMeasurement=0
-        for run in sortedMeasurement:
+        for run in measurement:
             if not run:
                 notStartsMeasurement+=1
                 continue
@@ -788,11 +984,11 @@ class WorkerThreadG2(QThread):
     def processRun(self, run, timeDifferences, stopDifferences):
         self.totalStarts += 1
         if run[3] == -1:
-            
             return 1
         self.totalStops += 1
-        timeDifferences.append(run[3])
-        self.totalTimeIntegration += run[3]
+        if run[3]<self.maximumTime:
+            timeDifferences.append(run[3])
+            self.totalTimeIntegration += run[3]
 
         if len(run) > 4 and run[4] != -1:
             stopDifferences.append(run[4] - run[3])

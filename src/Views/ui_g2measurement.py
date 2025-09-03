@@ -544,6 +544,9 @@ class Ui_G2(object):
         self.equationComboBox.addItem("")
         self.equationComboBox.addItem("")
         self.equationComboBox.addItem("")
+        self.equationComboBox.addItem("")
+        self.equationComboBox.addItem("")
+        self.equationComboBox.addItem("")
         self.equationComboBox.setObjectName(u"equationComboBox")
         sizePolicy13 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy13.setHorizontalStretch(0)
@@ -764,9 +767,12 @@ class Ui_G2(object):
         self.saveDataButton.setText(QCoreApplication.translate("G2", u"Save Data", None))
         self.savePlotButton.setText(QCoreApplication.translate("G2", u"Save Plot", None))
         self.fitEquationLabel.setText(QCoreApplication.translate("G2", u"Fit equation:", None))
-        self.equationComboBox.setItemText(0, QCoreApplication.translate("G2", u"Thermal", None))
-        self.equationComboBox.setItemText(1, QCoreApplication.translate("G2", u"Antibunching", None))
-        self.equationComboBox.setItemText(2, QCoreApplication.translate("G2", u"Three level system", None))
+        self.equationComboBox.setItemText(0, QCoreApplication.translate("G2", u"Thermal Gaussian", None))
+        self.equationComboBox.setItemText(1, QCoreApplication.translate("G2", u"Thermal Gaussian Shift", None))
+        self.equationComboBox.setItemText(2, QCoreApplication.translate("G2", u"Thermal Lorentzian", None))
+        self.equationComboBox.setItemText(3, QCoreApplication.translate("G2", u"Thermal Lorentzian Shift", None))
+        self.equationComboBox.setItemText(4, QCoreApplication.translate("G2", u"Antibunching", None))
+        self.equationComboBox.setItemText(5, QCoreApplication.translate("G2", u"Antibunching Shift", None))
 
         self.equationLabel.setText(QCoreApplication.translate("G2", u"Equation", None))
         self.applyFitButton.setText(QCoreApplication.translate("G2", u"Apply", None))
@@ -787,12 +793,15 @@ class Ui_G2(object):
     def guiChanges(self):
         self.drawColorPoint()
         self.equationComboBox.currentIndexChanged.connect(self.setChangeComboBox)
-        self.pixMapThermal=QPixmap("./Sources/ThermalEquation.png")
+        self.pixMapThermalGaussian=QPixmap("./Sources/ThermalGaussianEquation.png")
+        self.pixMapThermalGaussianShift=QPixmap("./Sources/ThermalGaussianDelayOffsetEquation.png")
+        self.pixMapThermalLorentzian=QPixmap("./Sources/ThermalLorentzianEquation.png")
+        self.pixMapThermalLorentzianShift=QPixmap("./Sources/ThermalLorentzianDelayOffsetEquation.png")
         self.pixMapAntiBunching=QPixmap("./Sources/AntibunchingEquation.png")
-        self.pixMapThreeLevel=QPixmap("./Sources/ThreeLevelSystemEquation.png")
+        self.pixMapAntiBunchingShift=QPixmap("./Sources/AntibunchingDelayOffsetEquation.png")
         self.coincidenceWindowComboBox.currentIndexChanged.connect(self.setNumberBins)
         self.numberBinsComboBox.currentIndexChanged.connect(self.setMaximumTimeValue)
-        self.setLabelEquation("Thermal")
+        self.setLabelEquation("Thermal Gaussian")
         self.defineValuesBinsComboBox()
 
     def defineValuesBinsComboBox(self):
@@ -831,12 +840,18 @@ class Ui_G2(object):
         self.setLabelEquation(equation)
     
     def setLabelEquation(self, equation):
-        if equation=="Thermal":
-            self.equationLabel.setPixmap(self.pixMapThermal)
+        if equation=="Thermal Gaussian":
+            self.equationLabel.setPixmap(self.pixMapThermalGaussian)
+        elif equation=="Thermal Gaussian Shift":
+            self.equationLabel.setPixmap(self.pixMapThermalGaussianShift)
+        elif equation=="Thermal Lorentzian":
+            self.equationLabel.setPixmap(self.pixMapThermalLorentzian)
+        elif equation=="Thermal Lorentzian Shift":
+            self.equationLabel.setPixmap(self.pixMapThermalLorentzianShift)
         elif equation=="Antibunching":
             self.equationLabel.setPixmap(self.pixMapAntiBunching)
-        elif equation=="Three level system":
-            self.equationLabel.setPixmap(self.pixMapThreeLevel)
+        elif equation=="Antibunching Shift":
+            self.equationLabel.setPixmap(self.pixMapAntiBunchingShift)
     
     def setNumberBins(self):
         binsToAdd=[]
