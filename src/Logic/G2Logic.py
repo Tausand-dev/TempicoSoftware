@@ -490,9 +490,9 @@ class G2Logic():
     def checkRangesMode(self,channel, maximumTime):
         modeChannelSelected=self.device.getMode(channel)
         if modeChannelSelected==1 and maximumTime>500000:
-            self.showDialogChangeMode(channel)
+            self.device.setMode(channel,2)
         elif modeChannelSelected==2 and maximumTime<125000:
-            self.showDialogChangeMode(channel)
+            self.device.setMode(channel,1)
             
             
         
