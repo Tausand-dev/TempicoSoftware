@@ -782,8 +782,11 @@ class WorkerThreadG2(QThread):
         self.running=True
         self.stopChannel=stopChannel
         self.maximumTime=maximumTime
+        self.maximumTimeSeconds=self.psToS(maximumTime)
+        print(self.maximumTimeSeconds)
         self.numberBins=numberBins
         self.coincidenceWindow=self.psToS(coincidenceWindow)
+        print(self.coincidenceWindow)
         self.isLimitedMeasurement=limitedMeasurement
         self.numberMeasurements=numberOfMeasurements
         self.autoclearMeasure=autoclearMeasure
@@ -988,7 +991,7 @@ class WorkerThreadG2(QThread):
         self.totalStops += 1
         if run[3]<self.maximumTime:
             timeDifferences.append(run[3])
-            self.totalTimeIntegration += run[3]
+        self.totalTimeIntegration += run[3]
 
         if len(run) > 4 and run[4] != -1:
             stopDifferences.append(run[4] - run[3])
@@ -1009,14 +1012,21 @@ class WorkerThreadG2(QThread):
             self.g2Histogram=g2TemporalHistogram
         integrationTimeS=self.psToS(self.totalTimeIntegration)
         normalizedParameter=1/((self.estimatedParameter**2)*integrationTimeS*self.coincidenceWindow)
+        print("Parametro normalización")
+        print(normalizedParameter)
         histogramToEmit=self.g2Histogram*normalizedParameter
+        print("Valor g2 promedio")
+        print(self.getG2Average(histogramToEmit))
         return histogramToEmit
         
         
     def generateBinList(self):
         return np.linspace(0, self.maximumTime, self.numberBins + 1)
     
-                    
+    
+    def getG2Average(self,g2Histogram):
+        valueSum=np.sum(g2Histogram)
+        return valueSum/len(g2Histogram)
     
     def sortByStart(self, measurement):
         dataFiltered=[]
