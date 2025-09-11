@@ -676,7 +676,7 @@ class MainWindow(QMainWindow):
                 stopChannelComboBox=self.uig2.stopChannelComboBox
                 coincidenceWindowComboBox=self.uig2.coincidenceWindowComboBox
                 numberMeasurementsSpinBoxg2=self.uig2.numberMeasurementsSpinBox
-                numberBinsComboBox=self.uig2.numberBinsComboBox
+                numberBinsLabel=self.uig2.numberBinsValue
                 startButtong2=self.uig2.startButton
                 stopButtong2=self.uig2.stopButton
                 clearButtong2= self.uig2.clearButton
@@ -684,7 +684,6 @@ class MainWindow(QMainWindow):
                 savePlotButtong2=self.uig2.savePlotButton
                 comboBoxEquation=self.uig2.equationComboBox
                 applyFitButton=self.uig2.applyFitButton
-                externalDelaySpinBox=self.uig2.externalDelaySpinBox
                 parametersTableg2=self.uig2.parametersTable
                 initialParametersButton=self.uig2.initialParametersButton
                 statusValueLabel=self.uig2.stateValueLabel
@@ -702,10 +701,10 @@ class MainWindow(QMainWindow):
                 stopAutoClearButton=self.uig2.stopAutoClearButton
                 clearAutoClearButton=self.uig2.cleanAutoClearButton
                 tabSettingsg2=self.uig2.tabWidget
-                maximumTimeRange=self.uig2.maximumTimeValue
-                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsComboBox,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
-                                    externalDelaySpinBox,parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
-                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRange,tabSettingsg2,self.conectedDevice,self,self.connectedTimer)
+                maximumTimeRangeComboBox=self.uig2.timeRangeComboBox
+                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsLabel,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
+                                    parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
+                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,self.conectedDevice,self,self.connectedTimer)
                        
 
     def Helpg2Button(self):
