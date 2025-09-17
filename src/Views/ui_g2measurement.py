@@ -199,18 +199,6 @@ class Ui_G2(object):
         self.timeRangeComboBox.addItem("")
         self.timeRangeComboBox.addItem("")
         self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
-        self.timeRangeComboBox.addItem("")
         self.timeRangeComboBox.setObjectName(u"timeRangeComboBox")
 
         self.horizontalLayout_12.addWidget(self.timeRangeComboBox)
@@ -657,27 +645,15 @@ class Ui_G2(object):
         self.stopChannelComboBox.setItemText(3, QCoreApplication.translate("G2", u"Channel D", None))
 
         self.timeRangeLabel.setText(QCoreApplication.translate("G2", u"Maximum Time:", None))
-        self.timeRangeComboBox.setItemText(0, QCoreApplication.translate("G2", u"24 ns", None))
-        self.timeRangeComboBox.setItemText(1, QCoreApplication.translate("G2", u"48 ns", None))
-        self.timeRangeComboBox.setItemText(2, QCoreApplication.translate("G2", u"96 ns", None))
-        self.timeRangeComboBox.setItemText(3, QCoreApplication.translate("G2", u"192 ns", None))
-        self.timeRangeComboBox.setItemText(4, QCoreApplication.translate("G2", u"384 ns", None))
-        self.timeRangeComboBox.setItemText(5, QCoreApplication.translate("G2", u"768 ns", None))
-        self.timeRangeComboBox.setItemText(6, QCoreApplication.translate("G2", u"1 µs", None))
-        self.timeRangeComboBox.setItemText(7, QCoreApplication.translate("G2", u"2 µs", None))
-        self.timeRangeComboBox.setItemText(8, QCoreApplication.translate("G2", u"3 µs", None))
-        self.timeRangeComboBox.setItemText(9, QCoreApplication.translate("G2", u"4 µs", None))
-        self.timeRangeComboBox.setItemText(10, QCoreApplication.translate("G2", u"5 µs", None))
-        self.timeRangeComboBox.setItemText(11, QCoreApplication.translate("G2", u"6 µs", None))
-        self.timeRangeComboBox.setItemText(12, QCoreApplication.translate("G2", u"7 µs", None))
-        self.timeRangeComboBox.setItemText(13, QCoreApplication.translate("G2", u"8 µs", None))
-        self.timeRangeComboBox.setItemText(14, QCoreApplication.translate("G2", u"9 µs", None))
-        self.timeRangeComboBox.setItemText(15, QCoreApplication.translate("G2", u"10 µs", None))
-        self.timeRangeComboBox.setItemText(16, QCoreApplication.translate("G2", u"11 µs", None))
-        self.timeRangeComboBox.setItemText(17, QCoreApplication.translate("G2", u"12 µs", None))
-        self.timeRangeComboBox.setItemText(18, QCoreApplication.translate("G2", u"13 µs", None))
-        self.timeRangeComboBox.setItemText(19, QCoreApplication.translate("G2", u"14 µs", None))
-        self.timeRangeComboBox.setItemText(20, QCoreApplication.translate("G2", u"15 µs", None))
+        self.timeRangeComboBox.setItemText(0, QCoreApplication.translate("G2", u"50 ns", None))
+        self.timeRangeComboBox.setItemText(1, QCoreApplication.translate("G2", u"100 ns", None))
+        self.timeRangeComboBox.setItemText(2, QCoreApplication.translate("G2", u"200 ns", None))
+        self.timeRangeComboBox.setItemText(3, QCoreApplication.translate("G2", u"500 ns", None))
+        self.timeRangeComboBox.setItemText(4, QCoreApplication.translate("G2", u"1 µs", None))
+        self.timeRangeComboBox.setItemText(5, QCoreApplication.translate("G2", u"2 µs", None))
+        self.timeRangeComboBox.setItemText(6, QCoreApplication.translate("G2", u"5 µs", None))
+        self.timeRangeComboBox.setItemText(7, QCoreApplication.translate("G2", u"10 µs", None))
+        self.timeRangeComboBox.setItemText(8, QCoreApplication.translate("G2", u"20 µs", None))
 
         self.coincidenceWindowLabel.setText(QCoreApplication.translate("G2", u"Coincidence window:", None))
         self.coincidenceWindowComboBox.setItemText(0, QCoreApplication.translate("G2", u"500 ps", None))
@@ -777,7 +753,17 @@ class Ui_G2(object):
         if self.coincidenceWindowComboBox.currentText()!="":
             getCoincidencePs=self.getNumberPs(self.coincidenceWindowComboBox.currentText())
             maximumTimePs=self.getNumberPs(self.timeRangeComboBox.currentText())
-            numberBins=maximumTimePs/getCoincidencePs
+            numberBins=round(maximumTimePs/getCoincidencePs,0)
+            residue=numberBins%10
+            if residue!=0:
+                
+                remanent=10-residue
+            else:
+                remanent=0
+            if remanent>=5:
+                numberBins=numberBins-remanent
+            else:
+                numberBins=numberBins+remanent
             numberBinsStr=str(int(numberBins))
             self.numberBinsValue.setText(numberBinsStr)
         

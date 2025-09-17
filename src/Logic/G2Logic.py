@@ -60,8 +60,8 @@ class G2Logic():
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
         self.currentMeasurement=False
+        self.regionDisable=None
         #Connect elements
-        self.stopChannelComboBox.currentIndexChanged.connect(self.stopChannelChanged)
         self.comboBoxEquation.currentIndexChanged.connect(self.changeTableParameters)
         self.startManualButton.clicked.connect(self.startManualMeasurement)
         self.stopManualButton.clicked.connect(self.stopManualMeasurement)
@@ -72,6 +72,14 @@ class G2Logic():
         self.startAutoClearButton.clicked.connect(self.startAutoClearMeasurement)
         self.stopAutoClearButton.clicked.connect(self.stopAutoClearMeasurement)
         self.clearAutoClearButton.clicked.connect(self.clearManualMeasurement)
+        self.applyFitButton.clicked.connect(self.applyFitAction)
+        #Fit lists values
+        self.g2FitGaussian=[]
+        self.g2FitGaussianShift=[]
+        self.g2FitLorentzian=[]
+        self.g2FitLorentzianShift=[]
+        self.g2FitAntibunching=[]
+        self.g2FitAntibunchingShift=[]
         #self.externalDelaySpinBox.valueChanged.connect(self.changeExternalDelay)
         self.initialConfigs()
         self.createGraphic()
@@ -116,21 +124,23 @@ class G2Logic():
         self.sentinelsavedat=0
     
     def createGraphic(self):
-        self.graphicLayout=QHBoxLayout(self.graphicFrame)
-        self.winG2=pg.GraphicsLayoutWidget()
+        self.graphicLayout = QHBoxLayout(self.graphicFrame)
+        self.winG2 = pg.GraphicsLayoutWidget()
         self.winG2.setBackground('w')
-        #Add the plot to the window
-        self.plotG2=self.winG2.addPlot()
+        self.plotG2 = self.winG2.addPlot()
         self.plotG2.showGrid(x=True, y=True)
-        #Add Labels
-        self.plotG2.setLabel('left','g2(tau) Start-A')
-        self.plotG2.setLabel('bottom','Tau')
-        self.plotG2.addLegend()
+        self.plotG2.setLabel('left', 'g2(tau)')
+        self.plotG2.setLabel('bottom', 'Tau')
+        self.legend = pg.LegendItem(offset=(0, 0))
+        self.legend.setParentItem(self.plotG2.getViewBox())
+        self.legend.anchor((1, 0), (1, 0))
         self.graphicLayout.addWidget(self.winG2)
-        self.curveG2 = self.plotG2.plot(pen='b',  name='g2 Data')
+        self.curveG2 = self.plotG2.plot(pen='b', name='g2 Data')
         self.curveFit = self.plotG2.plot(pen='r', name='g2 fit')
+        self.legend.addItem(self.curveG2, 'g2 Data')
+        self.legend.addItem(self.curveFit, 'g2 fit')
     
-    def stopChannelChanged(self):
+    def setVerticalLabel(self):
         if self.stopChannelComboBox.currentIndex()==0:
             self.plotG2.setLabel('left','g2(tau) Start-A')
         elif self.stopChannelComboBox.currentIndex()==1:
@@ -151,74 +161,97 @@ class G2Logic():
     def initParametersEquationThermalGaussian(self):
         self.thermalGaussianTcValue="nan"
         self.thermalGaussianTcStd="nan"
-        self.thermalGaussianTcUnits="nan"
+        self.thermalGaussianTcUnits=""
         self.thermalGaussianR2="nan"
     
     def initParametersEquationThermalGaussianShift(self):
         self.thermalGaussianShiftTcValue="nan"
         self.thermalGaussianShiftTcStd="nan"
-        self.thermalGaussianShiftTcUnits="nan"
+        self.thermalGaussianShiftTcUnits=""
         self.thermalGaussianShiftTdValue="nan"
         self.thermalGaussianShiftTdStd="nan"
-        self.thermalGaussianShiftTdUnits="nan"
-        self.thermalGaussianShiftBValue="nan"
+        self.thermalGaussianShiftTdUnits=""
+        self.thermalGaussianShiftBValue="nan"   
         self.thermalGaussianShiftBStd="nan"
-        self.thermalGaussianShiftBUnits="nan"
+        self.thermalGaussianShiftBUnits=""
         self.thermalGaussianShiftR2="nan"
     
     def initParametersEquationThermalLorentzian(self):
         self.thermalLorentzianT0Value="nan"
         self.thermalLorentzianT0Std="nan"
-        self.thermalLorentzianT0Units="nan"
+        self.thermalLorentzianT0Units=""
         self.thermalLorentzianR2="nan"
     
     def initParametersEquationThermalLorentzianShift(self):
         self.thermalLorentzianShiftT0Value="nan"
         self.thermalLorentzianShiftT0Std="nan"
-        self.thermalLorentzianShiftT0Units="nan"
+        self.thermalLorentzianShiftT0Units=""
         self.thermalLorentzianShiftTdValue="nan"
         self.thermalLorentzianShiftTdStd="nan"
-        self.thermalLorentzianShiftTdUnits="nan"
+        self.thermalLorentzianShiftTdUnits=""
         self.thermalLorentzianShiftBValue="nan"
         self.thermalLorentzianShiftBStd="nan"
-        self.thermalLorentzianShiftBUnits="nan"
+        self.thermalLorentzianShiftBUnits=""
         self.thermalLorentzianShiftR2="nan"
         
     
     def initParametersEquationAntiBunching(self):
         self.antiBunchingTauAValue="nan"
         self.antiBunchingTauAStd="nan"
-        self.antiBunchingTauAUnits="nan"
+        self.antiBunchingTauAUnits=""
         self.antiBunchingR2="nan"
     
     def initParametersEquationAntiBunchingShift(self):
         self.antiBunchingShiftTauAValue="nan"
         self.antiBunchingShiftTauAStd="nan"
-        self.antiBunchingShiftTauAUnits="nan"
+        self.antiBunchingShiftTauAUnits=""
         self.antiBunchingShiftTaudValue="nan"
         self.antiBunchingShiftTaudStd="nan"
-        self.antiBunchingShiftTaudUnits="nan"
+        self.antiBunchingShiftTaudUnits=""
         self.antiBunchingShiftBValue="nan"
         self.antiBunchingShiftBStd="nan"
-        self.antiBunchingShiftBUnits="nan"
+        self.antiBunchingShiftBUnits=""
         self.antiBunchingShiftR2="nan"
     
     def changeTableParameters(self):
         self.parametersTable.setRowCount(0)
         if self.comboBoxEquation.currentIndex()==0:
             self.changeTermalGaussianTableParameters()
+            if len(self.g2FitGaussian)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitGaussian)
+            else:
+                self.curveFit.setData([], [])
+                
         elif self.comboBoxEquation.currentIndex()==1:
             self.changeTermalGaussianShiftTableParameters()
+            if len(self.g2FitGaussianShift)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitGaussianShift)
+            else:
+                self.curveFit.setData([], [])
         elif self.comboBoxEquation.currentIndex()==2:
             self.changeTermalLorentzianTableParameters()
+            if len(self.g2FitLorentzian)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitLorentzian)
+            else:
+                self.curveFit.setData([], [])
         elif self.comboBoxEquation.currentIndex()==3:
             self.changeTermalLorentzianShiftTableParameters()
+            if len(self.g2FitLorentzianShift)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitLorentzianShift)
+            else:
+                self.curveFit.setData([], [])
         elif self.comboBoxEquation.currentIndex()==4:
             self.changeAntiBunchingTableParameters()
+            if len(self.g2FitAntibunching)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitAntibunching)
+            else:
+                self.curveFit.setData([], [])
         elif self.comboBoxEquation.currentIndex()==5:
             self.changeAntibunchingShiftTableParameters()
-
-    
+            if len(self.g2FitAntibunchingShift)>0:
+                self.curveFit.setData(self.tauValues, self.g2FitAntibunchingShift)
+            else:
+                self.curveFit.setData([], [])
     
     def changeTermalGaussianTableParameters(self):
         self.parametersTable.insertRow(0)
@@ -230,8 +263,8 @@ class G2Logic():
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalGaussianTcValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalGaussianTcStd)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.thermalGaussianTcValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.thermalGaussianTcStd,self.thermalGaussianTcValue)))
             self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalGaussianTcUnits)))
             
         if self.thermalGaussianR2=="nan":
@@ -241,7 +274,7 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(self.thermalGaussianR2))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalGaussianR2)))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
     
@@ -251,16 +284,16 @@ class G2Logic():
         self.parametersTable.insertRow(1)
         self.parametersTable.insertRow(2)
         self.parametersTable.insertRow(3)
-        if self.thermalGaussianTcValue=="nan":
+        if self.thermalGaussianShiftTcValue=="nan":
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
             self.parametersTable.setItem(0,1,QTableWidgetItem("Undefined"))
             self.parametersTable.setItem(0,2,QTableWidgetItem(""))
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalGaussianTcValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalGaussianTcStd)))
-            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalGaussianTcUnits)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.thermalGaussianShiftTcValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.thermalGaussianShiftTcStd,self.thermalGaussianShiftTcValue)))
+            self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalGaussianShiftTcUnits)))
         
         
         if self.thermalGaussianShiftTdValue=="nan":
@@ -270,8 +303,8 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalGaussianShiftTdValue)))
-            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.thermalGaussianShiftTdStd)))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.formatValue(self.thermalGaussianShiftTdValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(self.formatStd(self.thermalGaussianShiftTdStd,self.thermalGaussianShiftTdValue )))
             self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.thermalGaussianShiftTdUnits)))
         
         if self.thermalGaussianShiftBValue=="nan":
@@ -281,8 +314,8 @@ class G2Logic():
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
-            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.thermalGaussianShiftBValue)))
-            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.thermalGaussianShiftBStd)))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(self.formatValue(self.thermalGaussianShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(self.formatStd(self.thermalGaussianShiftBStd,self.thermalGaussianShiftBValue)))
             self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.thermalGaussianShiftBUnits)))
         
         
@@ -293,7 +326,7 @@ class G2Logic():
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(3,1,QTableWidgetItem(self.thermalGaussianShiftR2))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(str(self.thermalGaussianShiftR2)))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
     
@@ -308,8 +341,8 @@ class G2Logic():
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalLorentzianT0Value)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalLorentzianT0Std)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.thermalLorentzianT0Value)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.thermalLorentzianT0Std,self.thermalLorentzianT0Value)))
             self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalLorentzianT0Units)))
             
         if self.thermalLorentzianR2=="nan":
@@ -319,7 +352,7 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(self.thermalLorentzianR2))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalLorentzianR2)))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
     
@@ -335,8 +368,8 @@ class G2Logic():
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_0"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.thermalLorentzianShiftT0Value)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.thermalLorentzianShiftT0Std)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.thermalLorentzianShiftT0Value)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.thermalLorentzianShiftT0Std,self.thermalLorentzianShiftT0Value)))
             self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.thermalLorentzianShiftT0Units)))
         
         
@@ -347,8 +380,8 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.thermalLorentzianShiftTdValue)))
-            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.thermalLorentzianShiftTdStd)))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.formatValue(self.thermalLorentzianShiftTdValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(self.formatStd(self.thermalLorentzianShiftTdStd,self.thermalLorentzianShiftTdValue)))
             self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.thermalLorentzianShiftTdUnits)))
         
         if self.thermalLorentzianShiftBValue=="nan":
@@ -358,8 +391,8 @@ class G2Logic():
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
-            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.thermalLorentzianShiftBValue)))
-            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.thermalLorentzianShiftBStd)))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(self.formatValue(self.thermalLorentzianShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(self.formatStd(self.thermalLorentzianShiftBStd,self.thermalLorentzianShiftBValue)))
             self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.thermalLorentzianShiftBUnits)))
         
         
@@ -370,7 +403,7 @@ class G2Logic():
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(3,1,QTableWidgetItem(self.thermalLorentzianShiftR2))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(str(self.thermalLorentzianShiftR2)))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
     
@@ -385,8 +418,8 @@ class G2Logic():
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.antiBunchingTauAValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.antiBunchingTauAStd)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.antiBunchingTauAValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.antiBunchingTauAStd,self.antiBunchingTauAValue)))
             self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.antiBunchingTauAUnits)))
             
         if self.antiBunchingR2=="nan":
@@ -396,7 +429,7 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(self.antiBunchingR2))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.antiBunchingR2)))
             self.parametersTable.setItem(1,2,QTableWidgetItem(""))
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
     
@@ -413,8 +446,8 @@ class G2Logic():
             self.parametersTable.setItem(0,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(0,0,QTableWidgetItem("T_c"))
-            self.parametersTable.setItem(0,1,QTableWidgetItem(str(self.antiBunchingShiftTauAValue)))
-            self.parametersTable.setItem(0,2,QTableWidgetItem(str(self.antiBunchingShiftTauAStd)))
+            self.parametersTable.setItem(0,1,QTableWidgetItem(self.formatValue(self.antiBunchingShiftTauAValue)))
+            self.parametersTable.setItem(0,2,QTableWidgetItem(self.formatStd(self.antiBunchingShiftTauAStd,self.antiBunchingShiftTauAValue)))
             self.parametersTable.setItem(0,3,QTableWidgetItem(str(self.antiBunchingShiftTauAUnits)))
         
         
@@ -425,8 +458,8 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(1,0,QTableWidgetItem("T_d"))
-            self.parametersTable.setItem(1,1,QTableWidgetItem(str(self.antiBunchingShiftTaudValue)))
-            self.parametersTable.setItem(1,2,QTableWidgetItem(str(self.antiBunchingShiftTaudStd)))
+            self.parametersTable.setItem(1,1,QTableWidgetItem(self.formatValue(self.antiBunchingShiftTaudValue)))
+            self.parametersTable.setItem(1,2,QTableWidgetItem(self.formatStd(self.antiBunchingShiftTaudStd,self.antiBunchingShiftTaudValue)))
             self.parametersTable.setItem(1,3,QTableWidgetItem(str(self.antiBunchingShiftTaudUnits)))
         
         if self.antiBunchingShiftBValue=="nan":
@@ -436,8 +469,8 @@ class G2Logic():
             self.parametersTable.setItem(2,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(2,0,QTableWidgetItem("b"))
-            self.parametersTable.setItem(2,1,QTableWidgetItem(str(self.antiBunchingShiftBValue)))
-            self.parametersTable.setItem(2,2,QTableWidgetItem(str(self.antiBunchingShiftBStd)))
+            self.parametersTable.setItem(2,1,QTableWidgetItem(self.formatValue(self.antiBunchingShiftBValue)))
+            self.parametersTable.setItem(2,2,QTableWidgetItem(self.formatStd(self.antiBunchingShiftBStd,self.antiBunchingShiftBValue)))
             self.parametersTable.setItem(2,3,QTableWidgetItem(str(self.antiBunchingShiftBUnits)))
         
         
@@ -448,27 +481,205 @@ class G2Logic():
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
         else:
             self.parametersTable.setItem(3,0,QTableWidgetItem("R^2"))
-            self.parametersTable.setItem(3,1,QTableWidgetItem(self.antiBunchingShiftR2))
+            self.parametersTable.setItem(3,1,QTableWidgetItem(str(self.antiBunchingShiftR2)))
             self.parametersTable.setItem(3,2,QTableWidgetItem(""))
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
+    
+    def formatValue(self,value):
+        if value == 0:
+            return "0.00"
+        abs_val = abs(value)
+        if 0.01 <= abs_val < 1e6:
+            return f"{value:.2f}"
+        else:
+            return f"{value:.2e}"
+    
+    
+    def formatStd(self,valueVar,valueEstimated):
+        print("Varianza")
+        print(valueVar)
+        print("Valor estimado")
+        print(valueEstimated)
+        if valueVar<0:
+            return "nan"
+        valueStd=np.sqrt(valueVar)
+        relativeUncertainty=valueStd/abs(valueEstimated)
+        if relativeUncertainty>3:
+            return "nan"   
+        if valueVar == 0:
+            return "0.00"
+        abs_val = abs(valueVar)
+        if 0.01 <= abs_val < 1e6:
+            return f"{valueVar:.2f}"
+        else:
+            return f"{valueVar:.2e}"
+    
     
     def thermalGaussian(self,t,T_c):
         return 1+exp(-np.pi*((t/T_c)**2))
 
     def thermalGaussianShift(self,t,T_c,T_d,b):
-        return 1+exp(-np.pi*((abs(t-T_d)/T_c)**2))+b
+        return 1+exp(-np.pi*((np.abs(t-T_d)/T_c)**2))+b
     
     def thermalLorentzian(self,t,T_0):
-        return 1+exp(-2*(abs(t)/T_0))
+        return 1+exp(-2*(np.abs(t)/T_0))
     
     def thermalLorentzianShift(self,t,T_0,T_d,b):
-        return 1+exp(-2*(abs(t-T_d)/T_0))+b
+        return 1+exp(-2*(np.abs(t-T_d)/T_0))+b
     
     def antiBunching(self,t,T_c):
         return 1+exp(-1*((t/T_c)))
     
     def antiBunchingShift(self,t,T_c,T_d,b):
-        return 1+exp(-1*((abs(t-T_d)/T_c)))+b
+        return 1+exp(-1*((np.abs(t-T_d)/T_c)))+b
+    
+    def applyFitAction(self):
+        self.applyFitButton.setEnabled(False)
+        self.comboBoxEquation.setEnabled(False)
+        if self.comboBoxEquation.currentIndex()==0:
+            parametersList,stdList=self.applyFit("Gaussian")
+            self.applyFitToTable(parametersList, stdList,"Gaussian")
+        if self.comboBoxEquation.currentIndex()==1:
+            parametersList,stdList=self.applyFit("GaussianShift")
+            self.applyFitToTable(parametersList, stdList, "GaussianShift")
+        if self.comboBoxEquation.currentIndex()==2:
+            parametersList,stdList=self.applyFit("Lorentzian")
+            self.applyFitToTable(parametersList, stdList, "Lorentzian")
+        if self.comboBoxEquation.currentIndex()==3:
+            parametersList,stdList=self.applyFit("LorentzianShift")
+            self.applyFitToTable(parametersList, stdList, "LorentzianShift")
+        if self.comboBoxEquation.currentIndex()==4:
+            parametersList,stdList=self.applyFit("AntiBunching")
+            self.applyFitToTable(parametersList, stdList,"AntiBunching")
+        if self.comboBoxEquation.currentIndex()==5:
+            parametersList,stdList=self.applyFit("AntiBunchingShift")
+            self.applyFitToTable(parametersList, stdList,"AntiBunchingShift")
+        self.applyFitButton.setEnabled(True)
+        self.comboBoxEquation.setEnabled(True)
+            
+        
+    
+    def applyFitToTable(self, parametersList, stdList,fitApplied):
+        if fitApplied=="Gaussian":
+            if len(parametersList)>0:
+                self.thermalGaussianTcValue=parametersList[0]
+                self.thermalGaussianTcStd=stdList[0]
+                self.g2FitGaussian=self.thermalGaussian(self.tauValues,self.thermalGaussianTcValue)
+                self.thermalGaussianR2=self.calculateR2(self.g2Values,self.g2FitGaussian)
+                self.curveFit.setData(self.tauValues, self.g2FitGaussian)
+            else:
+                self.initParametersEquationThermalGaussian()
+        if fitApplied=="GaussianShift":
+            if len(parametersList)>0:
+                self.thermalGaussianShiftTcValue=parametersList[0]
+                self.thermalGaussianShiftTcStd=stdList[0]
+                self.thermalGaussianShiftTdValue=parametersList[1]
+                self.thermalGaussianShiftTdStd=stdList[1]
+                self.thermalGaussianShiftBValue=parametersList[2]
+                self.thermalGaussianShiftBStd=stdList[2]
+                self.g2FitGaussianShift=self.thermalGaussianShift(self.tauValues,self.thermalGaussianTcValue,self.thermalGaussianShiftTdValue,self.thermalGaussianShiftBValue)
+                self.thermalGaussianShiftR2=self.calculateR2(self.g2Values,self.g2FitGaussianShift)
+                self.curveFit.setData(self.tauValues, self.g2FitGaussianShift)
+            else:
+                self.initParametersEquationThermalGaussianShift()
+        if fitApplied=="Lorentzian":
+            if len(parametersList)>0:
+                self.thermalLorentzianT0Value=parametersList[0]
+                self.thermalLorentzianT0Std=stdList[0]
+                self.g2FitLorentzian=self.thermalLorentzian(self.tauValues,self.thermalLorentzianT0Value)
+                self.thermalLorentzianR2=self.calculateR2(self.g2Values,self.g2FitLorentzian)
+                self.curveFit.setData(self.tauValues, self.g2FitLorentzian)
+            else:
+                self.initParametersEquationThermalLorentzian()
+        if fitApplied=="LorentzianShift":
+            if len(parametersList)>0:
+                self.thermalLorentzianShiftT0Value=parametersList[0]
+                self.thermalLorentzianShiftT0Std=stdList[0]
+                self.thermalLorentzianShiftTdValue=parametersList[1]
+                self.thermalLorentzianShiftTdStd=stdList[1]
+                self.thermalLorentzianShiftBValue=parametersList[2]
+                self.thermalLorentzianShiftBStd=stdList[2]
+                self.g2FitLorentzianShift=self.thermalLorentzianShift(self.tauValues,self.thermalLorentzianShiftT0Value,self.thermalLorentzianShiftTdValue,self.thermalLorentzianShiftBValue)
+                self.thermalLorentzianShiftR2=self.calculateR2(self.g2Values,self.g2FitLorentzianShift)
+                self.curveFit.setData(self.tauValues, self.g2FitLorentzianShift)
+            else:
+                self.initParametersEquationThermalLorentzianShift()
+        if fitApplied=="AntiBunching":
+            if len(parametersList)>0:
+                self.antiBunchingTauAValue=parametersList[0]
+                self.antiBunchingTauAStd=stdList[0]
+                self.g2FitAntibunching=self.antiBunching(self.tauValues,self.antiBunchingTauAValue)
+                self.antiBunchingR2=self.calculateR2(self.g2Values,self.g2FitAntibunching)
+                self.curveFit.setData(self.tauValues, self.g2FitAntibunching)
+            else:
+                self.initParametersEquationAntiBunching()
+        if fitApplied=="AntiBunchingShift":
+            if len(parametersList)>0:
+                self.antiBunchingShiftTauAValue=parametersList[0]
+                self.antiBunchingShiftTauAStd=stdList[0]
+                self.antiBunchingShiftTaudValue=parametersList[1]
+                self.antiBunchingShiftTaudStd=stdList[1]
+                self.antiBunchingShiftBValue=parametersList[2]
+                self.antiBunchingShiftBStd=stdList[2]
+                self.g2FitAntibunchingShift=self.antiBunchingShift(self.tauValues,self.antiBunchingShiftTauAValue,self.antiBunchingShiftTaudValue,self.antiBunchingShiftBValue)
+                self.antiBunchingShiftR2=self.calculateR2(self.g2Values,self.g2FitAntibunchingShift)
+                self.curveFit.setData(self.tauValues, self.g2FitAntibunchingShift)
+            else:
+                self.initParametersEquationAntiBunchingShift()
+        self.changeTableParameters()
+    
+    def applyFit(self, fitName):
+        parametersList =[]
+        stdList=[]
+        try:
+            if fitName=="Gaussian":
+                popt, pcov= curve_fit(self.thermalGaussian, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0]]
+            elif fitName=="GaussianShift":
+                popt, pcov= curve_fit(self.thermalGaussianShift, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
+            elif fitName == "Lorentzian":
+                popt, pcov= curve_fit(self.thermalLorentzian, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0]]
+            elif fitName == "LorentzianShift":
+                popt, pcov= curve_fit(self.thermalLorentzianShift, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
+            elif fitName == "AntiBunching":
+                popt, pcov= curve_fit(self.antiBunching, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0]]
+            elif fitName == "AntiBunchingShift":
+                popt, pcov= curve_fit(self.antiBunchingShift, self.tauValues, self.g2Values)
+                parametersList=popt
+                stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
+        except:
+            self.showDialogNoFitParameters()
+        return parametersList, stdList
+        
+    
+    def calculateR2(self,data,fitData):
+        arrayData=array(data)
+        arrayFit=array(fitData)
+        meanData=mean(arrayData)
+        ssRes=sum((arrayData-arrayFit)**2)
+        ssTot=sum((arrayData-meanData)**2)
+        R2=1-(ssRes/ssTot)
+        print("El valor de r2 es")
+        print(R2)
+        return round(R2,2)
+    
+    def showDialogNoFitParameters(self):
+        QMessageBox.warning(
+            self.mainWindow,
+            "Fit Parameters Not Estimated",
+            "The fit parameters could not be estimated for the current data.\n"
+            "Please verify that the data is sufficient and properly distributed."
+        )
+    
     
     #Manual measurement 
     def startManualMeasurement(self):
@@ -506,12 +717,23 @@ class G2Logic():
         elif self.maximumTimeComboBox.currentText().endswith("ms"):
             unitsLabel="ms"
         bottomLabel=f"Tau ({unitsLabel})"
+        self.updateParameterUnits(unitsLabel)
         self.plotG2.setLabel('bottom',bottomLabel)
         return unitsLabel
     
+    def updateParameterUnits(self, unitsLabel):
+        self.thermalGaussianTcUnits=unitsLabel
+        self.thermalGaussianShiftTcUnits=unitsLabel
+        self.thermalGaussianShiftTdUnits=unitsLabel
+        self.thermalLorentzianT0Units=unitsLabel
+        self.thermalLorentzianShiftT0Units=unitsLabel
+        self.thermalLorentzianShiftTdUnits=unitsLabel
+        self.thermalLorentzianShiftTdUnits=unitsLabel
+        self.antiBunchingTauAUnits=unitsLabel
+        self.antiBunchingShiftTauAUnits=unitsLabel
+        self.antiBunchingShiftTaudUnits=unitsLabel
         
-    
-            
+        
     
     
     def stopManualMeasurement(self):
@@ -577,12 +799,14 @@ class G2Logic():
         coincidenceWindowSelected=self.getPicoSecondsValue(self.coincidenceWindowComboBox.currentText())
         maximumTime=self.getPicoSecondsValue(self.maximumTimeComboBox.currentText())
         numberBins=int(self.numberBinsLabel.text())
+        self.checkRangesMode(channelSelected,maximumTime)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device,self.modeToMeasure, self.getUnits(),False,0,True)
         self.threadSettingsBeforeMeasurement(2)
         self.worker.start()
     
     def generalSettingsBeforeMeasurement(self, tab):
         self.stopTimerConnection()
+        self.setVerticalLabel()
         self.applyFitButton.setEnabled(False)
         self.stopChannelComboBox.setEnabled(False)
         self.coincidenceWindowComboBox.setEnabled(False)
@@ -592,6 +816,7 @@ class G2Logic():
         self.tauValues=[]
         self.determinedParameters=False
         self.currentMeasurement=True
+        self.resetFits()
         if tab==0:
             self.tabSettings.setTabEnabled(1,False)
             self.tabSettings.setTabEnabled(2,False)
@@ -618,7 +843,22 @@ class G2Logic():
             self.worker.finished.connect(self.finishAutoClearMeasurement)
             
     
-    
+    def resetFits(self):
+        self.g2FitGaussian=[]
+        self.g2FitGaussianShift=[]
+        self.g2FitLorentzian=[]
+        self.g2FitLorentzianShift=[]
+        self.g2FitAntibunching=[]
+        self.g2FitAntibunchingShift=[]
+        self.initParametersEquationThermalGaussian()
+        self.initParametersEquationThermalGaussianShift()
+        self.initParametersEquationThermalLorentzian()
+        self.initParametersEquationThermalLorentzianShift()
+        self.initParametersEquationAntiBunching()
+        self.initParametersEquationAntiBunchingShift()
+        self.changeTableParameters()
+        self.curveFit.setData([], [])
+        
     
     def generalSettingsAfterMeasurement(self, channel):
         if not self.determinedParameters:
@@ -760,7 +1000,13 @@ class G2Logic():
     def changeDeterminedParameters(self):
         self.determinedParameters=True
     
+    
+        
+        
+    
     def captureTauValues(self, tauValues, unitFactor, mode):
+        if self.regionDisable:
+            self.plotG2.removeItem(self.regionDisable)
         self.tauValues = tauValues
         region = 125000/unitFactor
         if mode == 1:
@@ -777,11 +1023,11 @@ class G2Logic():
             self.plotG2.setXRange(x_min_limit, x_max_limit, padding=0)
         
         
-        regionDisable = pg.LinearRegionItem(values=[0, region], orientation="vertical")
-        regionDisable.setBrush((150,150,150,120))
-        regionDisable.setMovable(False)
-        regionDisable.setZValue(-10)
-        self.plotG2.addItem(regionDisable)
+        self.regionDisable = pg.LinearRegionItem(values=[0, region], orientation="vertical")
+        self.regionDisable.setBrush((150,150,150,120))
+        self.regionDisable.setMovable(False)
+        self.regionDisable.setZValue(-10)
+        self.plotG2.addItem(self.regionDisable)
                     
         
         
@@ -789,7 +1035,8 @@ class G2Logic():
     
     
     def captureMeasurement(self, g2Values, totalStarts, totalStops):
-        self.curveG2.setData(self.tauValues, g2Values)
+        self.g2Values=g2Values
+        self.curveG2.setData(self.tauValues, self.g2Values)
         self.totalStartsLabel.setText(str(totalStarts))
         self.totalStopsLabel.setText(str(totalStops))
     
