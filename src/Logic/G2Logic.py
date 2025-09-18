@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum
 from Utils.createsavefile import createsavefile as savefile
@@ -73,6 +73,9 @@ class G2Logic():
         self.stopAutoClearButton.clicked.connect(self.stopAutoClearMeasurement)
         self.clearAutoClearButton.clicked.connect(self.clearManualMeasurement)
         self.applyFitButton.clicked.connect(self.applyFitAction)
+        self.initialParametersButton.clicked.connect(self.showParameterDialog)
+        #Tau values
+        self.tauValues=[]
         #Fit lists values
         self.g2FitGaussian=[]
         self.g2FitGaussianShift=[]
@@ -99,6 +102,7 @@ class G2Logic():
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.applyFitButton.setEnabled(False)
+        self.initialParametersButton.setEnabled(False)
         self.initParametersEquationThermalGaussian()
         self.initParametersEquationThermalGaussianShift()
         self.initParametersEquationThermalLorentzian()
@@ -106,6 +110,7 @@ class G2Logic():
         self.initParametersEquationAntiBunching()
         self.initParametersEquationAntiBunchingShift()
         self.changeTermalGaussianTableParameters()
+        self.initialParameters()
     
     def connectedDevice(self, device):
         self.mainWindow.disconnectButton.setEnabled(True)
@@ -157,6 +162,223 @@ class G2Logic():
     
     def stopTimerConnection(self):
         self.connectedTimer.stop()
+    
+    def initialParameters(self):
+        self.initialParametersGaussian()
+        self.initialParametesGaussianShifted()
+        self.initalParametersLorentzian()
+        self.initialParametersLorentzianShifted()
+        self.initalParametersAntiBunching()
+        self.initalParametersAntiBunchingShifted()
+    
+    
+    def initialParametersGaussian(self):
+        self.thermalGaussianTcInitial=1
+        
+    
+    def initialParametesGaussianShifted(self):
+        self.thermalGaussianShiftTcInitial=1
+        self.thermalGaussianShiftTdInitial=1
+        self.thermalGaussianShiftBInitial=1
+    
+    def initalParametersLorentzian(self):
+        self.thermalLorentzianT0Initial=1
+    
+    def initialParametersLorentzianShifted(self):
+        self.thermalLorentzianShiftT0Initial=1
+        self.thermalLorentzianShiftTdInitial=1
+        self.thermalLorentzianShiftBInitial=1
+    
+    def initalParametersAntiBunching(self):
+        self.antiBunchingTauAInitial=1
+        
+    
+    def initalParametersAntiBunchingShifted(self):
+        self.antiBunchingShiftTauAInitial=1
+        self.antiBunchingShiftTaudInitial=1
+        self.antiBunchingShiftBInitial=1
+    
+    def updateLocalDialogInitalParameters(self):
+        if self.lastSelection=="Gaussian":
+            self.localInitialGaussianTc=self.currentSpinBox[0].value()
+        if self.lastSelection=="Gaussian Shifted":
+            self.localInitialGaussianShiftedTc=self.currentSpinBox[0].value()
+            self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()
+            self.localInitialGaussianShiftedB=self.currentSpinBox[2].value()
+        if self.lastSelection=="Lorentzian":
+            self.localInitialLorentzianT0=self.currentSpinBox[0].value()
+        if self.lastSelection=="Lorentzian Shifted":
+            self.localInitialLorentzianShiftedT0=self.currentSpinBox[0].value()
+            self.localInitialLorentzianShiftedTd=self.currentSpinBox[1].value()
+            self.localInitialLorentzianShiftedB=self.currentSpinBox[2].value()
+        if self.lastSelection=="Antibunching":
+            self.localInitialAntiBunchingTA=self.currentSpinBox[0].value()
+        if self.lastSelection=="Antibunching Shifted":
+            self.localInitialAntiBunchingShiftedTA=self.currentSpinBox[0].value()
+            self.localInitialAntiBunchingShiftedTd=self.currentSpinBox[1].value()
+            self.localInitialAntiBunchingShiftedB=self.currentSpinBox[2].value()
+        
+    def updateParameterFields(self, comboBox, fieldLayout, fieldWidgets, dialog):
+        if self.currentSpinBox:
+            self.updateLocalDialogInitalParameters()
+        for i in reversed(range(fieldLayout.count())):
+            item = fieldLayout.itemAt(i)
+            if item.widget():
+                item.widget().setParent(None)
+            elif item.layout():
+                while item.layout().count():
+                    child = item.layout().takeAt(0)
+                    if child.widget():
+                        child.widget().setParent(None)
+                fieldLayout.removeItem(item.layout())
+
+        selection = comboBox.currentText()
+        fields = []
+        if selection == "Gaussian":
+            fields = ["Tc"]
+            values=[self.localInitialGaussianTc]
+            self.lastSelection="Gaussian"
+        elif selection == "Gaussian Shifted":
+            fields = ["Tc", "Td", "B"]
+            values=[self.localInitialGaussianShiftedTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
+            self.lastSelection="Gaussian Shifted"
+        elif selection == "Lorentzian":
+            fields = ["T0"]
+            values=[self.localInitialLorentzianT0]
+            self.lastSelection="Lorentzian"
+        elif selection == "Lorentzian Shifted":
+            fields = ["T0", "Td", "B"]
+            values=[self.localInitialLorentzianShiftedT0,self.localInitialLorentzianShiftedTd,self.localInitialLorentzianShiftedB]
+            self.lastSelection="Lorentzian Shifted"
+        elif selection == "Antibunching":
+            fields = ["TauA"]
+            values=[self.localInitialAntiBunchingTA]
+            self.lastSelection="Antibunching"
+        elif selection == "Antibunching Shifted":
+            fields = ["TauA", "Taud", "B"]
+            values=[self.localInitialAntiBunchingShiftedTA,self.localInitialAntiBunchingShiftedTd,self.localInitialAntiBunchingShiftedB]
+            self.lastSelection="Antibunching Shifted"
+
+        fieldWidgets.clear()
+        self.currentValues=values
+        self.currentSpinBox=[]
+        
+        for k in range(len(fields)):
+            f=fields[k]
+            currentValue=values[k]
+            if "Td" in f or "Taud" in f: 
+                checkLayout = QHBoxLayout()
+                checkLayout.setSpacing(5)
+                checkbox = QCheckBox("Delay fixed")
+                checkLayout.addWidget(checkbox)
+                fieldLayout.addLayout(checkLayout)
+
+            hLayout = QHBoxLayout()
+            hLayout.setSpacing(5)
+            label = QLabel(f)
+            hLayout.addWidget(label)
+            spin = QDoubleSpinBox()
+            self.currentSpinBox.append(spin)
+            spin.setValue(currentValue)
+            hLayout.addWidget(spin)
+
+            if "Td" in f or "Taud" in f:
+                fieldWidgets.append((f, spin, checkbox))
+            else:
+                fieldWidgets.append((f, spin))
+
+            fieldLayout.addLayout(hLayout)
+        dialog.layout().activate()
+        dialog.adjustSize()
+    
+    def initLocalDialogParameters(self):
+        #Gaussian
+        self.localInitialGaussianTc=self.thermalGaussianTcInitial
+        #Gaussian shifted
+        self.localInitialGaussianShiftedTc=self.thermalGaussianShiftTcInitial
+        self.localInitialGaussianShiftedTd=self.thermalGaussianShiftTdInitial
+        self.localInitialGaussianShiftedB=self.thermalGaussianShiftBInitial
+        #Lorentzian
+        self.localInitialLorentzianT0=self.thermalLorentzianT0Initial
+        #Lorentizian shifted
+        self.localInitialLorentzianShiftedT0=self.thermalLorentzianShiftT0Initial
+        self.localInitialLorentzianShiftedTd=self.thermalLorentzianShiftTdInitial
+        self.localInitialLorentzianShiftedB=self.thermalLorentzianShiftBInitial
+        #Antibunching
+        self.localInitialAntiBunchingTA=self.antiBunchingTauAInitial
+        #Antibunching shifted
+        self.localInitialAntiBunchingShiftedTA=self.antiBunchingShiftTauAInitial
+        self.localInitialAntiBunchingShiftedTd=self.antiBunchingShiftTaudInitial
+        self.localInitialAntiBunchingShiftedB=self.antiBunchingShiftBInitial
+        
+    def showParameterDialog(self):
+        self.lastSelection=""
+        self.initLocalDialogParameters()
+        self.currentSpinBox=[]
+        self.currentValues=[]
+        self.dialogParameters = QDialog(self.mainWindow)
+        self.dialogParameters.setWindowTitle("Initial Parameters")
+        outerLayout = QVBoxLayout(self.dialogParameters)
+        outerLayout.setContentsMargins(6, 6, 6, 6)
+        outerLayout.setSpacing(6)
+
+        comboBox = QComboBox()
+        comboBox.addItems([
+            "Gaussian", "Gaussian Shifted", "Lorentzian",
+            "Lorentzian Shifted", "Antibunching", "Antibunching Shifted"
+        ])
+        outerLayout.addWidget(comboBox)
+
+        fieldLayout = QVBoxLayout()
+        fieldLayout.setContentsMargins(0, 0, 0, 0)
+        fieldLayout.setSpacing(6)
+        outerLayout.addLayout(fieldLayout)
+
+        fieldWidgets = []
+
+        btnLayout = QHBoxLayout()
+        btnLayout.setSpacing(8)
+        applyBtn = QPushButton("Apply")
+        defaultBtn = QPushButton("Default Settings")
+        cancelBtn = QPushButton("Cancel")
+        btnLayout.addWidget(applyBtn)
+        btnLayout.addWidget(defaultBtn)
+        btnLayout.addWidget(cancelBtn)
+        outerLayout.addLayout(btnLayout)
+        self.updateParameterFields(comboBox, fieldLayout, fieldWidgets, self.dialogParameters)
+        comboBox.currentTextChanged.connect(
+            lambda: self.updateParameterFields(comboBox, fieldLayout, fieldWidgets, self.dialogParameters)
+        )
+        applyBtn.clicked.connect(self.updateInitialParameters)
+        cancelBtn.clicked.connect(self.dialogParameters.reject)
+        defaultBtn.clicked.connect(lambda: print("Default settings clicked"))
+        self.dialogParameters.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.dialogParameters.adjustSize()
+        result = self.dialogParameters.exec_()
+        return result == QDialog.Accepted, fieldWidgets
+
+    def updateInitialParameters(self):
+        self.updateLocalDialogInitalParameters()
+        #Gaussian
+        self.thermalGaussianTcInitial=self.localInitialGaussianTc
+        #Gaussian shifted
+        self.thermalGaussianShiftTcInitial=self.localInitialGaussianShiftedTc
+        self.thermalGaussianShiftTdInitial=self.localInitialGaussianShiftedTd
+        self.thermalGaussianShiftBInitial=self.localInitialGaussianShiftedB
+        #Lorentzian
+        self.thermalLorentzianT0Initial=self.localInitialLorentzianT0
+        #Lorentizian shifted
+        self.thermalLorentzianShiftT0Initial=self.localInitialLorentzianShiftedT0
+        self.thermalLorentzianShiftTdInitial=self.localInitialLorentzianShiftedTd
+        self.thermalLorentzianShiftBInitial=self.localInitialLorentzianShiftedB
+        #Antibunching
+        self.antiBunchingTauAInitial=self.localInitialAntiBunchingTA
+        #Antibunching shifted
+        self.antiBunchingShiftTauAInitial=self.localInitialAntiBunchingShiftedTA
+        self.antiBunchingShiftTaudInitial=self.localInitialAntiBunchingShiftedTd
+        self.antiBunchingShiftBInitial=self.localInitialAntiBunchingShiftedB
+        self.dialogParameters.accept()
+        
     
     def initParametersEquationThermalGaussian(self):
         self.thermalGaussianTcValue="nan"
@@ -633,27 +855,33 @@ class G2Logic():
         stdList=[]
         try:
             if fitName=="Gaussian":
-                popt, pcov= curve_fit(self.thermalGaussian, self.tauValues, self.g2Values)
+                p0=[self.thermalGaussianTcInitial]
+                popt, pcov= curve_fit(self.thermalGaussian, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0]]
             elif fitName=="GaussianShift":
-                popt, pcov= curve_fit(self.thermalGaussianShift, self.tauValues, self.g2Values)
+                p0=[self.self.thermalGaussianShiftTcInitial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
+                popt, pcov= curve_fit(self.thermalGaussianShift, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
             elif fitName == "Lorentzian":
-                popt, pcov= curve_fit(self.thermalLorentzian, self.tauValues, self.g2Values)
+                p0=[self.thermalLorentzianT0Initial]
+                popt, pcov= curve_fit(self.thermalLorentzian, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0]]
             elif fitName == "LorentzianShift":
-                popt, pcov= curve_fit(self.thermalLorentzianShift, self.tauValues, self.g2Values)
+                p0=[self.thermalLorentzianShiftT0Initial,self.thermalLorentzianShiftTdInitial,self.thermalLorentzianShiftBInitial]
+                popt, pcov= curve_fit(self.thermalLorentzianShift, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
             elif fitName == "AntiBunching":
-                popt, pcov= curve_fit(self.antiBunching, self.tauValues, self.g2Values)
+                p0=[self.antiBunchingTauAInitial]
+                popt, pcov= curve_fit(self.antiBunching, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0]]
             elif fitName == "AntiBunchingShift":
-                popt, pcov= curve_fit(self.antiBunchingShift, self.tauValues, self.g2Values)
+                p0=[self.antiBunchingShiftTauAInitial,self.antiBunchingShiftTaudInitial,self.antiBunchingShiftBInitial]
+                popt, pcov= curve_fit(self.antiBunchingShift, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
         except:
@@ -864,7 +1092,9 @@ class G2Logic():
         if not self.determinedParameters:
             self.showDialogNoParameters()
         self.startTimerConnection()
-        self.applyFitButton.setEnabled(True)
+        if self.tauValues:
+            self.applyFitButton.setEnabled(True)
+            self.initialParametersButton.setEnabled(True)
         self.stopChannelComboBox.setEnabled(True)
         self.coincidenceWindowComboBox.setEnabled(True)
         self.maximumTimeComboBox.setEnabled(True)
@@ -1016,10 +1246,10 @@ class G2Logic():
             x_max = max(tauValues)
             
             margin = x_max * 0.05
-            x_min_limit = -margin
+            x_min_limit = 0
             x_max_limit = x_max + margin
             
-            self.plotG2.getViewBox().setLimits(xMin=x_min_limit, xMax=x_max_limit)
+            self.plotG2.getViewBox().setLimits(xMin=x_min_limit, xMax=x_max_limit, yMin=-0.1)
             self.plotG2.setXRange(x_min_limit, x_max_limit, padding=0)
         
         
@@ -1027,6 +1257,8 @@ class G2Logic():
         self.regionDisable.setBrush((150,150,150,120))
         self.regionDisable.setMovable(False)
         self.regionDisable.setZValue(-10)
+        for line in self.regionDisable.lines:
+            line.setPen(pg.mkPen(None))
         self.plotG2.addItem(self.regionDisable)
                     
         
@@ -1039,6 +1271,123 @@ class G2Logic():
         self.curveG2.setData(self.tauValues, self.g2Values)
         self.totalStartsLabel.setText(str(totalStarts))
         self.totalStopsLabel.setText(str(totalStops))
+    
+    
+    def saveG2Data(self):
+        dataFolderPrefix=self.savefile.getDataFolderPrefix()
+        folder_path=dataFolderPrefix["saveFolder"]
+        data_prefix=dataFolderPrefix["lifetimePrefix"]
+        dialog = QDialog(self.mainWindow)
+        dialog.setObjectName("TextFormat")
+        dialog.resize(282, 105)
+        dialog.setWindowTitle("Save")
+        verticalLayout_2 = QVBoxLayout(dialog)
+        verticalLayout_2.setObjectName("verticalLayout_2")
+        VerticalImage = QVBoxLayout()
+        VerticalImage.setObjectName("VerticalImage")
+        SelectLabel = QLabel(dialog)
+        SelectLabel.setObjectName("SelectLabel")
+        SelectLabel.setText("Select the text format:")
+        VerticalImage.addWidget(SelectLabel)
+        FormatBox = QComboBox(dialog)
+        FormatBox.addItem("txt")
+        FormatBox.addItem("csv")
+        FormatBox.addItem("dat")
+        FormatBox.setObjectName("FormatBox")
+        VerticalImage.addWidget(FormatBox)
+        verticalLayout_2.addLayout(VerticalImage)
+        accepButton = QPushButton(dialog)
+        accepButton.setObjectName("accepButton")
+        accepButton.setText("Accept")
+        verticalLayout_2.addWidget(accepButton)
+        QMetaObject.connectSlotsByName(dialog)
+        # Connect the accept button with real accept
+        accepButton.clicked.connect(dialog.accept)
+        if dialog.exec_() == QDialog.Accepted:
+            selected_format = FormatBox.currentText()
+            conditiontxt= FormatBox.currentText()=="txt" and self.sentinelsavetxt==1
+            conditioncsv= FormatBox.currentText()=="csv" and self.sentinelsavecsv==1
+            conditiondat= FormatBox.currentText()=="dat" and self.sentinelsavedat==1   
+            total_condition= conditiontxt or conditiondat or conditioncsv
+            if not total_condition:
+                current_date=datetime.datetime.now()
+                current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                fitSetting=""
+                if self.thermalGaussianTcValue!="nan":
+                    fitSetting+=f"Thermal gaussian fit:\tT_c{self.thermalGaussianTcValue} {self.thermalGaussianTcUnits}"
+                if self.thermalGaussianShiftTcValue!="nan" or self.thermalGaussianShiftTdValue!="nan" or self.thermalGaussianShiftBValue!="nan":
+                    fitSetting+=(f"Thermal gaussian shifted fit:\tT_c{self.thermalGaussianShiftTcValue} {self.thermalGaussianShiftTcUnits}"
+                                 f"\tT_d{self.thermalGaussianShiftTdValue} {self.thermalGaussianShiftTdUnits}"
+                                 f"\tB{self.thermalGaussianShiftBValue} {self.thermalGaussianShiftBUnits}")
+                if self.thermalLorentzianT0Value!="nan":
+                    fitSetting+=f"Thermal lorentzian fit:\tT_0{self.thermalLorentzianT0Value} {self.thermalLorentzianT0Units}"
+                if self.thermalLorentzianShiftT0Value!="nan" or self.thermalLorentzianShiftTdValue!="nan" or self.thermalLorentzianShiftBValue!="nan":
+                    fitSetting+=(f"Thermal lorentzian shifted fit:\tT_0{self.thermalLorentzianShiftT0Value} {self.thermalLorentzianShiftT0Units}"
+                                 f"\tT_d{self.thermalLorentzianShiftTdValue} {self.thermalLorentzianShiftTdUnits}"
+                                 f"\tB{self.thermalLorentzianShiftBValue} {self.thermalLorentzianShiftBUnits}")
+                
+                
+                
+                #Channel Setting
+                fitSetting+='Start Channel:\t'+'\t'+self.comboBoxStartChannel.currentText()
+                fitSetting+='Stop Channel:\t'+'\t'+self.comboBoxStopChannel.currentText()
+                
+                
+                #Put the settings and fit
+                filename=data_prefix+current_date_str
+                #Round the values in order to get a better txt files
+                newMeasuredTime=[]
+                for i in self.measuredTime:
+                    newValue=round(i,5)
+                    newMeasuredTime.append(newValue)
+                data=[newMeasuredTime,self.measuredData ]
+                try:
+                    self.savefile.save_LifeTime_data(data,filename,folder_path,fitSetting,selected_format, self.unitsLabel)
+                    if selected_format=="txt":
+                        self.oldtxtName=filename
+                        self.sentinelsavetxt=1
+                    elif selected_format=="csv":
+                        self.oldcsvName=filename
+                        self.sentinelsavecsv=1
+                    elif selected_format=="dat":
+                        self.olddatName=filename
+                        self.sentinelsavedat=1
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Information)
+                    if selected_format=="txt":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                    elif selected_format=="csv":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                    elif selected_format=="dat":
+                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                    message_box.setText(textRoute)
+                    message_box.setWindowTitle("Successful save")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()   
+                except:
+                    message_box = QMessageBox(self.mainWindow)
+                    message_box.setIcon(QMessageBox.Critical)
+                    message_box.setText("The changes could not be saved.")
+                    message_box.setWindowTitle("Error saving")
+                    message_box.setStandardButtons(QMessageBox.Ok)
+                    message_box.exec_()         
+            else:
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
+                if selected_format=="txt":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                elif selected_format=="csv":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                elif selected_format=="dat":
+                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                message_box.setText(textRoute)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+        
+    
+    def saveG2Plot(self):
+        pass
     
     
         
