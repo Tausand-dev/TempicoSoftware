@@ -702,9 +702,11 @@ class MainWindow(QMainWindow):
                 clearAutoClearButton=self.uig2.cleanAutoClearButton
                 tabSettingsg2=self.uig2.tabWidget
                 maximumTimeRangeComboBox=self.uig2.timeRangeComboBox
+                fixedDelayCheckBox=self.uig2.fixedDelayCheckBox
+                externalDelaySpinBox=self.uig2.externalDelaySpinBox
                 self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsLabel,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
                                     parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
-                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,self.conectedDevice,self,self.connectedTimer)
+                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,fixedDelayCheckBox,externalDelaySpinBox,self.conectedDevice,self,self.connectedTimer)
                        
 
     def Helpg2Button(self):

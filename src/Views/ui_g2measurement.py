@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'g2NewUigABSFH.ui'
+## Form generated from reading UI file 'g2NewUixJjGWW.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -510,6 +510,49 @@ class Ui_G2(object):
 
         self.verticalLayout_7.addWidget(self.SelectFitFrame)
 
+        self.FixedDelayFrame = QFrame(self.ApplyFitFrame)
+        self.FixedDelayFrame.setObjectName(u"FixedDelayFrame")
+        self.FixedDelayFrame.setFrameShape(QFrame.StyledPanel)
+        self.FixedDelayFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_13 = QHBoxLayout(self.FixedDelayFrame)
+        self.horizontalLayout_13.setSpacing(0)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
+        self.fixedDelayLabel = QLabel(self.FixedDelayFrame)
+        self.fixedDelayLabel.setObjectName(u"fixedDelayLabel")
+
+        self.horizontalLayout_13.addWidget(self.fixedDelayLabel)
+
+        self.fixedDelayCheckBox = QCheckBox(self.FixedDelayFrame)
+        self.fixedDelayCheckBox.setObjectName(u"fixedDelayCheckBox")
+
+        self.horizontalLayout_13.addWidget(self.fixedDelayCheckBox)
+
+
+        self.verticalLayout_7.addWidget(self.FixedDelayFrame)
+
+        self.externalDelayFrame = QFrame(self.ApplyFitFrame)
+        self.externalDelayFrame.setObjectName(u"externalDelayFrame")
+        self.externalDelayFrame.setFrameShape(QFrame.StyledPanel)
+        self.externalDelayFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_17 = QHBoxLayout(self.externalDelayFrame)
+        self.horizontalLayout_17.setSpacing(0)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.externalDelayLabel = QLabel(self.externalDelayFrame)
+        self.externalDelayLabel.setObjectName(u"externalDelayLabel")
+
+        self.horizontalLayout_17.addWidget(self.externalDelayLabel)
+
+        self.externalDelaySpinBox = QDoubleSpinBox(self.externalDelayFrame)
+        self.externalDelaySpinBox.setObjectName(u"externalDelaySpinBox")
+        self.externalDelaySpinBox.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
+
+        self.horizontalLayout_17.addWidget(self.externalDelaySpinBox)
+
+
+        self.verticalLayout_7.addWidget(self.externalDelayFrame)
+
         self.equationLabel = QLabel(self.ApplyFitFrame)
         self.equationLabel.setObjectName(u"equationLabel")
         sizePolicy11.setHeightForWidth(self.equationLabel.sizePolicy().hasHeightForWidth())
@@ -649,11 +692,11 @@ class Ui_G2(object):
         self.timeRangeComboBox.setItemText(1, QCoreApplication.translate("G2", u"100 ns", None))
         self.timeRangeComboBox.setItemText(2, QCoreApplication.translate("G2", u"200 ns", None))
         self.timeRangeComboBox.setItemText(3, QCoreApplication.translate("G2", u"500 ns", None))
-        self.timeRangeComboBox.setItemText(4, QCoreApplication.translate("G2", u"1 µs", None))
-        self.timeRangeComboBox.setItemText(5, QCoreApplication.translate("G2", u"2 µs", None))
-        self.timeRangeComboBox.setItemText(6, QCoreApplication.translate("G2", u"5 µs", None))
-        self.timeRangeComboBox.setItemText(7, QCoreApplication.translate("G2", u"10 µs", None))
-        self.timeRangeComboBox.setItemText(8, QCoreApplication.translate("G2", u"20 µs", None))
+        self.timeRangeComboBox.setItemText(4, QCoreApplication.translate("G2", u"1 μs", None))
+        self.timeRangeComboBox.setItemText(5, QCoreApplication.translate("G2", u"2 μs", None))
+        self.timeRangeComboBox.setItemText(6, QCoreApplication.translate("G2", u"5 μs", None))
+        self.timeRangeComboBox.setItemText(7, QCoreApplication.translate("G2", u"10 μs", None))
+        self.timeRangeComboBox.setItemText(8, QCoreApplication.translate("G2", u"20 μs", None))
 
         self.coincidenceWindowLabel.setText(QCoreApplication.translate("G2", u"Coincidence window:", None))
         self.coincidenceWindowComboBox.setItemText(0, QCoreApplication.translate("G2", u"500 ps", None))
@@ -667,7 +710,7 @@ class Ui_G2(object):
         self.coincidenceWindowComboBox.setItemText(8, QCoreApplication.translate("G2", u"128 ns", None))
         self.coincidenceWindowComboBox.setItemText(9, QCoreApplication.translate("G2", u"256 ns", None))
         self.coincidenceWindowComboBox.setItemText(10, QCoreApplication.translate("G2", u"512 ns", None))
-        self.coincidenceWindowComboBox.setItemText(11, QCoreApplication.translate("G2", u"1 \u00b5s", None))
+        self.coincidenceWindowComboBox.setItemText(11, QCoreApplication.translate("G2", u"1 μs", None))
 
         self.numberBinsLabel.setText(QCoreApplication.translate("G2", u"Number of bins:", None))
         self.numberBinsValue.setText(QCoreApplication.translate("G2", u"value", None))
@@ -696,6 +739,9 @@ class Ui_G2(object):
         self.equationComboBox.setItemText(4, QCoreApplication.translate("G2", u"Antibunching", None))
         self.equationComboBox.setItemText(5, QCoreApplication.translate("G2", u"Antibunching Shift", None))
 
+        self.fixedDelayLabel.setText(QCoreApplication.translate("G2", u"Fixed delay:", None))
+        self.fixedDelayCheckBox.setText("")
+        self.externalDelayLabel.setText(QCoreApplication.translate("G2", u"External Delay", None))
         self.equationLabel.setText(QCoreApplication.translate("G2", u"Equation", None))
         self.applyFitButton.setText(QCoreApplication.translate("G2", u"Apply", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("G2", u"Fit parameters", None))
@@ -710,6 +756,10 @@ class Ui_G2(object):
         self.stateValueLabel.setText(QCoreApplication.translate("G2", u"No running measurement", None))
         self.colorLabel.setText(QCoreApplication.translate("G2", u"Color", None))
     # retranslateUi
+
+
+
+
 
 
     def guiChanges(self):
@@ -795,16 +845,28 @@ class Ui_G2(object):
     def setLabelEquation(self, equation):
         if equation=="Thermal Gaussian":
             self.equationLabel.setPixmap(self.pixMapThermalGaussian)
+            self.fixedDelayCheckBox.setEnabled(False)
+            self.externalDelaySpinBox.setEnabled(False)
         elif equation=="Thermal Gaussian Shift":
             self.equationLabel.setPixmap(self.pixMapThermalGaussianShift)
+            self.fixedDelayCheckBox.setEnabled(True)
+            self.externalDelaySpinBox.setEnabled(True)
         elif equation=="Thermal Lorentzian":
             self.equationLabel.setPixmap(self.pixMapThermalLorentzian)
+            self.fixedDelayCheckBox.setEnabled(False)
+            self.externalDelaySpinBox.setEnabled(False)
         elif equation=="Thermal Lorentzian Shift":
             self.equationLabel.setPixmap(self.pixMapThermalLorentzianShift)
+            self.fixedDelayCheckBox.setEnabled(True)
+            self.externalDelaySpinBox.setEnabled(True)
         elif equation=="Antibunching":
             self.equationLabel.setPixmap(self.pixMapAntiBunching)
+            self.fixedDelayCheckBox.setEnabled(False)
+            self.externalDelaySpinBox.setEnabled(False)
         elif equation=="Antibunching Shift":
             self.equationLabel.setPixmap(self.pixMapAntiBunchingShift)
+            self.fixedDelayCheckBox.setEnabled(True)
+            self.externalDelaySpinBox.setEnabled(True)
     
     def setNumberBins(self):
         binsToAdd=[]
@@ -822,17 +884,17 @@ class Ui_G2(object):
             currentRange=valueToAdd*valuePs
             if valueToAdd>minimumBinsNumber and currentRange<=4000000000:
                 binsToAdd.append(valueToAddStr)
-        self.numberBinsComboBox.clear()
-        self.numberBinsComboBox.addItems(binsToAdd)
-        self.numberBinsComboBox.setCurrentIndex(0)
+        self.coincidenceWindowComboBox.clear()
+        self.coincidenceWindowComboBox.addItems(binsToAdd)
+        self.coincidenceWindowComboBox.setCurrentIndex(0)
         
             
     
     def setMaximumTimeValue(self):
-        if self.numberBinsComboBox.currentText()!="":
+        if self.coincidenceWindowComboBox.currentText()!="":
             currentCoincidence=self.coincidenceWindowComboBox.currentText()
             valuePs=self.getNumberPs(currentCoincidence)
-            currentNumberBins=int(self.numberBinsComboBox.currentText())
+            currentNumberBins=int(self.coincidenceWindowComboBox.currentText())
         
             currentRange=valuePs*currentNumberBins
             currentRangeStr=self.getNumberStr(currentRange)
@@ -845,7 +907,7 @@ class Ui_G2(object):
             value=float(units[0])
         elif units[1]=="ns":
             value=float(units[0])*(10**(3))
-        elif units[1]=="µs":
+        elif units[1]=="μs":
             value=float(units[0])*(10**(6))
         return value
     
@@ -853,7 +915,7 @@ class Ui_G2(object):
         if valuePs//(10**9)>0:
             valueStr=str(round(valuePs/(10**9),2))+" ms"
         elif valuePs//(10**6)>0:
-            valueStr=str(round(valuePs/(10**6),2))+" µs"
+            valueStr=str(round(valuePs/(10**6),2))+" μs"
         elif valuePs//(10**3)>0:
             valueStr=str(round(valuePs/(10**3),2))+" ns"
         else:
@@ -866,7 +928,7 @@ class Ui_G2(object):
     def changeCoincidenceSpinBox(self):
         if self.coincidenceWindowSpinBox.value()==1000:
             self.coincidenceWindowSpinBox.setValue(1)
-            self.coincidenceWindowSpinBox.setSuffix(" µs")
+            self.coincidenceWindowSpinBox.setSuffix(" μs")
             self.coincidenceWindowSpinBox.setMinimum(0)
             self.coincidenceWindowSpinBox.setMaximum(100)
             self.coincidenceWindowSpinBox.setDecimals(3)

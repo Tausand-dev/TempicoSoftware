@@ -23,7 +23,7 @@ class G2Logic():
                  clearButton: QPushButton,saveDataButton: QPushButton, savePlotButton: QPushButton, comboBoxEquation: QComboBox, applyFitButton: QPushButton, 
                  parametersTable: QTableWidget, initialParametersButton: QPushButton, statusValueLabel: QLabel, statusColorLabel: QLabel, totalStartsLabel: QLabel, totalStopsLabel: QLabel, calculatedParameter: QLabel, helpButton: QPushButton,
                  graphicFrame:QFrame, startLimitedButtonG2: QPushButton, stopLimitedButtonG2: QPushButton, clearLimitedButtonG2: QPushButton, autoClearSpinBox: QSpinBox, startAutoClearButton: QPushButton,
-                 stopAutoClearButton: QPushButton, clearAutoClearButton: QPushButton,maximumTimeComboBox: QComboBox, tabSettings: QTabWidget,device: tempico.TempicoDevice, mainWindow, connectedTimer: QTimer):
+                 stopAutoClearButton: QPushButton, clearAutoClearButton: QPushButton,maximumTimeComboBox: QComboBox, tabSettings: QTabWidget,fixedDelayCheckBox: QCheckBox,externalDelaySpinBox: QDoubleSpinBox,device: tempico.TempicoDevice, mainWindow, connectedTimer: QTimer):
         self.savefile=savefile()
         self.stopChannelComboBox= stopChannelComboBox
         self.coincidenceWindowComboBox = coincidenceWindowComboBox
@@ -57,6 +57,8 @@ class G2Logic():
         self.clearAutoClearButton=clearAutoClearButton
         self.maximumTimeComboBox=maximumTimeComboBox
         self.tabSettings=tabSettings
+        self.fixedDelayCheckBox=fixedDelayCheckBox
+        self.externalDelaySpinBox=externalDelaySpinBox
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
@@ -76,6 +78,8 @@ class G2Logic():
         self.applyFitButton.clicked.connect(self.applyFitAction)
         self.initialParametersButton.clicked.connect(self.showParameterDialog)
         self.saveDataButton.clicked.connect(self.saveG2Data)
+        self.fixedDelayCheckBox.clicked.connect(self.changeExternalFixed)
+        self.externalDelaySpinBox.valueChanged.connect(self.changeReverseExternalSpinBox)
         #Tau values
         self.tauValues=[]
         #Fit lists values
@@ -309,6 +313,39 @@ class G2Logic():
         dialog.layout().activate()
         dialog.adjustSize()
     
+    def changeExternalCheckBox(self):
+        if self.comboBoxEquation.currentIndex()==1:
+            self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
+        elif self.comboBoxEquation.currentIndex()==3:
+            self.fixedDelayCheckBox.setChecked(self.externalDelayLorentzianCheckBox)
+        elif self.comboBoxEquation.currentIndex()==5:
+            self.fixedDelayCheckBox.setChecked(self.externalDelayAntiBunchingCheckBox)
+    
+    def changeExternalFixed(self):
+        if self.comboBoxEquation.currentIndex()==1:
+            self.externalDelayGaussianCheckBox=self.fixedDelayCheckBox.isChecked()
+        elif self.comboBoxEquation.currentIndex()==3:
+            self.externalDelayLorentzianCheckBox=self.fixedDelayCheckBox.isChecked()
+        elif self.comboBoxEquation.currentIndex()==5:
+            self.externalDelayAntiBunchingCheckBox=self.fixedDelayCheckBox.isChecked()
+    
+    
+    def changeExternalSpinBox(self):
+        if self.comboBoxEquation.currentIndex()==1:
+            self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial)
+        elif self.comboBoxEquation.currentIndex()==3:
+            self.externalDelaySpinBox.setValue(self.thermalLorentzianShiftTdInitial)
+        elif self.comboBoxEquation.currentIndex()==5:
+            self.externalDelaySpinBox.setValue(self.antiBunchingShiftTaudInitial)
+    
+    def changeReverseExternalSpinBox(self):
+        if self.comboBoxEquation.currentIndex()==1:
+            self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()
+        elif self.comboBoxEquation.currentIndex()==3:
+            self.thermalLorentzianShiftTdInitial=self.externalDelaySpinBox.value()
+        elif self.comboBoxEquation.currentIndex()==5:
+            self.antiBunchingShiftTaudInitial=self.externalDelaySpinBox.value()
+    
     def initLocalDialogParameters(self):
         #Gaussian
         self.localInitialGaussianTc=self.thermalGaussianTcInitial
@@ -404,7 +441,10 @@ class G2Logic():
         self.externalDelayGaussianCheckBox=self.localFixedGaussian
         self.externalDelayLorentzianCheckBox=self.localFixedLorentzian
         self.externalDelayAntiBunchingCheckBox=self.localFixedAntibunching
+        self.changeExternalCheckBox()
+        self.changeExternalSpinBox()
         self.dialogParameters.accept()
+    
         
     
     def initParametersEquationThermalGaussian(self):
@@ -463,6 +503,8 @@ class G2Logic():
         self.antiBunchingShiftR2="nan"
     
     def changeTableParameters(self):
+        self.changeExternalCheckBox()
+        self.changeExternalSpinBox()
         self.parametersTable.setRowCount(0)
         if self.comboBoxEquation.currentIndex()==0:
             self.changeTermalGaussianTableParameters()
@@ -980,8 +1022,8 @@ class G2Logic():
             unitsLabel="ps"
         elif self.maximumTimeComboBox.currentText().endswith("ns"):
             unitsLabel="ns"
-        elif self.maximumTimeComboBox.currentText().endswith("µs"):
-            unitsLabel="µs"
+        elif self.maximumTimeComboBox.currentText().endswith("μs"):
+            unitsLabel="μs"
         elif self.maximumTimeComboBox.currentText().endswith("ms"):
             unitsLabel="ms"
         self.unitsMeasured=unitsLabel
@@ -1016,7 +1058,7 @@ class G2Logic():
             value=float(units[0])
         elif units[1]=="ns":
             value=float(units[0])*(10**(3))
-        elif units[1]=="µs":
+        elif units[1]=="μs":
             value=float(units[0])*(10**(6))
         elif units[1]=="ms":
             value=float(units[0])*(10**(9))
@@ -1518,7 +1560,7 @@ class WorkerThreadG2(QThread):
         factor=1
         if self.units=="ns":
             factor=10**3
-        elif self.units=="µs":
+        elif self.units=="μs":
             factor=10**6
         elif self.units=="ms":
             factor=10**9
