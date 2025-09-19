@@ -17,7 +17,8 @@ class createsavefile:
                 "startStopHistogramPrefix": "StartStopHistogram",
                 "lifetimePrefix": "Lifetime",
                 "countsEstimationPrefix": "CountsEstimation",
-                "timeStampingPrefix": "TimeStamping"
+                "timeStampingPrefix": "TimeStamping",
+                "g2Prefix":"g2"
             }
             with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
                 json.dump(default_data, f, indent=4, ensure_ascii=False)
@@ -77,6 +78,7 @@ class createsavefile:
         dataDict['lifetimePrefix']= data['lifetimePrefix']
         dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
         dataDict['timeStampingPrefix']= data['timeStampingPrefix'] 
+        dataDict['g2Prefix']= data['g2Prefix']
         return dataDict
     
     def changePrefix(self,tab, newPrefix):
@@ -90,6 +92,8 @@ class createsavefile:
             data["countsEstimationPrefix"]= newPrefix
         elif tab=="TimeStamping":
             data["timeStampingPrefix"]= newPrefix
+        elif tab=="g2HBT":
+            data["g2Prefix"]= newPrefix
         with open("SaveFileConstants.json", "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
     
@@ -431,6 +435,7 @@ class createsavefile:
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}{separator}{stopTime}{separator}{channelList[channel]}\n")
     
+    
     def sort_time_stamps(self, file_path,autoSave):
         if autoSave:
             originalPath = os.path.join("./TempData", f"AutoSaveData.txt")
@@ -562,6 +567,47 @@ class createsavefile:
                     outfile.write(line)
 
         return True
+
+    
+    def save_g2Hbt_data(self,data, file_name, folder_path, settings, extension, textLabel):
+        """
+        Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
+        ensures that the provided time and LifeTime values have the same length and writes them into 
+        a file along with specified settings and a label for the LifeTime values.
+
+        The file is saved in the specified folder path, with the provided file name and extension.
+
+        :param data: A tuple where the first element is a list of time values and the second 
+                    element is a list of corresponding LifeTime values (tuple of lists).
+        :param file_name: The name of the output file (str).
+        :param folder_path: The path to the folder where the file will be saved (str).
+        :param settings: A string representing the settings to be written in the first line of the file (str).
+        :param extension: The file extension for the output file (str).
+        :param textLabel: A label to be written before the LifeTime values in the file (str).
+        :raises ValueError: If the lengths of the time and LifeTime value lists do not match.
+        :returns: None
+        """
+        if extension=="txt" or extension=="dat":
+            separator="\t"
+        else:
+            separator=";"
+            settings=settings.replace("\t",";")
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
+        if len(data[0]) != len(data[1]):
+            raise ValueError("Time and g2 Values must have the same length")
+        else:
+        
+            full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+            
+            with open(full_path, 'w') as file:
+                file.write(settings + '\n')
+                
+                file.write(f"{textLabel}{separator}g2 Values\n")
+                
+                for tau, g2Value in zip(data[0], data[1]):
+                    file.write(f"{tau}{separator}{g2Value}\n")
                 
     
 
