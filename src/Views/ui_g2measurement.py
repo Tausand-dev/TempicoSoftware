@@ -674,20 +674,20 @@ class Ui_G2(object):
 
     def retranslateUi(self, G2):
         G2.setWindowTitle(QCoreApplication.translate("G2", u"Form", None))
-        self.totalStartsLabel.setText(QCoreApplication.translate("G2", u"Total Starts:", None))
+        self.totalStartsLabel.setText(QCoreApplication.translate("G2", u"Total starts:", None))
         self.totalStartsValue.setText(QCoreApplication.translate("G2", u"Not determined yet", None))
-        self.totalStopsLabel.setText(QCoreApplication.translate("G2", u"Total Stops:", None))
+        self.totalStopsLabel.setText(QCoreApplication.translate("G2", u"Total stops:", None))
         self.totalStopsValue.setText(QCoreApplication.translate("G2", u"Not determined yet", None))
         self.estimatedLabel.setText(QCoreApplication.translate("G2", u"Counts per second:", None))
         self.estimateValueLabel.setText(QCoreApplication.translate("G2", u"Not determined yet", None))
         self.helpButton.setText(QCoreApplication.translate("G2", u"Help", None))
-        self.stopChannelLabel.setText(QCoreApplication.translate("G2", u"Stop Channel:", None))
+        self.stopChannelLabel.setText(QCoreApplication.translate("G2", u"Stop channel:", None))
         self.stopChannelComboBox.setItemText(0, QCoreApplication.translate("G2", u"Channel A", None))
         self.stopChannelComboBox.setItemText(1, QCoreApplication.translate("G2", u"Channel B", None))
         self.stopChannelComboBox.setItemText(2, QCoreApplication.translate("G2", u"Channel C", None))
         self.stopChannelComboBox.setItemText(3, QCoreApplication.translate("G2", u"Channel D", None))
 
-        self.timeRangeLabel.setText(QCoreApplication.translate("G2", u"Maximum Time:", None))
+        self.timeRangeLabel.setText(QCoreApplication.translate("G2", u"Maximum time:", None))
         self.timeRangeComboBox.setItemText(0, QCoreApplication.translate("G2", u"50 ns", None))
         self.timeRangeComboBox.setItemText(1, QCoreApplication.translate("G2", u"100 ns", None))
         self.timeRangeComboBox.setItemText(2, QCoreApplication.translate("G2", u"200 ns", None))
@@ -729,19 +729,19 @@ class Ui_G2(object):
         self.stopAutoClearButton.setText(QCoreApplication.translate("G2", u"Stop", None))
         self.cleanAutoClearButton.setText(QCoreApplication.translate("G2", u"Clear", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.AutoClear), QCoreApplication.translate("G2", u"Auto clear", None))
-        self.saveDataButton.setText(QCoreApplication.translate("G2", u"Save Data", None))
-        self.savePlotButton.setText(QCoreApplication.translate("G2", u"Save Plot", None))
+        self.saveDataButton.setText(QCoreApplication.translate("G2", u"Save data", None))
+        self.savePlotButton.setText(QCoreApplication.translate("G2", u"Save plot", None))
         self.fitEquationLabel.setText(QCoreApplication.translate("G2", u"Fit equation:", None))
-        self.equationComboBox.setItemText(0, QCoreApplication.translate("G2", u"Thermal Gaussian", None))
-        self.equationComboBox.setItemText(1, QCoreApplication.translate("G2", u"Thermal Gaussian Shift", None))
-        self.equationComboBox.setItemText(2, QCoreApplication.translate("G2", u"Thermal Lorentzian", None))
-        self.equationComboBox.setItemText(3, QCoreApplication.translate("G2", u"Thermal Lorentzian Shift", None))
+        self.equationComboBox.setItemText(0, QCoreApplication.translate("G2", u"Thermal gaussian", None))
+        self.equationComboBox.setItemText(1, QCoreApplication.translate("G2", u"Thermal gaussian shifted", None))
+        self.equationComboBox.setItemText(2, QCoreApplication.translate("G2", u"Thermal lorentzian", None))
+        self.equationComboBox.setItemText(3, QCoreApplication.translate("G2", u"Thermal lorentzian shifted", None))
         self.equationComboBox.setItemText(4, QCoreApplication.translate("G2", u"Antibunching", None))
-        self.equationComboBox.setItemText(5, QCoreApplication.translate("G2", u"Antibunching Shift", None))
+        self.equationComboBox.setItemText(5, QCoreApplication.translate("G2", u"Antibunching shifted", None))
 
         self.fixedDelayLabel.setText(QCoreApplication.translate("G2", u"Fixed delay:", None))
         self.fixedDelayCheckBox.setText("")
-        self.externalDelayLabel.setText(QCoreApplication.translate("G2", u"External Delay", None))
+        self.externalDelayLabel.setText(QCoreApplication.translate("G2", u"External delay", None))
         self.equationLabel.setText(QCoreApplication.translate("G2", u"Equation", None))
         self.applyFitButton.setText(QCoreApplication.translate("G2", u"Apply", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("G2", u"Fit parameters", None))
@@ -778,7 +778,7 @@ class Ui_G2(object):
         self.setNumberBinsValue()
         self.coincidenceWindowComboBox.currentIndexChanged.connect(self.setNumberBinsValue)
         self.timeRangeComboBox.currentIndexChanged.connect(self.defineCoincidenceValues)
-        self.setLabelEquation("Thermal Gaussian")
+        self.setLabelEquation("Thermal gaussian")
         self.defineValuesBinsComboBox()
 
     def defineValuesBinsComboBox(self):
@@ -843,19 +843,19 @@ class Ui_G2(object):
         self.setLabelEquation(equation)
     
     def setLabelEquation(self, equation):
-        if equation=="Thermal Gaussian":
+        if equation=="Thermal gaussian":
             self.equationLabel.setPixmap(self.pixMapThermalGaussian)
             self.fixedDelayCheckBox.setEnabled(False)
             self.externalDelaySpinBox.setEnabled(False)
-        elif equation=="Thermal Gaussian Shift":
+        elif equation=="Thermal gaussian shifted":
             self.equationLabel.setPixmap(self.pixMapThermalGaussianShift)
             self.fixedDelayCheckBox.setEnabled(True)
             self.externalDelaySpinBox.setEnabled(True)
-        elif equation=="Thermal Lorentzian":
+        elif equation=="Thermal lorentzian":
             self.equationLabel.setPixmap(self.pixMapThermalLorentzian)
             self.fixedDelayCheckBox.setEnabled(False)
             self.externalDelaySpinBox.setEnabled(False)
-        elif equation=="Thermal Lorentzian Shift":
+        elif equation=="Thermal lorentzian shifted":
             self.equationLabel.setPixmap(self.pixMapThermalLorentzianShift)
             self.fixedDelayCheckBox.setEnabled(True)
             self.externalDelaySpinBox.setEnabled(True)
@@ -863,7 +863,7 @@ class Ui_G2(object):
             self.equationLabel.setPixmap(self.pixMapAntiBunching)
             self.fixedDelayCheckBox.setEnabled(False)
             self.externalDelaySpinBox.setEnabled(False)
-        elif equation=="Antibunching Shift":
+        elif equation=="Antibunching shifted":
             self.equationLabel.setPixmap(self.pixMapAntiBunchingShift)
             self.fixedDelayCheckBox.setEnabled(True)
             self.externalDelaySpinBox.setEnabled(True)

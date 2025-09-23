@@ -51,13 +51,6 @@ class createsavefile:
         with open(pathFile,"w") as f:
             f.truncate(0)
             
-        
-    
-    
-        
-        
-            
-        
     
     def getDataFolderPrefix(self):
         with open("SaveFileConstants.json","r",encoding="utf-8") as file:
@@ -310,7 +303,7 @@ class createsavefile:
             with open(full_path, 'w') as file:
                 file.write(settings + '\n')
                 
-                file.write(textLabel+"\tg2 Values\n")
+                file.write(textLabel+"\tg2(Tau)\n")
                 
                 for tau, g2_value in zip(data[0], data[1]):
                     file.write(f"{tau}\t{g2_value}\n")

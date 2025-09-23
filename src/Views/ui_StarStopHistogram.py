@@ -377,7 +377,7 @@ class Ui_HistogramaStartStop(object):
         self.SaveGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Begin measurement", None))
         self.StopGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"End measurement", None))
         self.SaveDoc.setText(QCoreApplication.translate("HistogramaStartStop", u"Save", None))
-        self.SaveImage1.setText(QCoreApplication.translate("HistogramaStartStop", u"Save Plots", None))
+        self.SaveImage1.setText(QCoreApplication.translate("HistogramaStartStop", u"Save plots", None))
         self.ClearchannelA.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear A", None))
         self.ClearchannelB.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear B", None))
         self.ClearchannelC.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear C", None))

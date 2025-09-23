@@ -425,7 +425,7 @@ class UiLifeTime(object):
         self.buttonParameterFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_buttonParameter = QHBoxLayout(self.buttonParameterFrame)
         self.horizontalLayout_buttonParameter.setObjectName(u"horizontalLayout_fourthParameter")
-        self.buttonParameterLabel = QPushButton("Initial Parameters",self.buttonParameterFrame)
+        self.buttonParameterLabel = QPushButton("Initial parameters",self.buttonParameterFrame)
         self.buttonParameterLabel.setObjectName(u"buttonParameterLabel")
 
         self.horizontalLayout_buttonParameter.addWidget(self.buttonParameterLabel)
@@ -510,7 +510,7 @@ class UiLifeTime(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start Channel:", None))
+        self.startChannelLabel.setText(QCoreApplication.translate("Form", u"Start channel:", None))
         self.set_latex_to_label('exponential')
         self.startChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Start channel", None))
         self.startChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel A", None))
@@ -519,7 +519,7 @@ class UiLifeTime(object):
         self.startChannelComboBox.setItemText(4, QCoreApplication.translate("Form", u"Channel D", None))
         
 
-        self.stopChannelLabel.setText(QCoreApplication.translate("Form", u"Stop Channel:", None))
+        self.stopChannelLabel.setText(QCoreApplication.translate("Form", u"Stop channel:", None))
         self.stopChannelComboBox.setItemText(0, QCoreApplication.translate("Form", u"Channel A", None))
         self.stopChannelComboBox.setItemText(1, QCoreApplication.translate("Form", u"Channel B", None))
         self.stopChannelComboBox.setItemText(2, QCoreApplication.translate("Form", u"Channel C", None))
@@ -533,12 +533,12 @@ class UiLifeTime(object):
         self.stopButton.setText(QCoreApplication.translate("Form", u"Stop", None))
         self.clearButton.setText(QCoreApplication.translate("Form", u"Clear", None))
         self.saveDataFileButton.setText(QCoreApplication.translate("Form", u"Save data file", None))
-        self.savePlotButton.setText(QCoreApplication.translate("Form", u"Save Plot", None))
+        self.savePlotButton.setText(QCoreApplication.translate("Form", u"Save plot", None))
         self.totalMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Total measurements:", None))
         self.totalMeasurementsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
-        self.totalStartsLabel.setText(QCoreApplication.translate("Form", u"Total Starts:", None))
+        self.totalStartsLabel.setText(QCoreApplication.translate("Form", u"Total starts:", None))
         self.totalStartsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
-        self.totalStopsLabel.setText(QCoreApplication.translate("Form", u"Total Time:", None))
+        self.totalStopsLabel.setText(QCoreApplication.translate("Form", u"Total time:", None))
         self.totalStopsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))
         self.functionLabel.setText(QCoreApplication.translate("Form", u"Function:", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("Form", u"Fit parameters:", None))
