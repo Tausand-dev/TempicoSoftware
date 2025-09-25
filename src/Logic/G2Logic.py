@@ -1,6 +1,6 @@
-from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject
+from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QEvent
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication, QWhatsThis
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum
 from Utils.createsavefile import createsavefile as savefile
@@ -489,15 +489,37 @@ class G2Logic():
         self.localFixedGaussian=self.externalDelayGaussianCheckBox
         self.localFixedLorentzian=self.externalDelayLorentzianCheckBox
         self.localFixedAntibunching=self.externalDelayAntiBunchingCheckBox
+    
+    def helpEventFilter(dialog, obj, event):
+        """
+        Global event filter for the help '?' button.
+
+        :param dialog: QDialog being filtered.
+        :param obj: QObject that received the event.
+        :param event: QEvent instance.
+        :return: True if handled, False otherwise.
+        """
+        if event.type() == QEvent.EnterWhatsThisMode:
+            QWhatsThis.leaveWhatsThisMode()
+            QMessageBox.information(dialog, "Help",
+                "Aquí va la información de ayuda para este diálogo.")
+            return True
+        return False
+
         
     def showParameterDialog(self):
-        self.lastSelection=""
+        self.lastSelection = ""
         self.initLocalDialogParameters()
-        self.currentSpinBox=[]
-        self.currentValues=[]
-        self.currentFixedChebox=None
+        self.currentSpinBox = []
+        self.currentValues = []
+        self.currentFixedChebox = None
+        
         self.dialogParameters = QDialog(self.mainWindow)
         self.dialogParameters.setWindowTitle("Initial Parameters")
+        
+        # AGREGAR EL BOTÓN DE AYUDA (misma línea que tu ejemplo)
+        self.dialogParameters.setWindowFlags(self.dialogParameters.windowFlags() | Qt.WindowContextHelpButtonHint)
+        
         outerLayout = QVBoxLayout(self.dialogParameters)
         outerLayout.setContentsMargins(6, 6, 6, 6)
         outerLayout.setSpacing(6)
@@ -525,6 +547,7 @@ class G2Logic():
         btnLayout.addWidget(defaultBtn)
         btnLayout.addWidget(cancelBtn)
         outerLayout.addLayout(btnLayout)
+        
         self.updateParameterFields(self.comboBoxDialog, fieldLayout, fieldWidgets, self.dialogParameters)
         self.comboBoxDialog.currentTextChanged.connect(
             lambda: self.updateParameterFields(self.comboBoxDialog, fieldLayout, fieldWidgets, self.dialogParameters)
@@ -532,10 +555,42 @@ class G2Logic():
         applyBtn.clicked.connect(self.updateInitialParameters)
         cancelBtn.clicked.connect(self.dialogParameters.reject)
         defaultBtn.clicked.connect(self.setDefaultParameters)
+        
+        # OVERRIDE del método event (exactamente igual que tu ejemplo)
+        original_event = self.dialogParameters.event
+        def custom_event(event):
+            if event.type() == QEvent.EnterWhatsThisMode:
+                QWhatsThis.leaveWhatsThisMode()
+                self.showParameterHelp()
+                return True
+            return original_event(event)
+        
+        self.dialogParameters.event = custom_event
+        
         self.dialogParameters.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.dialogParameters.adjustSize()
+        
         result = self.dialogParameters.exec_()
         return result == QDialog.Accepted, fieldWidgets
+
+    def showParameterHelp(self):
+        """
+        Shows a fixed message.
+
+        :return: None
+        """
+        help_message = (
+            "For shifted fits, the delay parameter T_d can be either fixed or free.\n\n"
+            "When T_d is fixed, it remains constant during the fit and only the other "
+            "parameters are optimized.\n"
+            "When T_d is not fixed, all parameters, including T_d, are determined by the fit."
+        )
+
+        QMessageBox.information(
+            self.dialogParameters,
+            "Parameter Help",
+            help_message
+        )
 
     def setDefaultParameters(self):
         currentIndexDialog=self.comboBoxDialog.currentIndex()
