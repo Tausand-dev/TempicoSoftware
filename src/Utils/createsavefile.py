@@ -395,7 +395,7 @@ class createsavefile:
         with open(full_path, 'a') as file:
             if archivo_vacio:
                 file.write(settings)
-                file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
+                file.write("Start Time (YYYY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
         
@@ -424,7 +424,7 @@ class createsavefile:
         with open(full_path, 'a') as file:    
             if not file_exists:
                 file.write(settings)
-                file.write(f"Start Time (YY:MM:DD:HH:MM:SS){separator}Stop Time (ps){separator}Channel\n")
+                file.write(f"Start Time (YYYY:MM:DD:HH:MM:SS){separator}Stop Time (ps){separator}Channel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}{separator}{stopTime}{separator}{channelList[channel]}\n")
     

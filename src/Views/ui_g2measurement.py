@@ -547,6 +547,7 @@ class Ui_G2(object):
         self.externalDelaySpinBox = QDoubleSpinBox(self.externalDelayFrame)
         self.externalDelaySpinBox.setObjectName(u"externalDelaySpinBox")
         self.externalDelaySpinBox.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
+        self.externalDelaySpinBox.setMinimum(-9999999999999999464902769475481793196872414789632.000000000000000)
 
         self.horizontalLayout_17.addWidget(self.externalDelaySpinBox)
 
@@ -741,7 +742,7 @@ class Ui_G2(object):
 
         self.fixedDelayLabel.setText(QCoreApplication.translate("G2", u"Fixed delay:", None))
         self.fixedDelayCheckBox.setText("")
-        self.externalDelayLabel.setText(QCoreApplication.translate("G2", u"External delay", None))
+        self.externalDelayLabel.setText(QCoreApplication.translate("G2", u"External delay:", None))
         self.equationLabel.setText(QCoreApplication.translate("G2", u"Equation", None))
         self.applyFitButton.setText(QCoreApplication.translate("G2", u"Apply", None))
         self.fitParametersLabel.setText(QCoreApplication.translate("G2", u"Fit parameters", None))

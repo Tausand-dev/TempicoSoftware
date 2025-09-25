@@ -234,9 +234,9 @@ class G2Logic():
                 self.localInitialGaussianTc=self.currentSpinBox[0].value()
         if self.lastSelection=="Thermal gaussian shifted":
             if self.currentSpinBox[0].suffix()==" us":
-                self.localInitialGaussianShiftedTc=self.currentSpinBox[0].value()*1000
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()*1000
             else:
-                self.localInitialGaussianShiftedTc=self.currentSpinBox[0].value()
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()
             if self.currentSpinBox[1].suffix()==" us":
                 self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()*1000
             else:
@@ -250,31 +250,31 @@ class G2Logic():
                 self.localInitialLorentzianT0=self.currentSpinBox[0].value()
         if self.lastSelection=="Thermal lorentzian shifted":
             if self.currentSpinBox[0].suffix()==" us":
-                self.localInitialLorentzianShiftedT0=self.currentSpinBox[0].value()*1000
+                self.localInitialLorentzianT0=self.currentSpinBox[0].value()*1000
             else:
-                self.localInitialLorentzianShiftedT0=self.currentSpinBox[0].value()
+                self.localInitialLorentzianT0=self.currentSpinBox[0].value()
             if self.currentSpinBox[1].suffix()==" us":
-                self.localInitialLorentzianShiftedTd=self.currentSpinBox[1].value()*1000
+                self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()*1000
             else:
-                self.localInitialLorentzianShiftedTd=self.currentSpinBox[1].value()
-            self.localInitialLorentzianShiftedB=self.currentSpinBox[2].value()
-            self.localFixedLorentzian=self.currentFixedChebox.isChecked()
+                self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()
+            self.localInitialGaussianShiftedB=self.currentSpinBox[2].value()
+            self.localFixedGaussian=self.currentFixedChebox.isChecked()
         if self.lastSelection=="Antibunching":
             if self.currentSpinBox[0].suffix()==" us":
-                self.localInitialAntiBunchingTA=self.currentSpinBox[0].value()*1000
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()*1000
             else:
-                self.localInitialAntiBunchingTA=self.currentSpinBox[0].value()
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()
         if self.lastSelection=="Antibunching shifted":
             if self.currentSpinBox[0].suffix()==" us":
-                self.localInitialAntiBunchingShiftedTA=self.currentSpinBox[0].value()*1000
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()*1000
             else:
-                self.localInitialAntiBunchingShiftedTA=self.currentSpinBox[0].value()
+                self.localInitialGaussianTc=self.currentSpinBox[0].value()
             if self.currentSpinBox[1].suffix()==" us":
-                self.localInitialAntiBunchingShiftedTd=self.currentSpinBox[1].value()*1000
+                self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()*1000
             else:
-                self.localInitialAntiBunchingShiftedTd=self.currentSpinBox[1].value()
-            self.localInitialAntiBunchingShiftedB=self.currentSpinBox[2].value()
-            self.localFixedAntibunching=self.currentFixedChebox.isChecked()
+                self.localInitialGaussianShiftedTd=self.currentSpinBox[1].value()
+            self.localInitialGaussianShiftedB=self.currentSpinBox[2].value()
+            self.localFixedGaussian=self.currentFixedChebox.isChecked()
         
     def updateParameterFields(self, comboBox, fieldLayout, fieldWidgets, dialog):
         if self.currentSpinBox:
@@ -298,7 +298,7 @@ class G2Logic():
             self.lastSelection="Thermal gaussian"
         elif selection == "Thermal gaussian shifted":
             fields = [self.nameTc, self.nameTd, self.nameB]
-            values=[self.localInitialGaussianShiftedTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
+            values=[self.localInitialGaussianTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
             self.lastSelection="Thermal gaussian shifted"
         elif selection == "Thermal lorentzian":
             fields = [self.nameT0]
@@ -306,15 +306,15 @@ class G2Logic():
             self.lastSelection="Thermal lorentzian"
         elif selection == "Thermal lorentzian shifted":
             fields = [self.nameT0, self.nameTd, self.nameB]
-            values=[self.localInitialLorentzianShiftedT0,self.localInitialLorentzianShiftedTd,self.localInitialLorentzianShiftedB]
+            values=[self.localInitialLorentzianT0,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
             self.lastSelection="Thermal lorentzian shifted"
         elif selection == "Antibunching":
             fields = [self.nameTc]
-            values=[self.localInitialAntiBunchingTA]
+            values=[self.localInitialGaussianTc]
             self.lastSelection="Antibunching"
         elif selection == "Antibunching shifted":
             fields = [self.nameTc, self.nameTd, self.nameB]
-            values=[self.localInitialAntiBunchingShiftedTA,self.localInitialAntiBunchingShiftedTd,self.localInitialAntiBunchingShiftedB]
+            values=[self.localInitialGaussianTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
             self.lastSelection="Antibunching shifted"
 
         fieldWidgets.clear()
@@ -333,9 +333,9 @@ class G2Logic():
                 if selection=="Thermal gaussian shifted":
                     checkbox.setChecked(self.localFixedGaussian)
                 elif selection=="Thermal lorentzian shifted":
-                    checkbox.setChecked(self.localFixedLorentzian)
+                    checkbox.setChecked(self.localFixedGaussian)
                 elif selection=="Antibunching shifted":
-                    checkbox.setChecked(self.localFixedAntibunching)
+                    checkbox.setChecked(self.localFixedGaussian)
                 self.currentFixedChebox=checkbox
                 checkLayout.addWidget(checkbox)
                 fieldLayout.addLayout(checkLayout)
@@ -350,9 +350,11 @@ class G2Logic():
                 spin.setDecimals(3)
                 spin.setSingleStep(1)
                 spin.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
+                spin.setMinimum(-9999999999999999464902769475481793196872414789632.000000000000000)
                 spin.valueChanged.connect(lambda value, spinbox=spin: self.updateSpinBoxSufix(spinbox,value))
             else:
                 spin.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
+                spin.setMinimum(0)
                 spin.setDecimals(3)
                 spin.setSingleStep(1)
             self.currentSpinBox.append(spin)
@@ -372,86 +374,96 @@ class G2Logic():
         if self.comboBoxEquation.currentIndex()==1:
             self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
         elif self.comboBoxEquation.currentIndex()==3:
-            self.fixedDelayCheckBox.setChecked(self.externalDelayLorentzianCheckBox)
+            self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
         elif self.comboBoxEquation.currentIndex()==5:
-            self.fixedDelayCheckBox.setChecked(self.externalDelayAntiBunchingCheckBox)
+            self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
     
     def changeExternalFixed(self):
         if self.comboBoxEquation.currentIndex()==1:
             self.externalDelayGaussianCheckBox=self.fixedDelayCheckBox.isChecked()
         elif self.comboBoxEquation.currentIndex()==3:
-            self.externalDelayLorentzianCheckBox=self.fixedDelayCheckBox.isChecked()
+            self.externalDelayGaussianCheckBox=self.fixedDelayCheckBox.isChecked()
         elif self.comboBoxEquation.currentIndex()==5:
-            self.externalDelayAntiBunchingCheckBox=self.fixedDelayCheckBox.isChecked()
+            self.externalDelayGaussianCheckBox=self.fixedDelayCheckBox.isChecked()
     
     
     def changeExternalSpinBox(self):
         if self.comboBoxEquation.currentIndex()==1:
             self.isManualChange=False
-            if self.thermalGaussianShiftTdInitial<1000:
+            if abs(self.thermalGaussianShiftTdInitial)<1000:
                 self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial)
                 self.externalDelaySpinBox.setSuffix(" ns")
+                self.externalDelaySpinBox.setSingleStep(1)
                 self.externalDelaySpinBox.setDecimals(3)
             else:
                 self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial/1000)
                 self.externalDelaySpinBox.setSuffix(" us")
+                self.externalDelaySpinBox.setSingleStep(0.1)
                 self.externalDelaySpinBox.setDecimals(6)
         elif self.comboBoxEquation.currentIndex()==3:
             self.isManualChange=False
             print(self.thermalLorentzianShiftTdInitial)
-            if self.thermalLorentzianShiftTdInitial<1000:
+            if abs(self.thermalGaussianShiftTdInitial)<1000:
                 print("Entra aca")
-                self.externalDelaySpinBox.setValue(self.thermalLorentzianShiftTdInitial)
+                self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial)
                 self.externalDelaySpinBox.setSuffix(" ns")
+                self.externalDelaySpinBox.setSingleStep(1)
                 self.externalDelaySpinBox.setDecimals(3)
             else:
-                self.externalDelaySpinBox.setValue(self.thermalLorentzianShiftTdInitial/1000)
+                self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial/1000)
                 self.externalDelaySpinBox.setSuffix(" us")
+                self.externalDelaySpinBox.setSingleStep(0.1)
                 self.externalDelaySpinBox.setDecimals(6)
         elif self.comboBoxEquation.currentIndex()==5:
             self.isManualChange=False
-            if self.antiBunchingShiftTaudInitial<1000:
-                self.externalDelaySpinBox.setValue(self.antiBunchingShiftTaudInitial)
+            if abs(self.thermalGaussianShiftTdInitial)<1000:
+                self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial)
                 self.externalDelaySpinBox.setSuffix(" ns")
+                self.externalDelaySpinBox.setSingleStep(1)
                 self.externalDelaySpinBox.setDecimals(3)
             else:
-                self.externalDelaySpinBox.setValue(self.antiBunchingShiftTaudInitial/1000)
+                self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial/1000)
                 self.externalDelaySpinBox.setSuffix(" us")
+                self.externalDelaySpinBox.setSingleStep(0.1)
                 self.externalDelaySpinBox.setDecimals(6)
+        self.isManualChange=True
                 
                 
     
     def changeReverseExternalSpinBox(self):
         if self.isManualChange:
-            if self.externalDelaySpinBox.value()>=1000 and self.externalDelaySpinBox.suffix()==" ns":
+            if abs(self.externalDelaySpinBox.value())>=1000 and self.externalDelaySpinBox.suffix()==" ns":
+                self.externalDelaySpinBox.blockSignals(True)
                 self.externalDelaySpinBox.setSuffix(" us")
                 newValue=self.externalDelaySpinBox.value()/1000
                 self.externalDelaySpinBox.setValue(newValue)
                 self.externalDelaySpinBox.setDecimals(6)
-            if self.externalDelaySpinBox.value()<1 and self.externalDelaySpinBox.suffix()==" us":
+                self.externalDelaySpinBox.setSingleStep(0.1)
+                self.externalDelaySpinBox.blockSignals(False)
+            if abs(self.externalDelaySpinBox.value())<1 and self.externalDelaySpinBox.suffix()==" us":
+                self.externalDelaySpinBox.blockSignals(True)
                 self.externalDelaySpinBox.setSuffix(" ns")
-                if self.externalDelaySpinBox.value()==0:
-                    self.externalDelaySpinBox.setValue(999)
-                else:
-                    newValue=self.externalDelaySpinBox.value()/1000
-                    self.externalDelaySpinBox.setValue(newValue)
+                newValue=self.externalDelaySpinBox.value()*1000
+                self.externalDelaySpinBox.setValue(newValue)
+                self.externalDelaySpinBox.setSingleStep(1)
                 self.externalDelaySpinBox.setDecimals(3)
-                
+                self.externalDelaySpinBox.blockSignals(False)
             if self.comboBoxEquation.currentIndex()==1:
                 if self.externalDelaySpinBox.suffix()==" ns":
                     self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()
                 else:
                     self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()*1000
             elif self.comboBoxEquation.currentIndex()==3:
+                print("Entra aca")
                 if self.externalDelaySpinBox.suffix()==" ns":
-                    self.thermalLorentzianShiftTdInitial=self.externalDelaySpinBox.value()
+                    self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()
                 else:
-                    self.thermalLorentzianShiftTdInitial=self.externalDelaySpinBox.value()*1000
+                    self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()*1000
             elif self.comboBoxEquation.currentIndex()==5:
                 if self.externalDelaySpinBox.suffix()==" ns":
-                    self.antiBunchingShiftTaudInitial=self.externalDelaySpinBox.value()
+                    self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()
                 else:
-                    self.antiBunchingShiftTaudInitial=self.externalDelaySpinBox.value()*1000
+                    self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()*1000
         self.isManualChange=True
     
     def initLocalDialogParameters(self):
@@ -616,21 +628,26 @@ class G2Logic():
         self.changeExternalSpinBox()
         self.dialogParameters.accept()
     
-    def updateSpinBoxSufix(self, spinbox,value):
-        currentSuffix=spinbox.suffix()
-        if currentSuffix==" ns" and value>=1000:
+    def updateSpinBoxSufix(self, spinbox, value):
+        
+        currentSuffix = spinbox.suffix()
+
+        # ns → us
+        if currentSuffix == " ns" and abs(value) >= 1000:
+            spinbox.blockSignals(True)
             spinbox.setDecimals(6)
-            newValue=value/1000
-            spinbox.setValue(newValue)
+            spinbox.setValue(value / 1000.0)
             spinbox.setSuffix(" us")
-        if currentSuffix==" us" and value<1:
-            newValue=value*1000
+            spinbox.setSingleStep(0.1)
+            spinbox.blockSignals(False)
+
+        elif currentSuffix == " us" and abs(value) < 1:
+            spinbox.blockSignals(True)
             spinbox.setDecimals(3)
-            if value==0:
-                spinbox.setValue(999)
-            else:
-                spinbox.setValue(newValue)
+            spinbox.setValue(value * 1000.0)  # sin 999
             spinbox.setSuffix(" ns")
+            spinbox.setSingleStep(1)
+            spinbox.blockSignals(False)
         
     
         
@@ -1191,14 +1208,14 @@ class G2Logic():
             elif fitName=="GaussianShift":
                 if self.unitsMeasured=="ns":
                     if not self.externalDelayGaussianCheckBox:
-                        p0=[self.self.thermalGaussianShiftTcInitial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
+                        p0=[self.self.thermalGaussianTcInitial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
                     else:
-                        p0=[self.self.thermalGaussianShiftTcInitial,self.thermalGaussianShiftBInitial]
+                        p0=[self.self.thermalGaussianTcInitial,self.thermalGaussianShiftBInitial]
                 else:
                     if not self.externalDelayGaussianCheckBox:
-                        p0=[self.thermalGaussianShiftTcInitial/1000,self.thermalGaussianShiftTdInitial/1000,self.thermalGaussianShiftBInitial]
+                        p0=[self.thermalGaussianTcInitial/1000,self.thermalGaussianShiftTdInitial/1000,self.thermalGaussianShiftBInitial]
                     else:
-                        p0=[self.thermalGaussianShiftTcInitial/1000,self.thermalGaussianShiftBInitial]
+                        p0=[self.thermalGaussianTcInitial/1000,self.thermalGaussianShiftBInitial]
                 
                 if self.externalDelayGaussianCheckBox:
                     popt, pcov= curve_fit(self.thermalGaussianShiftFixed, self.tauValues, self.g2Values,p0)
@@ -1223,25 +1240,25 @@ class G2Logic():
                 stdList=[pcov[0,0]]
             elif fitName == "LorentzianShift":
                 if self.unitsMeasured=="ns":
-                    if not self.externalDelayLorentzianCheckBox:
-                        p0=[self.thermalLorentzianShiftT0Initial,self.thermalLorentzianShiftTdInitial,self.thermalLorentzianShiftBInitial]
+                    if not self.externalDelayGaussianCheckBox:
+                        p0=[self.thermalLorentzianT0Initial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
                     else:
                         print("Entra en el condicional del lorentzian")
-                        p0=[self.thermalLorentzianShiftT0Initial,self.thermalLorentzianShiftBInitial]
+                        p0=[self.thermalLorentzianT0Initial,self.thermalGaussianShiftBInitial]
                 else:
-                    if not self.externalDelayLorentzianCheckBox:
-                        p0=[self.thermalLorentzianShiftT0Initial/1000,self.thermalLorentzianShiftTdInitial/1000,self.thermalLorentzianShiftBInitial]
+                    if not self.externalDelayGaussianCheckBox:
+                        p0=[self.thermalLorentzianT0Initial/1000,self.thermalGaussianShiftTdInitial/1000,self.thermalGaussianShiftBInitial]
                     else:
-                        p0=[self.thermalLorentzianShiftT0Initial/1000,self.thermalLorentzianShiftBInitial]
+                        p0=[self.thermalLorentzianT0Initial/1000,self.thermalGaussianShiftBInitial]
                 
-                if self.externalDelayLorentzianCheckBox:
+                if self.externalDelayGaussianCheckBox:
                     print(p0)
                     popt, pcov= curve_fit(self.thermalLorentzianShiftFixed, self.tauValues, self.g2Values,p0)
                     if self.unitsMeasured=="ns":
-                        tauDInital=self.thermalLorentzianShiftTdInitial
+                        tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital, popt[1]]
                     else:
-                        tauDInital=self.thermalLorentzianShiftTdInitial
+                        tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital/1000, popt[1]]
                     stdList=[pcov[0,0],-1,pcov[1,1]]
                 else:
@@ -1250,31 +1267,31 @@ class G2Logic():
                     stdList=[pcov[0,0],pcov[1,1],pcov[2,2]]
             elif fitName == "AntiBunching":
                 if self.unitsMeasured=="ns":
-                    p0=[self.antiBunchingTauAInitial]
+                    p0=[self.thermalGaussianTcInitial]
                 else:
-                    p0=[self.antiBunchingTauAInitial/1000]
+                    p0=[self.thermalGaussianTcInitial/1000]
                 popt, pcov= curve_fit(self.antiBunching, self.tauValues, self.g2Values,p0)
                 parametersList=popt
                 stdList=[pcov[0,0]]
             elif fitName == "AntiBunchingShift":
                 if self.unitsMeasured=="ns":
-                    if not self.externalDelayAntiBunchingCheckBox:
-                        p0=[self.antiBunchingShiftTauAInitial,self.antiBunchingShiftTaudInitial,self.antiBunchingShiftBInitial]
+                    if not self.externalDelayGaussianCheckBox:
+                        p0=[self.thermalGaussianTcInitial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
                     else:
-                        p0=[self.antiBunchingShiftTauAInitial,self.antiBunchingShiftBInitial]
+                        p0=[self.thermalGaussianTcInitial,self.thermalGaussianShiftBInitial]
                 else:
-                    if not self.externalDelayAntiBunchingCheckBox:
-                        p0=[self.antiBunchingShiftTauAInitial/1000,self.antiBunchingShiftTaudInitial/1000,self.antiBunchingShiftBInitial]
+                    if not self.externalDelayGaussianCheckBox:
+                        p0=[self.thermalGaussianTcInitial/1000,self.thermalGaussianShiftTdInitial/1000,self.thermalGaussianShiftBInitial]
                     else:
-                        p0=[self.antiBunchingShiftTauAInitial/1000,self.antiBunchingShiftBInitial]
+                        p0=[self.thermalGaussianTcInitial/1000,self.thermalGaussianShiftBInitial]
                 
-                if self.externalDelayAntiBunchingCheckBox:
+                if self.externalDelayGaussianCheckBox:
                     popt, pcov= curve_fit(self.antiBunchingShiftFixed, self.tauValues, self.g2Values,p0)
                     if self.unitsMeasured=="ns":
-                        tauDInital=self.antiBunchingShiftTaudInitial
+                        tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital, popt[1]]
                     else:
-                        tauDInital=self.antiBunchingShiftTaudInitial
+                        tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital/1000, popt[1]]
                     stdList=[pcov[0,0],-1,pcov[1,1]]
                 else:
@@ -1465,7 +1482,7 @@ class G2Logic():
         self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
         self.worker.updateTauValues.connect(self.captureTauValues)
         self.worker.updateMeasurement.connect(self.captureMeasurement)
-        self.initDate=datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+        self.initDate=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if tab==0:
             self.worker.finished.connect(self.finishManualMeasurement)
         elif tab==1:
@@ -1507,7 +1524,7 @@ class G2Logic():
         self.maximumTimeComboBox.setEnabled(True)
         self.saveDataButton.setEnabled(True)
         self.savePlotButton.setEnabled(True)
-        self.finishDate=datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+        self.finishDate=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.changeStatus("No running measurement")
         self.changeStatusColor(0)
         self.currentMeasurement=False
