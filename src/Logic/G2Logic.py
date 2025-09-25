@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum
 from Utils.createsavefile import createsavefile as savefile
@@ -17,6 +17,7 @@ from datetime import datetime
 import pyTempico as tempico
 import time
 import threading
+import os
 import numpy as np
 class G2Logic():
     def __init__(self,stopChannelComboBox: QComboBox, coincidenceWindowComboBox: QComboBox, numberMeasurementsSpinBox: QSpinBox, numberBinsLabel: QLabel,startManualButton: QPushButton, stopManualButton: QPushButton,
@@ -80,6 +81,7 @@ class G2Logic():
         self.saveDataButton.clicked.connect(self.saveG2Data)
         self.fixedDelayCheckBox.clicked.connect(self.changeExternalFixed)
         self.externalDelaySpinBox.valueChanged.connect(self.changeReverseExternalSpinBox)
+        self.savePlotButton.clicked.connect(self.saveG2Plot)
         #Tau values
         self.tauValues=[]
         #Fit lists values
@@ -161,6 +163,10 @@ class G2Logic():
         self.curveFit = self.plotG2.plot(pen='r', name='g2 fit')
         self.legend.addItem(self.curveG2, 'g2 Data')
         self.legend.addItem(self.curveFit, 'g2 fit')
+    
+    
+    
+    
     
     def setVerticalLabel(self):
         if self.stopChannelComboBox.currentIndex()==0:
@@ -1805,9 +1811,160 @@ class G2Logic():
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
         
+    def createGraphicToSave(self):
+        saveWinG2 = pg.GraphicsLayoutWidget()
+        saveWinG2.setBackground('w')
+        savePlotG2 = saveWinG2.addPlot()
+        savePlotG2.showGrid(x=True, y=True)
+        
+        # Old Labels
+        leftCurrentLabel = self.plotG2.getAxis("left").labelText
+        bottomCurrentLabel = self.plotG2.getAxis("bottom").labelText
+        savePlotG2.setLabel('left', leftCurrentLabel)
+        savePlotG2.setLabel('bottom', bottomCurrentLabel)
+        
+        # Legend
+        saveLegend = pg.LegendItem(offset=(0, 0))
+        saveLegend.setParentItem(savePlotG2.getViewBox())
+        saveLegend.anchor((1, 0), (1, 0))
+        
+        # Curves
+        saveCurveG2 = savePlotG2.plot(pen='b', name='g2 Data')
+        saveCurveFit = savePlotG2.plot(pen='r', name='g2 fit')
+        saveLegend.addItem(saveCurveG2, 'g2 Data')
+        saveLegend.addItem(saveCurveFit, 'g2 fit')
+        
+        # Set data
+        saveCurveG2.setData(self.tauValues, self.g2Values)
+        
+        if self.comboBoxEquation.currentIndex() == 0:
+            if len(self.g2FitGaussian) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitGaussian)
+        elif self.comboBoxEquation.currentIndex() == 1:
+            if len(self.g2FitGaussianShift) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitGaussianShift)
+        elif self.comboBoxEquation.currentIndex() == 2:
+            if len(self.g2FitLorentzian) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitLorentzian)
+        elif self.comboBoxEquation.currentIndex() == 3:
+            if len(self.g2FitLorentzianShift) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitLorentzianShift)
+        elif self.comboBoxEquation.currentIndex() == 4:
+            if len(self.g2FitAntibunching) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitAntibunching)
+        elif self.comboBoxEquation.currentIndex() == 5:
+            if len(self.g2FitAntibunchingShift) > 0:
+                saveCurveFit.setData(self.tauValues, self.g2FitAntibunchingShift)
+        
+        # Equation label
+        equationLabel = ""
+        if self.comboBoxEquation.currentIndex() == 0:
+            if self.thermalGaussianTcValue != "nan":
+                equationLabel = f"Thermal gaussian 1+e^(-pi*(T/T_c)^2): {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)}"
+                print("Entra aca")
+        elif self.comboBoxEquation.currentIndex() == 1:
+            if (self.thermalGaussianShiftTcValue != "nan" or 
+                self.thermalGaussianShiftTdValue != "nan" or 
+                self.thermalGaussianShiftBValue != "nan"):
+                equationLabel = (f"Thermal gaussian shifted 1+e^(-pi*(|T-T_d|/T_c)^2)+b: {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)} "
+                            f"  ,{self.nameTd} = {self.formatValue(self.thermalGaussianShiftTdValue)} "
+                            f"  ,{self.nameB} = {self.formatValue(self.thermalGaussianShiftBValue)}")
+        elif self.comboBoxEquation.currentIndex() == 2:
+            if self.thermalLorentzianT0Value != "nan":
+                equationLabel = f"Thermal Lorentzian 1+e^(-2*(|T|/T_0)): {self.nameT0} = {self.formatValue(self.thermalLorentzianT0Value)}"
+        elif self.comboBoxEquation.currentIndex() == 3:
+            if (self.thermalLorentzianShiftT0Value != "nan" or 
+                self.thermalLorentzianShiftTdValue != "nan" or 
+                self.thermalLorentzianShiftBValue != "nan"):
+                equationLabel = (f"Thermal Shifted 1+e^(-2*(|T-T_d|/T_0))+b: {self.nameT0} = {self.formatValue(self.thermalLorentzianShiftT0Value)} "
+                            f"  ,{self.nameTd} = {self.formatValue(self.thermalLorentzianShiftTdValue)} "
+                            f"  ,{self.nameB} = {self.formatValue(self.thermalLorentzianShiftBValue)}")
+        elif self.comboBoxEquation.currentIndex() == 4:
+            if self.antiBunchingTauAValue != "nan":
+                equationLabel = f"Antibunching 1-e^(-(T/T_c)): {self.nameTc} = {self.formatValue(self.antiBunchingTauAValue)}"
+        elif self.comboBoxEquation.currentIndex() == 5:
+            if (self.antiBunchingShiftTauAValue != "nan" or 
+                self.antiBunchingShiftTaudValue != "nan" or 
+                self.antiBunchingShiftBValue != "nan"):
+                equationLabel = (f"Antibunching Shifted 1-e^(-(|T-T_d|/T_c)+b): {self.nameTc} = {self.formatValue(self.antiBunchingShiftTauAValue)} "
+                            f"  ,{self.nameTd} = {self.formatValue(self.antiBunchingShiftTaudValue)} "
+                            f"  ,{self.nameB} = {self.formatValue(self.antiBunchingShiftBValue)}")
+    
+        if equationLabel.strip():
+            footer = pg.LabelItem(text=equationLabel, justify='left')
+            saveWinG2.addItem(footer, row=2, col=0)
+            saveWinG2.ci.layout.setRowStretchFactor(0, 1)   
+            saveWinG2.ci.layout.setRowStretchFactor(2, 0)   
+        
+        return saveWinG2, savePlotG2
+    
     
     def saveG2Plot(self):
-        pass
+        """
+        Saves the graph image in the specified format (PNG, TIFF, or JPG) based on the user's selection.
+        :return: None
+        """
+        try:
+            dataFolderPrefix=self.savefile.getDataFolderPrefix()
+            folder_path=dataFolderPrefix["saveFolder"]
+            data_prefix=dataFolderPrefix["g2Prefix"]
+            dialog =QDialog(self.mainWindow)    
+            dialog.setObjectName("ImageFormat")
+            dialog.resize(285,105)
+            dialog.setWindowTitle("Save Plots")
+            verticalLayout_2 = QVBoxLayout(dialog)
+            verticalLayout_2.setObjectName("verticalLayout_2")
+            VerticalImage = QVBoxLayout()
+            VerticalImage.setObjectName("VerticalImage")
+            SelectLabel = QLabel(dialog)
+            SelectLabel.setObjectName("SelectLabel")
+            SelectLabel.setText("Select the image format:")
+            VerticalImage.addWidget(SelectLabel)
+            FormatBox = QComboBox(dialog)
+            FormatBox.addItem("png")
+            FormatBox.addItem("tiff")
+            FormatBox.addItem("jpg")
+            FormatBox.setObjectName("FormatBox")
+            VerticalImage.addWidget(FormatBox)
+            verticalLayout_2.addLayout(VerticalImage)
+            accepButton = QPushButton(dialog)
+            accepButton.setObjectName("accepButton")
+            accepButton.setText("Accept")
+            verticalLayout_2.addWidget(accepButton)
+            QMetaObject.connectSlotsByName(dialog)
+            accepButton.clicked.connect(dialog.accept)
+            if dialog.exec_()==QDialog.Accepted:
+                selected_format=FormatBox.currentText()
+                saveWinG2, savePlotG2=self.createGraphicToSave()
+                xRange, yRange = self.plotG2.viewRange()
+                savePlotG2.setXRange(xRange[0],xRange[1])
+                savePlotG2.setYRange(yRange[0],yRange[1])
+                savePlotG2.getAxis('left').setWidth(80)
+                savePlotG2.setAspectLocked(False)
+                QApplication.processEvents()
+                exporter=pg.exporters.ImageExporter(saveWinG2.scene())
+                exporter.parameters()['width'] = 1400
+                exporter.parameters()['height'] = 800
+                currentDate = datetime.now()
+                currentDateStr = currentDate.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+                graphName= data_prefix+currentDateStr
+                outputPath=os.path.join(folder_path,f"{graphName}.{selected_format}")
+                exporter.export(outputPath)
+                initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
+                text_route="\n"+graphName+"."+selected_format
+                message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
+                message_box.setText(initial_text+text_route)
+                message_box.setWindowTitle("Successful save")
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()            
+        except:
+            message_box = QMessageBox(self.mainWindow)
+            message_box.setIcon(QMessageBox.Critical)
+            message_box.setText("The plots could not be saved.")
+            message_box.setWindowTitle("Error saving")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
     
     
         
@@ -1879,7 +2036,7 @@ class WorkerThreadG2(QThread):
         factor=1
         if self.units=="ns":
             factor=10**3
-        elif self.units=="μs":
+        elif self.units=="us":
             factor=10**6
         elif self.units=="ms":
             factor=10**9

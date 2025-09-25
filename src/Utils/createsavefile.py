@@ -597,7 +597,7 @@ class createsavefile:
             with open(full_path, 'w') as file:
                 file.write(settings + '\n')
                 
-                file.write(f"{textLabel}{separator}g2 Values\n")
+                file.write(f"{textLabel}{separator}g2(Tau)\n")
                 
                 for tau, g2Value in zip(data[0], data[1]):
                     file.write(f"{tau}{separator}{g2Value}\n")
