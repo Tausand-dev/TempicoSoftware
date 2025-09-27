@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QEvent
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication, QWhatsThis
+from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication, QWhatsThis, QGridLayout
 import pyqtgraph as pg
 from numpy import mean, sqrt, exp, array, sum
 from Utils.createsavefile import createsavefile as savefile
@@ -92,6 +92,7 @@ class G2Logic():
         self.g2FitAntibunching=[]
         self.g2FitAntibunchingShift=[]
         self.stopChannelSave=""
+        self.parametersChange=False
         #self.externalDelaySpinBox.valueChanged.connect(self.changeExternalDelay)
         self.initialConfigs()
         self.createGraphic()
@@ -226,6 +227,35 @@ class G2Logic():
         self.antiBunchingShiftTaudInitial=0
         self.antiBunchingShiftBInitial=0
     
+    def initialParametersWithUnits(self):
+        if not self.parametersChange:
+            if self.unitsMeasured=="ns":
+                self.thermalGaussianTcInitial=1
+                self.thermalGaussianShiftTcInitial=1
+                self.thermalGaussianShiftTdInitial=0
+                self.thermalGaussianShiftBInitial=0
+                self.thermalLorentzianT0Initial=1
+                self.thermalLorentzianShiftT0Initial=1
+                self.thermalLorentzianShiftTdInitial=0
+                self.thermalLorentzianShiftBInitial=0
+                self.antiBunchingTauAInitial=1
+                self.antiBunchingShiftTauAInitial=1
+                self.antiBunchingShiftTaudInitial=0
+                self.antiBunchingShiftBInitial=0
+            else:
+                self.thermalGaussianTcInitial=1000
+                self.thermalGaussianShiftTcInitial=1000
+                self.thermalGaussianShiftTdInitial=0
+                self.thermalGaussianShiftBInitial=0
+                self.thermalLorentzianT0Initial=1000
+                self.thermalLorentzianShiftT0Initial=1000
+                self.thermalLorentzianShiftTdInitial=0
+                self.thermalLorentzianShiftBInitial=0
+                self.antiBunchingTauAInitial=1000
+                self.antiBunchingShiftTauAInitial=1000
+                self.antiBunchingShiftTaudInitial=0
+                self.antiBunchingShiftBInitial=0
+    
     def updateLocalDialogInitalParameters(self):
         if self.lastSelection=="Thermal gaussian":
             if self.currentSpinBox[0].suffix()==" us":
@@ -279,6 +309,8 @@ class G2Logic():
     def updateParameterFields(self, comboBox, fieldLayout, fieldWidgets, dialog):
         if self.currentSpinBox:
             self.updateLocalDialogInitalParameters()
+
+
         for i in reversed(range(fieldLayout.count())):
             item = fieldLayout.itemAt(i)
             if item.widget():
@@ -290,83 +322,92 @@ class G2Logic():
                         child.widget().setParent(None)
                 fieldLayout.removeItem(item.layout())
 
+        grid = QGridLayout()
+        grid.setContentsMargins(0, 0, 0, 0)
+        grid.setSpacing(5)
+        fieldLayout.addLayout(grid)
+
         selection = comboBox.currentText()
-        fields = []
+        fields, values = [], []
+
         if selection == "Thermal gaussian":
             fields = [self.nameTc]
-            values=[self.localInitialGaussianTc]
-            self.lastSelection="Thermal gaussian"
+            values = [self.localInitialGaussianTc]
+            self.lastSelection = "Thermal gaussian"
         elif selection == "Thermal gaussian shifted":
             fields = [self.nameTc, self.nameTd, self.nameB]
-            values=[self.localInitialGaussianTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
-            self.lastSelection="Thermal gaussian shifted"
+            values = [self.localInitialGaussianTc,
+                    self.localInitialGaussianShiftedTd,
+                    self.localInitialGaussianShiftedB]
+            self.lastSelection = "Thermal gaussian shifted"
         elif selection == "Thermal lorentzian":
             fields = [self.nameT0]
-            values=[self.localInitialLorentzianT0]
-            self.lastSelection="Thermal lorentzian"
+            values = [self.localInitialLorentzianT0]
+            self.lastSelection = "Thermal lorentzian"
         elif selection == "Thermal lorentzian shifted":
             fields = [self.nameT0, self.nameTd, self.nameB]
-            values=[self.localInitialLorentzianT0,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
-            self.lastSelection="Thermal lorentzian shifted"
+            values = [self.localInitialLorentzianT0,
+                    self.localInitialGaussianShiftedTd,
+                    self.localInitialGaussianShiftedB]
+            self.lastSelection = "Thermal lorentzian shifted"
         elif selection == "Antibunching":
             fields = [self.nameTc]
-            values=[self.localInitialGaussianTc]
-            self.lastSelection="Antibunching"
+            values = [self.localInitialGaussianTc]
+            self.lastSelection = "Antibunching"
         elif selection == "Antibunching shifted":
             fields = [self.nameTc, self.nameTd, self.nameB]
-            values=[self.localInitialGaussianTc,self.localInitialGaussianShiftedTd,self.localInitialGaussianShiftedB]
-            self.lastSelection="Antibunching shifted"
+            values = [self.localInitialGaussianTc,
+                    self.localInitialGaussianShiftedTd,
+                    self.localInitialGaussianShiftedB]
+            self.lastSelection = "Antibunching shifted"
 
         fieldWidgets.clear()
-        self.currentValues=values
-        self.currentSpinBox=[]
-        
-        for k in range(len(fields)):
-            f=fields[k]
-            currentValue=values[k]
-            if self.nameTd in f: 
-                checkLayout = QHBoxLayout()
-                checkLayout.setSpacing(5)
-                label_checkbox = QLabel("Fixed delay:")
-                checkLayout.addWidget(label_checkbox)
-                checkbox = QCheckBox()
-                if selection=="Thermal gaussian shifted":
-                    checkbox.setChecked(self.localFixedGaussian)
-                elif selection=="Thermal lorentzian shifted":
-                    checkbox.setChecked(self.localFixedGaussian)
-                elif selection=="Antibunching shifted":
-                    checkbox.setChecked(self.localFixedGaussian)
-                self.currentFixedChebox=checkbox
-                checkLayout.addWidget(checkbox)
-                fieldLayout.addLayout(checkLayout)
+        self.currentValues = values
+        self.currentSpinBox = []
 
-            hLayout = QHBoxLayout()
-            hLayout.setSpacing(5)
-            label = QLabel(f)
-            hLayout.addWidget(label)
+        row = 0
+        for k, f in enumerate(fields):
+            currentValue = values[k]
+
+            if self.nameTd in f:
+                label_checkbox = QLabel("Fixed delay:")
+                checkbox = QCheckBox()
+                checkbox.setStyleSheet("QCheckBox { margin:0; padding:0; }")
+                if selection.endswith("shifted"):
+                    checkbox.setChecked(self.localFixedGaussian)
+                self.currentFixedChebox = checkbox
+
+                grid.addWidget(label_checkbox, row, 0)
+                grid.addWidget(checkbox,       row, 1, Qt.AlignLeft)
+                row += 1
+
+            label = QLabel(f"{f}:")
             spin = QDoubleSpinBox()
-            if not self.nameB in f:
+            if self.nameB not in f:
                 spin.setSuffix(" ns")
                 spin.setDecimals(3)
                 spin.setSingleStep(1)
-                spin.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
-                spin.setMinimum(-9999999999999999464902769475481793196872414789632.000000000000000)
-                spin.valueChanged.connect(lambda value, spinbox=spin: self.updateSpinBoxSufix(spinbox,value))
+                spin.setMaximum(1e18)
+                spin.setMinimum(-1e18)
+                spin.valueChanged.connect(lambda v, s=spin: self.updateSpinBoxSufix(s, v))
             else:
-                spin.setMaximum(9999999999999999464902769475481793196872414789632.000000000000000)
+                spin.setMaximum(1e18)
                 spin.setMinimum(0)
                 spin.setDecimals(3)
                 spin.setSingleStep(1)
-            self.currentSpinBox.append(spin)
+
             spin.setValue(currentValue)
-            hLayout.addWidget(spin)
+            self.currentSpinBox.append(spin)
 
             if self.nameTd in f:
                 fieldWidgets.append((f, spin, checkbox))
             else:
                 fieldWidgets.append((f, spin))
 
-            fieldLayout.addLayout(hLayout)
+            grid.addWidget(label, row, 0)
+            grid.addWidget(spin,  row, 1)
+            row += 1
+
         dialog.layout().activate()
         dialog.adjustSize()
     
@@ -553,7 +594,7 @@ class G2Logic():
             lambda: self.updateParameterFields(self.comboBoxDialog, fieldLayout, fieldWidgets, self.dialogParameters)
         )
         applyBtn.clicked.connect(self.updateInitialParameters)
-        cancelBtn.clicked.connect(self.dialogParameters.reject)
+        cancelBtn.clicked.connect(self.cancelParameters)
         defaultBtn.clicked.connect(self.setDefaultParameters)
         
         # OVERRIDE del método event (exactamente igual que tu ejemplo)
@@ -572,6 +613,9 @@ class G2Logic():
         
         result = self.dialogParameters.exec_()
         return result == QDialog.Accepted, fieldWidgets
+    def cancelParameters(self):
+        self.checkParametersValue()
+        self.dialogParameters.reject()
 
     def showParameterHelp(self):
         """
@@ -594,18 +638,32 @@ class G2Logic():
 
     def setDefaultParameters(self):
         currentIndexDialog=self.comboBoxDialog.currentIndex()
-        self.localInitialGaussianTc=1
-        self.localInitialGaussianShiftedTc=1
-        self.localInitialGaussianShiftedTd=0
-        self.localInitialGaussianShiftedB=0
-        self.localInitialLorentzianT0=1
-        self.localInitialLorentzianShiftedT0=1
-        self.localInitialLorentzianShiftedTd=0
-        self.localInitialLorentzianShiftedB=0
-        self.localInitialAntiBunchingTA=1
-        self.localInitialAntiBunchingShiftedTA=1
-        self.localInitialAntiBunchingShiftedTd=0
-        self.localInitialAntiBunchingShiftedB=0
+        if self.unitsMeasured=="ns":
+            self.localInitialGaussianTc=1
+            self.localInitialGaussianShiftedTc=1
+            self.localInitialGaussianShiftedTd=0
+            self.localInitialGaussianShiftedB=0
+            self.localInitialLorentzianT0=1
+            self.localInitialLorentzianShiftedT0=1
+            self.localInitialLorentzianShiftedTd=0
+            self.localInitialLorentzianShiftedB=0
+            self.localInitialAntiBunchingTA=1
+            self.localInitialAntiBunchingShiftedTA=1
+            self.localInitialAntiBunchingShiftedTd=0
+            self.localInitialAntiBunchingShiftedB=0
+        else:
+            self.localInitialGaussianTc=1000
+            self.localInitialGaussianShiftedTc=1000
+            self.localInitialGaussianShiftedTd=0
+            self.localInitialGaussianShiftedB=0
+            self.localInitialLorentzianT0=1000
+            self.localInitialLorentzianShiftedT0=1000
+            self.localInitialLorentzianShiftedTd=0
+            self.localInitialLorentzianShiftedB=0
+            self.localInitialAntiBunchingTA=1000
+            self.localInitialAntiBunchingShiftedTA=1000
+            self.localInitialAntiBunchingShiftedTd=0
+            self.localInitialAntiBunchingShiftedB=0
         if currentIndexDialog==0:
             self.currentSpinBox[0].setValue(self.localInitialGaussianTc)
             self.currentSpinBox[0].setValue(self.localInitialGaussianTc)
@@ -654,6 +712,7 @@ class G2Logic():
             self.currentSpinBox[0].setDecimals(3)
             self.currentSpinBox[1].setSuffix(" ns")
             self.currentSpinBox[1].setDecimals(3)
+        
 
     def updateInitialParameters(self):
         self.updateLocalDialogInitalParameters()
@@ -681,10 +740,10 @@ class G2Logic():
         self.externalDelayAntiBunchingCheckBox=self.localFixedAntibunching
         self.changeExternalCheckBox()
         self.changeExternalSpinBox()
+        self.checkParametersValue()
         self.dialogParameters.accept()
     
     def updateSpinBoxSufix(self, spinbox, value):
-        
         currentSuffix = spinbox.suffix()
 
         # ns → us
@@ -1361,16 +1420,18 @@ class G2Logic():
         return parametersList, stdList
         
     
-    def calculateR2(self,data,fitData):
-        arrayData=array(data)
-        arrayFit=array(fitData)
-        meanData=mean(arrayData)
-        ssRes=sum((arrayData-arrayFit)**2)
-        ssTot=sum((arrayData-meanData)**2)
-        R2=1-(ssRes/ssTot)
-        print("El valor de r2 es")
+    def calculateR2(self, data, fitData):
+        arrayData = array(data)
+        arrayFit  = array(fitData)
+        meanData  = mean(arrayData)
+
+        ssReg = sum((arrayFit - meanData) ** 2)   # SSR
+        ssTot = sum((arrayData - meanData) ** 2)  # SST
+
+        R2 = ssReg / ssTot
+        print("El valor de R² es")
         print(R2)
-        return round(R2,2)
+        return round(R2, 2)
     
     def showDialogNoFitParameters(self):
         QMessageBox.warning(
@@ -1574,6 +1635,7 @@ class G2Logic():
         if self.tauValues:
             self.applyFitButton.setEnabled(True)
             self.initialParametersButton.setEnabled(True)
+            self.initialParametersWithUnits()
         self.stopChannelComboBox.setEnabled(True)
         self.coincidenceWindowComboBox.setEnabled(True)
         self.maximumTimeComboBox.setEnabled(True)
@@ -1740,6 +1802,28 @@ class G2Logic():
         for line in self.regionDisable.lines:
             line.setPen(pg.mkPen(None))
         self.plotG2.addItem(self.regionDisable)
+        
+    def checkParametersValue(self):
+        values = [
+            self.thermalGaussianTcInitial,
+            self.thermalGaussianShiftTcInitial,
+            self.thermalGaussianShiftTdInitial,
+            self.thermalGaussianShiftBInitial,
+            self.thermalLorentzianT0Initial,
+            self.thermalLorentzianShiftT0Initial,
+            self.thermalLorentzianShiftTdInitial,
+            self.thermalLorentzianShiftBInitial,
+            self.antiBunchingTauAInitial,
+            self.antiBunchingShiftTauAInitial,
+            self.antiBunchingShiftTaudInitial,
+            self.antiBunchingShiftBInitial
+        ]
+
+        if all(v == 1 for v in values) or all(v == 1000 for v in values):
+            self.parametersChange=False
+        else:
+            self.parametersChange=True
+            
                     
         
         
@@ -1794,33 +1878,70 @@ class G2Logic():
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 fitSetting=f"Initial Date:\t{self.initDate}\nFinish Date:\t{self.finishDate}\n"
                 if self.thermalGaussianTcValue!="nan":
-                    fitSetting+=f"Thermal gaussian fit:\tT_c: {self.thermalGaussianTcValue} {self.thermalGaussianTcUnits} \n"
+                    if self.thermalGaussianTcUnits=="ns":
+                        gaussianTcValue=round(self.thermalGaussianTcValue,3)
+                    else:
+                        gaussianTcValue=round(self.thermalGaussianTcValue,6)
+                    fitSetting+=f"Thermal gaussian fit:\tT_c: {gaussianTcValue} {self.thermalGaussianTcUnits} \n"
                 else:
                     fitSetting+=""
                 if self.thermalGaussianShiftTcValue!="nan" or self.thermalGaussianShiftTdValue!="nan" or self.thermalGaussianShiftBValue!="nan":
-                    fitSetting+=(f"Thermal gaussian shifted fit:\tT_c: {self.thermalGaussianShiftTcValue} {self.thermalGaussianShiftTcUnits}"
-                                 f"\tT_d: {self.thermalGaussianShiftTdValue} {self.thermalGaussianShiftTdUnits}"
-                                 f"\tB: {self.thermalGaussianShiftBValue} {self.thermalGaussianShiftBUnits}\n")
+                    if self.thermalGaussianShiftTcUnits=="ns":
+                        gaussianTcShift=round(self.thermalGaussianShiftTcValue,3)
+                        gaussianTdShift=round(self.thermalGaussianShiftTdValue,3)
+                        gaussianBShift=round(self.thermalGaussianShiftBValue,3)
+                    else:
+                        gaussianTcShift=round(self.thermalGaussianShiftTcValue,6)
+                        gaussianTdShift=round(self.thermalGaussianShiftTdValue,6)
+                        gaussianBShift=round(self.thermalGaussianShiftBValue,6)
+                        
+                    fitSetting+=(f"Thermal gaussian shifted fit:\t{self.nameTc}: {gaussianTcShift} {self.thermalGaussianShiftTcUnits}"
+                                 f"\t{self.nameTd}: {gaussianTdShift} {self.thermalGaussianShiftTdUnits}"
+                                 f"\t{self.nameB}: {gaussianBShift} {self.thermalGaussianShiftBUnits}\n")
                 else:
                     fitSetting+=""
                 if self.thermalLorentzianT0Value!="nan":
-                    fitSetting+=f"Thermal lorentzian fit:\tT_0: {self.thermalLorentzianT0Value} {self.thermalLorentzianT0Units}\n"
+                    if self.thermalLorentzianT0Units=="ns":
+                        lorentzianT0=round(self.thermalLorentzianT0Value,3)
+                    else:
+                        lorentzianT0=round(self.thermalLorentzianT0Value,6)
+                    fitSetting+=f"Thermal lorentzian fit:\t{self.nameT0}: {lorentzianT0} {self.thermalLorentzianT0Units}\n"
                 else:
                     fitSetting+=""
                 if self.thermalLorentzianShiftT0Value!="nan" or self.thermalLorentzianShiftTdValue!="nan" or self.thermalLorentzianShiftBValue!="nan":
-                    fitSetting+=(f"Thermal lorentzian shifted fit:\tT_0: {self.thermalLorentzianShiftT0Value} {self.thermalLorentzianShiftT0Units}"
-                                 f"\tT_d: {self.thermalLorentzianShiftTdValue} {self.thermalLorentzianShiftTdUnits}"
-                                 f"\tB: {self.thermalLorentzianShiftBValue} {self.thermalLorentzianShiftBUnits}\n")
+                    if self.thermalLorentzianShiftT0Units=="ns":
+                        lorentzianT0Shift=round(self.thermalLorentzianShiftT0Value,3)
+                        lorentzianTdShift=round(self.thermalLorentzianShiftTdValue,3)
+                        lorentzianBShift=round(self.thermalLorentzianShiftBValue,3)
+                    else:
+                        lorentzianT0Shift=round(self.thermalLorentzianShiftT0Value,6)
+                        lorentzianTdShift=round(self.thermalLorentzianShiftTdValue,6)
+                        lorentzianBShift=round(self.thermalLorentzianShiftBValue,6)
+                    fitSetting+=(f"Thermal lorentzian shifted fit:\t{self.nameT0}: {lorentzianT0Shift} {self.thermalLorentzianShiftT0Units}"
+                                 f"\t{self.nameTd}: {lorentzianTdShift} {self.thermalLorentzianShiftTdUnits}"
+                                 f"\t{self.nameB}: {lorentzianBShift} {self.thermalLorentzianShiftBUnits}\n")
                 else:
                     fitSetting+=""
                 if self.antiBunchingTauAValue!="nan":
-                    fitSetting+=f"Antibunching fit:\tT_A: {self.antiBunchingTauAValue} {self.antiBunchingTauAUnits}\n"
+                    if self.antiBunchingTauAUnits=="ns":
+                        antibunchingTauA=round(self.antiBunchingTauAValue,3)
+                    else:
+                        antibunchingTauA=round(self.antiBunchingTauAValue,6)
+                    fitSetting+=f"Antibunching fit:\t{self.nameTc}: {antibunchingTauA} {self.antiBunchingTauAUnits}\n"
                 else:
                     fitSetting+=""
                 if self.antiBunchingShiftTauAValue!="nan" and self.antiBunchingShiftTaudValue!="nan" and self.antiBunchingShiftBValue!="nan":
-                    fitSetting+=(f"Antibunching shifted fit:\tT_A: {self.antiBunchingShiftTauAValue} {self.antiBunchingShiftTauAUnits}"
-                                 f"\tT_d: {self.antiBunchingShiftTaudValue} {self.antiBunchingShiftTaudUnits}"
-                                 f"\tB: {self.antiBunchingShiftBValue} {self.antiBunchingShiftBUnits}\n")
+                    if self.antiBunchingShiftTauAUnits=="ns":
+                        antibunchingShiftTauA=round(self.antiBunchingShiftTauAValue,3)
+                        antibunchingShiftTaud=round(self.antiBunchingShiftTaudValue,3)
+                        antibunchingShiftB=round(self.antiBunchingShiftBValue,3)
+                    else:
+                        antibunchingShiftTauA=round(self.antiBunchingShiftTauAValue,6)
+                        antibunchingShiftTaud=round(self.antiBunchingShiftTaudValue,6)
+                        antibunchingShiftB=round(self.antiBunchingShiftBValue,6)
+                    fitSetting+=(f"Antibunching shifted fit:\t{self.nameTc}: {antibunchingShiftTauA} {self.antiBunchingShiftTauAUnits}"
+                                 f"\t{self.nameTd}: {antibunchingShiftTaud} {self.antiBunchingShiftTaudUnits}"
+                                 f"\t{self.nameB}: {antibunchingShiftB} {self.antiBunchingShiftBUnits}\n")
                 else:
                     fitSetting+=""
                 #Channel Setting
