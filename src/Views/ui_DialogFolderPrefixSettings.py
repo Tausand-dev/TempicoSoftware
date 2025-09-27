@@ -22,6 +22,7 @@ class Ui_DialogFolderPrefix(object):
     def setupUi(self, Dialog, mainWindow):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
+        self.createSaveFile=createsavefile()
         self.dialog=Dialog
         self.mainWIndow=mainWindow
         Dialog.resize(496, 336)
@@ -217,6 +218,7 @@ class Ui_DialogFolderPrefix(object):
         self.applyChangesButton.clicked.connect(self.applySettings)
 
         QMetaObject.connectSlotsByName(Dialog)
+        
     # setupUi
 
     def retranslateUi(self, Dialog):
@@ -237,8 +239,9 @@ class Ui_DialogFolderPrefix(object):
     def getSettings(self):
         #Disable folder line edit
         self.folderPathLineEdit.setReadOnly(True)
+        pathConstants=self.createSaveFile.getPathFolder()
         #get settings
-        with open("SaveFileConstants.json", "r", encoding="utf-8") as file:
+        with open(pathConstants, "r", encoding="utf-8") as file:
             data = json.load(file)
         documents_folder = os.path.join(os.path.expanduser("~"), "Documents")
         default_save_folder = os.path.join(documents_folder, "TempicoSoftwareData")
@@ -257,7 +260,7 @@ class Ui_DialogFolderPrefix(object):
         
         
     def applySettings(self):
-        
+        pathConstants=self.createSaveFile.getPathFolder()
         if any(c in self.startStopHistogramLineEdit.text() for c in r'\/:*?"<>|'):
             self.dialogShowingProblems("Start-stop histogram prefix")
         elif any(c in self.lifetimeLineEdit.text() for c in r'\/:*?"<>|'):
@@ -269,15 +272,16 @@ class Ui_DialogFolderPrefix(object):
         elif any(c in self.g2LineEdit.text() for c in r'\/:*?"<>|'):
             self.dialogShowingProblems("g2 prefix")
         else:
-            with open("SaveFileConstants.json", "r", encoding="utf-8") as file:
+            with open(pathConstants, "r", encoding="utf-8") as file:
                 data = json.load(file)
             data["saveFolder"]=self.folderPathLineEdit.text()
             data["startStopHistogramPrefix"]=self.startStopHistogramLineEdit.text()
             data["lifetimePrefix"]=self.lifetimeLineEdit.text()
             data["countsEstimationPrefix"]=self.countsEstimationLineEdit.text()
             data["timeStampingPrefix"]=self.lineEdit.text()
+
             data["g2Prefix"]=self.g2LineEdit.text()
-            with open("SaveFileConstants.json", "w", encoding="utf-8") as f:
+            with open(pathConstants, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             if self.folderPathLineEdit!=self.initialFolderPath:
                 self.mainWIndow.resetSaveSentinelsAllWindows()

@@ -435,14 +435,14 @@ class TimeStampLogic():
         - Restores the button text to "Pause acquisition" and re-enables it.
 
         :return: None
-        """   
-        if self.pauseNormalButton.text()=="Pause adquisition":
+        """
+        if self.pauseNormalButton.text()=="Pause acquisition":
             self.worker.changeIsPauseTrue()
-            self.pauseNormalButton.setText("Continue adquisition")
-        elif self.pauseNormalButton.text()=="Continue adquisition":
+            self.pauseNormalButton.setText("Continue acquisition")
+        elif self.pauseNormalButton.text()=="Continue acquisition":
             self.pauseNormalButton.setEnabled(False)
             self.worker.changeIsPauseFalse()
-            self.pauseNormalButton.setText("Pause adquisition")
+            self.pauseNormalButton.setText("Pause acquisition")
             self.pauseNormalButton.setEnabled(True)
             
             
@@ -468,8 +468,8 @@ class TimeStampLogic():
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
-        if self.pauseNormalButton.text()=="Continue adquisition":
-            self.pauseNormalButton.setText("Pause adquisition")
+        if self.pauseNormalButton.text()=="Continue acquisition":
+            self.pauseNormalButton.setText("Pause acquisition")
         self.startNormalButton.setEnabled(True)
         self.pauseNormalButton.setEnabled(False)
         self.stopNormalButton.setEnabled(False)

@@ -7,6 +7,7 @@ import sys
 import io
 from itertools import islice
 import shutil
+from Utils.createsavefile import createsavefile 
 class WorkerThreadTimeStamping(QThread):
     """
     Thread class responsible for executing and managing timestamp measurements in the background.
@@ -102,6 +103,8 @@ class WorkerThreadTimeStamping(QThread):
         self.saveCurrentMeasurements()
         #Maximum value
         self.maximumValueMeasurement=5000000000
+        self.savefile=createsavefile()
+        self.folderData=self.savefile.getAutoSaveFolderPath()
         
         
     
@@ -917,8 +920,8 @@ class WorkerThreadTimeStamping(QThread):
         :param file_path: The destination file path where the sorted data will be saved.
         :return: None
         """
-        tempDataPath = os.path.join("./TempData", f"AutoSaveData.txt")
-        tempDataOrder= os.path.join("./TempData", f"AutoSaveDataSorted.txt")
+        tempDataPath = os.path.join(self.folderData, f"AutoSaveData.txt")
+        tempDataOrder= os.path.join(self.folderData, f"AutoSaveDataSorted.txt")
         selectedFormat= filePath.split(".")[-1]
         newSeparator= ";" if selectedFormat == "csv" else "\t"
         chunkSize=30000
