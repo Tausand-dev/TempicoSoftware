@@ -14,6 +14,7 @@ class createsavefile:
         self.config_dir = Path(user_config_dir(self.app_name))
         self.config_dir.mkdir(parents=True, exist_ok=True)
     
+    
     def createDefaultFolder(self):
         save_path = self.config_dir / "SaveFileConstants.json"
         if not save_path.exists():
@@ -64,43 +65,47 @@ class createsavefile:
                 f.write(readme_text)
     
     def createTempFileData(self):
-        dataFolderDict=self.getDataFolderPrefix()
-        currentFolder=dataFolderDict['saveFolder']
-        folderName="TempData"
-        fileData="AutoSaveData.txt"
-        filePath=f"{currentFolder}\\{folderName}\\{fileData}"
-        folderPath=f"{currentFolder}\\{folderName}"
+        dataFolderDict = self.getDataFolderPrefix()
+        currentFolder = dataFolderDict['saveFolder']
+        folderName = "TempData"
+        fileData = "AutoSaveData.txt"
+        folderPath = os.path.join(currentFolder, folderName)
+        filePath   = os.path.join(folderPath, fileData)
+
         os.makedirs(folderPath, exist_ok=True)
-        with open(filePath,"w") as f:
+
+        with open(filePath, "w", encoding="utf-8") as f:
             pass
+
         self.createReadmeFile(folderPath)
     
     
     def clearDataAutoSave(self):
-        dataFolderDict=self.getDataFolderPrefix()
-        currentFolder=dataFolderDict['saveFolder']
-        folderName="TempData"
-        fileData="AutoSaveData.txt"
-        filePath=f"{currentFolder}\\{folderName}\\{fileData}"
-        folderPath=f"{currentFolder}\\{folderName}"
-        with open(filePath,"w") as f:
+        dataFolderDict = self.getDataFolderPrefix()
+        currentFolder  = dataFolderDict['saveFolder']
+        folderName     = "TempData"
+        fileData       = "AutoSaveData.txt"
+        folderPath = os.path.join(currentFolder, folderName)
+        filePath   = os.path.join(folderPath, fileData)
+        with open(filePath, "w", encoding="utf-8") as f:
             f.truncate(0)
+
         self.createReadmeFile(folderPath)
     
     def getAutoSaveDataPath(self):
-        dataFolderDict=self.getDataFolderPrefix()
-        currentFolder=dataFolderDict['saveFolder']
-        folderName="TempData"
-        fileData="AutoSaveData.txt"
-        filePath=f"{currentFolder}\\{folderName}\\{fileData}"
+        dataFolderDict = self.getDataFolderPrefix()
+        currentFolder  = dataFolderDict['saveFolder']
+        folderName     = "TempData"
+        fileData       = "AutoSaveData.txt"
+        filePath = os.path.join(currentFolder, folderName, fileData)
         return filePath
             
     def getAutoSaveFolderPath(self):
-        dataFolderDict=self.getDataFolderPrefix()
-        currentFolder=dataFolderDict['saveFolder']
-        folderName="TempData"
-        filePath=f"{currentFolder}\\{folderName}"
-        return filePath
+        dataFolderDict = self.getDataFolderPrefix()
+        currentFolder  = dataFolderDict['saveFolder']
+        folderName     = "TempData"
+        folderPath = os.path.join(currentFolder, folderName)
+        return folderPath
           
         
     
@@ -659,4 +664,3 @@ class createsavefile:
                     file.write(f"{tau}{separator}{g2Value}\n")
                 
     
-

@@ -285,6 +285,7 @@ class Ui_DialogFolderPrefix(object):
                 json.dump(data, f, indent=4, ensure_ascii=False)
             if self.folderPathLineEdit!=self.initialFolderPath:
                 self.mainWIndow.resetSaveSentinelsAllWindows()
+            self.createSaveFile.createTempFileData()
             self.dialog.close()
             
     
