@@ -11,7 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-
+import os
 
 class Ui_TimeStamping(object):
     def setupUi(self, Form):
@@ -57,8 +57,14 @@ class Ui_TimeStamping(object):
         self.SettingsFrame.setFont(font)
         self.SettingsFrame.setMouseTracking(False)
         self.SettingsFrame.setAcceptDrops(False)
-        self.SettingsFrame.setFrameShape(QFrame.Panel)
-        self.SettingsFrame.setFrameShadow(QFrame.Sunken)
+        if os.name=="posix":
+            self.SettingsFrame.setFrameShape(QFrame.NoFrame)
+            self.SettingsFrame.setFrameShadow(QFrame.Plain)
+            self.SettingsFrame.setLineWidth(0)
+            self.SettingsFrame.setMidLineWidth(0)
+        else:
+            self.SettingsFrame.setFrameShape(QFrame.Panel)
+            self.SettingsFrame.setFrameShadow(QFrame.Sunken)
         self.verticalLayout_2 = QVBoxLayout(self.SettingsFrame)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(10, 0, 10, 0)
@@ -70,8 +76,14 @@ class Ui_TimeStamping(object):
         sizePolicy2.setVerticalStretch(2)
         sizePolicy2.setHeightForWidth(self.EnableChannelsFrame.sizePolicy().hasHeightForWidth())
         self.EnableChannelsFrame.setSizePolicy(sizePolicy2)
-        self.EnableChannelsFrame.setFrameShape(QFrame.StyledPanel)
-        self.EnableChannelsFrame.setFrameShadow(QFrame.Raised)
+        if os.name=="posix":
+            self.EnableChannelsFrame.setFrameShape(QFrame.NoFrame)
+            self.EnableChannelsFrame.setFrameShadow(QFrame.Plain)
+            self.EnableChannelsFrame.setLineWidth(0)
+            self.EnableChannelsFrame.setMidLineWidth(0)
+        else:
+            self.EnableChannelsFrame.setFrameShape(QFrame.StyledPanel)
+            self.EnableChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.EnableChannelsFrame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(10, 7, 10, 0)
@@ -116,8 +128,14 @@ class Ui_TimeStamping(object):
         sizePolicy4.setVerticalStretch(6)
         sizePolicy4.setHeightForWidth(self.frameStartStop.sizePolicy().hasHeightForWidth())
         self.frameStartStop.setSizePolicy(sizePolicy4)
-        self.frameStartStop.setFrameShape(QFrame.StyledPanel)
-        self.frameStartStop.setFrameShadow(QFrame.Raised)
+        if os.name=="posix":
+            self.frameStartStop.setFrameShape(QFrame.NoFrame)
+            self.frameStartStop.setFrameShadow(QFrame.Plain)
+            self.frameStartStop.setLineWidth(0)
+            self.frameStartStop.setMidLineWidth(0)
+        else:
+            self.frameStartStop.setFrameShape(QFrame.StyledPanel)
+            self.frameStartStop.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.verticalLayout_8.setContentsMargins(10, 0, 10, 0)
@@ -304,8 +322,14 @@ class Ui_TimeStamping(object):
         self.SaveDataFrame.setObjectName(u"SaveDataFrame")
         sizePolicy2.setHeightForWidth(self.SaveDataFrame.sizePolicy().hasHeightForWidth())
         self.SaveDataFrame.setSizePolicy(sizePolicy2)
-        self.SaveDataFrame.setFrameShape(QFrame.StyledPanel)
-        self.SaveDataFrame.setFrameShadow(QFrame.Raised)
+        if os.name=="posix":
+            self.SaveDataFrame.setFrameShape(QFrame.NoFrame)
+            self.SaveDataFrame.setFrameShadow(QFrame.Plain)
+            self.SaveDataFrame.setLineWidth(0)
+            self.SaveDataFrame.setMidLineWidth(0)
+        else:
+            self.SaveDataFrame.setFrameShape(QFrame.StyledPanel)
+            self.SaveDataFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_4 = QVBoxLayout(self.SaveDataFrame)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.verticalLayout_4.setContentsMargins(10, 0, 10, 8)
@@ -376,14 +400,26 @@ class Ui_TimeStamping(object):
         self.MeasurementsFrame.setObjectName(u"MeasurementsFrame")
         sizePolicy2.setHeightForWidth(self.MeasurementsFrame.sizePolicy().hasHeightForWidth())
         self.MeasurementsFrame.setSizePolicy(sizePolicy2)
-        self.MeasurementsFrame.setFrameShape(QFrame.Panel)
-        self.MeasurementsFrame.setFrameShadow(QFrame.Sunken)
+        if os.name=="posix":
+            self.MeasurementsFrame.setFrameShape(QFrame.StyledPanel)
+            self.MeasurementsFrame.setFrameShadow(QFrame.Raised)
+            self.MeasurementsFrame.setLineWidth(0)
+            self.MeasurementsFrame.setMidLineWidth(0)
+        else:
+            self.MeasurementsFrame.setFrameShape(QFrame.Panel)
+            self.MeasurementsFrame.setFrameShadow(QFrame.Sunken)
         self.horizontalLayout_4 = QHBoxLayout(self.MeasurementsFrame)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.MeasurementsChannelsFrame = QFrame(self.MeasurementsFrame)
         self.MeasurementsChannelsFrame.setObjectName(u"MeasurementsChannelsFrame")
-        self.MeasurementsChannelsFrame.setFrameShape(QFrame.StyledPanel)
-        self.MeasurementsChannelsFrame.setFrameShadow(QFrame.Raised)
+        if os.name=="posix":
+            self.MeasurementsChannelsFrame.setFrameShape(QFrame.NoFrame)
+            self.MeasurementsChannelsFrame.setFrameShadow(QFrame.Plain)
+            self.MeasurementsChannelsFrame.setLineWidth(0)
+            self.MeasurementsChannelsFrame.setMidLineWidth(0)
+        else:
+            self.MeasurementsChannelsFrame.setFrameShape(QFrame.StyledPanel)
+            self.MeasurementsChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_6 = QVBoxLayout(self.MeasurementsChannelsFrame)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.measurementsChannelALabel = QLabel(self.MeasurementsChannelsFrame)
@@ -417,8 +453,14 @@ class Ui_TimeStamping(object):
 
         self.MeasurementsValuesFrame = QFrame(self.MeasurementsFrame)
         self.MeasurementsValuesFrame.setObjectName(u"MeasurementsValuesFrame")
-        self.MeasurementsValuesFrame.setFrameShape(QFrame.StyledPanel)
-        self.MeasurementsValuesFrame.setFrameShadow(QFrame.Raised)
+        if os.name=="posix":
+            self.MeasurementsValuesFrame.setFrameShape(QFrame.NoFrame)
+            self.MeasurementsValuesFrame.setFrameShadow(QFrame.Plain)
+            self.MeasurementsValuesFrame.setLineWidth(0)
+            self.MeasurementsValuesFrame.setMidLineWidth(0)
+        else:
+            self.MeasurementsValuesFrame.setFrameShape(QFrame.StyledPanel)
+            self.MeasurementsValuesFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_7 = QVBoxLayout(self.MeasurementsValuesFrame)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.valueChannelALabel = QLabel(self.MeasurementsValuesFrame)
