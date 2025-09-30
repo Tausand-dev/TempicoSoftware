@@ -99,6 +99,17 @@ class G2Logic():
     
     
     def initialConfigs(self):
+        """
+        Initializes the default configuration for the application interface and 
+        fitting parameters. 
+
+        This method disables buttons related to starting, stopping, clearing, 
+        and saving measurements when the device is not connected. It also sets 
+        default suffixes, initializes fitting parameter equations, updates tables, 
+        and prepares the interface for user interaction.
+
+        :return: None
+        """
         if self.device==None:
             self.startManualButton.setEnabled(False)
             self.startLimitedButtonG2.setEnabled(False)
@@ -126,6 +137,11 @@ class G2Logic():
         self.initialParameters()
     
     def parametersFitName(self):
+        """
+        Initializes the parameter names used in curve fitting.
+
+        :return: None
+        """
         self.nameTc="T_c"
         self.nameR2="R^2"
         self.nameTd="T_d"
@@ -133,22 +149,49 @@ class G2Logic():
         self.nameT0="T_0"
     
     def connectedDevice(self, device):
+        """
+        Handles actions after a device is connected.
+
+        :param device: The connected device object.
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(True)
         self.mainWindow.connectButton.setEnabled(False)
         self.device=device
         self.startManualButton.setEnabled(True)
     
     def disconnectedDevice(self):
+        """
+        Handles actions after the device is disconnected.
+
+        :return: None
+        """
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         self.startManualButton.setEnabled(False)
     
     def resetSaveSentinels(self):
+        """
+        Resets the sentinel values for saving files.
+
+        :return: None
+        """
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
     
     def createGraphic(self):
+        """
+        Creates the main g2(tau) plot using PyQtGraph.
+
+        This function sets up a GraphicsLayoutWidget inside the graphic frame,
+        configures grid, axes labels, and a legend, and adds two curves:
+        one for the experimental g2 data and another for the fitted curve. 
+        The plot is embedded into a QHBoxLayout for display in the UI.
+
+        :return: None
+        """
+
         self.graphicLayout = QHBoxLayout(self.graphicFrame)
         self.winG2 = pg.GraphicsLayoutWidget()
         self.winG2.setBackground('w')
@@ -170,6 +213,14 @@ class G2Logic():
     
     
     def setVerticalLabel(self):
+        """
+        Updates the Y-axis label of the g2(tau) plot based on the selected stop channel.
+
+        The label reflects which channel (A, B, C, or D) is currently used as 
+        the stop channel in the correlation measurement.
+
+        :return: None
+        """
         if self.stopChannelComboBox.currentIndex()==0:
             self.plotG2.setLabel('left','g2(tau) Start-A')
         elif self.stopChannelComboBox.currentIndex()==1:
@@ -181,13 +232,29 @@ class G2Logic():
     
     
     def startTimerConnection(self):
+        """
+        Starts the connection timer with a 500 ms interval.
+
+        :return: None
+        """
         self.connectedTimer.start(500)
 
     
     def stopTimerConnection(self):
+        """
+        Stops the connection timer.
+
+        :return: None
+        """
         self.connectedTimer.stop()
     
     def initialParameters(self):
+        """
+        Initializes all default fitting parameters by calling the corresponding 
+        setup methods for Gaussian, Lorentzian, and Anti-Bunching models.
+
+        :return: None
+        """
         self.initialExternalDelayCheckbox()
         self.initialParametersGaussian()
         self.initialParametesGaussianShifted()
@@ -197,37 +264,85 @@ class G2Logic():
         self.initalParametersAntiBunchingShifted()
     
     def initialExternalDelayCheckbox(self):
+        """
+        Resets the external delay checkboxes for Gaussian, Lorentzian, 
+        and Anti-Bunching models to False.
+
+        :return: None
+        """
         self.externalDelayGaussianCheckBox=False
         self.externalDelayLorentzianCheckBox=False
         self.externalDelayAntiBunchingCheckBox=False
         
     def initialParametersGaussian(self):
+        """
+        Initializes the default parameter for the Gaussian thermal model.
+
+        :return: None
+        """
         self.thermalGaussianTcInitial=1
         
     
     def initialParametesGaussianShifted(self):
+        """
+        Initializes the default parameters for the shifted Gaussian thermal model.
+
+        :return: None
+        """
         self.thermalGaussianShiftTcInitial=1
         self.thermalGaussianShiftTdInitial=0
         self.thermalGaussianShiftBInitial=0
     
     def initalParametersLorentzian(self):
+        """
+        Initializes the default parameter for the Lorentzian thermal model.
+
+        :return: None
+        """
         self.thermalLorentzianT0Initial=1
     
     def initialParametersLorentzianShifted(self):
+        """
+        Initializes the default parameters for the shifted Lorentzian thermal model.
+
+        :return: None
+        """
         self.thermalLorentzianShiftT0Initial=1
         self.thermalLorentzianShiftTdInitial=0
         self.thermalLorentzianShiftBInitial=0
     
     def initalParametersAntiBunching(self):
+        """
+        Initializes the default parameter for the Anti-Bunching model.
+
+        :return: None
+        """
         self.antiBunchingTauAInitial=1
         
     
     def initalParametersAntiBunchingShifted(self):
+        """
+        Initializes the default parameters for the shifted Anti-Bunching model.
+
+        :return: None
+        """
         self.antiBunchingShiftTauAInitial=1
         self.antiBunchingShiftTaudInitial=0
         self.antiBunchingShiftBInitial=0
     
     def initialParametersWithUnits(self):
+        """
+        Initializes the default parameters for all models depending on the 
+        measurement units.  
+
+        If parameters have not been changed manually, the function sets values 
+        close to 1 when the units are nanoseconds ("ns"). For other units, the 
+        parameters are initialized with values around 1000. This initialization 
+        applies to Gaussian, shifted Gaussian, Lorentzian, shifted Lorentzian, 
+        Anti-Bunching, and shifted Anti-Bunching models.  
+
+        :return: None
+        """
         if not self.parametersChange:
             if self.unitsMeasured=="ns":
                 self.thermalGaussianTcInitial=1
@@ -257,6 +372,19 @@ class G2Logic():
                 self.antiBunchingShiftBInitial=0
     
     def updateLocalDialogInitalParameters(self):
+        """
+        Updates the local copies of initial parameters based on the last selected 
+        fitting model and the values entered in the dialog spin boxes.  
+
+        Depending on the selected model (Gaussian, shifted Gaussian, Lorentzian, 
+        shifted Lorentzian, Anti-Bunching, or shifted Anti-Bunching), the function 
+        reads the corresponding spin box values, applies unit conversion if needed 
+        (from microseconds to nanoseconds), and assigns them to the appropriate 
+        local variables. It also stores the fixed-state option from the checkbox 
+        when available.  
+
+        :return: None
+        """
         if self.lastSelection=="Thermal gaussian":
             if self.currentSpinBox[0].suffix()==" us":
                 self.localInitialGaussianTc=self.currentSpinBox[0].value()*1000
@@ -307,6 +435,21 @@ class G2Logic():
             self.localFixedGaussian=self.currentFixedChebox.isChecked()
         
     def updateParameterFields(self, comboBox, fieldLayout, fieldWidgets, dialog):
+        """
+        Updates the dialog fields for the initial parameters.
+
+        This function rebuilds the parameter input fields in the dialog based on the
+        current selection of the combo box. It updates the corresponding local variables
+        with the current values, clears the previous layout, and dynamically adds the
+        spin boxes and checkboxes required for the selected equation. The created widgets
+        are connected to functions so that values are correctly saved when modified.
+
+        :param comboBox: Combo box containing the equation selection (QComboBox).
+        :param fieldLayout: Layout where the parameter fields will be placed (QLayout).
+        :param fieldWidgets: List that stores the generated field widgets (list).
+        :param dialog: Dialog window containing the parameter fields (QDialog).
+        :return: None
+        """
         if self.currentSpinBox:
             self.updateLocalDialogInitalParameters()
 
@@ -412,6 +555,15 @@ class G2Logic():
         dialog.adjustSize()
     
     def changeExternalCheckBox(self):
+        """
+        Updates the state of the main UI checkbox.
+
+        This function synchronizes the checkbox in the main interface with the stored
+        variable value. Depending on the current index of the equation combo box, the
+        main checkbox is updated to reflect the corresponding saved state.
+
+        :return: None
+        """
         if self.comboBoxEquation.currentIndex()==1:
             self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
         elif self.comboBoxEquation.currentIndex()==3:
@@ -420,6 +572,15 @@ class G2Logic():
             self.fixedDelayCheckBox.setChecked(self.externalDelayGaussianCheckBox)
     
     def changeExternalFixed(self):
+        """
+        Updates the stored variable according to the main UI checkbox state.
+
+        This function sets the value of the corresponding variable based on whether
+        the main checkbox is selected or not. The assignment depends on the current
+        index of the equation combo box.
+
+        :return: None
+        """
         if self.comboBoxEquation.currentIndex()==1:
             self.externalDelayGaussianCheckBox=self.fixedDelayCheckBox.isChecked()
         elif self.comboBoxEquation.currentIndex()==3:
@@ -429,6 +590,17 @@ class G2Logic():
     
     
     def changeExternalSpinBox(self):
+        """
+        Updates the main UI spin box with the correct units.
+
+        This function modifies the value, suffix, step size, and decimals of the main
+        spin box (`externalDelaySpinBox`) depending on the selected equation in the
+        combo box. The units are set to nanoseconds (ns) if the value is below 1000,
+        or microseconds (us) otherwise. The corresponding stored initial delay value
+        is used for the assignment.
+
+        :return: None
+        """
         if self.comboBoxEquation.currentIndex()==1:
             self.isManualChange=False
             if abs(self.thermalGaussianShiftTdInitial)<1000:
@@ -443,9 +615,7 @@ class G2Logic():
                 self.externalDelaySpinBox.setDecimals(6)
         elif self.comboBoxEquation.currentIndex()==3:
             self.isManualChange=False
-            print(self.thermalLorentzianShiftTdInitial)
             if abs(self.thermalGaussianShiftTdInitial)<1000:
-                print("Entra aca")
                 self.externalDelaySpinBox.setValue(self.thermalGaussianShiftTdInitial)
                 self.externalDelaySpinBox.setSuffix(" ns")
                 self.externalDelaySpinBox.setSingleStep(1)
@@ -472,6 +642,18 @@ class G2Logic():
                 
     
     def changeReverseExternalSpinBox(self):
+        """
+        Updates the internal delay variable based on the value set in the main spin box.
+
+        This function reads the current value and suffix ("ns" or "us") from
+        `externalDelaySpinBox` and updates the corresponding internal variable
+        (`thermalGaussianShiftTdInitial`). If the spin box value exceeds the
+        unit threshold (>=1000 ns or <1 us), it automatically adjusts the units
+        and rescales the displayed value. The update is applied according to the
+        currently selected equation in the combo box.
+
+        :return: None
+        """
         if self.isManualChange:
             if abs(self.externalDelaySpinBox.value())>=1000 and self.externalDelaySpinBox.suffix()==" ns":
                 self.externalDelaySpinBox.blockSignals(True)
@@ -508,6 +690,17 @@ class G2Logic():
         self.isManualChange=True
     
     def initLocalDialogParameters(self):
+        """
+        Initializes the local dialog parameters based on the current stored values.
+
+        This function copies the internal state variables that hold the initial
+        parameters for Gaussian, Lorentzian, and Antibunching models (including
+        their shifted versions) into the corresponding local variables used by
+        the parameter dialog. It also initializes the local checkbox states
+        for external delay options.
+
+        :return: None
+        """
         #Gaussian
         self.localInitialGaussianTc=self.thermalGaussianTcInitial
         #Gaussian shifted
@@ -549,6 +742,20 @@ class G2Logic():
 
         
     def showParameterDialog(self):
+        """
+        Shows the dialog window for configuring initial parameters.
+
+        This function creates and displays a dialog that allows the user to
+        configure initial parameters for Gaussian, Lorentzian, and Antibunching
+        models (including shifted versions). The dialog contains a combo box
+        for selecting the model, dynamic parameter fields, and control buttons
+        (Apply, Default settings, Cancel). It also integrates a help button
+        that opens the parameter help window.
+
+        :return: A tuple (bool, list). The boolean indicates whether the dialog
+                was accepted (True) or canceled (False). The list contains
+                the field widgets created for the selected parameters.
+        """
         self.lastSelection = ""
         self.initLocalDialogParameters()
         self.currentSpinBox = []
@@ -613,7 +820,16 @@ class G2Logic():
         
         result = self.dialogParameters.exec_()
         return result == QDialog.Accepted, fieldWidgets
+    
     def cancelParameters(self):
+        """
+        Cancels the parameter dialog.
+
+        This function checks the parameter values and closes the dialog
+        without applying changes.
+
+        :return: None
+        """
         self.checkParametersValue()
         self.dialogParameters.reject()
 
@@ -637,6 +853,15 @@ class G2Logic():
         )
 
     def setDefaultParameters(self):
+        """
+        Sets the default parameters for the selected model.
+
+        This function initializes the parameters depending on the measurement units 
+        (ns or ps) and updates the spin boxes in the dialog with the corresponding 
+        default values.
+
+        :return: None
+        """
         currentIndexDialog=self.comboBoxDialog.currentIndex()
         if self.unitsMeasured=="ns":
             self.localInitialGaussianTc=1
@@ -715,6 +940,21 @@ class G2Logic():
         
 
     def updateInitialParameters(self):
+        """
+        Applies and saves the changes made in the Initial Parameters dialog.
+
+        This function updates the global initial parameters with the values 
+        set in the dialog's local variables for each type of equation: Gaussian, 
+        Gaussian shifted, Lorentzian, Lorentzian shifted, Antibunching, 
+        and Antibunching shifted. It also updates the state of the external 
+        delay checkboxes in the main UI to reflect whether the delay is fixed 
+        or not, and updates the spin box that stores the T_d value according 
+        to the current units. Finally, it calls checkParametersValue() to 
+        verify if the current values differ from the defaults and closes the 
+        dialog with accept().
+
+        :return: None
+        """
         self.updateLocalDialogInitalParameters()
         #Gaussian
         self.thermalGaussianTcInitial=self.localInitialGaussianTc
@@ -744,6 +984,14 @@ class G2Logic():
         self.dialogParameters.accept()
     
     def updateSpinBoxSufix(self, spinbox, value):
+        """
+        Updates the QDoubleSpinBox value and suffix according to its magnitude. 
+        Converts between ns and us automatically and adjusts decimals and step. 
+
+        :param spinbox: The QDoubleSpinBox being updated (QDoubleSpinBox)
+        :param value: The new value of the spinbox (float)
+        :return: None
+        """
         currentSuffix = spinbox.suffix()
 
         # ns → us
@@ -767,12 +1015,24 @@ class G2Logic():
         
     
     def initParametersEquationThermalGaussian(self):
+        """
+        Initializes the fit parameters for the Thermal Gaussian equation. 
+        Sets the parameter values, standard deviations, units, and R² to default (not-a-number) values.
+
+        :return: None
+        """
         self.thermalGaussianTcValue="nan"
         self.thermalGaussianTcStd="nan"
         self.thermalGaussianTcUnits=""
         self.thermalGaussianR2="nan"
     
     def initParametersEquationThermalGaussianShift(self):
+        """
+        Initializes the fit parameters for the Thermal Gaussian Shifted equation.
+        Sets the parameter values, standard deviations, units, and R² to default (not-a-number) values.
+
+        :return: None
+        """
         self.thermalGaussianShiftTcValue="nan"
         self.thermalGaussianShiftTcStd="nan"
         self.thermalGaussianShiftTcUnits=""
@@ -785,12 +1045,24 @@ class G2Logic():
         self.thermalGaussianShiftR2="nan"
     
     def initParametersEquationThermalLorentzian(self):
+        """
+        Initializes the fit parameters for the Thermal Lorentzian equation.
+        Sets the parameter value, standard deviation, units, and R² to default (not-a-number) values.
+
+        :return: None
+        """
         self.thermalLorentzianT0Value="nan"
         self.thermalLorentzianT0Std="nan"
         self.thermalLorentzianT0Units=""
         self.thermalLorentzianR2="nan"
     
     def initParametersEquationThermalLorentzianShift(self):
+        """
+        Initializes the fit parameters for the shifted Thermal Lorentzian equation.
+        All parameter values, standard deviations, units, and R² are set to default (not-a-number) values.
+
+        :return: None
+        """
         self.thermalLorentzianShiftT0Value="nan"
         self.thermalLorentzianShiftT0Std="nan"
         self.thermalLorentzianShiftT0Units=""
@@ -804,12 +1076,24 @@ class G2Logic():
         
     
     def initParametersEquationAntiBunching(self):
+        """
+        Initializes the fit parameters for the Antibunching equation.
+        All parameter values, standard deviations, units, and R² are set to default (not-a-number) values.
+
+        :return: None
+        """
         self.antiBunchingTauAValue="nan"
         self.antiBunchingTauAStd="nan"
         self.antiBunchingTauAUnits=""
         self.antiBunchingR2="nan"
     
     def initParametersEquationAntiBunchingShift(self):
+        """
+        Initializes the fit parameters for the shifted Antibunching equation.
+        All values, standard deviations, units, and R² are set to default (not-a-number) values.
+
+        :return: None
+        """
         self.antiBunchingShiftTauAValue="nan"
         self.antiBunchingShiftTauAStd="nan"
         self.antiBunchingShiftTauAUnits=""
@@ -822,6 +1106,19 @@ class G2Logic():
         self.antiBunchingShiftR2="nan"
     
     def changeTableParameters(self):
+        """
+        Updates the UI parameter table and the main curve plot according to the currently selected equation.
+
+        The method first updates the main UI elements, including the fixed delay checkbox and the external delay spinbox, 
+        to reflect the current state of the selected equation. It then clears the parameter table and fills it 
+        with the parameters corresponding to the selected equation type.
+
+        Depending on the selection in comboBoxEquation, it updates the table and the main plot with the corresponding 
+        fit data. If the fit data is empty, the main plot is cleared.
+
+        :return: None
+        """
+
         self.changeExternalCheckBox()
         self.changeExternalSpinBox()
         self.parametersTable.setRowCount(0)
@@ -864,6 +1161,18 @@ class G2Logic():
                 self.curveFit.setData([], [])
     
     def changeTermalGaussianTableParameters(self):
+        """
+        Updates the parameter table specifically for the Thermal Gaussian equation.
+
+        This method inserts two rows into the parameters table. The first row corresponds to the Gaussian 
+        time constant (Tc) and the second row corresponds to the R² value of the fit.
+
+        If the value of Tc or R² is not available ("nan"), the table shows "Undefined" and leaves the 
+        other cells empty. Otherwise, it formats and displays the value, its standard deviation (if applicable), 
+        and the units for Tc, and the numeric value for R².
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         if self.thermalGaussianTcValue=="nan":
@@ -890,6 +1199,18 @@ class G2Logic():
     
     
     def changeTermalGaussianShiftTableParameters(self):
+        """
+        Updates the parameter table for the Thermal Gaussian Shifted equation.
+
+        This method inserts four rows in the parameters table. The first three rows correspond to the 
+        fit parameters Tc, Td, and B, and the fourth row shows the R² value of the fit.
+
+        For each parameter, if its value is not defined ("nan"), the table shows "Undefined" and leaves 
+        the remaining cells empty. If a value exists, it displays the formatted value, its standard deviation, 
+        and units. The R² row only displays the numeric value if available.
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         self.parametersTable.insertRow(2)
@@ -942,6 +1263,16 @@ class G2Logic():
     
     
     def changeTermalLorentzianTableParameters(self):
+        """
+        Updates the parameter table for the Thermal Lorentzian equation.
+
+        This method inserts two rows in the table. The first row corresponds to the T0 fit parameter and 
+        the second row to the R² value. If a parameter value is "nan", it displays "Undefined" and leaves 
+        the other cells empty. Otherwise, it shows the formatted value, its standard deviation, and units. 
+        The R² row only shows the numeric value if available.
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         if self.thermalLorentzianT0Value=="nan":
@@ -967,6 +1298,15 @@ class G2Logic():
             self.parametersTable.setItem(1,3,QTableWidgetItem(""))
     
     def changeTermalLorentzianShiftTableParameters(self):
+        """
+        Updates the parameter table for the Thermal Lorentzian Shifted equation.
+
+        Four rows are inserted corresponding to the fit parameters T0, Td, B, and the R² value. Each row
+        displays the parameter name, formatted value, standard deviation, and units if available. If a
+        parameter value is "nan", the table shows "Undefined" and leaves the other columns empty.
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         self.parametersTable.insertRow(2)
@@ -1019,6 +1359,15 @@ class G2Logic():
     
     
     def changeAntiBunchingTableParameters(self):
+        """
+        Updates the parameter table for the Antibunching equation.
+
+        Two rows are inserted for the TauA parameter and the R² value. Each row displays the parameter name, 
+        formatted value, standard deviation, and units if available. If a parameter value is "nan", the table 
+        shows "Undefined" and leaves the other columns empty.
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         if self.antiBunchingTauAValue=="nan":
@@ -1045,6 +1394,15 @@ class G2Logic():
     
     
     def changeAntibunchingShiftTableParameters(self):
+        """
+        Updates the parameter table for the Antibunching Shift equation.
+
+        Four rows are inserted for the parameters TauA, Taud, B, and R². Each row displays the parameter name, 
+        formatted value, standard deviation, and units if available. If a parameter value is "nan", the table 
+        shows "Undefined" and leaves the other columns empty.
+
+        :return: None
+        """
         self.parametersTable.insertRow(0)
         self.parametersTable.insertRow(1)
         self.parametersTable.insertRow(2)
@@ -1096,6 +1454,15 @@ class G2Logic():
             self.parametersTable.setItem(3,3,QTableWidgetItem(""))
     
     def formatValue(self,value):
+        """
+        Formats a numerical value for display in the parameter table.
+
+        Values between 0.01 and 1,000,000 are shown with two decimal places. Values outside this range 
+        are displayed in scientific notation with two significant figures. Zero is formatted as "0.00".
+
+        :param value: The numerical value to format (float or int).
+        :return: Formatted string representing the value (str).
+        """
         if value == 0:
             return "0.00"
         abs_val = abs(value)
@@ -1106,10 +1473,20 @@ class G2Logic():
     
     
     def formatStd(self,valueVar,valueEstimated):
-        print("Varianza")
-        print(valueVar)
-        print("Valor estimado")
-        print(valueEstimated)
+        """
+        Formats the standard deviation of a parameter for display in the table.
+
+        If the standard deviation is "N/A", it returns it unchanged. Negative values return "nan". 
+        If the relative uncertainty (std / estimated value) exceeds 3, it returns "nan". Values of 0 
+        are formatted as "0.00". Values between 0.01 and 1,000,000 are shown with two decimals, and 
+        other values are displayed in scientific notation with two significant figures.
+
+        :param valueVar: The variance or standard deviation to format (float, int, or "N/A").
+        :param valueEstimated: The estimated value of the parameter (float or int) used to calculate relative uncertainty.
+        :return: Formatted string representing the standard deviation (str).
+        """
+        if valueVar=="N/A":
+            return valueVar
         if valueVar<0:
             return "nan"
         valueStd=np.sqrt(valueVar)
@@ -1126,10 +1503,26 @@ class G2Logic():
     
     
     def thermalGaussian(self,t,T_c):
+        """
+        Computes the thermal Gaussian correlation function.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Correlation time (float)
+        :return: Values of the thermal Gaussian function at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         return 1+exp(-np.pi*((t/T_c)**2))
 
     def thermalGaussianShift(self,t,T_c,T_d,b):
+        """
+        Computes the thermal Gaussian correlation function with a time shift and baseline.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Correlation time (float)
+        :param T_d: Time shift (float)
+        :param b: Baseline offset (float)
+        :return: Values of the shifted thermal Gaussian function at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         T_c=float(T_c)
         T_d=float(T_d)
@@ -1137,6 +1530,16 @@ class G2Logic():
         return 1+exp(-np.pi*((np.abs(t-T_d)/T_c)**2))+b
     
     def thermalGaussianShiftFixed(self,t,T_c,b):
+        """
+        Computes the thermal Gaussian correlation function with a fixed time shift.
+
+        The time shift T_d is taken from the initial parameter depending on the units measured.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Correlation time (float)
+        :param b: Baseline offset (float)
+        :return: Values of the shifted thermal Gaussian function at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         if self.unitsMeasured == "ns":
             T_d = self.thermalGaussianShiftTdInitial
@@ -1145,14 +1548,41 @@ class G2Logic():
         return 1+exp(-np.pi*((np.abs(t-T_d)/T_c)**2))+b
     
     def thermalLorentzian(self,t,T_0):
+        """
+        Computes the thermal Lorentzian correlation function.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_0: Characteristic decay time (float)
+        :return: Values of the thermal Lorentzian function at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         return 1+exp(-2*(np.abs(t)/T_0))
     
     def thermalLorentzianShift(self,t,T_0,T_d,b):
+        """
+        Computes the thermal Lorentzian correlation function with a time shift and offset.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_0: Characteristic decay time (float)
+        :param T_d: Time shift (float)
+        :param b: Constant offset (float)
+        :return: Values of the shifted thermal Lorentzian function at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         return 1+exp(-2*(np.abs(t-T_d)/T_0))+b
     
     def thermalLorentzianShiftFixed(self,t,T_0,b):
+        """
+        Computes the thermal Lorentzian correlation function with a fixed time shift and offset.
+
+        The time shift T_d is taken from the initial value stored in the object,
+        and automatically converted if the units are not in nanoseconds.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_0: Characteristic decay time (float)
+        :param b: Constant offset (float)
+        :return: Values of the thermal Lorentzian function with fixed shift at each time t (np.ndarray)
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         if self.unitsMeasured == "ns":
             T_d = self.thermalLorentzianShiftTdInitial
@@ -1161,14 +1591,38 @@ class G2Logic():
         return 1+exp(-2*(np.abs(t-T_d)/T_0))+b
     
     def antiBunching(self,t,T_c):
+        """
+        Computes the antibunching correlation function.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Characteristic antibunching time (float)
+        :return: Antibunching function values as np.ndarray
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         return 1+exp(-1*((t/T_c)))
     
     def antiBunchingShift(self,t,T_c,T_d,b):
+        """
+        Computes the shifted antibunching correlation function.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Characteristic antibunching time (float)
+        :param T_d: Time shift applied to the function (float)
+        :param b: Baseline offset added to the function (float)
+        :return: Shifted antibunching function values as np.ndarray
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         return 1+exp(-1*((np.abs(t-T_d)/T_c)))+b
     
     def antiBunchingShiftFixed(self,t,T_c,b):
+        """
+        Computes the shifted antibunching correlation function with a fixed time shift.
+
+        :param t: Time values (list or np.ndarray)
+        :param T_c: Characteristic antibunching time (float)
+        :param b: Baseline offset added to the function (float)
+        :return: Shifted antibunching function values as np.ndarray
+        """
         t = np.array(t) if not isinstance(t, np.ndarray) else t
         if self.unitsMeasured == "ns":
             T_d = self.antiBunchingShiftTaudInitial
@@ -1177,6 +1631,15 @@ class G2Logic():
         return 1+exp(-1*((np.abs(t-T_d)/T_c)))+b
     
     def applyFitAction(self):
+        """
+        Applies the selected fit to the current data. 
+        The function disables the fit button and equation selector during processing.
+        It determines which equation is selected, applies the corresponding fit, 
+        and updates the parameter table with the fit results. Once done, it re-enables
+        the UI controls.
+
+        :return: None
+        """
         self.applyFitButton.setEnabled(False)
         self.comboBoxEquation.setEnabled(False)
         if self.comboBoxEquation.currentIndex()==0:
@@ -1203,6 +1666,30 @@ class G2Logic():
         
     
     def applyFitToTable(self, parametersList, stdList,fitApplied):
+        """
+        Applies the results of a curve fit to the corresponding parameters in the application,
+        updates the plotted curve, calculates the goodness of fit (R²), and updates the parameter table in the UI.
+        If the fit fails, produces NaN values, or the parameter list is empty, the method resets the parameters 
+        for the selected equation to their default state and notifies the user with a dialog.
+
+        The function handles six types of fits: 
+        - Thermal Gaussian
+        - Gaussian Shift
+        - Thermal Lorentzian
+        - Lorentzian Shift
+        - AntiBunching
+        - AntiBunching Shift
+
+        For each fit type, it assigns the fitted parameter values and their standard deviations to 
+        internal variables, computes the fitted g² curve, and calculates R². 
+        If the fitted curve contains invalid values (NaNs), the method resets the parameters and shows a warning dialog.
+        After updating or resetting the parameters, the corresponding table in the UI is refreshed to reflect the current values.
+
+        :param parametersList: List of fitted parameter values (list). The order depends on the selected fit type.
+        :param stdList: List of standard deviations of the fitted parameters (list). Same order as parametersList.
+        :param fitApplied: Name of the fit applied (str). Must be one of the recognized fit types.
+        :return: None
+        """
         try:
             if fitApplied=="Thermal gaussian":
                 if len(parametersList)>0:
@@ -1308,6 +1795,23 @@ class G2Logic():
         self.changeTableParameters()
     
     def applyFit(self, fitName):
+        """
+        Performs a curve fit for a selected equation using the measured g² data and initial parameter guesses,
+        and returns the fitted parameter values along with their estimated standard deviations.
+
+        The method supports fits for thermal Gaussian, GaussianShift, thermal Lorentzian, LorentzianShift,
+        AntiBunching, and AntiBunchingShift. Initial parameters are automatically adjusted according to the
+        measurement units (ns or other) and the method can handle fits where certain delay parameters are fixed
+        based on the externalDelayGaussianCheckBox. 
+
+        When the fit is successful, the function returns the fitted parameters in the order required by the
+        corresponding equation, along with their estimated variances or "N/A" for fixed parameters. If the
+        fit fails due to any reason such as non-convergence, the method shows a dialog informing the user and
+        returns empty lists for both parameters and standard deviations.
+
+        :param fitName: Name of the fit to apply (str). Must match one of the recognized fit types.
+        :return: A tuple containing the list of fitted parameter values and the list of corresponding standard deviations.
+        """
         parametersList =[]
         stdList=[]
         try:
@@ -1339,7 +1843,7 @@ class G2Logic():
                     else:
                         tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital/1000, popt[1]]
-                    stdList=[pcov[0,0],-1,pcov[1,1]]
+                    stdList=[pcov[0,0],"N/A",pcov[1,1]]
                 else:
                     popt, pcov= curve_fit(self.thermalGaussianShift, self.tauValues, self.g2Values,p0)
                     parametersList=popt
@@ -1357,7 +1861,7 @@ class G2Logic():
                     if not self.externalDelayGaussianCheckBox:
                         p0=[self.thermalLorentzianT0Initial,self.thermalGaussianShiftTdInitial,self.thermalGaussianShiftBInitial]
                     else:
-                        print("Entra en el condicional del lorentzian")
+                        
                         p0=[self.thermalLorentzianT0Initial,self.thermalGaussianShiftBInitial]
                 else:
                     if not self.externalDelayGaussianCheckBox:
@@ -1366,7 +1870,7 @@ class G2Logic():
                         p0=[self.thermalLorentzianT0Initial/1000,self.thermalGaussianShiftBInitial]
                 
                 if self.externalDelayGaussianCheckBox:
-                    print(p0)
+                    
                     popt, pcov= curve_fit(self.thermalLorentzianShiftFixed, self.tauValues, self.g2Values,p0)
                     if self.unitsMeasured=="ns":
                         tauDInital=self.thermalGaussianShiftTdInitial
@@ -1374,7 +1878,7 @@ class G2Logic():
                     else:
                         tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital/1000, popt[1]]
-                    stdList=[pcov[0,0],-1,pcov[1,1]]
+                    stdList=[pcov[0,0],"N/A",pcov[1,1]]
                 else:
                     popt, pcov= curve_fit(self.thermalLorentzianShift, self.tauValues, self.g2Values,p0)
                     parametersList=popt
@@ -1407,7 +1911,7 @@ class G2Logic():
                     else:
                         tauDInital=self.thermalGaussianShiftTdInitial
                         parametersList=[popt[0],tauDInital/1000, popt[1]]
-                    stdList=[pcov[0,0],-1,pcov[1,1]]
+                    stdList=[pcov[0,0],"N/A",pcov[1,1]]
                 else:
                     popt, pcov= curve_fit(self.antiBunchingShift, self.tauValues, self.g2Values,p0)
                     parametersList=popt
@@ -1421,6 +1925,13 @@ class G2Logic():
         
     
     def calculateR2(self, data, fitData):
+        """
+        Computes the coefficient of determination (R²) between measured and fitted data.
+
+        :param data: Measured data points (list).
+        :param fitData: Fitted data points (list).
+        :return: R² value rounded to two decimal places (float).
+        """
         arrayData = array(data)
         arrayFit  = array(fitData)
         meanData  = mean(arrayData)
@@ -1429,11 +1940,14 @@ class G2Logic():
         ssTot = sum((arrayData - meanData) ** 2)  # SST
 
         R2 = ssReg / ssTot
-        print("El valor de R² es")
-        print(R2)
         return round(R2, 2)
     
     def showDialogNoFitParameters(self):
+        """
+        Displays a warning dialog indicating that the fit parameters could not be estimated.
+
+        :return: None
+        """
         QMessageBox.warning(
             self.mainWindow,
             "Fit Parameters Not Estimated",
@@ -1444,6 +1958,13 @@ class G2Logic():
     
     #Manual measurement 
     def startManualMeasurement(self):
+        """
+        Starts a manual measurement session. The user can start and stop the measurement using
+        the corresponding buttons. Initializes measurement settings, retrieves selected
+        parameters, and starts the worker thread for data acquisition.
+
+        :return: None
+        """
         self.stopManualButton.setEnabled(True)
         self.startManualButton.setEnabled(False)
         self.clearButton.setEnabled(True)
@@ -1459,6 +1980,17 @@ class G2Logic():
         self.worker.start()
     
     def checkRangesMode(self,channel, maximumTime):
+        """
+        Determines the optimal measurement mode for the device based on the selected 
+        channel and the maximum measurement time. Some device channels support multiple
+        modes, and the appropriate mode is chosen to ensure accurate measurements within 
+        the specified maximum time. The selected mode is stored in the instance variable 
+        `modeToMeasure`.
+
+        :param channel: The channel to be measured (int).
+        :param maximumTime: The maximum measurement time in picoseconds (int).
+        :return: None
+        """
         modeChannelSelected=int(self.device.getMode(channel))
         if modeChannelSelected==1 and maximumTime>500000:
             self.modeToMeasure=2
@@ -1468,6 +2000,13 @@ class G2Logic():
             self.modeToMeasure=modeChannelSelected
     
     def getUnits(self):
+        """
+        Retrieves the time units selected in the maximum time combo box, updates the 
+        internal `unitsMeasured` variable, updates the plot label and parameter units 
+        accordingly, and returns the selected units.
+
+        :return: The selected time units as a string ('ps', 'ns', 'us', or 'ms').
+        """
         unitsLabel="ps"
         if self.maximumTimeComboBox.currentText().endswith("ps"):
             unitsLabel="ps"
@@ -1484,6 +2023,12 @@ class G2Logic():
         return unitsLabel
     
     def updateParameterUnits(self, unitsLabel):
+        """
+        Updates the units for all initial measurement parameters to the specified label.
+
+        :param unitsLabel: The units to assign to the parameters (str), e.g., 'ps', 'ns', 'us', or 'ms'.
+        :return: None
+        """
         self.thermalGaussianTcUnits=unitsLabel
         self.thermalGaussianShiftTcUnits=unitsLabel
         self.thermalGaussianShiftTdUnits=unitsLabel
@@ -1499,10 +2044,22 @@ class G2Logic():
     
     
     def stopManualMeasurement(self):
+        """
+        Stops the ongoing manual measurement by stopping the worker thread
+        and disables the stop button.
+
+        :return: None
+        """
         self.worker.stop()
         self.stopManualButton.setEnabled(False)
         
     def getPicoSecondsValue(self, valueStr):
+        """
+        Converts a time value with units (ps, ns, μs, ms) to picoseconds.
+
+        :param valueStr: A string containing the value and its unit, e.g., '10 ns' (str).
+        :return: The value converted to picoseconds (float).
+        """
         units=valueStr.split(" ")
         print(units)
         if units[1]=="ps":
@@ -1517,11 +2074,25 @@ class G2Logic():
         
     
     def clearManualMeasurement(self):
+        """
+        Clears the data captured during a manual measurement by calling the worker thread.
+
+        :return: None
+        """
         self.worker.clearG2()
         
      
     #By size measurement
     def startLimitedMeasurement(self):
+        """
+        Starts a limited manual measurement in which the user specifies the number of measurements 
+        to perform. After reaching this number, the measurement automatically stops.
+
+        Configures the measurement parameters, disables/enables the corresponding buttons and spinboxes,
+        determines the device mode based on the selected channel and maximum time, and starts the worker thread.
+
+        :return: None
+        """
         self.stopLimitedButtonG2.setEnabled(True)
         self.startLimitedButtonG2.setEnabled(False)
         self.clearLimitedButtonG2.setEnabled(True)
@@ -1539,10 +2110,23 @@ class G2Logic():
         
     
     def stopLimitedMeasurement(self):
+        """
+        Stops the ongoing limited manual measurement and disables the corresponding stop button.
+
+        This interrupts the worker thread responsible for collecting the data.
+
+        :return: None
+        """
         self.worker.stop()
         self.stopLimitedButtonG2.setEnabled(False)
     
     def stopAutoClearMeasurement(self):
+        """
+        Stops the auto-clear measurement. This stops the data collection worker
+        thread and disables the QTimer that periodically clears the graph.
+
+        :return: None
+        """
         self.worker.stop()
         self.autoClearTimer.stop()
         self.stopAutoClearButton.setEnabled(False)
@@ -1550,6 +2134,16 @@ class G2Logic():
     
     #Auto clear measurement
     def startAutoClearMeasurement(self):
+        """
+        Starts an auto-clear measurement where the plot is periodically cleared
+        based on the user-selected time interval. This measurement continuously
+        collects data while automatically resetting the graph at each interval.
+
+        Sets up and starts the worker thread for data collection and a QTimer
+        to trigger the clearing of the graph.
+
+        :return: None
+        """
         self.stopAutoClearButton.setEnabled(True)
         self.startAutoClearButton.setEnabled(False)
         self.clearAutoClearButton.setEnabled(True)
@@ -1567,6 +2161,17 @@ class G2Logic():
         self.worker.start()
     
     def generalSettingsBeforeMeasurement(self, tab):
+        """
+        Applies general pre-measurement settings for all three types of measurements
+        (manual, limited, auto-clear). It stops any running timers, disables
+        controls that should not be changed during measurement, resets data
+        arrays, flags, and fit parameters. Also manages which tabs are enabled
+        based on the selected measurement type.
+
+        :param tab: Index indicating the type of measurement (0: manual, 1: limited, 2: auto-clear).
+        :type tab: int
+        :return: None
+        """
         self.stopTimerConnection()
         self.setVerticalLabel()
         self.applyFitButton.setEnabled(False)
@@ -1592,6 +2197,17 @@ class G2Logic():
     
     
     def threadSettingsBeforeMeasurement(self, tab):
+        """
+        Connects signals from the worker thread responsible for executing the measurement
+        to the appropriate GUI update functions. Sets up handling for status updates,
+        color changes, estimated parameters, tau values, and measurement data capture.
+        Also records the start time of the measurement and connects the worker's finished
+        signal to the corresponding finish function based on the type of measurement.
+
+        :param tab: Index indicating the type of measurement (0: manual, 1: limited, 2: auto-clear).
+        :type tab: int
+        :return: None
+        """
         self.worker.updateStatusLabel.connect(self.changeStatus)
         self.worker.updateColorLabel.connect(self.changeStatusColor)
         self.worker.updateEstimatedParameter.connect(self.changeEstimatedParameter)
@@ -1609,6 +2225,14 @@ class G2Logic():
             
     
     def resetFits(self):
+        """
+        Resets all fit data and related parameters for every type of measurement.
+        Clears the calculated fit arrays, reinitializes the fit parameters,
+        updates the parameters table, clears the displayed curve, and resets
+        all save sentinels.
+
+        :return: None
+        """
         self.g2FitGaussian=[]
         self.g2FitGaussianShift=[]
         self.g2FitLorentzian=[]
@@ -1629,6 +2253,16 @@ class G2Logic():
         
     
     def generalSettingsAfterMeasurement(self, channel):
+        """
+        Restores general UI and measurement settings after a measurement ends.
+        This includes enabling/disabling buttons and combo boxes, setting initial
+        parameters if tau values were captured, updating the status and finish time,
+        and re-enabling the appropriate tabs depending on which measurement mode
+        was active.
+
+        :param channel: Index of the measurement mode that was active (0: Manual, 1: Limited, 2: AutoClear) (int)
+        :return: None
+        """
         if not self.determinedParameters:
             self.showDialogNoParameters()
         self.startTimerConnection()
@@ -1659,6 +2293,13 @@ class G2Logic():
     
     
     def finishManualMeasurement(self):
+        """
+        Finalizes a manual measurement once the measurement thread finishes.
+        Restores the general settings for the UI, disables the stop button,
+        enables the start button, and disables the clear button.
+
+        :return: None
+        """
         self.generalSettingsAfterMeasurement(0)
         self.stopManualButton.setEnabled(False)
         self.startManualButton.setEnabled(True)
@@ -1667,6 +2308,14 @@ class G2Logic():
         
     
     def finishLimitedMeasurement(self):
+        """
+        Finalizes a limited measurement once the measurement thread finishes.
+        Restores the general settings for the UI, disables the stop button,
+        enables the start button, disables the clear button, and re-enables
+        the spin box for selecting the number of measurements.
+
+        :return: None
+        """
         self.generalSettingsAfterMeasurement(1)
         self.stopLimitedButtonG2.setEnabled(False)
         self.startLimitedButtonG2.setEnabled(True)
@@ -1675,6 +2324,14 @@ class G2Logic():
     
     
     def finishAutoClearMeasurement(self):
+        """
+        Finalizes an auto-clear measurement after the measurement thread completes.
+        Restores the general settings for the UI, disables the stop button,
+        enables the start button, disables the clear button, and re-enables
+        the spin box for selecting the auto-clear interval.
+
+        :return: None
+        """
         self.generalSettingsAfterMeasurement(2)
         self.stopAutoClearButton.setEnabled(False)
         self.startAutoClearButton.setEnabled(True)
@@ -1684,6 +2341,13 @@ class G2Logic():
     
     
     def showDialogNoParameters(self):
+        """
+        Displays a warning dialog indicating that there are insufficient measurements
+        on the START or STOP channel, making it impossible to determine the parameters
+        required to calculate g².
+
+        :return: None
+        """
         QMessageBox.warning(
             self.mainWindow,
             "Insufficient Measurements",
@@ -1718,6 +2382,11 @@ class G2Logic():
         
     
     def getChannelComboBox(self):
+        """
+        Returns the letter of the currently selected STOP channel from the combo box.
+
+        :return: The channel letter as a string ("A", "B", "C", or "D").
+        """
         if self.stopChannelComboBox.currentText()=="Channel A":
             return "A"
         elif self.stopChannelComboBox.currentText()=="Channel B":
@@ -1728,6 +2397,12 @@ class G2Logic():
             return "D"
     #Change status
     def changeStatus(self, text):
+        """
+        Updates the status label with the provided text.
+
+        :param text: The new status text to display (str).
+        :return: None
+        """
         self.statusValueLabel.setText(text)
     
     def changeStatusColor(self, color):
@@ -1762,14 +2437,32 @@ class G2Logic():
         self.statusColorLabel.setPixmap(pixmap)
     
     def changeEstimatedParameter(self, text):
+        """
+        Updates the label showing the currently estimated parameter.
+
+        :param text: The new estimated parameter value to display (str).
+        :return: None
+        """
         self.calculatedParameter.setText(text)
     
     def changeEstimatedParameterStartTimer(self,text):
+        """
+        Updates the label with the estimated parameter and starts the auto-clear timer.
+        The timer will trigger at intervals defined by the user in the auto-clear spin box.
+
+        :param text: The new estimated parameter value to display (str).
+        :return: None
+        """
         self.calculatedParameter.setText(text)
         everyValue=self.autoClearSpinBox.value()
         self.autoClearTimer.start(everyValue*1000)
         
     def changeDeterminedParameters(self):
+        """
+        Sets the flag indicating that the measurement parameters have been determined.
+
+        :return: None
+        """
         self.determinedParameters=True
     
     
@@ -1777,6 +2470,18 @@ class G2Logic():
         
     
     def captureTauValues(self, tauValues, unitFactor, mode):
+        """
+        Captures tau (time delay) values from the measurement thread and updates the G² plot.
+
+        This function sets the tauValues attribute, adjusts the plot's X and Y limits,
+        and adds a non-movable shaded region indicating the measurement range. The region
+        size depends on the acquisition mode and unit factor.
+
+        :param tauValues: List of tau values from the measurement (list of float).
+        :param unitFactor: Conversion factor to adjust the measurement units (float).
+        :param mode: Acquisition mode of the device, affecting the region size (int).
+        :return: None
+        """
         if self.regionDisable:
             self.plotG2.removeItem(self.regionDisable)
         self.tauValues = tauValues
@@ -1804,6 +2509,15 @@ class G2Logic():
         self.plotG2.addItem(self.regionDisable)
         
     def checkParametersValue(self):
+        """
+        Checks whether all initial fit parameters are set to their default values.
+
+        This function verifies if all the initial parameters are either 1 or 1000.
+        If so, it sets the `parametersChange` flag to False, indicating no user
+        modifications. Otherwise, the flag is set to True.
+
+        :return: None
+        """
         values = [
             self.thermalGaussianTcInitial,
             self.thermalGaussianShiftTcInitial,
@@ -1826,11 +2540,20 @@ class G2Logic():
             
                     
         
-        
-    
     
     
     def captureMeasurement(self, g2Values, totalStarts, totalStops):
+        """
+        Captures the current g² measurement from the worker thread and updates the plot and labels.
+
+        This function stores the g² values, updates the main curve in the plot, 
+        and refreshes the total START and STOP counts displayed in the UI.
+
+        :param g2Values: List of g² values from the measurement (list).
+        :param totalStarts: Total counts detected on the START channel (int).
+        :param totalStops: Total counts detected on the STOP channel (int).
+        :return: None
+        """
         self.g2Values=g2Values
         self.curveG2.setData(self.tauValues, self.g2Values)
         self.totalStartsLabel.setText(str(totalStarts))
@@ -1838,6 +2561,20 @@ class G2Logic():
     
     
     def saveG2Data(self):
+        """
+        Saves the current g² measurement data along with associated fit parameters and channel settings.
+
+        This function opens a dialog for the user to select the desired text format (txt, csv, dat). 
+        It checks if the data has already been saved in that format to avoid duplicates. 
+        The g² values and tau values are rounded for precision, and any calculated fit parameters 
+        for Gaussian, Gaussian Shifted, Lorentzian, Lorentzian Shifted, Antibunching, and 
+        Antibunching Shifted models are included in the saved file with their corresponding units.
+        The save location and filename are generated based on the current date and a predefined prefix.
+        After saving, a message box informs the user of the file path and name or reports an error 
+        if the save was unsuccessful.
+
+        :return: None
+        """
         dataFolderPrefix=self.savefile.getDataFolderPrefix()
         folder_path=dataFolderPrefix["saveFolder"]
         data_prefix=dataFolderPrefix["g2Prefix"]
@@ -2005,6 +2742,17 @@ class G2Logic():
                 message_box.exec_()
         
     def createGraphicToSave(self):
+        """
+        Creates a copy of the current g² plot for saving purposes without affecting the on-screen graph.
+
+        This function generates a new GraphicsLayoutWidget, copies the curves, labels, and legend 
+        from the main plot, and optionally adds a footer showing the current fit equation and parameters.
+        The returned widget can be resized or modified independently of the main plot for saving.
+
+        :return: tuple containing
+            - saveWinG2 (GraphicsLayoutWidget): The copied plot widget ready for saving.
+            - savePlotG2 (PlotItem): The main plot area within the copied widget.
+        """
         saveWinG2 = pg.GraphicsLayoutWidget()
         saveWinG2.setBackground('w')
         savePlotG2 = saveWinG2.addPlot()
@@ -2285,12 +3033,16 @@ class WorkerThreadG2(QThread):
     def settingsForEstimatedParameters(self):
         if self.stopChannel=="A":
             self.device.setNumberOfStops(1,2)
+            self.device.setMode(1,2)
         elif self.stopChannel=="B":
             self.device.setNumberOfStops(2,2)
+            self.device.setMode(1,2)
         elif self.stopChannel=="C":
             self.device.setNumberOfStops(3,2)
+            self.device.setMode(1,2)
         elif self.stopChannel=="D":
             self.device.setNumberOfStops(4,2)
+            self.device.setMode(1,2)
         
         
         
