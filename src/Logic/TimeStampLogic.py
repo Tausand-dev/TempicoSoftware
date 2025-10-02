@@ -73,7 +73,6 @@ class TimeStampLogic():
     :param parent: The parent UI element containing this tab (usually QMainWindow).
     :param device: The connected TempicoDevice used for timestamp acquisition.
     :param timerConnection: Timer object for device connection polling (QTimer).
-    :return: None
     """
     def __init__(self,enableCheckBoxA: QCheckBox,enableCheckBoxB: QCheckBox,enableCheckBoxC: QCheckBox,enableCheckBoxD: QCheckBox, startNormalButton: QPushButton, pauseNormalButton: QPushButton, stopNormalButton: QPushButton ,
                  startScheduleButton: QPushButton, pauseScheduleButton: QPushButton, stopScheduleButton: QPushButton,startLimitedButton: QPushButton, pauseLimitedButton: QPushButton, stopLimitedButton: QPushButton

@@ -59,7 +59,6 @@ class CountEstimatedLogic():
     :param device: The connected measurement device.
     :param parent: The parent window containing the UI (usually a QMainWindow).
     :param timerConnection: Timer responsible for checking device connection status (QTimer).
-    :return: None
     """
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
                  mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 

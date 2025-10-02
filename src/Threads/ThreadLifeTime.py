@@ -24,7 +24,6 @@ class WorkerThreadLifeTime(QThread):
     :param numberMeasurements: The number of measurements to be taken (int).
     :param device: The Tempico device used for performing measurements (Tempico).
     :param TimeRange: The time range for the measurements (int).
-    :return: None
     """
     createdSignal=Signal()
     statusSignal=Signal(str)

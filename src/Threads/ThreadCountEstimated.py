@@ -47,8 +47,6 @@ class WorkerThreadCountsEstimated(QThread):
         - continueEvent: Event object used to pause/resume thread logic when user interaction is needed.
         - running: Boolean flag to control the thread's main loop.
         - numberStopsChannelA/B/C/D: Internal counters to track stop events for each channel.
-
-    :return: None
     """
     
     #One value is for the count estimated and the other is for the uncertainty

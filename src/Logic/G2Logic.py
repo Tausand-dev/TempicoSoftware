@@ -1,25 +1,71 @@
-from PySide2.QtCore import QTimer, QTime, Qt, QMetaObject, QEvent
+from PySide2.QtCore import QTimer, Qt, QMetaObject, QEvent
 from PySide2.QtGui import QPixmap, QPainter, QColor
 from PySide2.QtWidgets import QComboBox, QFrame, QPushButton, QSpinBox, QLabel, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QDialog, QVBoxLayout, QFormLayout, QDoubleSpinBox, QTabWidget, QCheckBox, QWidget, QSizePolicy,QApplication, QWhatsThis, QGridLayout
 import pyqtgraph as pg
-from numpy import mean, sqrt, exp, array, sum
+from numpy import mean, exp, array, sum
 from Utils.createsavefile import createsavefile as savefile
 import datetime
 from scipy.optimize import curve_fit
-import math
-import re
-from Threads.ThreadLifeTime import WorkerThreadLifeTime
-from pyqtgraph.exporters import ImageExporter
+from Threads.ThreadG2 import WorkerThreadG2
 import pyTempico as tempico
-from PySide2.QtCore import QThread, Signal, Slot
-from numpy import mean, sqrt, std
+from numpy import mean
 from datetime import datetime
 import pyTempico as tempico
-import time
-import threading
 import os
 import numpy as np
 class G2Logic():
+    """
+    Manages the logic for the g² (second-order correlation) tab in the GUI.
+
+    This class is responsible for handling the interaction between the user 
+    interface and the underlying measurement logic for g² experiments. It 
+    connects UI elements, manages measurement control (manual, limited, and 
+    auto-clear modes), handles saving data/plots, and provides integration 
+    with fitting equations and parameter configuration.
+
+    Key responsibilities:
+    - Control of manual, limited, and auto-clear measurements.
+    - Management of fitting parameters and application of selected models.
+    - Handling of measurement reset, saving, and plot export.
+    - Connection of GUI elements (buttons, combo boxes, spin boxes, etc.) 
+      to their respective actions.
+    - Preparation and update of the graphical frame for g² visualization.
+
+    :param stopChannelComboBox: Combo box to select the stop channel (QComboBox).
+    :param coincidenceWindowComboBox: Combo box to select the coincidence window (QComboBox).
+    :param numberMeasurementsSpinBox: Spin box to define the number of measurements (QSpinBox).
+    :param numberBinsLabel: Label to display the number of histogram bins (QLabel).
+    :param startManualButton: Button to start a manual measurement (QPushButton).
+    :param stopManualButton: Button to stop a manual measurement (QPushButton).
+    :param clearButton: Button to clear the current measurement (QPushButton).
+    :param saveDataButton: Button to save g² measurement data (QPushButton).
+    :param savePlotButton: Button to save the g² plot (QPushButton).
+    :param comboBoxEquation: Combo box to select the fitting equation (QComboBox).
+    :param applyFitButton: Button to apply the selected fit to the data (QPushButton).
+    :param parametersTable: Table to show and edit fitting parameters (QTableWidget).
+    :param initialParametersButton: Button to restore or configure initial fit parameters (QPushButton).
+    :param statusValueLabel: Label to display the current measurement status (QLabel).
+    :param statusColorLabel: Label to show the status with a color indicator (QLabel).
+    :param totalStartsLabel: Label to display the total number of start events (QLabel).
+    :param totalStopsLabel: Label to display the total number of stop events (QLabel).
+    :param calculatedParameter: Label to show the calculated parameter value (QLabel).
+    :param helpButton: Button to open the help dialog (QPushButton).
+    :param graphicFrame: Frame where the g² plot is displayed (QFrame).
+    :param startLimitedButtonG2: Button to start a limited measurement (QPushButton).
+    :param stopLimitedButtonG2: Button to stop a limited measurement (QPushButton).
+    :param clearLimitedButtonG2: Button to clear a limited measurement (QPushButton).
+    :param autoClearSpinBox: Spin box to configure auto-clear interval (QSpinBox).
+    :param startAutoClearButton: Button to start auto-clear measurements (QPushButton).
+    :param stopAutoClearButton: Button to stop auto-clear measurements (QPushButton).
+    :param clearAutoClearButton: Button to clear auto-clear measurement results (QPushButton).
+    :param maximumTimeComboBox: Combo box to select the maximum integration time (QComboBox).
+    :param tabSettings: Tab widget containing g² settings (QTabWidget).
+    :param fixedDelayCheckBox: Checkbox to enable/disable fixed delay (QCheckBox).
+    :param externalDelaySpinBox: Spin box to set the external delay value (QDoubleSpinBox).
+    :param device: The Tempico device used for data acquisition (tempico.TempicoDevice).
+    :param mainWindow: Reference to the main application window.
+    :param connectedTimer: Timer used to monitor device connection (QTimer).
+    """
     def __init__(self,stopChannelComboBox: QComboBox, coincidenceWindowComboBox: QComboBox, numberMeasurementsSpinBox: QSpinBox, numberBinsLabel: QLabel,startManualButton: QPushButton, stopManualButton: QPushButton,
                  clearButton: QPushButton,saveDataButton: QPushButton, savePlotButton: QPushButton, comboBoxEquation: QComboBox, applyFitButton: QPushButton, 
                  parametersTable: QTableWidget, initialParametersButton: QPushButton, statusValueLabel: QLabel, statusColorLabel: QLabel, totalStartsLabel: QLabel, totalStopsLabel: QLabel, calculatedParameter: QLabel, helpButton: QPushButton,
@@ -147,6 +193,7 @@ class G2Logic():
         self.nameTd="T_d"
         self.nameB="b"
         self.nameT0="T_0"
+        self.nameTau="Tau"
     
     def connectedDevice(self, device):
         """
@@ -197,8 +244,8 @@ class G2Logic():
         self.winG2.setBackground('w')
         self.plotG2 = self.winG2.addPlot()
         self.plotG2.showGrid(x=True, y=True)
-        self.plotG2.setLabel('left', 'g2(tau)')
-        self.plotG2.setLabel('bottom', 'Tau')
+        self.plotG2.setLabel('left', f'g2({self.nameTau})')
+        self.plotG2.setLabel('bottom', self.nameTau)
         self.legend = pg.LegendItem(offset=(0, 0))
         self.legend.setParentItem(self.plotG2.getViewBox())
         self.legend.anchor((1, 0), (1, 0))
@@ -222,13 +269,13 @@ class G2Logic():
         :return: None
         """
         if self.stopChannelComboBox.currentIndex()==0:
-            self.plotG2.setLabel('left','g2(tau) Start-A')
+            self.plotG2.setLabel('left',f'g2({self.nameTau}) Start-A')
         elif self.stopChannelComboBox.currentIndex()==1:
-            self.plotG2.setLabel('left','g2(tau) Start-B')
+            self.plotG2.setLabel('left',f'g2({self.nameTau}) Start-B')
         elif self.stopChannelComboBox.currentIndex()==2:
-            self.plotG2.setLabel('left','g2(tau) Start-C')
+            self.plotG2.setLabel('left',f'g2({self.nameTau}) Start-C')
         elif self.stopChannelComboBox.currentIndex()==3:
-            self.plotG2.setLabel('left','g2(tau) Start-D')
+            self.plotG2.setLabel('left',f'g2({self.nameTau}) Start-D')
     
     
     def startTimerConnection(self):
@@ -2055,7 +2102,7 @@ class G2Logic():
         
     def getPicoSecondsValue(self, valueStr):
         """
-        Converts a time value with units (ps, ns, μs, ms) to picoseconds.
+        Converts a time value with units (ps, ns, us, ms) to picoseconds.
 
         :param valueStr: A string containing the value and its unit, e.g., '10 ns' (str).
         :return: The value converted to picoseconds (float).
@@ -2801,35 +2848,34 @@ class G2Logic():
         equationLabel = ""
         if self.comboBoxEquation.currentIndex() == 0:
             if self.thermalGaussianTcValue != "nan":
-                equationLabel = f"Thermal gaussian 1+e^(-pi*(T/T_c)^2): {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)}"
-                print("Entra aca")
+                equationLabel = f"Thermal gaussian 1+e^(-pi*({self.nameTau}/T_c)^2): {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)}"
         elif self.comboBoxEquation.currentIndex() == 1:
             if (self.thermalGaussianShiftTcValue != "nan" or 
                 self.thermalGaussianShiftTdValue != "nan" or 
                 self.thermalGaussianShiftBValue != "nan"):
-                equationLabel = (f"Thermal gaussian shifted 1+e^(-pi*(|T-T_d|/T_c)^2)+b: {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)} "
-                            f"  ,{self.nameTd} = {self.formatValue(self.thermalGaussianShiftTdValue)} "
-                            f"  ,{self.nameB} = {self.formatValue(self.thermalGaussianShiftBValue)}")
+                equationLabel = (f"Thermal gaussian shifted 1+e^(-pi*(|{self.nameTau}-T_d|/T_c)^2)+b: {self.nameTc} = {self.formatValue(self.thermalGaussianTcValue)} "
+                            f",  {self.nameTd} = {self.formatValue(self.thermalGaussianShiftTdValue)} "
+                            f",  {self.nameB} = {self.formatValue(self.thermalGaussianShiftBValue)}")
         elif self.comboBoxEquation.currentIndex() == 2:
             if self.thermalLorentzianT0Value != "nan":
-                equationLabel = f"Thermal Lorentzian 1+e^(-2*(|T|/T_0)): {self.nameT0} = {self.formatValue(self.thermalLorentzianT0Value)}"
+                equationLabel = f"Thermal Lorentzian 1+e^(-2*(|{self.nameTau}|/T_0)): {self.nameT0} = {self.formatValue(self.thermalLorentzianT0Value)}"
         elif self.comboBoxEquation.currentIndex() == 3:
             if (self.thermalLorentzianShiftT0Value != "nan" or 
                 self.thermalLorentzianShiftTdValue != "nan" or 
                 self.thermalLorentzianShiftBValue != "nan"):
-                equationLabel = (f"Thermal Shifted 1+e^(-2*(|T-T_d|/T_0))+b: {self.nameT0} = {self.formatValue(self.thermalLorentzianShiftT0Value)} "
-                            f"  ,{self.nameTd} = {self.formatValue(self.thermalLorentzianShiftTdValue)} "
-                            f"  ,{self.nameB} = {self.formatValue(self.thermalLorentzianShiftBValue)}")
+                equationLabel = (f"Thermal Shifted 1+e^(-2*(|{self.nameTau}-T_d|/T_0))+b: {self.nameT0} = {self.formatValue(self.thermalLorentzianShiftT0Value)} "
+                            f",  {self.nameTd} = {self.formatValue(self.thermalLorentzianShiftTdValue)} "
+                            f",  {self.nameB} = {self.formatValue(self.thermalLorentzianShiftBValue)}")
         elif self.comboBoxEquation.currentIndex() == 4:
             if self.antiBunchingTauAValue != "nan":
-                equationLabel = f"Antibunching 1-e^(-(T/T_c)): {self.nameTc} = {self.formatValue(self.antiBunchingTauAValue)}"
+                equationLabel = f"Antibunching 1-e^(-({self.nameTau}/T_c)): {self.nameTc} = {self.formatValue(self.antiBunchingTauAValue)}"
         elif self.comboBoxEquation.currentIndex() == 5:
             if (self.antiBunchingShiftTauAValue != "nan" or 
                 self.antiBunchingShiftTaudValue != "nan" or 
                 self.antiBunchingShiftBValue != "nan"):
-                equationLabel = (f"Antibunching Shifted 1-e^(-(|T-T_d|/T_c)+b): {self.nameTc} = {self.formatValue(self.antiBunchingShiftTauAValue)} "
-                            f"  ,{self.nameTd} = {self.formatValue(self.antiBunchingShiftTaudValue)} "
-                            f"  ,{self.nameB} = {self.formatValue(self.antiBunchingShiftBValue)}")
+                equationLabel = (f"Antibunching Shifted 1-e^(-(|{self.nameTau}-T_d|/T_c)+b): {self.nameTc} = {self.formatValue(self.antiBunchingShiftTauAValue)} "
+                            f",  {self.nameTd} = {self.formatValue(self.antiBunchingShiftTaudValue)} "
+                            f",  {self.nameB} = {self.formatValue(self.antiBunchingShiftBValue)}")
     
         if equationLabel.strip():
             footer = pg.LabelItem(text=equationLabel, justify='left')
@@ -2915,354 +2961,7 @@ class G2Logic():
     
     
                 
-class WorkerThreadG2(QThread):
-    updateMeasurement=Signal(list, int, int)
-    updateTauValues=Signal(list,int,int)
-    updateStatusLabel=Signal(str)
-    updateColorLabel=Signal(int)
-    updateEstimatedParameter=Signal(str)
-    updateDeterminedParameters=Signal()
-    updateFirstParameter=Signal(str)
-    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice, 
-                 mode,units,limitedMeasurement=False,numberOfMeasurements=0,autoclearMeasure=False):
-        super().__init__()
-        self.totalStarts=0
-        self.totalStops=0
-        self.running=True
-        self.stopChannel=stopChannel
-        self.maximumTime=maximumTime
-        self.maximumTimeSeconds=self.psToS(maximumTime)
-        self.modeSettings=mode
-        self.units=units
-        self.cumulatedEstimatedParameter=0
-        self.totalEstimatedParameter=0
-        self.numberBins=numberBins
-        self.coincidenceWindow=self.psToS(coincidenceWindow)
-        self.isLimitedMeasurement=limitedMeasurement
-        self.numberMeasurements=numberOfMeasurements
-        self.autoclearMeasure=autoclearMeasure
-        self.device=device
-        self.totalTimeIntegration=0
-        self.bins=self.generateBinList()
-        self.divisionFactor=self.getDivisionFactor()
-        self.TauValues = (0.5 * (self.bins[:-1] + self.bins[1:])/self.divisionFactor)
-        self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
-        self.baseg2Histogram=np.array(np.zeros(len(self.TauValues)))
-        print(self.baseg2Histogram)
-        self.saveSettings()
-        self.settingsForEstimate()
-        
-    
-    def run(self):
-        self.estimatedParameter=self.estimatedParameterValue()
-        if self.estimatedParameter==-1 and self.running:
-            print("Cannot estimated due to low number of values")
-        elif self.estimatedParameter!=-1 and self.running:
-            self.cumulatedEstimatedParameter+=self.estimatedParameter
-            self.totalEstimatedParameter+=1
-            if not self.autoclearMeasure:
-                self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
-            else:
-                self.updateFirstParameter.emit(str(int(self.estimatedParameter)))
-            self.updateDeterminedParameters.emit()
-            self.updateTauValues.emit(self.TauValues,self.divisionFactor,self.modeSettings)
-        self.settingsForMeasurement()
-        self.updateStatusLabel.emit("Running measurement")
-        self.updateColorLabel.emit(1)
-        while self.running:
-            self.getMeasurement()
-        self.recoverSettings()
-    
-    def getDivisionFactor(self):
-        factor=1
-        if self.units=="ns":
-            factor=10**3
-        elif self.units=="us":
-            factor=10**6
-        elif self.units=="ms":
-            factor=10**9
-        return factor
-            
-    
-    def settingsForEstimate(self):
-        self.device.setNumberOfRuns(1)
-        self.device.disableChannel(1)
-        self.device.disableChannel(2)
-        self.device.disableChannel(3)
-        self.device.disableChannel(4)
-        if self.stopChannel=="A":
-            self.device.enableChannel(1)
-            self.device.setAverageCycles(1,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(1,2)
-        elif self.stopChannel=="B":
-            self.device.enableChannel(2)
-            self.device.setAverageCycles(2,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(2,2)
-        elif self.stopChannel=="C":
-            self.device.enableChannel(3)
-            self.device.setAverageCycles(3,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(3,2)
-        elif self.stopChannel=="D":
-            self.device.enableChannel(4)
-            self.device.setAverageCycles(2,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(4,2)
-    
-    def settingsForMeasurement(self):
-        self.device.setNumberOfRuns(100)
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,1)
-            self.device.setMode(1,self.modeSettings)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,1)
-            self.device.setMode(2,self.modeSettings)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,1)
-            self.device.setMode(3,self.modeSettings)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,1)
-            self.device.setMode(4,self.modeSettings)
-    
-    def settingsForEstimatedParameters(self):
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,2)
-            self.device.setMode(1,2)
-        
-        
-        
-    def saveSettings(self):
-        self.numberRunsSaved=self.device.getNumberOfRuns()
-        self.numberStopsChannelA=self.device.getNumberOfStops(1)
-        self.numberStopsChannelB=self.device.getNumberOfStops(2)
-        self.numberStopsChannelC=self.device.getNumberOfStops(3)
-        self.numberStopsChannelD=self.device.getNumberOfStops(4)
-        self.stopMaskChannelA=self.device.getStopMask(1)
-        self.stopMaskChannelB=self.device.getStopMask(2)
-        self.stopMaskChannelC=self.device.getStopMask(3)
-        self.stopMaskChannelD=self.device.getStopMask(4)
-        self.averageCyclesChannelA=self.device.getAverageCycles(1)
-        self.averageCyclesChannelB=self.device.getAverageCycles(2)
-        self.averageCyclesChannelC=self.device.getAverageCycles(3)
-        self.averageCyclesChannelD=self.device.getAverageCycles(4)
-        self.modeChannelA=self.device.getMode(1)
-        self.modeChannelB=self.device.getMode(2)
-        self.modeChannelC=self.device.getMode(3)
-        self.modeChannelD=self.device.getMode(4)
-    
-    def recoverSettings(self):
-        self.device.enableChannel(1)
-        self.device.enableChannel(2)
-        self.device.enableChannel(3)
-        self.device.enableChannel(4)
-        self.device.setNumberOfRuns(self.numberRunsSaved)
-        self.device.setNumberOfStops(1,self.numberStopsChannelA)
-        self.device.setNumberOfStops(2,self.numberStopsChannelB)
-        self.device.setNumberOfStops(3,self.numberStopsChannelC)
-        self.device.setNumberOfStops(4,self.numberStopsChannelD)
-        self.device.setStopMask(1,self.stopMaskChannelA)
-        self.device.setStopMask(2,self.stopMaskChannelB)
-        self.device.setStopMask(3,self.stopMaskChannelC)
-        self.device.setStopMask(4,self.stopMaskChannelD)
-        self.device.setAverageCycles(1,self.averageCyclesChannelA)
-        self.device.setAverageCycles(2,self.averageCyclesChannelB)
-        self.device.setAverageCycles(3,self.averageCyclesChannelC)
-        self.device.setAverageCycles(4,self.averageCyclesChannelD)
-        self.device.setMode(1,self.modeChannelA)
-        self.device.setMode(2,self.modeChannelB)
-        self.device.setMode(3,self.modeChannelC)
-        self.device.setMode(4,self.modeChannelD)
-    
-    def estimatedParameterValue(self):
-        self.settingsForEstimatedParameters()
-        notRegisteredMeasurements=0
-        percentage=0
-        self.updateStatusLabel.emit(f"Taking initial parameters {percentage}%")
-        self.updateColorLabel.emit(2)
-        estimatedDifferences=[]
-        notStartsDetected=0
-        for i in range(100):
-            if not self.running:
-                return -1
-            measurement=self.device.measure()
-            print(measurement)
-            if notStartsDetected>=10:
-                self.updateStatusLabel.emit(f"Taking initial parameters 100% (Waiting start 10/10)")
-                return -1
-            if not measurement:
-                notRegisteredMeasurements+=1
-                notStartsDetected+=1
-                
-            else:
-                notStartsDetected=0
-                if len(measurement[0])==5:
-                    stop1=measurement[0][3]
-                    stop2=measurement[0][4]
-                    differenceEstimated=stop2-stop1
-                    estimatedDifferences.append(differenceEstimated)
-                else:
-                    notRegisteredMeasurements+=1
-            percentage=i+1
-            if notRegisteredMeasurements>0:
-                self.updateStatusLabel.emit(f"Taking initial parameters {percentage}% (Waiting start {notRegisteredMeasurements}/10)")
-            else:
-                self.updateStatusLabel.emit(f"Taking initial parameters {percentage}%")
-                
-        self.updateStatusLabel.emit(f"Taking initial parameters 100%")
-        if notRegisteredMeasurements>700:
-            return -1
-        else:
-            return self.getCountPerSecondParameter(estimatedDifferences)
-    
-    
-    def getMeasurement(self):
-        self.settingsForMeasurement()
-        measurement = self.device.measure()
-        totalStopPerMeasurement=0
-        timeDifferences, stopDifferences = [], []
-        notStartsMeasurement=0
-        for run in measurement:
-            if not run:
-                notStartsMeasurement+=1
-                continue
-            totalStopPerMeasurement+=self.processRun(run, timeDifferences)
-            if self.isLimitedMeasurement and self.totalStops>=self.numberMeasurements:
-                self.updateDeterminedParameters.emit()
-                self.running=False
-                break
-        stopDifferences=self.estimateParameterInMeasurement()
-        if self.totalTimeIntegration>0:
-            g2Values=self.buildG2Histogram(timeDifferences)
-            self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
-        else:
-            self.updateMeasurement.emit(self.g2Histogram, self.totalStarts,self.totalStops)
-        if stopDifferences:
-            self.cumulatedEstimatedParameter+=self.getCountPerSecondParameter(stopDifferences)
-            self.totalEstimatedParameter+=1
-            self.estimatedParameter=self.cumulatedEstimatedParameter/self.totalEstimatedParameter
-            self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
-        if len(measurement)==0:
-            self.updateStatusLabel.emit(f"No measurements in start channel")
-            self.updateColorLabel.emit(3)
-        elif notStartsMeasurement>70:
-            self.updateStatusLabel.emit(f"No measurements in start channel")
-            self.updateColorLabel.emit(3)
-        elif totalStopPerMeasurement>70:
-            self.updateStatusLabel.emit(f"No measurements in channels {self.stopChannel}")
-            self.updateColorLabel.emit(3)
-        else:
-            self.updateStatusLabel.emit(f"Running measurement")
-            self.updateColorLabel.emit(1)
-            
-    def estimateParameterInMeasurement(self):
-        self.settingsForEstimatedParameters()
-        estimatedDifferences=[]
-        measure=self.device.measure()
-        for run in measure:
-            if not run:
-                continue
-            if len(run)==5:
-                stop1=run[3]
-                stop2=run[4]
-                differenceEstimated=stop2-stop1
-                estimatedDifferences.append(differenceEstimated)
-        return estimatedDifferences
-            
-            
-    
-    
-    def processRun(self, run, timeDifferences):
-        self.totalStarts += 1
-        if run[3] == -1:
-            return 1
-        
-        if run[3]<self.maximumTime:
-            timeDifferences.append(run[3])
-            self.totalStops += 1
-        self.totalTimeIntegration += run[3]
-        return 0
 
- 
-    def getCountPerSecondParameter(self,estimatedDifferences):
-        meanDifferences=np.mean(estimatedDifferences)
-        estimatedValue= (10**(12))/meanDifferences
-        return round(estimatedValue,0)
-
-    
-    def buildG2Histogram(self,timeDifferences):
-        g2TemporalHistogram,_=np.histogram(timeDifferences, bins=self.bins)
-        if len(g2TemporalHistogram)==0:
-            g2TemporalHistogram=self.baseg2Histogram
-        if len(self.g2Histogram)!=0:
-            self.g2Histogram=self.g2Histogram+ g2TemporalHistogram
-        else:
-            self.g2Histogram=g2TemporalHistogram
-        integrationTimeS=self.psToS(self.totalTimeIntegration)
-        normalizedParameter=1/((self.estimatedParameter**2)*integrationTimeS*self.coincidenceWindow)
-        histogramToEmit=self.g2Histogram*normalizedParameter
-        return histogramToEmit
-        
-        
-    def generateBinList(self):
-        if self.modeSettings==1:
-            histogramToBuild=np.linspace(12500, self.maximumTime, self.numberBins + 1)
-        elif self.modeSettings==2:
-            histogramToBuild=np.linspace(125000, self.maximumTime, self.numberBins + 1)
-        return histogramToBuild
-    
-    
-    def getG2Average(self,g2Histogram):
-        valueSum=np.sum(g2Histogram)
-        return valueSum/len(g2Histogram)
-    
-    def sortByStart(self, measurement):
-        dataFiltered=[]
-        for run in measurement:
-            if run:
-                dataFiltered.append(run)
-        dataFiltered.sort(key=lambda x: x[2])
-        return dataFiltered
-    
-    def changeToOneStop(self):
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,1)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,1)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,1)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,1)
-    
-    def psToS(self,picoseconds):
-        return picoseconds * 1e-12
-
-    def clearG2(self):
-        self.totalTimeIntegration=0
-        self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
-        self.totalStarts=0
-        self.totalStops=0
-        self.cumulatedEstimatedParameter=0
-        self.totalEstimatedParameter=0
-        
-    
-    def stop(self):
-        self.updateDeterminedParameters.emit()
-        self.running=False
             
     
         

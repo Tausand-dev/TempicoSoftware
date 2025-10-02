@@ -45,7 +45,6 @@ class LifeTimeLogic():
     :param parameterTable: The table displaying the parameters of the measurements (QTableWidget).
     :param MainWindow: The main window that holds the application UI elements.
     :param timerStatus: The timer used for periodic updates (QTimer).
-    :return: None
     """
     #TO DO: DELETE TEMPICO CLASS TYPE OF THE VARIABLE
     def __init__(self,comboBoxStartChannel: QComboBox, comboBoxStopChannel: QComboBox, graphicFrame:QFrame, startButton: QPushButton,stopButton: QPushButton, initialParametersButton: QPushButton,

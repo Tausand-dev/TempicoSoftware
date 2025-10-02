@@ -4,14 +4,18 @@ src
 .. toctree::
    :maxdepth: 4
 
-   LifeTimeGraphics
-   StartStopHist
-   aboutDialog
-   CountsEstimatedGraphics
-   timeStampGraphics
-   createsavefile
-   findDevices
-   generalsettings
-   main
+   StartStopLogic.rst
+   G2Logic.rst
+   LifeTimeLogic.rst
+   CountsEstimatedLogic.rst
+   TimeStampLogic.rst
+   ThreadCountEstimated.rst
+   ThreadG2.rst
+   ThreadLifeTime.rst
+   ThreadProccessData.rst
+   ThreadStartStop.rst
+   ThreadTimeStamping.rst
+   findDevices.rst
+   main.rst
    
    

@@ -1,7 +1,7 @@
-generalsettings module
+ThreadStartStop module
 ======================
 
-.. automodule:: generalsettings
+.. automodule:: Threads.ThreadStartStop
    :members:
    :undoc-members:
    :show-inheritance:
