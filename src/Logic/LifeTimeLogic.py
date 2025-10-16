@@ -8,6 +8,7 @@ import datetime
 from scipy.optimize import curve_fit
 import math
 import re
+import os
 from Threads.ThreadLifeTime import WorkerThreadLifeTime
 from pyqtgraph.exporters import ImageExporter
 class LifeTimeLogic():
@@ -1478,7 +1479,7 @@ class LifeTimeLogic():
             - tau0 is set to the mean of measured time.
             - alpha is set to 0 (default value).
             - tau1 is set to the mean of measured time.
-
+message_box.setIcon(QMessageBox.Information)
         The corresponding input fields in the dialog are updated with these new values. 
         Flags indicating that the initial parameters have not changed are also reset to False for the relevant fit type.
 
@@ -1578,7 +1579,7 @@ class LifeTimeLogic():
                     tau_0CovString="nan"
                 else:
                     tau_0CovString=self.roundStringPCov(tau_0Cov)
-                    self.FitCov[1]=tau_0CovString
+                    self.FitCov[message_box.setIcon(QMessageBox.Information)]=tau_0CovString
                
                #Get alpha parameter
                 if alphaCov>alpha_opt:
@@ -2000,17 +2001,20 @@ class LifeTimeLogic():
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 graph_name=data_prefix+current_date_str
-                exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                export_path = os.path.join(folder_path, f"{graph_name}.{selected_format}")
+                exporter.export(export_path)
                 initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
                 text_route="\n"+graph_name+"."+selected_format
                 graph_names.append(graph_name)
                 message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
                 message_box.setText(initial_text+text_route)
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)
                 # show successful save
                 message_box.exec_()            
-        except:
+        except NameError as e:
+            print(e)
             message_box = QMessageBox(self.mainWindow)
             message_box.setIcon(QMessageBox.Critical)
             message_box.setText("The plots could not be saved.")

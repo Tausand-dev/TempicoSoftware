@@ -1015,7 +1015,10 @@ class StartStopLogic():
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     graph_name=data_prefix+'Measure_ChannelD'+current_date_str
-                    exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
+                    if os.name == 'posix':  
+                        exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
+                    else:  
+                        exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                     
                 message_box = QMessageBox(self.parent)
