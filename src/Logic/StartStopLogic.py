@@ -10,7 +10,8 @@ from Utils.createsavefile import createsavefile as savefile
 import datetime
 import os
 from Threads.ThreadStartStop import WorkerThreadStartStopHistogram
-from Utils.constants import *
+import Utils.constants as constants
+import pyTempico as Tempico
 
 #Create graphic design#
 class StartStopLogic():
@@ -30,7 +31,7 @@ class StartStopLogic():
     :param mainWindow: The main window (QWindow) for the GUI.
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
+    def __init__(self, parent, disconnect,device: Tempico.TempicoDevice,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
         super().__init__()
         self.savefile=savefile()
         #timer to manage disconnection
@@ -375,7 +376,7 @@ class StartStopLogic():
     
     
     def getMinimumValue(self):
-        if "TP12" in VERSION_PARAMETER:
+        if "TP12" in constants.VERSION_PARAMETER:
             self.minimumMs=-0.00025
             self.minimumNs=-250
         else:
@@ -414,6 +415,8 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(3,False)
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
+            if "TP12" in constants.VERSION_PARAMETER:
+                self.calibrateDeviceDelay()
             self.create_graphs()
             self.statusValue.setText("Measurement running")
             self.changeStatusColor(1)
@@ -426,7 +429,8 @@ class StartStopLogic():
             self.savebutton.setEnabled(False)
             
     
-    
+    def calibrateDeviceDelay(self):
+        self.device.calibrateDelay()
     
     def stopTimerConnection(self):
         """
