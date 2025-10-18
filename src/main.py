@@ -19,6 +19,7 @@ from Views.uiParametersDialog import UiParameters
 from Utils.ParametersDialog import CountParameters
 from Logic.StartStopLogic import StartStopLogic
 from Utils.constants import *
+import Utils.constants as constants
 from Views.ui_LifeTimemeasurement import UiLifeTime
 from Logic.LifeTimeLogic import LifeTimeLogic
 from Logic.CountsEstimatedLogic import CountEstimatedLogic
@@ -388,6 +389,7 @@ class MainWindow(QMainWindow):
                 self.disconnectButton.setEnabled(True)
                 try:
                     self.conectedDevice.open()
+                    self.getVersionParameters()
                     self.LifeTimeTimer.start(500)
                     if self.g2Graphic!=None:
                          self.g2Graphic.connectDevice()
@@ -447,6 +449,7 @@ class MainWindow(QMainWindow):
                         openSentinel=False
                         try:
                             self.conectedDevice.open()
+                            self.getVersionParameters()
                             self.LifeTimeTimer.start(500)
                             openSentinel=True
                         except:
@@ -476,6 +479,7 @@ class MainWindow(QMainWindow):
             openSentinel=False
             try:
                 self.conectedDevice.open()
+                self.getVersionParameters()
                 self.LifeTimeTimer.start(500)
                 openSentinel=True
             except:
@@ -797,7 +801,11 @@ class MainWindow(QMainWindow):
             self.prefixFolderDialog.exec_()
             
         
-
+    def getVersionParameters(self):
+        constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
+        constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
+    
+    
     def enableSettings(self):
         """
         Re-enables the device and general settings dialogs if they are open.
