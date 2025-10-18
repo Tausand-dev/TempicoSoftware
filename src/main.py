@@ -16,6 +16,7 @@ from Views.ui_TimeStamping import Ui_TimeStamping
 from Utils.createsavefile import createsavefile as savefile
 from Views.ui_settings import Ui_settings
 from Views.uiParametersDialog import UiParameters
+from Utils.generatorSettingsDialog import Ui_Generator
 from Utils.ParametersDialog import CountParameters
 from Logic.StartStopLogic import StartStopLogic
 from Utils.constants import *
@@ -190,6 +191,12 @@ class MainWindow(QMainWindow):
         folder_prefix_settings_action=QAction("File path",self)
         settings_menu.addAction(folder_prefix_settings_action)
         folder_prefix_settings_action.triggered.connect(self.folderPrefixClicked)
+        
+        self.generator_settings_action=QAction("Signal generator",self)
+        settings_menu.addAction(self.generator_settings_action)
+        self.generator_settings_action.triggered.connect(self.generatorClicked)
+        self.generator_settings_action.setVisible(False)
+        
         general_settings_action.triggered.connect(self.general_settings_clicked)
         about_settings_action=QAction("About Tempico Software",self)
         about_settings_action.triggered.connect(self.about_settings)
@@ -506,6 +513,7 @@ class MainWindow(QMainWindow):
         It does not take any parameters and does not return a value.
         :returns: None
         """
+        self.generator_settings_action.setVisible(False)
         if hasattr(self, 'grafico'):
             self.grafico.hide_graphic2()
             self.connectButton.setEnabled(True)
@@ -799,11 +807,36 @@ class MainWindow(QMainWindow):
             self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
             self.uiFolderPrefix.onlyReading()
             self.prefixFolderDialog.exec_()
+    
+    def generatorClicked(self):
+        if self.conectedDevice!=None:
+            if not self.currentMeasurement:
+                self.dialog_generator=QDialog(self)
+                self.settings_generator = Ui_Generator()
+                self.settings_generator.setupUi(self.dialog_generator, self.conectedDevice)
+                self.settings_generator.getGeneratorSettings()
+                self.dialog_generator.exec_()
+                self.openSettings=True
+            else:
+                pass
+        else:
+            message_box = QMessageBox(self)
+            message_box.setWindowTitle("No connected device")
+            message_box.setText("No connected device was found")
+            pixmap= QPixmap(ICON_LOCATION)
+            message_box.setIconPixmap(pixmap)
+            message_box.setIcon(QMessageBox.Information)
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
             
         
     def getVersionParameters(self):
         constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
         constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
+        if "TP12" in constants.VERSION_PARAMETER:
+            self.generator_settings_action.setVisible(True)
+        else:
+            self.generator_settings_action.setVisible(False)
     
     
     def enableSettings(self):
