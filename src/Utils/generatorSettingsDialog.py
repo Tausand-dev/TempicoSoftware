@@ -406,9 +406,13 @@ class Ui_Generator(object):
         self.channelDStopSourceComboBox.setEnabled(True)
     
     def applyChanges(self):
+        needDiscrepanceDialog=False
         generatorFrequency=self.generatorFrequencySpinBox.value()
         if float(generatorFrequency)!= self.generatorFrequency:
             self.device.setGeneratorFrequency(generatorFrequency)
+        frequencyApplied=self.device.getGeneratorFrequency()
+        if generatorFrequency!=frequencyApplied:
+            needDiscrepanceDialog=True
         #Channel A
         startSourceChannelA=self.channelAStartSourceComboBox.currentIndex()
         stopSourceChannelA=self.channelAStopSourceComboBox.currentIndex()
@@ -461,4 +465,65 @@ class Ui_Generator(object):
         elif stopSourceChannelD==1 and self.stopSourceChannelD!="INTERNAL":
             self.device.setStopInternalSource(4)
         self.dialog.accept()
+        if needDiscrepanceDialog:
+            self.dialogMessageWithDiscrepances(int(frequencyApplied))
+    
+
+    
+    def dialogMessageWithDiscrepances(self, appliedValue):
+
+        message = (
+            "The generator signal could not be set to the exact requested value;\n"
+            f"however, the closest possible value was applied: {appliedValue} Hz."
+        )
+
+        msg_box = QMessageBox(self.dialog.parent())
+        msg_box.setIcon(QMessageBox.Information)
+        msg_box.setWindowTitle("Generator Configuration Notice")
+        msg_box.setText(message)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+    
+    def setConfigOnlyRead(self, valuesList):
+        #General
+        self.generatorFrequencySpinBox.setValue(valuesList[0])
+        #Channel A
+        if valuesList[1]=="EXTERNAL":
+            self.channelAStartSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelAStartSourceComboBox.setCurrentIndex(1)
+        if valuesList[2]=="EXTERNAL":
+            self.channelAStopSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelAStopSourceComboBox.setCurrentIndex(1)
+        #Channel B
+        if valuesList[3]=="EXTERNAL":
+            self.channelBStartSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelBStartSourceComboBox.setCurrentIndex(1)
+        if valuesList[4]=="EXTERNAL":
+            self.channelBStopSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelBStopSourceComboBox.setCurrentIndex(1)
+        #Channel C
+        if valuesList[5]=="EXTERNAL":
+            self.channelCStartSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelCStartSourceComboBox.setCurrentIndex(1)
+        if valuesList[6]=="EXTERNAL":
+            self.channelCStopSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelCStopSourceComboBox.setCurrentIndex(1)
+        #Channel D
+        if valuesList[7]=="EXTERNAL":
+            self.channelDStartSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelDStartSourceComboBox.setCurrentIndex(1)
+        if valuesList[8]=="EXTERNAL":
+            self.channelDStopSourceComboBox.setCurrentIndex(0)
+        else:
+            self.channelDStopSourceComboBox.setCurrentIndex(1)
+        self.onlyRead()
+        
+    
         

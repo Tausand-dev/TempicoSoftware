@@ -148,6 +148,7 @@ class MainWindow(QMainWindow):
         self.openSettings=False
         self.openGeneralSettings=False
         self.openPrefixSettings=False
+        self.openGenerator=False
         ## general settings
         self.thresholdVoltage=0
         self.numberRuns=0
@@ -811,14 +812,28 @@ class MainWindow(QMainWindow):
     def generatorClicked(self):
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
+                self.openGenerator=True
                 self.dialog_generator=QDialog(self)
                 self.settings_generator = Ui_Generator()
                 self.settings_generator.setupUi(self.dialog_generator, self.conectedDevice)
                 self.settings_generator.getGeneratorSettings()
                 self.dialog_generator.exec_()
-                self.openSettings=True
+                
             else:
-                pass
+                message_box = QMessageBox(self)
+                message_box.setWindowTitle("Running measurement")
+                message_box.setText("The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.")
+                pixmap= QPixmap(ICON_LOCATION)
+                message_box.setIconPixmap(pixmap)
+                message_box.setIcon(QMessageBox.Information)
+                message_box.setStandardButtons(QMessageBox.Ok)
+                message_box.exec_()
+                self.openGenerator=True
+                self.dialog_generator=QDialog(self)
+                self.settings_generator = Ui_Generator()
+                self.settings_generator.setupUi(self.dialog_generator, self.conectedDevice)
+                self.settings_generator.setConfigOnlyRead(self.generatorSettings)
+                self.dialog_generator.exec_()
         else:
             message_box = QMessageBox(self)
             message_box.setWindowTitle("No connected device")
@@ -860,6 +875,9 @@ class MainWindow(QMainWindow):
         if self.openPrefixSettings:
             if self.prefixFolderDialog.isVisible():
                 self.uiFolderPrefix.enableEditing()
+        if self.openGenerator:
+            if self.dialog_generator.isVisible():
+                self.settings_generator.enableValues()
 
     def saveSettings(self):
         """
@@ -925,6 +943,20 @@ class MainWindow(QMainWindow):
             #Get the threshold voltage
             self.thresholdVoltage=self.conectedDevice.getThresholdVoltage()
             self.numberRuns=self.conectedDevice.getNumberOfRuns()
+            self.generatorSettings=[]
+            if "TP12" in constants.VERSION_PARAMETER:
+                self.generatorSettings.append(self.conectedDevice.getGeneratorFrequency())
+                self.generatorSettings.append(self.conectedDevice.getStartSource(1))
+                self.generatorSettings.append(self.conectedDevice.getStopSource(1))
+                self.generatorSettings.append(self.conectedDevice.getStartSource(2))
+                self.generatorSettings.append(self.conectedDevice.getStopSource(2))
+                self.generatorSettings.append(self.conectedDevice.getStartSource(3))
+                self.generatorSettings.append(self.conectedDevice.getStopSource(3))
+                self.generatorSettings.append(self.conectedDevice.getStartSource(4))
+                self.generatorSettings.append(self.conectedDevice.getStopSource(4))
+                
+                
+                
 
 
 
