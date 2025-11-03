@@ -250,6 +250,7 @@ class Ui_Generator(object):
         self.generatorFrequencySpinBox.setObjectName(u"generatorFrequencySpinBox")
         self.generatorFrequencySpinBox.setMinimum(10)
         self.generatorFrequencySpinBox.setMaximum(10000000)
+        self.generatorFrequencySpinBox.setAlignment(Qt.AlignRight)
 
         self.horizontalLayout.addWidget(self.generatorFrequencySpinBox)
 
@@ -317,7 +318,7 @@ class Ui_Generator(object):
 
         self.tabChannelsWidget.setTabText(self.tabChannelsWidget.indexOf(self.channelD), QCoreApplication.translate("Dialog", u"Channel D", None))
         self.generatorFrequencyLabel.setText(QCoreApplication.translate("Dialog", u"Generator frequency:", None))
-        self.generatorFrequencySpinBox.setSuffix(QCoreApplication.translate("Dialog", u"Hz", None))
+        self.generatorFrequencySpinBox.setSuffix(QCoreApplication.translate("Dialog", u" Hz", None))
         self.applyChangesButton.setText(QCoreApplication.translate("Dialog", u"Apply changes", None))
     # retranslateUi
 
