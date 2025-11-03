@@ -422,26 +422,31 @@ class Ui_TimeStamping(object):
         self.verticalLayout_7 = QVBoxLayout(self.MeasurementsValuesFrame)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.valueChannelALabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelALabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.valueChannelALabel.setObjectName(u"valueChannelALabel")
 
         self.verticalLayout_7.addWidget(self.valueChannelALabel)
 
         self.valueChannelBLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelBLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.valueChannelBLabel.setObjectName(u"valueChannelBLabel")
 
         self.verticalLayout_7.addWidget(self.valueChannelBLabel)
 
         self.valueChannelCLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelCLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.valueChannelCLabel.setObjectName(u"valueChannelCLabel")
 
         self.verticalLayout_7.addWidget(self.valueChannelCLabel)
 
         self.valueChannelDLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueChannelDLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.valueChannelDLabel.setObjectName(u"valueChannelDLabel")
 
         self.verticalLayout_7.addWidget(self.valueChannelDLabel)
 
         self.valueTotalLabel = QLabel(self.MeasurementsValuesFrame)
+        self.valueTotalLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.valueTotalLabel.setObjectName(u"valueTotalLabel")
 
         self.verticalLayout_7.addWidget(self.valueTotalLabel)
