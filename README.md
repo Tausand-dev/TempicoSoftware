@@ -109,13 +109,17 @@ After the measurement, the options to save the data and save the plots become av
 ## Time Stamping Window
 ### Before the measurement
 Before starting the measurement process, the user can select the channels from which data will be collected. The type of measurement can also be defined, choosing between manual, scheduled, or sample-size–based modes, each with its corresponding configuration parameters. By default, automatic data saving is enabled to prevent memory overflow. Additionally, the user can configure how frequently the data is written to storage, allowing the system to periodically release memory from the main buffer in a controlled manner.
+![Before measurement Time Stamping window](./Sources/beforeTimeStamping.png)
 
 ### During the measurement
 During the measurement process, the collected data can be displayed in a table if desired, although it is also possible to hide this view. A status bar is available to indicate the current state of the measurement, showing whether it is running or saving, as well as the remaining time of the measurement or the percentage of progress completed.
 
+![During measurement Time Stamping window](./Sources/duringTimeStamping.png)
+
 ### After measurement
 After the measurement is completed, the data can be saved again in a different format if desired by disabling the automatic data saving option. Additionally, the data count from the most recent measurement can be reviewed in the table.
 
+![After measurement Time Stamping window](./Sources/afterTimeStamping.png)
 ## Grant port access on Linux
 
 Most Linux configurations have a dialout group for full and direct access to serial ports. By adding your user account to this group you will have the necessary permissions for Tempico Software to communicate with the serial ports.
