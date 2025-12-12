@@ -1,7 +1,7 @@
-createsavefile module
+StartStopLogic module
 =====================
 
-.. automodule:: Utils.createsavefile
+.. automodule:: Logic.StartStopLogic
    :members:
    :undoc-members:
    :show-inheritance:

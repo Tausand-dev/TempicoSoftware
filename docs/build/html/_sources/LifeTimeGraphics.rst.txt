@@ -1,7 +1,7 @@
 LifeTimeGraphics module
 ===================
 
-.. automodule:: LifeTimeGraphics
+.. automodule:: Logic.LifeTimeGraphics
    :members:
    :undoc-members:
    :show-inheritance:

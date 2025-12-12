@@ -1,7 +1,7 @@
 findDevices module
 ==================
 
-.. automodule:: findDevices
+.. automodule:: Utils.findDevices
    :members:
    :undoc-members:
    :show-inheritance:

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aboutDialog module &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>aboutDialog module &mdash; Tempico Software 1.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,9 +17,7 @@
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="CountsEstimatedGraphics module" href="CountsEstimatedGraphics.html" />
-    <link rel="prev" title="StartStopHist module" href="StartStopHist.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,15 +36,11 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">aboutDialog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="timeStampGraphics.html">timeStampGraphics module</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
@@ -74,49 +68,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-aboutDialog">
-<span id="aboutdialog-module"></span><h1>aboutDialog module<a class="headerlink" href="#module-aboutDialog" title="Permalink to this headline"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aboutDialog.</span></span><span class="sig-name descname"><span class="pre">Ui_AboutDialog</span></span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog.acceptButton">
-<span class="sig-name descname"><span class="pre">acceptButton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog.acceptButton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog.acceptButton" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog.open_link">
-<span class="sig-name descname"><span class="pre">open_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog.open_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog.open_link" title="Permalink to this definition"></a></dt>
-<dd><p>Opens a specified URL in the default web browser.</p>
-<p>This function is triggered when a link is clicked and opens the provided URL 
-using the system’s default web browser.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>link</strong> (<em>str</em>) – The URL to be opened.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="aboutDialog.Ui_AboutDialog.setupUi">
-<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">AboutDialog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aboutDialog.html#Ui_AboutDialog.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aboutDialog.Ui_AboutDialog.setupUi" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <section id="aboutdialog-module">
+<h1>aboutDialog module<a class="headerlink" href="#aboutdialog-module" title="Permalink to this headline"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="StartStopHist.html" class="btn btn-neutral float-left" title="StartStopHist module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="CountsEstimatedGraphics.html" class="btn btn-neutral float-right" title="CountsEstimatedGraphics module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

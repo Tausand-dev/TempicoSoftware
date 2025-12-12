@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>findDevices module &mdash; Tempico Software 1.1.0 documentation</title>
+  <title>findDevices module &mdash; Tempico Software 1.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -74,11 +74,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-findDevices">
-<span id="finddevices-module"></span><h1>findDevices module<a class="headerlink" href="#module-findDevices" title="Permalink to this headline"></a></h1>
+  <section id="module-Utils.findDevices">
+<span id="finddevices-module"></span><h1>findDevices module<a class="headerlink" href="#module-Utils.findDevices" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="findDevices.PyTempicoManager">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">findDevices.</span></span><span class="sig-name descname"><span class="pre">PyTempicoManager</span></span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="Utils.findDevices.PyTempicoManager">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Utils.findDevices.</span></span><span class="sig-name descname"><span class="pre">PyTempicoManager</span></span><a class="reference internal" href="_modules/Utils/findDevices.html#PyTempicoManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Utils.findDevices.PyTempicoManager" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for managing the search and connection of Tempico devices connected to serial ports on the PC.</p>
 <p>This class is responsible for scanning the available serial ports on the system and searching for Tempico devices 
@@ -92,8 +92,8 @@ connected to those ports. It facilitates interaction with Tempico devices by all
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="findDevices.PyTempicoManager.find_devices">
-<span class="sig-name descname"><span class="pre">find_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.find_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.find_devices" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="Utils.findDevices.PyTempicoManager.find_devices">
+<span class="sig-name descname"><span class="pre">find_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Utils/findDevices.html#PyTempicoManager.find_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Utils.findDevices.PyTempicoManager.find_devices" title="Permalink to this definition"></a></dt>
 <dd><p>Finds and verifies whether a device with the given VID and PID is a Tempico device.</p>
 <p>This function takes the Vendor ID (VID) and Product ID (PID) as inputs, converts them to integers, 
 and attempts to open the device using these values. It then checks if the manufacturer and product 
@@ -115,8 +115,8 @@ strings match the expected values for a Tempico device.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="findDevices.PyTempicoManager.get_pytempico_devices">
-<span class="sig-name descname"><span class="pre">get_pytempico_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.get_pytempico_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.get_pytempico_devices" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="Utils.findDevices.PyTempicoManager.get_pytempico_devices">
+<span class="sig-name descname"><span class="pre">get_pytempico_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Utils/findDevices.html#PyTempicoManager.get_pytempico_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Utils.findDevices.PyTempicoManager.get_pytempico_devices" title="Permalink to this definition"></a></dt>
 <dd><p>Searches for Tempico devices among the available serial ports and returns a list of their port names.</p>
 <p>This function scans the system’s serial ports, checks if they correspond to a Tempico device by
 retrieving the VID and PID, and verifies if they match the Tempico device specifications.
@@ -132,8 +132,8 @@ Bluetooth devices are excluded from the search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="findDevices.PyTempicoManager.get_vid_pid">
-<span class="sig-name descname"><span class="pre">get_vid_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_pid_information</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.get_vid_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.get_vid_pid" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="Utils.findDevices.PyTempicoManager.get_vid_pid">
+<span class="sig-name descname"><span class="pre">get_vid_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vid_pid_information</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Utils/findDevices.html#PyTempicoManager.get_vid_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Utils.findDevices.PyTempicoManager.get_vid_pid" title="Permalink to this definition"></a></dt>
 <dd><p>Extracts the Vendor ID (VID) and Product ID (PID) from a string and returns them as a tuple.</p>
 <p>This function processes a string that contains the VID and PID information in the format 
 ‘VID:PID=xxxx:yyyy’. It splits the string and retrieves the VID and PID values, returning 
@@ -152,8 +152,8 @@ them as a tuple of strings.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="findDevices.PyTempicoManager.verify_pyTempico">
-<span class="sig-name descname"><span class="pre">verify_pyTempico</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuple_vid_pid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/findDevices.html#PyTempicoManager.verify_pyTempico"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#findDevices.PyTempicoManager.verify_pyTempico" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="Utils.findDevices.PyTempicoManager.verify_pyTempico">
+<span class="sig-name descname"><span class="pre">verify_pyTempico</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuple_vid_pid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Utils/findDevices.html#PyTempicoManager.verify_pyTempico"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Utils.findDevices.PyTempicoManager.verify_pyTempico" title="Permalink to this definition"></a></dt>
 <dd><p>Verifies whether the connected device is a Tempico device.</p>
 <p>This function checks if the device’s Vendor ID (VID) and Product ID (PID) match the values 
 corresponding to a Tempico device. It returns <cite>True</cite> if the device is identified as a Tempico, 

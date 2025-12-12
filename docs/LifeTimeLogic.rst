@@ -1,7 +1,7 @@
-StartStopHist module
+LifeTimeLogic module
 ====================
 
-.. automodule:: StartStopHist
+.. automodule:: Logic.LifeTimeLogic
    :members:
    :undoc-members:
    :show-inheritance:

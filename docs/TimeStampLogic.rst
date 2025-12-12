@@ -1,7 +1,7 @@
-createsavefile module
+TimeStampLogic module
 =====================
 
-.. automodule:: createsavefile
+.. automodule:: Logic.TimeStampLogic
    :members:
    :undoc-members:
    :show-inheritance:

@@ -17,15 +17,12 @@ Tempico Software is a program developed by Tausand Electronics, with Joan Amaya 
    :maxdepth: 1
    :caption: Contents:
 
-   LifeTimeGraphics.rst
-   StartStopHist.rst
-   aboutDialog.rst
-   CountsEstimatedGraphics.rst
-   createsavefile.rst
-   findDevices.rst
-   generalsettings.rst
-   timeStampGraphics.rst
+   StartStopLogic.rst
+   LifeTimeLogic.rst
+   TimeStampLogic.rst
+   CountsEstimatedLogic.rst
    main.rst
+   
 
 Indices and tables
 ==================
