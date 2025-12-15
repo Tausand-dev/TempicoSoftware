@@ -1,26 +1,29 @@
-from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction
+from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction,QDesktopWidget
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
-from generalsettings import GeneralSettingsWindow
-from aboutDialog import Ui_AboutDialog
-from ui_StarStopHistogram import Ui_HistogramaStartStop
-from ui_g2measurement import Ui_G2
-from ui_devicesDialog import Ui_Devices
+from Utils.generalsettings import GeneralSettingsWindow
+from Utils.aboutDialog import Ui_AboutDialog
+from Views.ui_StarStopHistogram import Ui_HistogramaStartStop
+from Views.ui_g2measurement import Ui_G2
+from Views.ui_devicesDialog import Ui_Devices
 import time
 from PySide2.QtCore import QTimer
 import time
-from ui_CountsEstimated import Ui_CountsEstimated
+from Views.ui_CountsEstimated import Ui_CountsEstimated
+from Views.ui_TimeStamping import Ui_TimeStamping
 #To do eliminate import
-from createsavefile import createsavefile as savefile
-from ui_settings import Ui_settings
-from uiParametersDialog import UiParameters
-from ParametersDialog import CountParameters
-from StartStopHist import StartStopLogic
-from constants import *
-from ui_LifeTimemeasurement import UiLifeTime
-from LifeTimeGraphics import LifeTimeGraphic
-from CountsEstimatedGraphics import CountEstimatedLogic
+from Utils.createsavefile import createsavefile as savefile
+from Views.ui_settings import Ui_settings
+from Views.uiParametersDialog import UiParameters
+from Utils.ParametersDialog import CountParameters
+from Logic.StartStopLogic import StartStopLogic
+from Utils.constants import *
+from Views.ui_LifeTimemeasurement import UiLifeTime
+from Logic.LifeTimeLogic import LifeTimeLogic
+from Logic.CountsEstimatedLogic import CountEstimatedLogic
+from Logic.TimeStampLogic import TimeStampLogic
+from Views.ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -95,11 +98,21 @@ class MainWindow(QMainWindow):
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
         self.savefile=savefile()
-        self.savefile.create_folder_and_file()
+        self.savefile.createDefaultFolder()
         self.setWindowTitle("Tempico Software")
-        self.setGeometry(100,100,1000,700)
+        primary_screen = QApplication.instance().primaryScreen()
+        screen_geometry = primary_screen.geometry()
+        width, height = screen_geometry.width(), screen_geometry.height()
+        if width<1000 or height<700:
+            xPosition=int(width/2)-400
+            yPosition=int(height/2)-300
+            self.setGeometry(xPosition,yPosition,800,600)
+        else:
+            xPosition=int(width/2)-500
+            yPosition=int(height/2)-350
+            self.setGeometry(xPosition,yPosition,1000,700)  
         self.setWindowIcon(QIcon(ICON_LOCATION))
-        self.setMinimumSize(1000,700)
+        self.setMinimumSize(800,600)
         self.conectedDevice=None
         self.LifeTimeTimer=QTimer()
         self.LifeTimeTimer.timeout.connect(self.manageConection)
@@ -132,6 +145,7 @@ class MainWindow(QMainWindow):
         ##
         self.openSettings=False
         self.openGeneralSettings=False
+        self.openPrefixSettings=False
         ## general settings
         self.thresholdVoltage=0
         self.numberRuns=0
@@ -167,11 +181,14 @@ class MainWindow(QMainWindow):
         #file_menu.addAction(new_action)
         #file_menu.addAction(Open_action)
         #-----Actions for settings--------#
-        change_parameters_action=QAction("Channels settings",self)
+        change_parameters_action=QAction("Channels",self)
         settings_menu.addAction(change_parameters_action)
         change_parameters_action.triggered.connect(self.settings_clicked)
-        general_settings_action=QAction("General settings",self)
+        general_settings_action=QAction("General",self)
         settings_menu.addAction(general_settings_action)
+        folder_prefix_settings_action=QAction("File path",self)
+        settings_menu.addAction(folder_prefix_settings_action)
+        folder_prefix_settings_action.triggered.connect(self.folderPrefixClicked)
         general_settings_action.triggered.connect(self.general_settings_clicked)
         about_settings_action=QAction("About Tempico Software",self)
         about_settings_action.triggered.connect(self.about_settings)
@@ -185,9 +202,11 @@ class MainWindow(QMainWindow):
         self.tab1=QWidget()
         self.tab2=QWidget()
         self.tab3=QWidget()
+        self.tab4=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
+        self.tabs.addTab(self.tab4,"Time stamping")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -222,6 +241,10 @@ class MainWindow(QMainWindow):
         #------Counts Estimated Graphic class---------#
         self.countsEstimatedGraphic=None
         self.countsEstimated_init_sentinel=0
+        #------Time Stamping Graphic class---------#
+        self.timeStampGraphic=None
+        self.timeStampGraphic_init_sentinel=0
+        
 
         #------Layout for the main window---------#
         mainLayout = QVBoxLayout(mainWidget)
@@ -233,6 +256,7 @@ class MainWindow(QMainWindow):
         self.disconnectButton.clicked.connect(self.disconnect_button_click)
         self.sentinel2=0
         self.sentinel3=0
+        self.sentinel4=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
         self.open_dialog()
@@ -294,6 +318,26 @@ class MainWindow(QMainWindow):
             self.uiCountsEstimated = Ui_CountsEstimated()
             self.uiCountsEstimated.setupUi(parent)
             self.sentinel3=1
+    
+    
+    def construct_time_stamping(self,parent):
+        """
+        Constructs the Counts Estimated window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set,
+        it creates an instance of the `Ui_CountsEstimated` class and sets up the UI using the given parent.
+
+        It ensures the UI is initialized only once by checking the `sentinel3` flag.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the counts estimated window.
+        :type parent: QWidget
+        :returns: None
+        """
+        #TO DO Build Documentation
+        if self.sentinel4==0:
+            self.uiTimeStamping = Ui_TimeStamping()
+            self.uiTimeStamping.setupUi(parent)
+            self.sentinel4=1
 
 
 
@@ -351,6 +395,9 @@ class MainWindow(QMainWindow):
                         self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                     if self.countsEstimatedGraphic!=None:
                         self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+                    #To do implement connect device
+                    if self.timeStampGraphic!=None:
+                        self.timeStampGraphic.connectedDevice(self.conectedDevice)
 
 
                     checkchannel1=self.ui.Channel1Graph1
@@ -410,11 +457,12 @@ class MainWindow(QMainWindow):
                             self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                         if self.countsEstimatedGraphic!=None and openSentinel:
                             self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+                        if self.timeStampGraphic!=None and openSentinel:
+                            self.timeStampGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
-                    except NameError as e:
-                        print(e)
+                    except:
                         msg_box = QMessageBox(self)
                         msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                         msg_box.setWindowTitle("Connection Error")
@@ -438,6 +486,8 @@ class MainWindow(QMainWindow):
                     self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
             if self.countsEstimatedGraphic!=None and openSentinel:
                     self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
+            if self.timeStampGraphic!=None and openSentinel:
+                    self.timeStampGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -464,6 +514,8 @@ class MainWindow(QMainWindow):
             self.LifeTimeGraphic.disconnectedDevice()
         if self.countsEstimatedGraphic!=None:
             self.countsEstimatedGraphic.disconnectedDevice()
+        if self.timeStampGraphic!=None:
+            self.timeStampGraphic.disconnectedDevice()
 
 
 
@@ -514,7 +566,7 @@ class MainWindow(QMainWindow):
                   self.parametersTable=parametersTable
                   timeRange=self.uiLifeTime.timeRangeValue
                   numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
-                  self.LifeTimeGraphic=LifeTimeGraphic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
+                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
                                                applyButton,parametersTable,self,self.LifeTimeTimer)
@@ -564,8 +616,55 @@ class MainWindow(QMainWindow):
                 helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
-
-
+          elif valor_padre==3:
+            padre=self.tab4
+            self.construct_time_stamping(padre)  
+            if self.timeStampGraphic==None:
+                enableCheckBoxA=self.uiTimeStamping.enableChannelACheckBox
+                enableCheckBoxB=self.uiTimeStamping.enableChannelBCheckBox
+                enableCheckBoxC=self.uiTimeStamping.enableChannelCCheckBox
+                enableCheckBoxD=self.uiTimeStamping.enableChannelDCheckBox
+                startNormalButton=self.uiTimeStamping.startNormalButton
+                pauseNormalButton=self.uiTimeStamping.pauseNormalButton
+                stopNormalButton=self.uiTimeStamping.stopNormalButton
+                startScheduleButton=self.uiTimeStamping.startScheduleButton
+                pauseScheduleButton=self.uiTimeStamping.pauseScheduleButton
+                stopScheduleButton=self.uiTimeStamping.stopScheduleButton
+                startLimitedButton=self.uiTimeStamping.startLimitedMeasurementsButton
+                pauseLimitedButton=self.uiTimeStamping.pausetLimitedMeasurementsButton
+                stopLimitedButton=self.uiTimeStamping.stoptLimitedMeasurementsButton
+                startDate=self.uiTimeStamping.startDate
+                startTime=self.uiTimeStamping.startTime
+                finishDate=self.uiTimeStamping.stopDate
+                finishTime=self.uiTimeStamping.stopTime
+                numberMeasurementsSpinBox=self.uiTimeStamping.numberMeasurementsSpinBox
+                showTableCheckBox=self.uiTimeStamping.showTableCheckBox
+                measurementLabelA=self.uiTimeStamping.measurementsChannelALabel
+                measurementLabelB=self.uiTimeStamping.measurementsChannelBLabel
+                measurementLabelC=self.uiTimeStamping.measurementsChannelCLabel
+                measurementLabelD=self.uiTimeStamping.measurementsChannelDLabel
+                valueMeasurementA=self.uiTimeStamping.valueChannelALabel
+                valueMeasurementB=self.uiTimeStamping.valueChannelBLabel
+                valueMeasurementC=self.uiTimeStamping.valueChannelCLabel
+                valueMeasurementD=self.uiTimeStamping.valueChannelDLabel
+                valueTotalMeasurement=self.uiTimeStamping.valueTotalLabel
+                tableTimeStamp=self.uiTimeStamping.tableTimeStamp
+                statusLabelTimeStamp=self.uiTimeStamping.valueStateLabel
+                colorLabelTimeStamp=self.uiTimeStamping.labelColor
+                saveDataComplete=self.uiTimeStamping.saveDataAfterCompleteCheckBox
+                tabNormalMeasurement=self.uiTimeStamping.tabNormalMeasurement
+                tabScheduleMeasurement=self.uiTimeStamping.tab_2
+                tabLimitedMeasurement=self.uiTimeStamping.limitedMeasurementsFrame
+                saveDataButton= self.uiTimeStamping.saveDataButton
+                tabsTimeStamp=self.uiTimeStamping.tabStartStopTypes
+                autoSaveComboBox= self.uiTimeStamping.timeAutoSaveComboBox
+                helpSaveButton=self.uiTimeStamping.helpSaveButton
+                self.timeStampGraphic=TimeStampLogic(enableCheckBoxA,enableCheckBoxB,enableCheckBoxC,enableCheckBoxD, startNormalButton, pauseNormalButton, stopNormalButton, startScheduleButton,
+                                                     pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
+                                                     numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
+                                                     valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
+                
 
         #   elif valor_padre==1:
 
@@ -672,6 +771,32 @@ class MainWindow(QMainWindow):
             message_box.setIcon(QMessageBox.Information)
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+    
+    def folderPrefixClicked(self):
+        if not self.currentMeasurement:
+            self.openPrefixSettings=True
+            self.prefixFolderDialog=QDialog(self)
+            self.uiFolderPrefix=Ui_DialogFolderPrefix()
+            self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
+            self.prefixFolderDialog.exec_()
+        else:
+            #Open warning dialog
+            message_box = QMessageBox(self)
+            message_box.setWindowTitle("Running measurement")
+            message_box.setText("The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.")
+            pixmap= QPixmap(ICON_LOCATION)
+            message_box.setIconPixmap(pixmap)
+            message_box.setIcon(QMessageBox.Information)
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            self.openPrefixSettings=True
+            self.prefixFolderDialog=QDialog(self)
+            self.uiFolderPrefix=Ui_DialogFolderPrefix()
+            self.uiFolderPrefix.setupUi(self.prefixFolderDialog,self)
+            self.uiFolderPrefix.onlyReading()
+            self.prefixFolderDialog.exec_()
+            
+        
 
     def enableSettings(self):
         """
@@ -691,7 +816,9 @@ class MainWindow(QMainWindow):
             if self.settings_windows.isVisible():
                 self.settings_windows.getsettings()
                 self.settings_windows.enableSettings()
-
+        if self.openPrefixSettings:
+            if self.prefixFolderDialog.isVisible():
+                self.uiFolderPrefix.enableEditing()
 
     def saveSettings(self):
         """
@@ -779,7 +906,7 @@ class MainWindow(QMainWindow):
         """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
-                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice,self)
                 self.settings_windows.getsettings()
                 self.openGeneralSettings=True
                 self.settings_windows.exec_()
@@ -793,7 +920,7 @@ class MainWindow(QMainWindow):
                 message_box.setIcon(QMessageBox.Information)
                 message_box.setStandardButtons(QMessageBox.Ok)
                 message_box.exec_()
-                self.settings_windows=GeneralSettingsWindow(self.conectedDevice)
+                self.settings_windows=GeneralSettingsWindow(self.conectedDevice,self)
                 self.settings_windows.preDefinedSettings(self.thresholdVoltage, self.numberRuns)
                 self.settings_windows.disableSettings()
                 self.openGeneralSettings=True
@@ -923,6 +1050,8 @@ class MainWindow(QMainWindow):
             except:
                 if self.countsEstimatedGraphic:
                     self.countsEstimatedGraphic.disconnectedDevice()
+                if self.timeStampGraphic:
+                    self.timeStampGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
                 if self.grafico:
@@ -948,6 +1077,8 @@ class MainWindow(QMainWindow):
         """
         if self.countsEstimatedGraphic:
             self.countsEstimatedGraphic.disconnectedDevice()
+        if self.timeStampGraphic:
+            self.timeStampGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
         if self.grafico:
@@ -977,6 +1108,17 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.currentMeasurement=False
+    
+    def resetSaveSentinelsAllWindows(self):
+        if self.timeStampGraphic!=None:
+            self.timeStampGraphic.resetSaveSentinels()
+        if self.countsEstimatedGraphic!=None:
+            self.countsEstimatedGraphic.resetSaveSentinels()
+        if self.LifeTimeGraphic!=None:
+            self.LifeTimeGraphic.resetSaveSentinels()
+        if self.grafico!=None:
+            self.grafico.resetSaveSentinels()
+        
 
 
 

@@ -6,20 +6,21 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main module &mdash; Tempico Software 1.2.0 documentation</title>
+  <title>main module &mdash; Tempico Software 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c8675c2"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3d533f9b"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="generalsettings module" href="generalsettings.html" /> 
+    <link rel="next" title="StartStopLogic module" href="StartStopLogic.html" />
+    <link rel="prev" title="Welcome to Tempico Software’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,13 +44,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">main module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
@@ -61,14 +55,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_time_stamping"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_time_stamping()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnect_button_click"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnect_button_click()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnectedDevice()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.enableSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.enableSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.folderPrefixClicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.folderPrefixClicked()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.general_settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.general_settings_clicked()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resetSaveSentinelsAllWindows"><code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.saveSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.saveSettings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.settings_clicked()</span></code></a></li>
@@ -83,6 +80,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#main.execProgram"><code class="docutils literal notranslate"><span class="pre">execProgram()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
 </ul>
 
         </div>
@@ -116,7 +117,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
 <p>Main application window class.</p>
-<p>This class is responsible for creating the main window of the application, including its tabs and graphical user interface (GUI) components. 
+<p>This class is responsible for creating the main window of the application, including its tabs and graphical user interface (GUI) components.
 It serves as a bridge between the UI classes that handle the design elements and the logic classes that manage the application’s functionalities.</p>
 <p>The main tasks of this class include:
 - Initializing the main window and its layout.
@@ -139,8 +140,8 @@ It serves as a bridge between the UI classes that handle the design elements and
 <dt class="sig sig-object py" id="main.MainWindow.about_settings">
 <span class="sig-name descname"><span class="pre">about_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.about_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.about_settings" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the About window displaying information about the company, version, and repository.</p>
-<p>This function opens a window showing details about the company (Tausand), the software version, 
-and the location of the repository. It does not perform any checks or validations and directly 
+<p>This function opens a window showing details about the company (Tausand), the software version,
+and the location of the repository. It does not perform any checks or validations and directly
 displays the About window.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -150,7 +151,7 @@ displays the About window.</p>
 <dt class="sig sig-object py" id="main.MainWindow.activeMeasurement">
 <span class="sig-name descname"><span class="pre">activeMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.activeMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.activeMeasurement" title="Permalink to this definition"></a></dt>
 <dd><p>Activates the sentinel indicating that a measurement is currently running.</p>
-<p>This function sets the internal flag to True, which is used to track the 
+<p>This function sets the internal flag to True, which is used to track the
 active state of a measurement process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -163,10 +164,10 @@ active state of a measurement process.</p>
 <dt class="sig sig-object py" id="main.MainWindow.clicked_tabs">
 <span class="sig-name descname"><span class="pre">clicked_tabs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.clicked_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.clicked_tabs" title="Permalink to this definition"></a></dt>
 <dd><p>Executes an action when a tab is clicked and creates the corresponding window.</p>
-<p>This function checks which tab is currently active and constructs the associated window 
-by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram, 
-it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds 
-to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it 
+<p>This function checks which tab is currently active and constructs the associated window
+by invoking the appropriate function. If the tab corresponds to the Start/Stop Histogram,
+it stops the LifeTime timer and constructs the Start/Stop Histogram window. If the tab corresponds
+to the Lifetime Measurements, it constructs the Lifetime window and sets up the LifeTime logic if it
 has not been initialized yet.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -176,9 +177,9 @@ has not been initialized yet.</p>
 <dt class="sig sig-object py" id="main.MainWindow.closeEvent">
 <span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.closeEvent" title="Permalink to this definition"></a></dt>
 <dd><p>Handles the close event of the main window and prompts the user for confirmation.</p>
-<p>This function is triggered when the user attempts to close the main window. It displays 
-a dialog asking if the user is sure about closing the application (Tempico software). 
-If the user confirms by selecting “Yes”, the event is accepted and the application closes. 
+<p>This function is triggered when the user attempts to close the main window. It displays
+a dialog asking if the user is sure about closing the application (Tempico software).
+If the user confirms by selecting “Yes”, the event is accepted and the application closes.
 If the user selects “No”, the close event is ignored, and the application remains open.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -211,7 +212,7 @@ it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up 
 <dt class="sig sig-object py" id="main.MainWindow.construct_g2">
 <span class="sig-name descname"><span class="pre">construct_g2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_g2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_g2" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs the g2 Measurements window.</p>
-<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates 
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates
 an instance of the <cite>Uig2</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
@@ -228,7 +229,7 @@ an instance of the <cite>Uig2</cite> class and sets up the UI using the given pa
 <dt class="sig sig-object py" id="main.MainWindow.construct_lifetime">
 <span class="sig-name descname"><span class="pre">construct_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_lifetime" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs the Lifetime Measurements window.</p>
-<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates 
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set, it creates
 an instance of the <cite>UiLifeTime</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
@@ -259,11 +260,28 @@ an instance of the <cite>Ui_HistogramaStartStop</cite> class and sets up the UI 
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_time_stamping">
+<span class="sig-name descname"><span class="pre">construct_time_stamping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_time_stamping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_time_stamping" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the Counts Estimated window.</p>
+<p>This function takes a <cite>QTabWidget</cite> parent, and if the sentinel is not set,
+it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up the UI using the given parent.</p>
+<p>It ensures the UI is initialized only once by checking the <cite>sentinel3</cite> flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the counts estimated window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.disconnect_button_click">
 <span class="sig-name descname"><span class="pre">disconnect_button_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.disconnect_button_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.disconnect_button_click" title="Permalink to this definition"></a></dt>
 <dd><p>Handles the disconnect button click event.</p>
-<p>This function hides the graphical display, disables the disconnect button, and re-enables the connect button. 
-It also closes the connected device and resets its reference to <cite>None</cite>. 
+<p>This function hides the graphical display, disables the disconnect button, and re-enables the connect button.
+It also closes the connected device and resets its reference to <cite>None</cite>.
 If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cite> are active, it will disconnect them as well.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -273,8 +291,8 @@ If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cit
 <dt class="sig sig-object py" id="main.MainWindow.disconnectedDevice">
 <span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.disconnectedDevice" title="Permalink to this definition"></a></dt>
 <dd><p>Handles device disconnection without displaying any user interface dialogs.</p>
-<p>This function is triggered when the connection with the device is lost. It notifies 
-all relevant components to handle the disconnection and sets the connected device 
+<p>This function is triggered when the connection with the device is lost. It notifies
+all relevant components to handle the disconnection and sets the connected device
 reference to None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -287,8 +305,8 @@ reference to None.</p>
 <dt class="sig sig-object py" id="main.MainWindow.enableSettings">
 <span class="sig-name descname"><span class="pre">enableSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.enableSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.enableSettings" title="Permalink to this definition"></a></dt>
 <dd><p>Re-enables the device and general settings dialogs if they are open.</p>
-<p>If either the device configuration or general settings dialog is currently visible, 
-this function refreshes and reactivates their interactive fields by calling the 
+<p>If either the device configuration or general settings dialog is currently visible,
+this function refreshes and reactivates their interactive fields by calling the
 corresponding <cite>get_settings()</cite> and <cite>enableSettings()</cite> methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -298,13 +316,18 @@ corresponding <cite>get_settings()</cite> and <cite>enableSettings()</cite> meth
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.folderPrefixClicked">
+<span class="sig-name descname"><span class="pre">folderPrefixClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.folderPrefixClicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.folderPrefixClicked" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.general_settings_clicked">
 <span class="sig-name descname"><span class="pre">general_settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.general_settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.general_settings_clicked" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the general settings window for device-wide configurations.</p>
-<p>This function checks if a device is connected. If no measurement is currently running, 
-it opens the general settings window where configurations that affect the entire device 
-(regardless of the channel) can be adjusted. If a measurement is running, a message box 
-is displayed to inform the user that changes cannot be made while the measurement is in 
+<p>This function checks if a device is connected. If no measurement is currently running,
+it opens the general settings window where configurations that affect the entire device
+(regardless of the channel) can be adjusted. If a measurement is running, a message box
+is displayed to inform the user that changes cannot be made while the measurement is in
 progress. If no device is connected, a message box is shown indicating that no device was found.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -314,8 +337,8 @@ progress. If no device is connected, a message box is shown indicating that no d
 <dt class="sig sig-object py" id="main.MainWindow.manageConection">
 <span class="sig-name descname"><span class="pre">manageConection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.manageConection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.manageConection" title="Permalink to this definition"></a></dt>
 <dd><p>Manages the connection status with the measurement device.</p>
-<p>This function checks if the device is still connected. If the connection is lost, it stops the 
-timer responsible for monitoring the device, removes the device instance, disables measurement 
+<p>This function checks if the device is still connected. If the connection is lost, it stops the
+timer responsible for monitoring the device, removes the device instance, disables measurement
 functionalities in all tabs, and displays an error dialog to inform the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -328,7 +351,7 @@ functionalities in all tabs, and displays an error dialog to inform the user.</p
 <dt class="sig sig-object py" id="main.MainWindow.noMeasurement">
 <span class="sig-name descname"><span class="pre">noMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.noMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.noMeasurement" title="Permalink to this definition"></a></dt>
 <dd><p>Deactivates the sentinel indicating that no measurement is currently running.</p>
-<p>This function sets the internal flag to False, marking that there is no active 
+<p>This function sets the internal flag to False, marking that there is no active
 measurement process at the moment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -341,7 +364,7 @@ measurement process at the moment.</p>
 <dt class="sig sig-object py" id="main.MainWindow.open_dialog">
 <span class="sig-name descname"><span class="pre">open_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.open_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.open_dialog" title="Permalink to this definition"></a></dt>
 <dd><p>Opens a dialog window to detect and connect a measurement device.</p>
-<p>This function creates and displays a dialog window that lists available measurement devices and their corresponding ports. 
+<p>This function creates and displays a dialog window that lists available measurement devices and their corresponding ports.
 Users can select a device and either connect or cancel the operation.</p>
 <p>If the ‘Connect’ button is clicked:
 - The selected device is connected, and all relevant software options are enabled.
@@ -362,11 +385,16 @@ Users can select a device and either connect or cancel the operation.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.resetSaveSentinelsAllWindows">
+<span class="sig-name descname"><span class="pre">resetSaveSentinelsAllWindows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.resetSaveSentinelsAllWindows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.resetSaveSentinelsAllWindows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.resizeEvent">
 <span class="sig-name descname"><span class="pre">resizeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.resizeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.resizeEvent" title="Permalink to this definition"></a></dt>
 <dd><p>Handles the window resize event and adjusts the column widths of the parameters table.</p>
-<p>This function is triggered when the user resizes the main window. It resizes the columns 
-of the parameters table in the LifeTime tab based on the current window width. The column 
+<p>This function is triggered when the user resizes the main window. It resizes the columns
+of the parameters table in the LifeTime tab based on the current window width. The column
 widths are scaled proportionally to ensure the table adapts to the new window size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -397,10 +425,10 @@ such as restoring settings or displaying them in the UI.</p>
 <dt class="sig sig-object py" id="main.MainWindow.settings_clicked">
 <span class="sig-name descname"><span class="pre">settings_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.settings_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.settings_clicked" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the settings window when the settings option is clicked.</p>
-<p>This function checks if a device is connected. If no measurement is currently running, 
-it displays the settings window for channel configuration. If a measurement is running, 
-a message box is shown informing the user that changes cannot be made while a measurement 
-is in progress. If no device is connected, a message box alerts the user that no device 
+<p>This function checks if a device is connected. If no measurement is currently running,
+it displays the settings window for channel configuration. If a measurement is running,
+a message box is shown informing the user that changes cannot be made while a measurement
+is in progress. If no device is connected, a message box alerts the user that no device
 was found.</p>
 <p>It does not take any parameters and does not return a value.
 :returns: None</p>
@@ -455,7 +483,8 @@ After showing the main window, it closes the current window.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="generalsettings.html" class="btn btn-neutral float-left" title="generalsettings module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Tempico Software’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="StartStopLogic.html" class="btn btn-neutral float-right" title="StartStopLogic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

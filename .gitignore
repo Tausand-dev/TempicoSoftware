@@ -11,9 +11,11 @@
 /WindowsInstaller/
 /WindowsInstaller1.2/
 /WindowsInstaller1.2.1/
+/WindowsInstaller1.3.0/
 /src/TestVenv/
 /src/dist/
 /src/build/
+/dist/
 /src/InstallerEnvironment/
 
 
@@ -181,3 +183,6 @@ cython_debug/
 
 ## Inno Setup installer output
 /installer/Output
+
+## Microsoft Office Word temporal files
+~$*.docx
