@@ -846,6 +846,7 @@ class CountEstimatedLogic():
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
+            self.mainWindow.tabs.setTabEnabled(4,False)
             self.mainWindow.saveSettings()
             self.saveSettings()
             if "TP12" in constants.VERSION_PARAMETER:
@@ -897,6 +898,7 @@ class CountEstimatedLogic():
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
         self.resetSentinels()
         self.stopButton.setEnabled(False)
         self.worker.stop()

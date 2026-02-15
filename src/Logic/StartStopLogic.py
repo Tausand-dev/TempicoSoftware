@@ -413,6 +413,7 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
+            self.mainWindow.tabs.setTabEnabled(4,False)
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
             if "TP12" in constants.VERSION_PARAMETER:
@@ -500,6 +501,7 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
@@ -528,6 +530,7 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
         self.threadCreated=False
         self.stop_graphic()
     
@@ -1072,6 +1075,9 @@ class StartStopLogic():
             message_box.setWindowTitle("Error saving")
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.exec_()
+    
+
+    
             
 
     #Function to connect the Thread with update signal

@@ -2,6 +2,7 @@ import pyTempico as tempico
 from PySide2.QtCore import QThread, Signal
 import pyTempico as tempico
 import numpy as np
+from Utils.constants import *
 class WorkerThreadG2(QThread):
     """
     Worker thread for handling g² (second-order correlation) measurements in a separate thread 
@@ -395,9 +396,8 @@ class WorkerThreadG2(QThread):
         :return: 1 if the stop value is invalid (-1), otherwise 0 (int).
         """
         self.totalStarts += 1
-        if run[3] == -1:
+        if run[3] == OVERFLOW_PARAMETER:
             return 1
-        
         if run[3]<self.maximumTime:
             timeDifferences.append(run[3])
             self.totalStops += 1

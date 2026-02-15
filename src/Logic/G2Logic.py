@@ -128,6 +128,7 @@ class G2Logic():
         self.fixedDelayCheckBox.clicked.connect(self.changeExternalFixed)
         self.externalDelaySpinBox.valueChanged.connect(self.changeReverseExternalSpinBox)
         self.savePlotButton.clicked.connect(self.saveG2Plot)
+        self.helpButton.clicked.connect(self.helpButtonDialog)
         #Tau values
         self.tauValues=[]
         #Fit lists values
@@ -206,6 +207,8 @@ class G2Logic():
         self.mainWindow.connectButton.setEnabled(False)
         self.device=device
         self.startManualButton.setEnabled(True)
+        self.startLimitedButtonG2.setEnabled(True)
+        self.startAutoClearButton.setEnabled(True)
     
     def disconnectedDevice(self):
         """
@@ -216,6 +219,8 @@ class G2Logic():
         self.mainWindow.disconnectButton.setEnabled(False)
         self.mainWindow.connectButton.setEnabled(True)
         self.startManualButton.setEnabled(False)
+        self.startLimitedButtonG2.setEnabled(False)
+        self.startAutoClearButton.setEnabled(False)
     
     def resetSaveSentinels(self):
         """
@@ -2024,8 +2029,22 @@ class G2Logic():
         
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device, self.modeToMeasure, self.getUnits())
         self.threadSettingsBeforeMeasurement(0)
+        self.disableTabs()
         self.worker.start()
     
+    def enableTabs(self):
+        self.mainWindow.tabs.setTabEnabled(0,True)
+        self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
+    
+
+    def disableTabs(self):
+        self.mainWindow.tabs.setTabEnabled(0,False)
+        self.mainWindow.tabs.setTabEnabled(1,False)
+        self.mainWindow.tabs.setTabEnabled(2,False)
+        self.mainWindow.tabs.setTabEnabled(3,False)
+
     def checkRangesMode(self,channel, maximumTime):
         """
         Determines the optimal measurement mode for the device based on the selected 
@@ -2099,6 +2118,7 @@ class G2Logic():
         """
         self.worker.stop()
         self.stopManualButton.setEnabled(False)
+        self.enableTabs()
         
     def getPicoSecondsValue(self, valueStr):
         """
@@ -2153,7 +2173,9 @@ class G2Logic():
         self.checkRangesMode(channelSelected,maximumTime)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device,self.modeToMeasure, self.getUnits(), True, numberMeasurements)
         self.threadSettingsBeforeMeasurement(1)
+        self.disableTabs()
         self.worker.start()
+        
         
     
     def stopLimitedMeasurement(self):
@@ -2166,6 +2188,7 @@ class G2Logic():
         """
         self.worker.stop()
         self.stopLimitedButtonG2.setEnabled(False)
+        self.enableTabs()
     
     def stopAutoClearMeasurement(self):
         """
@@ -2177,6 +2200,7 @@ class G2Logic():
         self.worker.stop()
         self.autoClearTimer.stop()
         self.stopAutoClearButton.setEnabled(False)
+        self.enableTabs()
         
     
     #Auto clear measurement
@@ -2205,6 +2229,7 @@ class G2Logic():
         self.checkRangesMode(channelSelected,maximumTime)
         self.worker=WorkerThreadG2(channelSelected,maximumTime,numberBins,coincidenceWindowSelected,self.device,self.modeToMeasure, self.getUnits(),False,0,True)
         self.threadSettingsBeforeMeasurement(2)
+        self.disableTabs()
         self.worker.start()
     
     def generalSettingsBeforeMeasurement(self, tab):
@@ -2351,6 +2376,7 @@ class G2Logic():
         self.stopManualButton.setEnabled(False)
         self.startManualButton.setEnabled(True)
         self.clearButton.setEnabled(False)
+        self.enableTabs()
         
         
     
@@ -2368,6 +2394,7 @@ class G2Logic():
         self.startLimitedButtonG2.setEnabled(True)
         self.clearLimitedButtonG2.setEnabled(False)
         self.numberMeasurementsSpinBox.setEnabled(True)
+        self.enableTabs()
     
     
     def finishAutoClearMeasurement(self):
@@ -2384,6 +2411,7 @@ class G2Logic():
         self.startAutoClearButton.setEnabled(True)
         self.clearAutoClearButton.setEnabled(False)
         self.autoClearSpinBox.setEnabled(True)
+        self.enableTabs()
         
     
     
@@ -2425,6 +2453,29 @@ class G2Logic():
         result = msg.exec_()
         if result == QMessageBox.Ok:
             self.device.setMode(channel,suggestedMode)
+    
+    def helpButtonDialog(self):
+        """
+        Displays an informational dialog with instructions for using the g² window.
+
+        This function shows a modal QMessageBox explaining how g²(τ) is calculated
+        from the coincidence histogram and the required experimental setup.
+
+        :return: None
+        """
+        message_box = QMessageBox(self.mainWindow)
+        message_box.setIcon(QMessageBox.Information)
+        message_box.setWindowTitle("g² Information")
+        message_box.setText(
+            "The second-order correlation function is estimated as:\n\n"
+            "g²(τ) ≈ N(τ) / (N² · Δt · T)\n\n"
+            "where N(τ) is the coincidence histogram, N is the average count rate, "
+            "Δt is the bin width, and T is the integration time.\n\n"
+            "A 50/50 beam splitter configuration is required, since the system "
+            "measures only Start–Stop time differences for coincidences."
+        )
+        message_box.setStandardButtons(QMessageBox.Ok)
+        message_box.exec_()
         
         
     
@@ -2512,6 +2563,8 @@ class G2Logic():
         """
         self.determinedParameters=True
     
+
+
     
         
         
