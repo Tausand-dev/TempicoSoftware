@@ -1,6 +1,7 @@
 from PySide2.QtCore import QThread, Signal, Slot
 from numpy import arange, histogram
 from numpy import append as appnd
+import Utils.constants as constants
 
 class WorkerThreadLifeTime(QThread):
     """
@@ -143,17 +144,20 @@ class WorkerThreadLifeTime(QThread):
                     if self.deviceStartChannel!=None:
                         currentStartMeasurement=measurement[i]
                         currentStopMeasurement=measurement[i+100]
-                        sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=-1
-                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                        sentinelStart=len(currentStartMeasurement)==4 and currentStartMeasurement[3]!=constants.OVERFLOW_PARAMETER
+                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=constants.OVERFLOW_PARAMETER
                         if sentinelStart:
                             self.totalStarts+=1
                         if sentinelStart and sentinelStop:
-                            differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
-                            self.totalMeasurements+=1
-                            self.totalTime+=differenceValue
-                            if abs(differenceValue)<=self.TimeRange:
-                                self.noMeasurementsCounter=0
-                                self.startStopDifferences.append(differenceValue)
+                            if currentStopMeasurement[3]>=currentStartMeasurement[3]:
+                                differenceValue=currentStopMeasurement[3]-currentStartMeasurement[3]
+                                self.totalMeasurements+=1
+                                self.totalTime+=differenceValue
+                                if abs(differenceValue)<=self.TimeRange:
+                                    self.noMeasurementsCounter=0
+                                    self.startStopDifferences.append(differenceValue)
+                                else:
+                                    self.noMeasurementsCounter+=1
                             else:
                                 self.noMeasurementsCounter+=1
                             
@@ -163,7 +167,7 @@ class WorkerThreadLifeTime(QThread):
                                 
                     else:
                         currentStopMeasurement=measurement[i]
-                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]!=-1
+                        sentinelStop=len(currentStopMeasurement)==4 and currentStopMeasurement[3]>=0
                         partialStop=len(currentStopMeasurement)==4 
                         if sentinelStop:
                             differenceValue=currentStopMeasurement[3]

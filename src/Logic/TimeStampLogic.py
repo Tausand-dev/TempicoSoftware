@@ -11,6 +11,7 @@ from Threads.ThreadProccessData import ProcessingDataSaved
 import platform
 import struct
 import psutil
+import Utils.constants as constants
 class TimeStampLogic():
     """
     Class responsible for managing the logic and interface of the TimeStamp measurement tab.
@@ -1189,6 +1190,8 @@ class TimeStampLogic():
         :return: None
         """
         self.mainWindow.disconnectButton.setEnabled(False)
+        if "TP12" in constants.VERSION_PARAMETER:
+            self.calibrateDeviceDelay()
         self.saveDataComplete.setEnabled(False)
         self.autoSaveComboBox.setEnabled(False)
         self.saveDataButton.setEnabled(False)
@@ -1196,6 +1199,10 @@ class TimeStampLogic():
         self.enableCheckBoxB.setEnabled(False)
         self.enableCheckBoxC.setEnabled(False)
         self.enableCheckBoxD.setEnabled(False)
+    
+    
+    def calibrateDeviceDelay(self):
+        self.device.calibrateDelay()
         
     
     def clearData(self):

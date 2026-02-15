@@ -5,6 +5,7 @@ import pyTempico as tempico
 import time
 import threading
 import numpy as np
+import Utils.constants as constants
 class WorkerThreadCountsEstimated(QThread):
     """
     This class represents a worker thread that processes Start-Stop measurements in a separate thread
@@ -189,25 +190,25 @@ class WorkerThreadCountsEstimated(QThread):
                 for run in measure:
                     if self.channelASentinel:
                         if run:
-                            if run[0]==1 and run[3]!=-1 :
+                            if run[0]==1 and run[3]!=constants.OVERFLOW_PARAMETER :
                                 intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelA)
                                
                                 values=values+intervalValues
                     if self.channelBSentinel:
                         if run:
-                            if run[0]==2 and run[3]!=-1 :
+                            if run[0]==2 and run[3]!=constants.OVERFLOW_PARAMETER :
                                 intervalValues=self.calculateIntervalWithStops(run,self.numberStopsChannelB)
                                 valuesB=valuesB+intervalValues
                     
                     if self.channelCSentinel:
                         if run:
-                            if run[0]==3 and run[3]!=-1 :
+                            if run[0]==3 and run[3]!=constants.OVERFLOW_PARAMETER :
                                 intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelC)
                                 valuesC=valuesC+intervalValues
                     
                     if self.channelDSentinel:
                         if run:
-                            if run[0]==4 and run[3]!=-1 :
+                            if run[0]==4 and run[3]!=constants.OVERFLOW_PARAMETER :
                                 intervalValues=self.calculateIntervalWithStops(run, self.numberStopsChannelD)
                                 valuesD=valuesD+intervalValues
         if len(values)>0:
@@ -334,7 +335,7 @@ class WorkerThreadCountsEstimated(QThread):
         #TODO: CHANGE RECALCULATING NUMBER OF STOPS
         tempValues=[]
         for i in range(numberStops-1):
-            if currentMeasure[i+3]!=-1 and currentMeasure[i+4]!=-1:
+            if currentMeasure[i+3]!=constants.OVERFLOW_PARAMETER and currentMeasure[i+4]!=constants.OVERFLOW_PARAMETER:
                 differenceValue=currentMeasure[i+4]-currentMeasure[i+3]
                 tempValues.append(differenceValue)
         
@@ -403,7 +404,7 @@ class WorkerThreadCountsEstimated(QThread):
                 measurements=self.device.measure()
                 if measurements:
                     if measurements[0]:
-                        if measurements[0][3] != -1:
+                        if measurements[0][3] != constants.OVERFLOW_PARAMETER:
                             totalMeasurements+=1
             if totalMeasurements>totalIterations/2:
                 stopsFounded=True
