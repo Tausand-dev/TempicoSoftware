@@ -1,19 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main &mdash; Tempico Software 1.1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>main &mdash; Tempico Software 1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3d533f9b"></script>
+      <script src="../_static/doctools.js?v=888ff710"></script>
+      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -24,11 +25,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> Tempico Software
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Tempico Software
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -36,15 +41,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../StartStopHist.html">StartStopHist module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../aboutDialog.html">aboutDialog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../createsavefile.html">createsavefile module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../findDevices.html">findDevices module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../generalsettings.html">generalsettings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../timeStampGraphics.html">timeStampGraphics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TimeStampLogic.html">TimeStampLogic module</a></li>
 </ul>
 
         </div>
@@ -60,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Module code</a> &raquo;</li>
-      <li>main</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">main</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,32 +73,32 @@
            <div itemprop="articleBody">
              
   <h1>Source code for main</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QSplashScreen</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QAction</span>
+<span></span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QSplashScreen</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QAction</span><span class="p">,</span><span class="n">QDesktopWidget</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QIcon</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QSystemTrayIcon</span>
-<span class="kn">from</span> <span class="nn">generalsettings</span> <span class="kn">import</span> <span class="n">GeneralSettingsWindow</span>
-<span class="kn">from</span> <span class="nn">aboutDialog</span> <span class="kn">import</span> <span class="n">Ui_AboutDialog</span>
-<span class="kn">from</span> <span class="nn">ui_StarStopHistogram</span> <span class="kn">import</span> <span class="n">Ui_HistogramaStartStop</span>
-<span class="kn">from</span> <span class="nn">ui_g2measurement</span> <span class="kn">import</span> <span class="n">Ui_G2</span>
-<span class="kn">from</span> <span class="nn">ui_devicesDialog</span> <span class="kn">import</span> <span class="n">Ui_Devices</span>
+<span class="kn">from</span> <span class="nn">Utils.generalsettings</span> <span class="kn">import</span> <span class="n">GeneralSettingsWindow</span>
+<span class="kn">from</span> <span class="nn">Utils.aboutDialog</span> <span class="kn">import</span> <span class="n">Ui_AboutDialog</span>
+<span class="kn">from</span> <span class="nn">Views.ui_StarStopHistogram</span> <span class="kn">import</span> <span class="n">Ui_HistogramaStartStop</span>
+<span class="kn">from</span> <span class="nn">Views.ui_g2measurement</span> <span class="kn">import</span> <span class="n">Ui_G2</span>
+<span class="kn">from</span> <span class="nn">Views.ui_devicesDialog</span> <span class="kn">import</span> <span class="n">Ui_Devices</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QTimer</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">ui_CountsEstimated</span> <span class="kn">import</span> <span class="n">Ui_CountsEstimated</span>
-<span class="kn">from</span> <span class="nn">ui_TimeStamping</span> <span class="kn">import</span> <span class="n">Ui_TimeStamping</span>
+<span class="kn">from</span> <span class="nn">Views.ui_CountsEstimated</span> <span class="kn">import</span> <span class="n">Ui_CountsEstimated</span>
+<span class="kn">from</span> <span class="nn">Views.ui_TimeStamping</span> <span class="kn">import</span> <span class="n">Ui_TimeStamping</span>
 <span class="c1">#To do eliminate import</span>
-<span class="kn">from</span> <span class="nn">createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
-<span class="kn">from</span> <span class="nn">ui_settings</span> <span class="kn">import</span> <span class="n">Ui_settings</span>
-<span class="kn">from</span> <span class="nn">uiParametersDialog</span> <span class="kn">import</span> <span class="n">UiParameters</span>
-<span class="kn">from</span> <span class="nn">ParametersDialog</span> <span class="kn">import</span> <span class="n">CountParameters</span>
-<span class="kn">from</span> <span class="nn">StartStopHist</span> <span class="kn">import</span> <span class="n">StartStopLogic</span>
-<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">ui_LifeTimemeasurement</span> <span class="kn">import</span> <span class="n">UiLifeTime</span>
-<span class="kn">from</span> <span class="nn">LifeTimeGraphics</span> <span class="kn">import</span> <span class="n">LifeTimeGraphic</span>
-<span class="kn">from</span> <span class="nn">CountsEstimatedGraphics</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
-<span class="kn">from</span> <span class="nn">timeStampGraphics</span> <span class="kn">import</span> <span class="n">TimeStampLogic</span>
-<span class="kn">from</span> <span class="nn">ui_DialogFolderPrefixSettings</span> <span class="kn">import</span> <span class="n">Ui_DialogFolderPrefix</span>
+<span class="kn">from</span> <span class="nn">Utils.createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
+<span class="kn">from</span> <span class="nn">Views.ui_settings</span> <span class="kn">import</span> <span class="n">Ui_settings</span>
+<span class="kn">from</span> <span class="nn">Views.uiParametersDialog</span> <span class="kn">import</span> <span class="n">UiParameters</span>
+<span class="kn">from</span> <span class="nn">Utils.ParametersDialog</span> <span class="kn">import</span> <span class="n">CountParameters</span>
+<span class="kn">from</span> <span class="nn">Logic.StartStopLogic</span> <span class="kn">import</span> <span class="n">StartStopLogic</span>
+<span class="kn">from</span> <span class="nn">Utils.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Views.ui_LifeTimemeasurement</span> <span class="kn">import</span> <span class="n">UiLifeTime</span>
+<span class="kn">from</span> <span class="nn">Logic.LifeTimeLogic</span> <span class="kn">import</span> <span class="n">LifeTimeLogic</span>
+<span class="kn">from</span> <span class="nn">Logic.CountsEstimatedLogic</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
+<span class="kn">from</span> <span class="nn">Logic.TimeStampLogic</span> <span class="kn">import</span> <span class="n">TimeStampLogic</span>
+<span class="kn">from</span> <span class="nn">Views.ui_DialogFolderPrefixSettings</span> <span class="kn">import</span> <span class="n">Ui_DialogFolderPrefix</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="c1">#from qt_material import apply_stylesheet</span>
@@ -174,9 +175,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">.</span><span class="n">createDefaultFolder</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Tempico Software&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>
+        <span class="n">primary_screen</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">primaryScreen</span><span class="p">()</span>
+        <span class="n">screen_geometry</span> <span class="o">=</span> <span class="n">primary_screen</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">screen_geometry</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="n">screen_geometry</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">width</span><span class="o">&lt;</span><span class="mi">1000</span> <span class="ow">or</span> <span class="n">height</span><span class="o">&lt;</span><span class="mi">700</span><span class="p">:</span>
+            <span class="n">xPosition</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">400</span>
+            <span class="n">yPosition</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">300</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="n">xPosition</span><span class="p">,</span><span class="n">yPosition</span><span class="p">,</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xPosition</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">500</span>
+            <span class="n">yPosition</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">350</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="n">xPosition</span><span class="p">,</span><span class="n">yPosition</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>  
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span><span class="mi">800</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manageConection</span><span class="p">)</span>
@@ -630,7 +641,7 @@
                   <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">=</span><span class="n">parametersTable</span>
                   <span class="n">timeRange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">timeRangeValue</span>
                   <span class="n">numberBinsComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberBinsComboBox</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="n">LifeTimeGraphic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="n">LifeTimeLogic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
                                                <span class="n">clearButton</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">savePlotButton</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">comboBoxBinWidth</span><span class="p">,</span><span class="n">numberBinsComboBox</span><span class="p">,</span><span class="n">functionComboBox</span><span class="p">,</span>
                                                <span class="n">spinBoxNumberMeasurements</span><span class="p">,</span><span class="n">totalMeasurements</span><span class="p">,</span><span class="n">totalStarts</span><span class="p">,</span><span class="n">totalTime</span><span class="p">,</span><span class="n">timeRange</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
                                                <span class="n">applyButton</span><span class="p">,</span><span class="n">parametersTable</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span>
@@ -1174,7 +1185,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="o">=</span><span class="kc">False</span></div>
     
 <div class="viewcode-block" id="MainWindow.resetSaveSentinelsAllWindows"><a class="viewcode-back" href="../main.html#main.MainWindow.resetSaveSentinelsAllWindows">[docs]</a>    <span class="k">def</span> <span class="nf">resetSaveSentinelsAllWindows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Se resetean los sentinelas&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>

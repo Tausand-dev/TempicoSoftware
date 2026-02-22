@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main module &mdash; Tempico Software 1.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>main module &mdash; Tempico Software 1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3d533f9b"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="timeStampGraphics module" href="timeStampGraphics.html" /> 
+    <link rel="next" title="StartStopLogic module" href="StartStopLogic.html" />
+    <link rel="prev" title="Welcome to Tempico Software’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -26,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> Tempico Software
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -38,15 +44,46 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeGraphics.html">LifeTimeGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="StartStopHist.html">StartStopHist module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="aboutDialog.html">aboutDialog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedGraphics.html">CountsEstimatedGraphics module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="createsavefile.html">createsavefile module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="findDevices.html">findDevices module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generalsettings.html">generalsettings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="timeStampGraphics.html">timeStampGraphics module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">main module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">main module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.activeMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.activeMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_counts_estimated"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_counts_estimated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_time_stamping"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_time_stamping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnect_button_click"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnect_button_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">MainWindow.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.enableSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.enableSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.folderPrefixClicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.folderPrefixClicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.general_settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.general_settings_clicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resetSaveSentinelsAllWindows"><code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.saveSettings"><code class="docutils literal notranslate"><span class="pre">MainWindow.saveSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.settings_clicked"><code class="docutils literal notranslate"><span class="pre">MainWindow.settings_clicked()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">MainWindow.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#main.SplashScreen"><code class="docutils literal notranslate"><span class="pre">SplashScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.SplashScreen.show_main_window"><code class="docutils literal notranslate"><span class="pre">SplashScreen.show_main_window()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.SplashScreen.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">SplashScreen.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#main.execProgram"><code class="docutils literal notranslate"><span class="pre">execProgram()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
 </ul>
 
         </div>
@@ -62,8 +99,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>main module</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">main module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -74,11 +111,11 @@
            <div itemprop="articleBody">
              
   <section id="module-main">
-<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this headline"></a></h1>
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="main.MainWindow">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PySide2.QtWidgets.QMainWindow</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
 <p>Main application window class.</p>
 <p>This class is responsible for creating the main window of the application, including its tabs and graphical user interface (GUI) components.
 It serves as a bridge between the UI classes that handle the design elements and the logic classes that manage the application’s functionalities.</p>
@@ -87,7 +124,7 @@ It serves as a bridge between the UI classes that handle the design elements and
 - Creating and managing tabs for different sections of the application.
 - Integrating UI design elements with the logical operations for each functionality.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parent</strong> (<em>QWidget</em><em>, </em><em>optional</em>) – The parent widget (optional).</p></li>
 <li><p><strong>args</strong> (<em>tuple</em>) – Additional arguments.</p></li>
@@ -117,7 +154,7 @@ displays the About window.</p>
 <p>This function sets the internal flag to True, which is used to track the
 active state of a measurement process.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -145,10 +182,10 @@ a dialog asking if the user is sure about closing the application (Tempico softw
 If the user confirms by selecting “Yes”, the event is accepted and the application closes.
 If the user selects “No”, the close event is ignored, and the application remains open.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>event</strong> (<em>QCloseEvent</em>) – The close event triggered when attempting to close the window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -162,10 +199,10 @@ If the user selects “No”, the close event is ignored, and the application re
 it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up the UI using the given parent.</p>
 <p>It ensures the UI is initialized only once by checking the <cite>sentinel3</cite> flag.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the counts estimated window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -179,10 +216,10 @@ it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up 
 an instance of the <cite>Uig2</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the lifetime measurements window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -196,10 +233,10 @@ an instance of the <cite>Uig2</cite> class and sets up the UI using the given pa
 an instance of the <cite>UiLifeTime</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the lifetime measurements window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -213,10 +250,10 @@ an instance of the <cite>UiLifeTime</cite> class and sets up the UI using the gi
 an instance of the <cite>Ui_HistogramaStartStop</cite> class and sets up the UI using the given parent.</p>
 <p>It does not return a value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the histogram window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -230,10 +267,10 @@ an instance of the <cite>Ui_HistogramaStartStop</cite> class and sets up the UI 
 it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up the UI using the given parent.</p>
 <p>It ensures the UI is initialized only once by checking the <cite>sentinel3</cite> flag.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the counts estimated window.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -258,7 +295,7 @@ If additional graphics like <cite>g2Graphic</cite> or <cite>LifeTimeGraphic</cit
 all relevant components to handle the disconnection and sets the connected device
 reference to None.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -272,7 +309,7 @@ reference to None.</p>
 this function refreshes and reactivates their interactive fields by calling the
 corresponding <cite>get_settings()</cite> and <cite>enableSettings()</cite> methods.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -304,7 +341,7 @@ progress. If no device is connected, a message box is shown indicating that no d
 timer responsible for monitoring the device, removes the device instance, disables measurement
 functionalities in all tabs, and displays an error dialog to inform the user.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -317,7 +354,7 @@ functionalities in all tabs, and displays an error dialog to inform the user.</p
 <p>This function sets the internal flag to False, marking that there is no active
 measurement process at the moment.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -336,7 +373,7 @@ Users can select a device and either connect or cancel the operation.</p>
 - No options are activated.</p>
 <p>In case of a connection error, a message box is displayed informing the user of the failure.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -360,10 +397,10 @@ Users can select a device and either connect or cancel the operation.</p>
 of the parameters table in the LifeTime tab based on the current window width. The column
 widths are scaled proportionally to ensure the table adapts to the new window size.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>event</strong> (<em>QResizeEvent</em>) – The resize event triggered when the window is resized.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -378,7 +415,7 @@ averaging cycles, mode, number of stops, stop edge type, stop mask, threshold vo
 and number of runs. These values are saved into instance attributes for later use,
 such as restoring settings or displaying them in the UI.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -399,22 +436,22 @@ was found.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="main.MainWindow.staticMetaObject">
-<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.MainWindow.staticMetaObject" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.MainWindow.staticMetaObject" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="main.SplashScreen">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">SplashScreen</span></span><a class="reference internal" href="_modules/main.html#SplashScreen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.SplashScreen" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PySide2.QtWidgets.QMainWindow</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">SplashScreen</span></span><a class="reference internal" href="_modules/main.html#SplashScreen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.SplashScreen" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
 <p>Splash screen class for the application.</p>
 <p>This class creates a splash screen that displays an image for a brief period before fading out and transitioning to the main application window.</p>
 <p>The key responsibilities of this class include:
 - Displaying a splash screen with a specified image.
 - Timing the display duration and handling the transition to the main application window.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em><em>, </em><em>optional</em>) – The parent widget (optional).</p>
 </dd>
 </dl>
@@ -430,7 +467,7 @@ After showing the main window, it closes the current window.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="main.SplashScreen.staticMetaObject">
-<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.SplashScreen.staticMetaObject" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#main.SplashScreen.staticMetaObject" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -446,7 +483,8 @@ After showing the main window, it closes the current window.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="timeStampGraphics.html" class="btn btn-neutral float-left" title="timeStampGraphics module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Tempico Software’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="StartStopLogic.html" class="btn btn-neutral float-right" title="StartStopLogic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

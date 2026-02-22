@@ -183,3 +183,6 @@ cython_debug/
 
 ## Inno Setup installer output
 /installer/Output
+
+## Microsoft Office Word temporal files
+~$*.docx
