@@ -13,6 +13,7 @@ from datetime import datetime
 import pyTempico as tempico
 import os
 import numpy as np
+from Utils.constants import VERSION_PARAMETER
 class G2Logic():
     """
     Manages the logic for the g² (second-order correlation) tab in the GUI.
@@ -729,7 +730,6 @@ class G2Logic():
                 else:
                     self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()*1000
             elif self.comboBoxEquation.currentIndex()==3:
-                print("Entra aca")
                 if self.externalDelaySpinBox.suffix()==" ns":
                     self.thermalGaussianShiftTdInitial=self.externalDelaySpinBox.value()
                 else:
@@ -2044,6 +2044,18 @@ class G2Logic():
         self.mainWindow.tabs.setTabEnabled(1,False)
         self.mainWindow.tabs.setTabEnabled(2,False)
         self.mainWindow.tabs.setTabEnabled(3,False)
+    
+    def cannotEstimateParametersDialog(self):
+        """
+        Displays a warning dialog indicating that the measurement parameters cannot be estimated.
+
+        :return: None
+        """
+        QMessageBox.warning(
+            self.mainWindow,
+            "Measurement Parameters Not Estimated",
+            "Cannot estimated parameters due to low counts in the selected channel."
+        )
 
     def checkRangesMode(self,channel, maximumTime):
         """
@@ -2128,7 +2140,6 @@ class G2Logic():
         :return: The value converted to picoseconds (float).
         """
         units=valueStr.split(" ")
-        print(units)
         if units[1]=="ps":
             value=float(units[0])
         elif units[1]=="ns":
@@ -2286,6 +2297,7 @@ class G2Logic():
         self.worker.updateDeterminedParameters.connect(self.changeDeterminedParameters)
         self.worker.updateTauValues.connect(self.captureTauValues)
         self.worker.updateMeasurement.connect(self.captureMeasurement)
+        self.worker.cannotEstimate.connect(self.cannotEstimateParametersDialog)
         self.initDate=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if tab==0:
             self.worker.finished.connect(self.finishManualMeasurement)
@@ -2820,7 +2832,6 @@ class G2Logic():
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()   
                 except NameError as e:
-                    print(e)
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Critical)
                     message_box.setText("The changes could not be saved.")

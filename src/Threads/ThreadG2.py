@@ -40,6 +40,7 @@ class WorkerThreadG2(QThread):
     updateEstimatedParameter=Signal(str)
     updateDeterminedParameters=Signal()
     updateFirstParameter=Signal(str)
+    cannotEstimate=Signal()
     def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice, 
                  mode,units,limitedMeasurement=False,numberOfMeasurements=0,autoclearMeasure=False):
         super().__init__()
@@ -72,7 +73,7 @@ class WorkerThreadG2(QThread):
     def run(self):
         self.estimatedParameter=self.estimatedParameterValue()
         if self.estimatedParameter==-1 and self.running:
-            print("Cannot estimated due to low number of values")
+            self.running=False
         elif self.estimatedParameter!=-1 and self.running:
             self.cumulatedEstimatedParameter+=self.estimatedParameter
             self.totalEstimatedParameter+=1
