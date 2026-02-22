@@ -13,7 +13,7 @@ from datetime import datetime
 import pyTempico as tempico
 import os
 import numpy as np
-from Utils.constants import VERSION_PARAMETER
+import Utils.constants as constants
 class G2Logic():
     """
     Manages the logic for the g² (second-order correlation) tab in the GUI.
@@ -2597,8 +2597,12 @@ class G2Logic():
         if self.regionDisable:
             self.plotG2.removeItem(self.regionDisable)
         self.tauValues = tauValues
-        region = 125000/unitFactor
-        if mode == 1:
+        if constants.OVERFLOW_PARAMETER == -1:
+            region = 125000/unitFactor
+        else:
+            region = -150000/unitFactor
+
+        if mode == 1 and constants.OVERFLOW_PARAMETER == -1:
             region = 12500/unitFactor
 
         if len(tauValues) > 0:
