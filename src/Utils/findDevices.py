@@ -122,19 +122,21 @@ class PyTempicoManager:
                     if len(values_packet) == 2:
                         value = self.verify_pyTempico(values_packet)
                         if value == True and os.name!="posix":
-                            serialNumber=puerto.serial_number.split("-")
-                            reference=serialNumber[0]
-                            try:
+                            try: #in Linux, puerto.serial_number may return None
+                                serialNumber=puerto.serial_number.split("-")
+                                reference=serialNumber[0]                                
                                 serialManufacturer=serialNumber[1]
                             except:
-                                serialManufacturer=''
+                                reference=''
+                                serialManufacturer=''                                
                             ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.name})")
                 if "Tempico" in description:
-                    serialNumber=puerto.serial_number.split("-")
-                    reference=serialNumber[0]
-                    try:
+                    try: #in Linux, puerto.serial_number may return None
+                        serialNumber=puerto.serial_number.split("-")
+                        reference=serialNumber[0]
                         serialManufacturer=serialNumber[1]
                     except:
+                        reference=''
                         serialManufacturer=''
                     ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.device})")
         return ports
