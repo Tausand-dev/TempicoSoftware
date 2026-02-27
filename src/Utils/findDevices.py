@@ -124,12 +124,18 @@ class PyTempicoManager:
                         if value == True and os.name!="posix":
                             serialNumber=puerto.serial_number.split("-")
                             reference=serialNumber[0]
-                            serialManufacturer=serialNumber[1]
+                            try:
+                                serialManufacturer=serialNumber[1]
+                            except:
+                                serialManufacturer=''
                             ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.name})")
                 if "Tempico" in description:
                     serialNumber=puerto.serial_number.split("-")
                     reference=serialNumber[0]
-                    serialManufacturer=serialNumber[1]
+                    try:
+                        serialManufacturer=serialNumber[1]
+                    except:
+                        serialManufacturer=''
                     ports.append(f"Tempico {reference} {serialManufacturer} ({puerto.device})")
         return ports
 
