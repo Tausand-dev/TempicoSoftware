@@ -1,3 +1,10 @@
+# Release Notes 1.3.0 – November 2025
+
+## New Features
+
+- Introduced the **Time Stamping** tab, which records in a table format the arrival times of pulses in start and stop channels.
+
+
 # Release Notes 1.2.1 – July 2025
 
 ## Bug Fixes
@@ -11,7 +18,7 @@
 
 ## New Features
 
-- Introduced the **Counts Estimated** tab, which displays **per-second estimations** of counts received by each channel.
+- Introduced the **Counts Estimation** tab, which displays **per-second estimations** of counts received by each channel.
 - View of the **historical count estimations** as well as **current counts**.
 - Both the generated data and their corresponding graphs can be **saved for later analysis**.
 
