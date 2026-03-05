@@ -8,6 +8,7 @@ import pyTempico as tempico
 from pyqtgraph import mkPen
 import os
 from Threads.ThreadCountEstimated import WorkerThreadCountsEstimated
+import Utils.constants as constants
 class CountEstimatedLogic():
     """
     Class responsible for managing the logic and graphical representation of the Count Estimation window.
@@ -848,6 +849,8 @@ class CountEstimatedLogic():
             self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.saveSettings()
             self.saveSettings()
+            if "TP12" in constants.VERSION_PARAMETER:
+                self.calibrateDeviceDelay()
             self.stopTimerConnection()
             self.resetValues()
             self.getChannelsMeasure()
@@ -868,6 +871,9 @@ class CountEstimatedLogic():
             self.worker.start()
         else:
             self.noChannelsSelected()
+    
+    def calibrateDeviceDelay(self):
+        self.device.calibrateDelay()
     
     def stopMeasure(self):
         """

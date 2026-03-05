@@ -10,6 +10,7 @@ import math
 import re
 from Threads.ThreadLifeTime import WorkerThreadLifeTime
 from pyqtgraph.exporters import ImageExporter
+import Utils.constants as constants
 class LifeTimeLogic():
     """
     Class responsible for the logic and functionality of the LifeTime (Fluorescence Lifetime Measurement) window.
@@ -249,7 +250,7 @@ class LifeTimeLogic():
             self.comboBoxStopChannel.setCurrentIndex(self.oldStopChannelIndex)
         else:
             self.oldStopChannelIndex=self.comboBoxStopChannel.currentIndex()
-            
+           
     #Function to catch the start button action
     def startMeasurement(self):
         """
@@ -282,6 +283,8 @@ class LifeTimeLogic():
         self.mainWindow.saveSettings()
         self.mainWindow.disconnectButton.setEnabled(False)
         self.stopTimerConnection()
+        if "TP12" in constants.VERSION_PARAMETER:
+                self.calibrateDeviceDelay()
         self.numberMeasurementsSpinBox.setEnabled(False)
         if 'Start' in self.comboBoxStartChannel.currentText():
             self.plotLifeTime.setLabel('left','Counts '+self.comboBoxStopChannel.currentText())
@@ -333,6 +336,10 @@ class LifeTimeLogic():
         self.worker.updateMeasurementsLabel.connect(self.updateLabels)
         #Start the thread
         self.worker.start()
+    
+    
+    def calibrateDeviceDelay(self):
+        self.device.calibrateDelay()
         
     def getUnits(self,value):
         """

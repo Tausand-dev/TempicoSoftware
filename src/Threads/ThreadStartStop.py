@@ -4,6 +4,7 @@ import time
 import io
 import pyTempico as tempico
 import sys
+import Utils.constants as constants
 class WorkerThreadStartStopHistogram(QThread):
     """
     Worker thread for processing Start-Stop measurements without blocking the main UI.
@@ -244,7 +245,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         if run[0]==1:
                             totalRangeA=self.getRange(run,self.numberStopsChannelA)
                             for i in range(totalRangeA):
-                                if run[3+i]!=-1:
+                                if run[3+i]!=constants.OVERFLOW_PARAMETER:
                                     if "A" in self.channelsNM:
                                         self.channelsNM.remove("A")
                                     self.totalA+=1
@@ -282,7 +283,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         elif run[0]==2:
                             totalRangeB=self.getRange(run,self.numberStopsChannelB)
                             for i in range(totalRangeB):
-                                if run[3+i]!=-1:
+                                if run[3+i]!=constants.OVERFLOW_PARAMETER:
                                     if "B" in self.channelsNM:
                                         self.channelsNM.remove("B")
                                     self.totalB+=1
@@ -316,7 +317,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         elif run[0]==3:
                             totalRangeC=self.getRange(run,self.numberStopsChannelC)
                             for i in range(totalRangeC):
-                                if run[3+i]!=-1:
+                                if run[3+i]!=constants.OVERFLOW_PARAMETER:
                                     if "C" in self.channelsNM:
                                         self.channelsNM.remove("C")
                                     self.totalC+=1
@@ -350,7 +351,7 @@ class WorkerThreadStartStopHistogram(QThread):
                         elif run[0]==4:
                             totalRangeD=self.getRange(run,self.numberStopsChannelD)
                             for i in range(totalRangeD):
-                                if run[3+i]!=-1:
+                                if run[3+i]!=constants.OVERFLOW_PARAMETER:
                                     if "D" in self.channelsNM:
                                         self.channelsNM.remove("D")
                                     self.totalD+=1

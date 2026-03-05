@@ -8,6 +8,7 @@ import io
 from itertools import islice
 import shutil
 from Utils.createsavefile import createsavefile 
+import Utils.constants as constants
 class WorkerThreadTimeStamping(QThread):
     """
     Thread class responsible for executing and managing timestamp measurements in the background.
@@ -326,7 +327,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==1:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsA)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -335,7 +336,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -344,7 +345,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -353,7 +354,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -362,7 +363,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -376,7 +377,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==2:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsB)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -385,7 +386,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -394,7 +395,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -403,7 +404,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -412,7 +413,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4: 
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -424,7 +425,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==3:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsC)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -433,7 +434,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1: 
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -442,7 +443,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -451,7 +452,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -460,7 +461,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -472,7 +473,7 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==4:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsD)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
@@ -481,7 +482,7 @@ class WorkerThreadTimeStamping(QThread):
                                                 self.allMeasurementsComplete=True
                                                 break
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
@@ -490,7 +491,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
@@ -499,7 +500,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
@@ -508,7 +509,7 @@ class WorkerThreadTimeStamping(QThread):
                                             self.allMeasurementsComplete=True
                                             break
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -659,31 +660,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==1:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsA)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelA+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueA.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -694,31 +695,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==2:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsB)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelB+=1
                                 if totalRange>4: 
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueB.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -727,31 +728,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==3:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsC)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>1: 
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelC+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueC.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1
@@ -760,31 +761,31 @@ class WorkerThreadTimeStamping(QThread):
                             if channelMeasure[0]==4:
                                 totalRange=self.getRange(channelMeasure,self.numberStopsD)
                                 if totalRange>0:
-                                    if channelMeasure[3]!=-1:
+                                    if channelMeasure[3]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[3]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>1:
-                                    if channelMeasure[4]!=-1:
+                                    if channelMeasure[4]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[4]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>2:
-                                    if channelMeasure[5]!=-1:
+                                    if channelMeasure[5]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[5]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>3:
-                                    if channelMeasure[6]!=-1:
+                                    if channelMeasure[6]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[6]))
                                         self.totalMeasurements+=1
                                         self.totalMeasurementsChannelD+=1
                                 if totalRange>4:
-                                    if channelMeasure[7]!=-1:
+                                    if channelMeasure[7]!=constants.OVERFLOW_PARAMETER:
                                         startValues[startValue]+=1
                                         valueD.append((startValue,channelMeasure[7]))
                                         self.totalMeasurements+=1

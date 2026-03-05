@@ -10,6 +10,8 @@ from Utils.createsavefile import createsavefile as savefile
 import datetime
 import os
 from Threads.ThreadStartStop import WorkerThreadStartStopHistogram
+import Utils.constants as constants
+import pyTempico as Tempico
 
 #Create graphic design#
 class StartStopLogic():
@@ -29,7 +31,7 @@ class StartStopLogic():
     :param mainWindow: The main window (QWindow) for the GUI.
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
-    def __init__(self, parent, disconnect,device,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
+    def __init__(self, parent, disconnect,device: Tempico.TempicoDevice,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
         super().__init__()
         self.savefile=savefile()
         #timer to manage disconnection
@@ -137,6 +139,7 @@ class StartStopLogic():
         self.maxYB=0
         self.maxYC=0
         self.maxYD=0
+        self.getMinimumValue()
         
         
 
@@ -198,11 +201,16 @@ class StartStopLogic():
             self.plotA.setTitle('Start-Stop Channel A')
             if self.channel1.getMode()==1:
                 self.plotA.setLabel('bottom', 'Start-stop time (ns)')
+                self.channel1Mode=1
             else:
                 self.plotA.setLabel('bottom', 'Start-stop time (ms)')
+                self.channel1Mode=2
             self.plotA.setMouseEnabled(x=True, y=False)
             self.plotA.disableAutoRange(axis=pg.ViewBox.XAxis)
-            self.plotA.setXRange(0,5)
+            if self.channel1Mode==1:
+                self.plotA.setXRange(self.minimumNs,5)
+            else:
+                self.plotA.setXRange(self.minimumMs,5)
             self.clear_channel_A.setEnabled(True)
             widgets.append(self.winA)
             self.curveA=self.plotA.plot(self.binsA, self.histA, stepMode=True, fillLevel=0, brush=(0, 0, 255, 150),name="ChannelA (Blue)")
@@ -227,12 +235,17 @@ class StartStopLogic():
             self.plotB.setTitle('Start-Stop Channel B')
             if self.channel2.getMode()==1:
                 self.plotB.setLabel('bottom', 'Start-stop time (ns)')
+                self.channel2Mode=1
             else:
                 self.plotB.setLabel('bottom', 'Start-stop time (ms)')
+                self.channel2Mode=2
             self.plotB.setMouseEnabled(x=True, y=False)
             self.plotB.disableAutoRange(axis=pg.ViewBox.XAxis)
             self.zoomCodeB=True
-            self.plotB.setXRange(0,5)
+            if self.channel2Mode==1:
+                self.plotB.setXRange(self.minimumNs,5)
+            else:
+                self.plotB.setXRange(self.minimumMs,5)
             self.clear_channel_B.setEnabled(True)
             widgets.append(self.winB)
             self.curveB=self.plotB.plot(self.binsB, self.histB, stepMode=True, fillLevel=0, brush=(255, 0, 0, 150),name="ChannelB (Red)")
@@ -257,12 +270,17 @@ class StartStopLogic():
             self.plotC.setTitle('Start-Stop Channel C')
             if self.channel3.getMode()==1:
                 self.plotC.setLabel('bottom', 'Start-stop time (ns)')
+                self.channel3Mode=1
             else:
                 self.plotC.setLabel('bottom', 'Start-stop time (ms)')
+                self.channel3Mode=2
             self.plotC.setMouseEnabled(x=True, y=False)
             self.plotC.disableAutoRange(axis=pg.ViewBox.XAxis)
             self.zoomCodeC=True
-            self.plotC.setXRange(0,5)
+            if self.channel3Mode==1:
+                self.plotC.setXRange(self.minimumNs,5)
+            else:
+                self.plotC.setXRange(self.minimumMs,5)
             self.clear_channel_C.setEnabled(True)
             widgets.append(self.winC)
             self.curveC=self.plotC.plot(self.binsC, self.histC, stepMode=True, fillLevel=0, brush=(0, 100, 0, 150),name="ChannelC (Green)")
@@ -287,12 +305,17 @@ class StartStopLogic():
             self.plotD.setTitle('Start-Stop Channel D')
             if self.channel4.getMode()==1:
                 self.plotD.setLabel('bottom', 'Start-stop time (ns)')
+                self.channel4Mode=1
             else:
                 self.plotD.setLabel('bottom', 'Start-stop time (ms)')
+                self.channel4Mode=2
             self.plotD.setMouseEnabled(x=True, y=False)
             self.plotD.disableAutoRange(axis=pg.ViewBox.XAxis)
             self.zoomCodeD=True
-            self.plotD.setXRange(0,5)
+            if self.channel4Mode==1:
+                self.plotD.setXRange(self.minimumNs,5)
+            else:
+                self.plotD.setXRange(self.minimumMs,5)
             self.clear_channel_D.setEnabled(True)
             widgets.append(self.winD)
             self.curveD=self.plotD.plot(self.binsD, self.histD, stepMode=True, fillLevel=0, brush=(220, 100, 0, 150),name="ChannelD (Yellow)")
@@ -352,7 +375,13 @@ class StartStopLogic():
     ##---------------------------------##  
     
     
-    
+    def getMinimumValue(self):
+        if "TP12" in constants.VERSION_PARAMETER:
+            self.minimumMs=-0.00025
+            self.minimumNs=-250
+        else:
+            self.minimumMs=0
+            self.minimumNs=0
     
     
     def start_graphic(self):
@@ -386,6 +415,8 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(3,False)
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
+            if "TP12" in constants.VERSION_PARAMETER:
+                self.calibrateDeviceDelay()
             self.create_graphs()
             self.statusValue.setText("Measurement running")
             self.changeStatusColor(1)
@@ -398,7 +429,8 @@ class StartStopLogic():
             self.savebutton.setEnabled(False)
             
     
-    
+    def calibrateDeviceDelay(self):
+        self.device.calibrateDelay()
     
     def stopTimerConnection(self):
         """
@@ -1367,40 +1399,64 @@ class StartStopLogic():
             if self.beforeMeasurement:
                 if not (self.sentinelZoomChangedA>2):
                     self.zoomCodeA=True
-                    self.plotA.setXRange(0,newMaxValue)
+                    if self.channel1Mode==1:
+                        self.plotA.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotA.setXRange(self.minimumMs,newMaxValue)
             else:
                 if not (self.sentinelZoomChangedA>0):
                     self.zoomCodeA=True
-                    self.plotA.setXRange(0,newMaxValue)
+                    if self.channel1Mode==1:
+                        self.plotA.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotA.setXRange(self.minimumMs,newMaxValue)
                 
         elif channel=='B':
             if self.beforeMeasurement:
                 if not (self.sentinelZoomChangedB>2):
                     self.zoomCodeB=True
-                    self.plotB.setXRange(0,newMaxValue)
+                    if self.channel2Mode==1:
+                        self.plotB.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotB.setXRange(self.minimumMs,newMaxValue)
             else:
                 if not (self.sentinelZoomChangedB>0):
                     self.zoomCodeB=True
-                    self.plotB.setXRange(0,newMaxValue)
+                    if self.channel2Mode==1:
+                        self.plotB.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotB.setXRange(self.minimumMs,newMaxValue)
         elif channel=='C':
             if self.beforeMeasurement:
                 if not (self.sentinelZoomChangedC>2):
                     self.zoomCodeC=True
-                    self.plotC.setXRange(0,newMaxValue)
+                    if self.channel3Mode==1:
+                        self.plotC.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotC.setXRange(self.minimumMs,newMaxValue)
             else:
                 if not (self.sentinelZoomChangedC>0):
                     self.zoomCodeC=True
-                    self.plotC.setXRange(0,newMaxValue)
+                    if self.channel3Mode==1:
+                        self.plotC.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotC.setXRange(self.minimumMs,newMaxValue)
                 
         elif channel=='D':
             if self.beforeMeasurement:
                 if not (self.sentinelZoomChangedD>2):
                     self.zoomCodeD=True
-                    self.plotD.setXRange(0,newMaxValue)
+                    if self.channel4Mode==1:
+                        self.plotD.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotD.setXRange(self.minimumMs,newMaxValue)
             else:
                 if not (self.sentinelZoomChangedD>0):
                     self.zoomCodeD=True
-                    self.plotD.setXRange(0,newMaxValue)
+                    if self.channel4Mode==1:
+                        self.plotD.setXRange(self.minimumNs,newMaxValue)
+                    else:
+                        self.plotD.setXRange(self.minimumMs,newMaxValue)
                 
     #auto range beetween 0 and max of Data the graphic with autorange button
     
