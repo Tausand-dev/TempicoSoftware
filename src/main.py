@@ -230,10 +230,12 @@ class MainWindow(QMainWindow):
         self.construct_start_stop_histogram(self.tab1)
         self.connectButton = QPushButton("Connect", self)
         self.disconnectButton = QPushButton("Disconnect", self)
+        self.about_me_button = QPushButton("About Me", parent=self)
 
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(self.connectButton)
         buttonLayout.addWidget(self.disconnectButton)
+        buttonLayout.addWidget(self.about_me_button)
 
         # Crear un QWidget para contener los QTabWidget y los botones
         mainWidget = QWidget(self)
@@ -263,6 +265,7 @@ class MainWindow(QMainWindow):
         self.connectsentinel=0
         self.connectButton.clicked.connect(self.open_dialog)
         self.disconnectButton.clicked.connect(self.disconnect_button_click)
+        self.about_me_button.clicked.connect(self.about_settings)
         self.sentinel2=0
         self.sentinel3=0
         self.sentinel4=0
@@ -1028,7 +1031,6 @@ class MainWindow(QMainWindow):
         settings_windows=Ui_AboutDialog()
         settings_windows.setupUi(settings_windows_dialog)
         settings_windows_dialog.exec_()
-
 
 #This function is not use for the Tempico Version 1.1
 #TO DO: Comment the function for a future version

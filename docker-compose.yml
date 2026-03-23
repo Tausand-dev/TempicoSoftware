@@ -1,0 +1,32 @@
+services:
+  # GUI development — requires WSLg or VcXsrv for X11 display
+  dev:
+    build:
+      context: .
+      target: dev
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_QPA_PLATFORM=xcb
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./src:/app/src
+    network_mode: host
+    stdin_open: true
+    tty: true
+
+  # Headless testing with virtual framebuffer
+  test:
+    build:
+      context: .
+      target: test
+    volumes:
+      - ./tests:/app/tests
+      - ./src:/app/src
+
+  # PyInstaller build (produces Linux binary, NOT Windows .exe)
+  build:
+    build:
+      context: .
+      target: build
+    volumes:
+      - ./dist:/app/dist
