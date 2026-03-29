@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main &mdash; Tempico Software 1.3.0 documentation</title>
+  <title>main &mdash; Tempico Software 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3d533f9b"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=73cda6fb"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -46,6 +46,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadProccessData.html">ThreadProccessData module</a></li>
 </ul>
 
         </div>
@@ -91,9 +96,11 @@
 <span class="kn">from</span> <span class="nn">Utils.createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
 <span class="kn">from</span> <span class="nn">Views.ui_settings</span> <span class="kn">import</span> <span class="n">Ui_settings</span>
 <span class="kn">from</span> <span class="nn">Views.uiParametersDialog</span> <span class="kn">import</span> <span class="n">UiParameters</span>
+<span class="kn">from</span> <span class="nn">Utils.generatorSettingsDialog</span> <span class="kn">import</span> <span class="n">Ui_Generator</span>
 <span class="kn">from</span> <span class="nn">Utils.ParametersDialog</span> <span class="kn">import</span> <span class="n">CountParameters</span>
 <span class="kn">from</span> <span class="nn">Logic.StartStopLogic</span> <span class="kn">import</span> <span class="n">StartStopLogic</span>
 <span class="kn">from</span> <span class="nn">Utils.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">Views.ui_LifeTimemeasurement</span> <span class="kn">import</span> <span class="n">UiLifeTime</span>
 <span class="kn">from</span> <span class="nn">Logic.LifeTimeLogic</span> <span class="kn">import</span> <span class="n">LifeTimeLogic</span>
 <span class="kn">from</span> <span class="nn">Logic.CountsEstimatedLogic</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
@@ -221,6 +228,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">openSettings</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openPrefixSettings</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">False</span>
         <span class="c1">## general settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="mi">0</span>
@@ -264,6 +272,12 @@
         <span class="n">folder_prefix_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;File path&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">settings_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">folder_prefix_settings_action</span><span class="p">)</span>
         <span class="n">folder_prefix_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folderPrefixClicked</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Signal generator&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">settings_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generatorClicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        
         <span class="n">general_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">general_settings_clicked</span><span class="p">)</span>
         <span class="n">about_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;About Tempico Software&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">about_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">about_settings</span><span class="p">)</span>
@@ -463,6 +477,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
@@ -522,6 +537,7 @@
                         <span class="n">openSentinel</span><span class="o">=</span><span class="kc">False</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
                             <span class="n">openSentinel</span><span class="o">=</span><span class="kc">True</span>
                         <span class="k">except</span><span class="p">:</span>
@@ -551,6 +567,7 @@
             <span class="n">openSentinel</span><span class="o">=</span><span class="kc">False</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
                 <span class="n">openSentinel</span><span class="o">=</span><span class="kc">True</span>
             <span class="k">except</span><span class="p">:</span>
@@ -577,6 +594,7 @@
 <span class="sd">        It does not take any parameters and does not return a value.</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;grafico&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">hide_graphic2</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -870,9 +888,52 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">onlyReading</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="MainWindow.generatorClicked"><a class="viewcode-back" href="../main.html#main.MainWindow.generatorClicked">[docs]</a>    <span class="k">def</span> <span class="nf">generatorClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span> <span class="o">=</span> <span class="n">Ui_Generator</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">getGeneratorSettings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Running measurement&quot;</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.&quot;</span><span class="p">)</span>
+                <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span> <span class="o">=</span> <span class="n">Ui_Generator</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setConfigOnlyRead</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No connected device&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No connected device was found&quot;</span><span class="p">)</span>
+            <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
             
         
-
+<div class="viewcode-block" id="MainWindow.getVersionParameters"><a class="viewcode-back" href="../main.html#main.MainWindow.getVersionParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getVersionParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getModelIdn</span><span class="p">()</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getOverflowParameter</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+    
+    
 <div class="viewcode-block" id="MainWindow.enableSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.enableSettings">[docs]</a>    <span class="k">def</span> <span class="nf">enableSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-enables the device and general settings dialogs if they are open.</span>
@@ -893,7 +954,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openPrefixSettings</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">enableEditing</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">enableEditing</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">enableValues</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.saveSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.saveSettings">[docs]</a>    <span class="k">def</span> <span class="nf">saveSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -958,7 +1022,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel4</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
             <span class="c1">#Get the threshold voltage</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">if</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getGeneratorFrequency</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span></div>
+                
+                
+                
 
 
 

@@ -9,5 +9,10 @@ src
    TimeStampLogic
    CountsEstimatedLogic
    main
+   ThreadStartStop
+   ThreadLifeTime
+   ThreadTimeStamping
+   ThreadCountEstimated
+   ThreadProccessData
    
    
