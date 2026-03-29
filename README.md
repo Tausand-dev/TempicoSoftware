@@ -120,6 +120,13 @@ During the measurement process, the collected data can be displayed in a table i
 After the measurement is completed, the data can be saved again in a different format if desired by disabling the automatic data saving option. Additionally, the data count from the most recent measurement can be reviewed in the table.
 
 ![After measurement Time Stamping window](./Sources/afterTimeStamping.png)
+
+## Compatibility with TP12
+
+Starting from version 2.X.X, the Tempico software includes compatibility with TP12XX series devices, enabling the measurement of negative time intervals of up to 250 ns between the start and stop signals. This capability enhances functionalities such as StartStopHistogram and TimeStamping, allowing for a more comprehensive analysis of temporal events.
+
+Additionally, an internal pulse generator is introduced, allowing the generation of pulses at configurable frequencies on the selected start and stop channels. This feature facilitates controlled testing and validation of measurements within the system.
+
 ## Grant port access on Linux
 
 Most Linux configurations have a dialout group for full and direct access to serial ports. By adding your user account to this group you will have the necessary permissions for Tempico Software to communicate with the serial ports.
