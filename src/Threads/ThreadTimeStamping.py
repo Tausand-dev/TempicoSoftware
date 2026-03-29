@@ -1010,6 +1010,17 @@ class WorkerThreadTimeStamping(QThread):
         self.numberStopsChannelD = self.device.ch4.getNumberOfStops()
         self.stopEdgeTypeChannelD= self.device.ch4.getStopEdge()
         self.stopMaskChannelD=self.device.ch4.getStopMask()
+
+        if "TP12" in constants.VERSION_PARAMETER:
+            self.startSourceChannelA=self.device.getStartSource(1)
+            self.stopSourceChannelA=self.device.getStopSource(1)
+            self.startSourceChannelB=self.device.getStartSource(2)
+            self.stopSourceChannelB=self.device.getStopSource(2)
+            self.startSourceChannelC=self.device.getStartSource(3)
+            self.stopSourceChannelC=self.device.getStopSource(3)
+            self.startSourceChannelD=self.device.getStartSource(4)
+            self.stopSourceChannelD=self.device.getStopSource(4)
+
     
     
     def applyCurrentSettings(self):
@@ -1050,6 +1061,40 @@ class WorkerThreadTimeStamping(QThread):
         self.device.ch4.setNumberOfStops(self.numberStopsChannelD)
         self.device.ch4.setStopEdge(self.stopEdgeTypeChannelD)
         self.device.ch4.setStopMask(self.stopMaskChannelD)
+        #Settings to sources
+        if "TP12" in constants.VERSION_PARAMETER:
+            if self.startSourceChannelA=='INTERNAL':
+                self.device.setStartInternalSource(1)
+            else:
+                self.device.setStartExternalSource(1)
+            if self.stopSourceChannelA=='INTERNAL':
+                self.device.setStopInternalSource(1)
+            else:
+                self.device.setStopExternalSource(1)
+            if self.startSourceChannelB=='INTERNAL':   
+                self.device.setStartInternalSource(2)
+            else:
+                self.device.setStartExternalSource(2)
+            if self.stopSourceChannelB=='INTERNAL':
+                self.device.setStopInternalSource(2)
+            else:
+                self.device.setStopExternalSource(2)
+            if self.startSourceChannelC=='INTERNAL':
+                self.device.setStartInternalSource(3)
+            else:
+                self.device.setStartExternalSource(3)
+            if self.stopSourceChannelC=='INTERNAL':
+                self.device.setStopInternalSource(3)
+            else:
+                self.device.setStopExternalSource(3)
+            if self.startSourceChannelD=='INTERNAL':
+                self.device.setStartInternalSource(4)
+            else:
+                self.device.setStartExternalSource(4)
+            if self.stopSourceChannelD=='INTERNAL':
+                self.device.setStopInternalSource(4)
+            else:
+                self.device.setStopExternalSource(4)
         #Enable disable channels to continue measurements
         self.device.ch1.disableChannel()
         self.device.ch2.disableChannel()
