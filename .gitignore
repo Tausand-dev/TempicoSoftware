@@ -17,6 +17,7 @@
 /src/build/
 /dist/
 /src/InstallerEnvironment/
+/.vscode/
 
 
 # Byte-compiled / optimized / DLL files
