@@ -127,6 +127,10 @@ Starting from version 2.X.X, the Tempico software includes compatibility with TP
 
 Additionally, an internal pulse generator is introduced, allowing the generation of pulses at configurable frequencies on the selected start and stop channels. This feature facilitates controlled testing and validation of measurements within the system.
 
+To configure this, in the settings window under the signal generator section, a tab is available that displays the source options for each channel. From there, the desired start and stop channels can be selected. If the internal option is chosen, the system will use the built-in periodic pulse generator operating at the frequency defined below. Conversely, if the external option is selected, an external signal must be provided through the corresponding Tempico input.
+
+![Signal Generator settings](./Sources/signalGenerator.png)
+
 ## Grant port access on Linux
 
 Most Linux configurations have a dialout group for full and direct access to serial ports. By adding your user account to this group you will have the necessary permissions for Tempico Software to communicate with the serial ports.
