@@ -16,6 +16,8 @@ from PySide2.QtGui import QDesktopServices, QPixmap
 from PySide2.QtCore import QUrl
 from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton
 from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
+from .constants import VERSION
+from .constants import PYTEMPICO_VERSION
 
 
 class Ui_AboutDialog(object):
@@ -144,8 +146,8 @@ class Ui_AboutDialog(object):
         self.linkGitHub.setOpenExternalLinks(True)
         ##translateFuncion
         self.descriptionLabel.setText(QCoreApplication.translate("AboutDialog", u"Tempico Software is a suite of tools build to ensure your experience with Tausand's time to digital converters.", None))
-        self.softwareLabel.setText(QCoreApplication.translate("AboutDialog", u"Software Version: 1.3.0", None))
-        self.tempicoLabel.setText(QCoreApplication.translate("AboutDialog", u"PyTempico Version: 1.3.0", None))
+        self.softwareLabel.setText(QCoreApplication.translate("AboutDialog", u"Software Version: %s"%VERSION, None))
+        self.tempicoLabel.setText(QCoreApplication.translate("AboutDialog", u"PyTempico Version: %s"%PYTEMPICO_VERSION, None))
         #self.imageLabel.setText(QCoreApplication.translate("AboutDialog", u"Picture Label", None))
         self.linkTausand.setText(QCoreApplication.translate("AboutDialog", u"Visit us at: %s "%tausand, None))
         self.linkGitHub.setText(QCoreApplication.translate("AboutDialog", u"More information on Tempico Software implementation can be found at: %s"%pages, None))

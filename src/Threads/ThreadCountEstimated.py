@@ -235,10 +235,6 @@ class WorkerThreadCountsEstimated(QThread):
             else:
                 valueChannelA=-1
                 uncertaintyChannelA=-1
-                
-            
-        
-        
         if len(valuesB)>0:
             meanValueB=(10**12)/mean(valuesB)
             desvestValuesB=std(valuesB)/sqrt(len(valuesB))
