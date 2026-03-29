@@ -20,7 +20,7 @@ The software operates via a Graphical User Interface (GUI) which facilitates use
 
 The UML diagram provides a high-level approximation of the application’s design structure.
 
-![UML](./Sources/TempicoSoftwareUML.jpg)
+![UML](./Sources/UMLTempicoSoftware.png)
 
 # Functionality
 
@@ -120,7 +120,25 @@ During the measurement process, the collected data can be displayed in a table i
 After the measurement is completed, the data can be saved again in a different format if desired by disabling the automatic data saving option. Additionally, the data count from the most recent measurement can be reviewed in the table.
 
 ![After measurement Time Stamping window](./Sources/afterTimeStamping.png)
-<<<<<<< HEAD
+
+### Before Measurement
+
+Before starting the measurement, it is possible to configure key parameters such as the maximum acquisition time for the $g^{(2)}$ function, the coincidence window, and the stop channel. It is important to note that the $g^{(2)}$ measurement assumes a 50/50 beam splitter configuration. Additionally, the measurement mode can be selected between Manual, By Size, or Auto-Clear.
+
+![Before measurement](./Sources/beforeMeasureg2.png)
+
+### During Measurement
+
+During the measurement, the computed $g^{(2)}$ values are displayed in real time as a function of the calculated $\tau$ values, based on the selected parameters. The interface also allows clearing the plot at any time, resetting the $g^{(2)}$ values to zero.
+
+![During measurement](./Sources/duringMeasureg2.png)
+
+### After Measurement
+
+After completing the measurement, the acquired data can be exported in multiple formats, including TXT, CSV, and DAT. The generated plots can also be saved as PNG, JPG, or TIFF images. In addition, curve fitting can be applied using different models such as Thermal Gaussian (and its shifted version), Lorentzian (and its shifted version), and Antibunched (and its shifted version). The user can adjust the initial fitting parameters and save the resulting plot with the applied fit.
+
+![After measurement](./Sources/afterMeasureg2.png)
+
 =======
 
 ## Compatibility with TP12
@@ -133,7 +151,6 @@ To configure this, in the settings window under the signal generator section, a 
 
 ![Signal Generator settings](./Sources/signalGenerator.png)
 
->>>>>>> c29f2b3ce42a7766f544c9d11838e1f3669880d8
 ## Grant port access on Linux
 
 Most Linux configurations have a dialout group for full and direct access to serial ports. By adding your user account to this group you will have the necessary permissions for Tempico Software to communicate with the serial ports.

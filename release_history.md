@@ -1,3 +1,8 @@
+# Release Notes 2.1.0 – February 2026
+
+## New Features
+
+- Introduced an experimental implementation of the **$g^{(2)}$ (second-order correlation)** functionality. This feature enables the analysis of temporal correlations between events using configurable parameters such as coincidence window, measurement time, and acquisition modes. As an experimental feature, it is subject to further improvements and validation in future releases.
 # Release Notes 2.0.0 – January 2026
 
 ## New Features
