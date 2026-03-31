@@ -123,7 +123,7 @@ After the measurement is completed, the data can be saved again in a different f
 
 ## Compatibility with TP12
 
-Starting from version 2.X.X, the Tempico software includes compatibility with TP12XX series devices, enabling the measurement of negative time intervals of up to 250 ns between the start and stop signals. This capability enhances functionalities such as StartStopHistogram and TimeStamping, allowing for a more comprehensive analysis of temporal events.
+Starting from version 2.0.0, the Tempico software includes compatibility with TP12XX series devices, enabling the measurement of negative time intervals of down to -200 ns between the start and stop signals. This capability enhances functionalities such as StartStopHistogram and TimeStamping, allowing for a more comprehensive analysis of temporal events.
 
 Additionally, an internal pulse generator is introduced, allowing the generation of pulses at configurable frequencies on the selected start and stop channels. This feature facilitates controlled testing and validation of measurements within the system.
 
