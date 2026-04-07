@@ -1201,74 +1201,11 @@ class TimeStampLogic():
         self.enableCheckBoxC.setEnabled(False)
         self.enableCheckBoxD.setEnabled(False)
     
-    
+
     def calibrateDeviceDelay(self):
-        self.getSettingsSources()
         self.device.calibrateDelay()
-        self.returnSettingsSources()
     
 
-    def getSettingsSources(self):
-        #Channel1
-        self.startSourceChannel1=self.device.getStartSource(1)
-        self.stopSourceChannel1=self.device.getStopSource(1)
-        #Channel2
-        self.startSourceChannel2=self.device.getStartSource(2)
-        self.stopSourceChannel2=self.device.getStopSource(2)
-        #Channel3
-        self.startSourceChannel3=self.device.getStartSource(3)
-        self.stopSourceChannel3=self.device.getStopSource(3)
-        #Channel4
-        self.startSourceChannel4=self.device.getStartSource(4)
-        self.stopSourceChannel4=self.device.getStopSource(4)
-
-    
-    def returnSettingsSources(self):
-        #Channel1
-        if self.startSourceChannel1=='INTERNAL':
-            self.device.setStartInternalSource(1)
-        else:
-            self.device.setStartExternalSource(1) 
-        
-        if self.stopSourceChannel1=='INTERNAL':
-            self.device.setStopInternalSource(1)
-        else:
-            self.device.setStopExternalSource(1)
-        
-        #Channel2
-        if self.startSourceChannel2=='INTERNAL':
-            self.device.setStartInternalSource(2)
-        else:
-            self.device.setStartExternalSource(2)
-        
-        if self.stopSourceChannel2=='INTERNAL':
-            self.device.setStopInternalSource(2)
-        else:
-            self.device.setStopExternalSource(2)
-        
-        #Channel3
-        if self.startSourceChannel3=='INTERNAL':
-            self.device.setStartInternalSource(3)
-        else:
-            self.device.setStartExternalSource(3)
-        
-        if self.stopSourceChannel3=='INTERNAL':
-            self.device.setStopInternalSource(3)
-        else:
-            self.device.setStopExternalSource(3)
-
-        #Channel4
-        if self.startSourceChannel4=='INTERNAL':
-            self.device.setStartInternalSource(4)
-        else:
-            self.device.setStartExternalSource(4)
-        
-        if self.stopSourceChannel4=='INTERNAL':
-            self.device.setStopInternalSource(4)
-        else:
-            self.device.setStopExternalSource(4)
-        
-    
     def clearData(self):
         """
         Clears all data and resets save-related sentinels from the previous measurement.
@@ -1314,8 +1251,6 @@ class TimeStampLogic():
         self.enableCheckBoxC.setEnabled(True)
         self.enableCheckBoxD.setEnabled(True)
         
-        
-        
     
     def autoSaveSettings(self,currentTab):
         """
@@ -1345,9 +1280,7 @@ class TimeStampLogic():
         #Set the timer to save
         self.autoSaveTimer.timeout.connect(self.autoSaveAction)
         self.autoSaveTimer.start(milisecondsToInit)
-            
-        
-        
+
     
     def showDialogNoChannels(self):
         """
