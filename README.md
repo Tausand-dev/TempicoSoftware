@@ -277,6 +277,21 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 10](./ReadmeSources/Tutorial15.png)
 
+#### Building on Windows 7 32-bit
+ 
+##### Installing KB2533623 Update
+ 
+This update is required to avoid DLL compatibility issues with PyInstaller-generated executables.
+ 
+1. Download KB2533623 for Windows 7 32-bit:  
+   [https://archive.org/details/kb-2533623-windows-7](https://archive.org/details/kb-2533623-windows-7)
+ 
+2. Run `Windows6.1-KB2533623-x86.msu` and follow the installation wizard.
+ 
+3. Restart the system when prompted.
+ 
+Once installed, proceed with PyInstaller and Inno Setup as described above.
+
 #### MacOS
 
 Run the following command
@@ -289,6 +304,16 @@ Two folders will be created: build and dist. Inside `dist` you'll find the `.app
 To change the icon of the `.app` file follow the instructions here https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos
 
 #### Linux
+
+##### Prerequisites
+ 
+Install the required FUSE library (needed for PyInstaller single-file executables):
+ 
+```bash
+sudo apt install libfuse2
+```
+ 
+##### Generate Standard Installer
 
 Run the following command
 
@@ -303,6 +328,29 @@ Two folders will be created: build and dist. Inside dist you'll find the executa
 ```
 
 If it doesn't run, make sure it has execute permissions. In case it doesn't run `chmod +x TempicoSoftware` and then try again. The executable file could be used to create a Desktop entry so it can be lauched as an application (for example in Gnome, an icon could be assigned)
+
+```bash
+pyinstaller \
+  --additional-hooks-dir installers/pyinstaller_hooks/ \
+  --name TempicoSoftware \
+  --onefile \
+  --noconsole \
+  -i Sources/tausand_small.png \
+  --exclude-module scipy.cluster \
+  --exclude-module scipy.fft \
+  --exclude-module scipy.integrate \
+  --exclude-module scipy.interpolate \
+  --exclude-module scipy.io \
+  --exclude-module scipy.ndimage \
+  --exclude-module scipy.odr \
+  --exclude-module scipy.signal \
+  --exclude-module scipy.stats \
+  --exclude-module scipy._lib._uarray \
+  src/main.py
+```
+**Note:** These exclusions reduce installer size by ~30-50 MB.
+
+##### Create AppImage
 
 To create an AppImage that can be run from multiple Linux distributions and be launch by double clicking, follow the next steps.
 
