@@ -329,6 +329,10 @@ Two folders will be created: build and dist. Inside dist you'll find the executa
 
 If it doesn't run, make sure it has execute permissions. In case it doesn't run `chmod +x TempicoSoftware` and then try again. The executable file could be used to create a Desktop entry so it can be lauched as an application (for example in Gnome, an icon could be assigned)
 
+##### Generate Optimized Installer (< 100 MB)
+ 
+To reduce installer size, exclude unused scipy modules:
+
 ```bash
 pyinstaller \
   --additional-hooks-dir installers/pyinstaller_hooks/ \
