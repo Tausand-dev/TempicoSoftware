@@ -352,7 +352,7 @@ pyinstaller \
   --exclude-module scipy._lib._uarray \
   src/main.py
 ```
-**Note:** These exclusions reduce installer size by ~30-50 MB.
+**Note:** These exclusions reduce installer size by ~20-30 MB.
 
 ##### Create AppImage
 
