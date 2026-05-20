@@ -26,6 +26,8 @@ from Logic.LifeTimeLogic import LifeTimeLogic
 from Logic.CountsEstimatedLogic import CountEstimatedLogic
 from Logic.TimeStampLogic import TimeStampLogic
 from Views.ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
+from Views.ui_FCSMeasurement import Ui_FCSMeasurement
+from Logic.FCSLogic import FCSLogic
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -212,10 +214,12 @@ class MainWindow(QMainWindow):
         self.tab2=QWidget()
         self.tab3=QWidget()
         self.tab4=QWidget()
+        self.tab5=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
         self.tabs.addTab(self.tab4,"Time stamping")
+        self.tabs.addTab(self.tab5,"FCS")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -253,6 +257,9 @@ class MainWindow(QMainWindow):
         #------Time Stamping Graphic class---------#
         self.timeStampGraphic=None
         self.timeStampGraphic_init_sentinel=0
+        #------FCS Graphic class---------#
+        self.fcsGraphic=None
+        self.sentinel5=0
         
 
         #------Layout for the main window---------#
@@ -348,6 +355,24 @@ class MainWindow(QMainWindow):
             self.uiTimeStamping.setupUi(parent)
             self.sentinel4=1
 
+    def construct_fcs(self, parent):
+        """
+        Constructs the FCS (Fluorescence Correlation Spectroscopy) window.
+
+        This function takes a ``QTabWidget`` parent, and if the sentinel is not set,
+        it creates an instance of ``Ui_FCSMeasurement`` and sets up the UI using
+        the given parent. It ensures the UI is initialized only once by checking
+        the ``sentinel5`` flag.
+
+        :param parent: The parent widget (typically a ``QTabWidget``) for the FCS window.
+        :type parent: QWidget
+        :returns: None
+        """
+        if self.sentinel5==0:
+            self.uiFCS = Ui_FCSMeasurement()
+            self.uiFCS.setupUi(parent)
+            self.sentinel5=1
+
 
 
     def construct_g2(self,parent):
@@ -408,7 +433,8 @@ class MainWindow(QMainWindow):
                     #To do implement connect device
                     if self.timeStampGraphic!=None:
                         self.timeStampGraphic.connectedDevice(self.conectedDevice)
-
+                    if self.fcsGraphic!=None:
+                        self.fcsGraphic.connectedDevice(self.conectedDevice)
 
                     checkchannel1=self.ui.Channel1Graph1
                     checkchannel2=self.ui.Channel4Graph1
@@ -470,6 +496,8 @@ class MainWindow(QMainWindow):
                             self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
                         if self.timeStampGraphic!=None and openSentinel:
                             self.timeStampGraphic.connectedDevice(self.conectedDevice)
+                        if self.fcsGraphic!=None and openSentinel:
+                            self.fcsGraphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -500,6 +528,8 @@ class MainWindow(QMainWindow):
                     self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
             if self.timeStampGraphic!=None and openSentinel:
                     self.timeStampGraphic.connectedDevice(self.conectedDevice)
+            if self.fcsGraphic!=None and openSentinel:
+                    self.fcsGraphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -529,6 +559,8 @@ class MainWindow(QMainWindow):
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.timeStampGraphic!=None:
             self.timeStampGraphic.disconnectedDevice()
+        if self.fcsGraphic!=None:
+            self.fcsGraphic.disconnectedDevice()
 
 
 
@@ -677,7 +709,43 @@ class MainWindow(QMainWindow):
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
                                                      tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
-                
+
+          elif valor_padre==4:
+            padre=self.tab5
+            self.construct_fcs(padre)
+            if self.fcsGraphic==None:
+                graphicFrame      = self.uiFCS.graphicFrame
+                startButton       = self.uiFCS.startButton
+                stopButton        = self.uiFCS.stopButton
+                saveDataButton    = self.uiFCS.saveDataButton
+                savePlotButton    = self.uiFCS.savePlotButton
+                clearButton       = self.uiFCS.clearButton
+                valueStatusLabel  = self.uiFCS.valueStatusLabel
+                pointLabel        = self.uiFCS.pointLabel
+                # tau_0: read from spinbox in µs, convert to picoseconds
+                tau_0 = self.uiFCS.tau0SpinBox.value() * 1_000_000  # µs → ps
+                self.fcsGraphic=FCSLogic(
+                    graphicFrame,
+                    self.disconnectButton,
+                    self.conectedDevice,
+                    startButton,
+                    stopButton,
+                    saveDataButton,
+                    savePlotButton,
+                    clearButton,
+                    self.connectButton,
+                    self,
+                    valueStatusLabel,
+                    pointLabel,
+                    self.LifeTimeTimer,
+                    tau_0=tau_0,
+                )
+                # Provide the duration widgets so FCSLogic can read them at start time
+                self.fcsGraphic.set_parameter_widgets(
+                    self.uiFCS.tau0SpinBox,
+                    self.uiFCS.durationSpinBox,
+                    self.uiFCS.indefiniteCheckBox,
+                )
 
         #   elif valor_padre==1:
 
@@ -1125,6 +1193,8 @@ class MainWindow(QMainWindow):
                     self.countsEstimatedGraphic.disconnectedDevice()
                 if self.timeStampGraphic:
                     self.timeStampGraphic.disconnectedDevice()
+                if self.fcsGraphic:
+                    self.fcsGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
                 if self.grafico:
@@ -1152,6 +1222,8 @@ class MainWindow(QMainWindow):
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.timeStampGraphic:
             self.timeStampGraphic.disconnectedDevice()
+        if self.fcsGraphic:
+            self.fcsGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
         if self.grafico:
@@ -1191,6 +1263,8 @@ class MainWindow(QMainWindow):
             self.LifeTimeGraphic.resetSaveSentinels()
         if self.grafico!=None:
             self.grafico.resetSaveSentinels()
+        if self.fcsGraphic!=None:
+            self.fcsGraphic.resetSaveSentinels()
         
 
 
@@ -1279,4 +1353,3 @@ def execProgram():
     window = MainWindow()
     window.show()
     app.exec_()
-
