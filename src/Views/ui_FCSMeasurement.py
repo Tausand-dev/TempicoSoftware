@@ -5,7 +5,8 @@ from PySide2.QtGui  import QPixmap, QPainter, QColor
 from PySide2.QtWidgets import (
     QSizePolicy, QHBoxLayout, QVBoxLayout,
     QFrame, QLabel, QPushButton, QGridLayout,
-    QMainWindow, QApplication, QWidget, QSpinBox, QCheckBox,
+    QMainWindow, QApplication, QWidget, QSpinBox, QCheckBox, QComboBox,
+    QTableWidget, QTableWidgetItem, QToolButton,
 )
 import sys
 
@@ -117,6 +118,9 @@ class Ui_FCSMeasurement(object):
         self.stopButton = QPushButton(self.StartStopFrame)
         self.stopButton.setObjectName(u"stopButton")
         self.horizontalLayout_startstop.addWidget(self.stopButton)
+        self.clearButton = QPushButton(self.StartStopFrame)
+        self.clearButton.setObjectName(u"clearButton")
+        self.horizontalLayout_startstop.addWidget(self.clearButton)
 
         self.verticalLayout_controls.addWidget(self.StartStopFrame)
 
@@ -138,21 +142,36 @@ class Ui_FCSMeasurement(object):
 
         self.verticalLayout_controls.addWidget(self.SaveFrame)
 
-        # Clear button row
-        self.ClearFrame = QFrame(self.MeasurementControlsFrame)
-        self.ClearFrame.setObjectName(u"ClearFrame")
-        self.ClearFrame.setFrameShape(QFrame.StyledPanel)
-        self.ClearFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_clear = QHBoxLayout(self.ClearFrame)
-        self.horizontalLayout_clear.setObjectName(u"horizontalLayout_clear")
+        # ── Panel: Measurement stats ──────────────────────────────────────
+        self.InfoFrame = QFrame(self.ConfigurationArea)
+        self.InfoFrame.setObjectName(u"InfoFrame")
+        self.InfoFrame.setFrameShape(QFrame.Panel)
+        self.InfoFrame.setFrameShadow(QFrame.Sunken)
 
-        self.clearButton = QPushButton(self.ClearFrame)
-        self.clearButton.setObjectName(u"clearButton")
-        self.horizontalLayout_clear.addWidget(self.clearButton)
+        self.verticalLayout_info = QVBoxLayout(self.InfoFrame)
+        self.verticalLayout_info.setObjectName(u"verticalLayout_info")
 
-        self.verticalLayout_controls.addWidget(self.ClearFrame)
+        self.statusLabel  = QLabel(self.InfoFrame)
+        self.valueStatusLabel = QLabel(self.InfoFrame)
+        self.pointLabel   = QLabel(self.InfoFrame)
+        self.callsLabel   = QLabel(self.InfoFrame)
+        self.eventsLabel  = QLabel(self.InfoFrame)
+        self.elapsedLabel = QLabel(self.InfoFrame)
 
-        self.verticalLayout.addWidget(self.MeasurementControlsFrame)
+        # Status row: dot + text side by side
+        self.statusRowFrame = QFrame(self.InfoFrame)
+        self.horizontalLayout_statusrow = QHBoxLayout(self.statusRowFrame)
+        self.horizontalLayout_statusrow.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_statusrow.addWidget(self.statusLabel)
+        self.horizontalLayout_statusrow.addWidget(self.valueStatusLabel)
+        self.horizontalLayout_statusrow.addWidget(self.pointLabel)
+        self.horizontalLayout_statusrow.addStretch(1)
+
+        self.verticalLayout_info.addWidget(self.statusRowFrame)
+        self.verticalLayout_info.addWidget(self.callsLabel)
+        self.verticalLayout_info.addWidget(self.eventsLabel)
+        self.verticalLayout_info.addWidget(self.elapsedLabel)
+        
 
         # ── Panel: Correlator parameters ──────────────────────────────────
         self.ParametersFrame = QFrame(self.ConfigurationArea)
@@ -172,12 +191,74 @@ class Ui_FCSMeasurement(object):
         self.LabelParametersFrame.setObjectName(u"LabelParametersFrame")
         self.LabelParametersFrame.setFrameShape(QFrame.StyledPanel)
         self.LabelParametersFrame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_plabel = QVBoxLayout(self.LabelParametersFrame)
-        self.verticalLayout_plabel.setObjectName(u"verticalLayout_plabel")
+        self.horizontalLayout_plabel = QHBoxLayout(self.LabelParametersFrame)
+        self.horizontalLayout_plabel.setObjectName(u"horizontalLayout_plabel")
+        self.horizontalLayout_plabel.setContentsMargins(4, 4, 4, 4)
+
         self.parametersLabel = QLabel(self.LabelParametersFrame)
         self.parametersLabel.setObjectName(u"parametersLabel")
-        self.verticalLayout_plabel.addWidget(self.parametersLabel)
+        self.horizontalLayout_plabel.addWidget(self.parametersLabel)
+
+        self.parametersHelpButton = QToolButton(self.LabelParametersFrame)
+        self.parametersHelpButton.setObjectName(u"parametersHelpButton")
+        self.parametersHelpButton.setText(u"?")
+        self.parametersHelpButton.setFixedSize(22, 22)
+        self.parametersHelpButton.setStyleSheet(
+            u"QToolButton {"
+            u"  font-weight: bold; font-size: 13px; color: #444444;"
+            u"  border: 1px solid #888888; border-radius: 11px;"
+            u"  background-color: #f0f0f0;"
+            u"}"
+            u"QToolButton:hover { background-color: #ddeeff; border-color: #1a5fa8; color: #1a5fa8; }"
+            u"QToolButton:pressed { background-color: #c0d8f0; }"
+        )
+        self.horizontalLayout_plabel.addWidget(self.parametersHelpButton)
+        self.horizontalLayout_plabel.addStretch(1)
+
         self.verticalLayout_params.addWidget(self.LabelParametersFrame)
+
+        # Start channel row
+        self.StartChannelFrame = QFrame(self.ParametersFrame)
+        self.StartChannelFrame.setObjectName(u"StartChannelFrame")
+        self.StartChannelFrame.setFrameShape(QFrame.StyledPanel)
+        self.StartChannelFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_startchannel = QHBoxLayout(self.StartChannelFrame)
+
+        self.startChannelLabel = QLabel(self.StartChannelFrame)
+        self.startChannelLabel.setObjectName(u"startChannelLabel")
+        self.horizontalLayout_startchannel.addWidget(self.startChannelLabel)
+
+        self.startChannelComboBox = QComboBox(self.StartChannelFrame)
+        self.startChannelComboBox.setObjectName(u"startChannelComboBox")
+        self.startChannelComboBox.addItem(u"Start channel")
+        self.startChannelComboBox.addItem(u"Channel A")
+        self.startChannelComboBox.addItem(u"Channel B")
+        self.startChannelComboBox.addItem(u"Channel C")
+        self.startChannelComboBox.addItem(u"Channel D")
+        self.horizontalLayout_startchannel.addWidget(self.startChannelComboBox)
+
+        self.verticalLayout_params.addWidget(self.StartChannelFrame)
+
+        # Stop channel row
+        self.StopChannelFrame = QFrame(self.ParametersFrame)
+        self.StopChannelFrame.setObjectName(u"ChannelFrame")
+        self.StopChannelFrame.setFrameShape(QFrame.StyledPanel)
+        self.StopChannelFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_stopchannel = QHBoxLayout(self.StopChannelFrame)
+
+        self.stopChannelLabel = QLabel(self.StopChannelFrame)
+        self.stopChannelLabel.setObjectName(u"stopChannelLabel")
+        self.horizontalLayout_stopchannel.addWidget(self.stopChannelLabel)
+
+        self.stopChannelComboBox = QComboBox(self.StopChannelFrame)
+        self.stopChannelComboBox.setObjectName(u"stopChannelComboBox")
+        self.stopChannelComboBox.addItem(u"Channel A")
+        self.stopChannelComboBox.addItem(u"Channel B")
+        self.stopChannelComboBox.addItem(u"Channel C")
+        self.stopChannelComboBox.addItem(u"Channel D")
+        self.horizontalLayout_stopchannel.addWidget(self.stopChannelComboBox)
+
+        self.verticalLayout_params.addWidget(self.StopChannelFrame)
 
         # tau_0 row  (unit: ms, minimum 1 ms)
         self.Tau0Frame = QFrame(self.ParametersFrame)
@@ -239,8 +320,12 @@ class Ui_FCSMeasurement(object):
         self.indefiniteCheckBox.toggled.connect(
             lambda checked: self.durationSpinBox.setEnabled(not checked)
         )
-
+        
         self.verticalLayout.addWidget(self.ParametersFrame)
+
+        self.verticalLayout.addWidget(self.MeasurementControlsFrame)
+
+        self.verticalLayout.addWidget(self.InfoFrame)
 
         # Vertical spacer so panels hug the top
         self.verticalLayout.addStretch(1)
@@ -264,6 +349,89 @@ class Ui_FCSMeasurement(object):
 
         self.verticalLayoutGraph = QVBoxLayout(self.TotalGraphicArea)
         self.verticalLayoutGraph.setObjectName(u"verticalLayoutGraph")
+
+        # ── Fit controls row ──────────────────────────────────────────────
+        self.fitFrame = QFrame(self.TotalGraphicArea)
+        self.fitFrame.setObjectName(u"fitFrame")
+        self.fitFrame.setFrameShape(QFrame.Panel)
+        self.fitFrame.setFrameShadow(QFrame.Sunken)
+
+        self.horizontalLayout_fit = QHBoxLayout(self.fitFrame)
+        self.horizontalLayout_fit.setContentsMargins(8, 4, 8, 4)
+        self.horizontalLayout_fit.setSpacing(10)
+
+        self.fitModelCombo = QComboBox(self.fitFrame)
+        self.fitModelCombo.setObjectName(u"fitModelCombo")
+        self.fitModelCombo.addItem(u"3D Gaussian diffusion")
+        self.fitModelCombo.addItem(u"Anomalous diffusion")
+        self.fitModelCombo.setFixedWidth(200)
+        self.fitModelCombo.setFixedHeight(28)
+        self.horizontalLayout_fit.addWidget(self.fitModelCombo)
+
+        self.fitButton = QPushButton(self.fitFrame)
+        self.fitButton.setObjectName(u"fitButton")
+        self.fitButton.setFixedWidth(60)
+        self.fitButton.setFixedHeight(28)
+        self.horizontalLayout_fit.addWidget(self.fitButton)
+
+        self.fitOffsetCheckBox = QCheckBox(self.fitFrame)
+        self.fitOffsetCheckBox.setObjectName(u"fitOffsetCheckBox")
+        self.fitOffsetCheckBox.setChecked(True)
+        self.horizontalLayout_fit.addWidget(self.fitOffsetCheckBox)
+
+        self.horizontalLayout_fit.addStretch(1)
+
+        self.verticalLayoutGraph.addWidget(self.fitFrame)
+
+        # ── Fit results panel (equation + parameter table) ────────────────
+        self.fitResultsFrame = QFrame(self.TotalGraphicArea)
+        self.fitResultsFrame.setObjectName(u"fitResultsFrame")
+        self.fitResultsFrame.setFrameShape(QFrame.Panel)
+        self.fitResultsFrame.setFrameShadow(QFrame.Sunken)
+        self.fitResultsFrame.setVisible(False)
+
+        self.verticalLayout_fitResults = QVBoxLayout(self.fitResultsFrame)
+        self.verticalLayout_fitResults.setContentsMargins(10, 6, 10, 6)
+        self.verticalLayout_fitResults.setSpacing(6)
+
+        # Equation label – renders HTML for super/subscripts
+        self.fitEquationLabel = QLabel(self.fitResultsFrame)
+        self.fitEquationLabel.setObjectName(u"fitEquationLabel")
+        self.fitEquationLabel.setStyleSheet(
+            u"font-size: 13px; color: #333333;"
+        )
+        self.fitEquationLabel.setAlignment(Qt.AlignCenter)
+        self.fitEquationLabel.setTextFormat(Qt.RichText)
+        self.fitEquationLabel.setWordWrap(True)
+        self.verticalLayout_fitResults.addWidget(self.fitEquationLabel)
+
+        # Parameter table
+        self.fitTable = QTableWidget(self.fitResultsFrame)
+        self.fitTable.setObjectName(u"fitTable")
+        self.fitTable.setColumnCount(2)
+        self.fitTable.setHorizontalHeaderLabels([u"Parameter", u"Value"])
+        self.fitTable.horizontalHeader().setStretchLastSection(True)
+        self.fitTable.verticalHeader().setVisible(False)
+        self.fitTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.fitTable.setSelectionMode(QTableWidget.NoSelection)
+        self.fitTable.setShowGrid(True)
+        self.fitTable.setFixedHeight(100)
+        self.fitTable.setStyleSheet(
+            u"font-size: 11px;"
+        )
+        self.verticalLayout_fitResults.addWidget(self.fitTable)
+
+        # Hidden label kept for FCSLogic error messages
+        self.fitResultLabel = QLabel(self.fitResultsFrame)
+        self.fitResultLabel.setObjectName(u"fitResultLabel")
+        self.fitResultLabel.setStyleSheet(
+            u"color: #cc0000; font-size: 11px;"
+        )
+        self.fitResultLabel.setAlignment(Qt.AlignCenter)
+        self.fitResultLabel.setVisible(False)
+        self.verticalLayout_fitResults.addWidget(self.fitResultLabel)
+
+        self.verticalLayoutGraph.addWidget(self.fitResultsFrame)
 
         # ── Graphic area – FCSLogic injects the plot here ─────────────────
         self.GraphicArea = QWidget(self.TotalGraphicArea)
@@ -361,6 +529,7 @@ class Ui_FCSMeasurement(object):
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
+        self.fitButton.setEnabled(False)
 
         # Draw the initial grey dot
         self.drawColorPoint()
@@ -379,22 +548,22 @@ class Ui_FCSMeasurement(object):
         )
         self.startButton.setText(
             QCoreApplication.translate(
-                "FCSMeasurement", u"Begin measurement", None
+                "FCSMeasurement", u"Start", None
             )
         )
         self.stopButton.setText(
             QCoreApplication.translate(
-                "FCSMeasurement", u"End measurement", None
+                "FCSMeasurement", u"Stop", None
             )
         )
         self.saveDataButton.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Save data", None)
+            QCoreApplication.translate("FCSMeasurement", u"Save Data File", None)
         )
         self.savePlotButton.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Save plot", None)
+            QCoreApplication.translate("FCSMeasurement", u"Save Plot", None)
         )
         self.clearButton.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Clear curve", None)
+            QCoreApplication.translate("FCSMeasurement", u"Clear", None)
         )
         # Parameters panel
         self.parametersLabel.setText(
@@ -404,7 +573,7 @@ class Ui_FCSMeasurement(object):
         )
         self.tau0Label.setText(
             QCoreApplication.translate(
-                "FCSMeasurement", u"Base bin τ₀ (µs):", None
+                "FCSMeasurement", u"Base bin width τ₀ (µs):", None
             )
         )
         self.durationLabel.setText(
@@ -414,7 +583,7 @@ class Ui_FCSMeasurement(object):
         )
         self.indefiniteCheckBox.setText(
             QCoreApplication.translate(
-                "FCSMeasurement", u"Indefinite measurement", None
+                "FCSMeasurement", u"Continuous measurement", None
             )
         )
         # Status bar
@@ -429,6 +598,70 @@ class Ui_FCSMeasurement(object):
         self.pointLabel.setText(
             QCoreApplication.translate("FCSMeasurement", u"", None)
         )
+        self.callsLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Calls: 0", None)
+            )
+        self.eventsLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Events: 0", None)
+            )
+        self.elapsedLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Elapsed: 0 s", None)
+            )
+        self.statusLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Status:", None)
+        )
+        self.valueStatusLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"No measurement running", None)
+        )
+        self.pointLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"", None)
+        )
+        self.fitButton.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Fit", None)
+        )
+        self.fitEquationLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"", None)
+        )
+        self.fitResultLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"", None)
+        )
+        self.fitOffsetCheckBox.setText(
+            QCoreApplication.translate("FCSMeasurement", u"G(∞) offset", None)
+        )
+        self.stopChannelLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Stop Channel:", None)
+        )
+        self.stopChannelComboBox.setItemText(
+            0, QCoreApplication.translate("FCSMeasurement", u"Channel A", None)
+        )
+        self.stopChannelComboBox.setItemText(
+            1, QCoreApplication.translate("FCSMeasurement", u"Channel B", None)
+        )
+        self.stopChannelComboBox.setItemText(
+            2, QCoreApplication.translate("FCSMeasurement", u"Channel C", None)
+        )
+        self.stopChannelComboBox.setItemText(
+            3, QCoreApplication.translate("FCSMeasurement", u"Channel D", None)
+        )
+        self.startChannelLabel.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Start Channel:", None)
+        )
+        self.startChannelComboBox.setItemText(
+            0, QCoreApplication.translate("FCSMeasurement", u"Start channel", None)
+        )
+        self.startChannelComboBox.setItemText(
+            1, QCoreApplication.translate("FCSMeasurement", u"Channel A", None)
+        )
+        self.startChannelComboBox.setItemText(
+            2, QCoreApplication.translate("FCSMeasurement", u"Channel B", None)
+        )
+        self.startChannelComboBox.setItemText(
+            3, QCoreApplication.translate("FCSMeasurement", u"Channel C", None)
+        )
+        self.startChannelComboBox.setItemText(
+            4, QCoreApplication.translate("FCSMeasurement", u"Channel D", None)
+        )
+        
 
     # retranslateUi
 

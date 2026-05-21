@@ -531,7 +531,7 @@ class UiLifeTime(object):
         self.startButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.stopButton.setText(QCoreApplication.translate("Form", u"Stop", None))
         self.clearButton.setText(QCoreApplication.translate("Form", u"Clear", None))
-        self.saveDataFileButton.setText(QCoreApplication.translate("Form", u"Save data file", None))
+        self.saveDataFileButton.setText(QCoreApplication.translate("Form", u"Save Data File", None))
         self.savePlotButton.setText(QCoreApplication.translate("Form", u"Save Plot", None))
         self.totalMeasurementsLabel.setText(QCoreApplication.translate("Form", u"Total measurements:", None))
         self.totalMeasurementsValue.setText(QCoreApplication.translate("Form", u"No measurement running", None))

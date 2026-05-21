@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.tab2,"Lifetime")
         self.tabs.addTab(self.tab3,"Counts estimation")
         self.tabs.addTab(self.tab4,"Time stamping")
-        self.tabs.addTab(self.tab5,"FCS")
+        self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
@@ -259,7 +259,7 @@ class MainWindow(QMainWindow):
         self.timeStampGraphic_init_sentinel=0
         #------FCS Graphic class---------#
         self.fcsGraphic=None
-        self.sentinel5=0
+        self.fcs_init_sentinel=0
         
 
         #------Layout for the main window---------#
@@ -273,6 +273,7 @@ class MainWindow(QMainWindow):
         self.sentinel2=0
         self.sentinel3=0
         self.sentinel4=0
+        self.sentinel5=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
         self.open_dialog()
@@ -738,7 +739,22 @@ class MainWindow(QMainWindow):
                     valueStatusLabel,
                     pointLabel,
                     self.LifeTimeTimer,
+                    self.uiFCS.callsLabel,
+                    self.uiFCS.eventsLabel,
+                    self.uiFCS.elapsedLabel,
+                    self.uiFCS.fitButton,
+                    self.uiFCS.fitModelCombo,
+                    self.uiFCS.fitEquationLabel,
+                    self.uiFCS.fitResultLabel,
+                    self.uiFCS.fitResultsFrame,
+                    self.uiFCS.fitTable,
+                    self.uiFCS.fitOffsetCheckBox,
+                    self.uiFCS.startChannelComboBox,
+                    self.uiFCS.stopChannelComboBox,
                     tau_0=tau_0,
+                )
+                self.uiFCS.parametersHelpButton.clicked.connect(
+                    self.fcsGraphic._show_correlator_help
                 )
                 # Provide the duration widgets so FCSLogic can read them at start time
                 self.fcsGraphic.set_parameter_widgets(

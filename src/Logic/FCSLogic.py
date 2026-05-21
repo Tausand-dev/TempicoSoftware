@@ -5,7 +5,6 @@
     measurement tab. Manages the pyqtgraph plot widget, button states, thread
     lifecycle, data saving, and status indicators.
 
-
     | @author: Miguelangel García Castillo, Tausand Electronics
     | mgarcia@tausand.com
     | https://www.tausand.com
@@ -18,14 +17,15 @@ import numpy as np
 import pyqtgraph as pg
 from PySide2.QtCore  import QMetaObject, Qt
 from PySide2.QtGui   import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import (
-    QGridLayout, QDialog, QVBoxLayout, QLabel,
-    QComboBox, QPushButton, QMessageBox,
+from PySide2.QtWidgets import (QTableWidget,
+    QTableWidgetItem, QGridLayout, QDialog, QVBoxLayout, 
+    QLabel, QComboBox, QPushButton, QMessageBox
 )
 
 import pyTempico as Tempico
 from Utils.createsavefile import createsavefile as savefile
 from Threads.ThreadFCS import WorkerThreadFCS
+from scipy.optimize import curve_fit
 
 
 class FCSLogic():
@@ -87,6 +87,18 @@ class FCSLogic():
         statusValue,
         statusPoint,
         timerStatus,
+        callsLabel,
+        eventsLabel,
+        elapsedLabel,
+        fitButton,
+        fitModelCombo,
+        fitEquationLabel,
+        fitResultLabel,
+        fitResultsFrame,
+        fitTable,
+        fitOffsetCheckBox,
+        startChannelComboBox,
+        stopChannelComboBox,
         tau_0 = 1_000_000_000,   # 1000 µs = 1 ms in picoseconds
     ):
         super().__init__()
@@ -111,6 +123,18 @@ class FCSLogic():
         self.statusValue      = statusValue
         self.statusPoint      = statusPoint
         self.timerConnection  = timerStatus
+        self.callsLabel       = callsLabel
+        self.eventsLabel      = eventsLabel
+        self.elapsedLabel     = elapsedLabel
+        self.fitButton        = fitButton
+        self.fitModelCombo    = fitModelCombo
+        self.fitEquationLabel  = fitEquationLabel
+        self.fitResultLabel    = fitResultLabel
+        self.fitResultsFrame   = fitResultsFrame
+        self.fitTable          = fitTable
+        self.fitOffsetCheckBox     = fitOffsetCheckBox
+        self.startChannelComboBox  = startChannelComboBox
+        self.stopChannelComboBox   = stopChannelComboBox
 
         self.startButton    = startButton
         self.stopButton     = stopButton
@@ -130,14 +154,16 @@ class FCSLogic():
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
-
+        self.stopChannelComboBox.setEnabled(True)
         # ── Button connections ────────────────────────────────────────────
         self.startButton.clicked.connect(self.start_graphic)
         self.stopButton.clicked.connect(self.stop_graphic)
         self.saveDataButton.clicked.connect(self.save_data)
         self.savePlotButton.clicked.connect(self.save_plot)
         self.clearButton.clicked.connect(self.clear_curve)
-
+        self.fitButton.clicked.connect(self.run_fit)
+        self.fitModelCombo.currentIndexChanged.connect(self._update_equation_label_preview)
+        self.fitOffsetCheckBox.stateChanged.connect(self._apply_offset_to_plot)
         # ── Internal state ────────────────────────────────────────────────
         # Sentinel: True while the worker thread is alive
         self.threadCreatedSentinel = False
@@ -145,14 +171,18 @@ class FCSLogic():
         self.hasMeasurementData    = False
         # Set to True when device disconnects mid-measurement
         self.withoutMeasurement    = False
+
+        self.isStopping            = False
         # Save-format sentinels (prevent re-saving the same data twice)
         self.sentinelsavetxt = 0
         self.sentinelsavecsv = 0
         self.sentinelsavedat = 0
 
         # Last emitted G(τ) arrays – kept so save works after stop
-        self.last_taus_s = np.array([])
-        self.last_g      = np.array([])
+        self.last_taus_s      = np.array([])
+        self.last_g           = np.array([])
+        self.last_stop_times_ps = np.array([])   # raw stop times in ps
+
 
         # ── Build the plot ────────────────────────────────────────────────
         self._build_plot()
@@ -175,7 +205,7 @@ class FCSLogic():
 
         self.plot.setTitle('Autocorrelation Function — FCS')
         self.plot.setLabel('left',   'G(τ)')
-        self.plot.setLabel('bottom', 'τ (s)')
+        self.plot.setLabel('bottom', 'Lag time τ (s)')
         self.plot.showGrid(x=True, y=True, alpha=0.3)
         # Logarithmic x-axis: standard for FCS curves (ns to ms range)
         self.plot.setLogMode(x=True, y=False)
@@ -188,6 +218,13 @@ class FCSLogic():
                          style=pg.QtCore.Qt.DashLine)
         )
         self.plot.addItem(ref_line)
+
+        # Fit curve – drawn after the user clicks Fit
+        self.fit_curve = self.plot.plot(
+            [], [],
+            pen=pg.mkPen('red', width=2),
+            name='Fit',
+        )
 
         # Scatter curve updated in real time
         self.curve = self.plot.plot(
@@ -241,6 +278,26 @@ class FCSLogic():
         self.durationSpinBox    = durationSpinBox
         self.indefiniteCheckBox = indefiniteCheckBox
 
+
+    def _get_stop_channel_index(self):
+        """Devuelve 1-4 según el combo de stop channel."""
+        return self.stopChannelComboBox.currentIndex() + 1
+    
+    def _restore_buttons_after_stop(self):
+        """Re-enable UI after a failed or aborted start."""
+        self.mainWindow.tabs.setTabEnabled(0, True)
+        self.mainWindow.tabs.setTabEnabled(1, True)
+        self.mainWindow.tabs.setTabEnabled(2, True)
+        self.mainWindow.tabs.setTabEnabled(3, True)
+        self.disconnectButton.setEnabled(True)
+        self.startButton.setEnabled(True)
+        self.stopButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(True)
+        
+        self.startTimerConnection()
+        if hasattr(self.mainWindow, 'noMeasurement'):
+            self.mainWindow.noMeasurement()
+
     # ── Start / Stop ──────────────────────────────────────────────────────────
 
     def start_graphic(self):
@@ -261,6 +318,7 @@ class FCSLogic():
         self.sentinelsavecsv = 0
         self.sentinelsavedat = 0
         self.hasMeasurementData = False
+        self.isStopping = False
         self.last_taus_s = np.array([])
         self.last_g      = np.array([])
 
@@ -281,6 +339,8 @@ class FCSLogic():
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(False)
+        
 
         self.statusValue.setText("Measurement running")
         self.changeStatusColor(1)
@@ -305,6 +365,17 @@ class FCSLogic():
             tau_0 = self.tau_0  # fallback to constructor value
 
         # Instantiate and start the worker thread
+        num_runs  = self.device.getNumberOfRuns()
+        num_stops = self.device.ch1.getNumberOfStops()   # same for all channels
+        ch_mode   = self.device.ch1.getMode()
+
+        if num_stops < 2:
+            self.statusValue.setText("Error: need at least 2 stops. Check General Settings.")
+            self.changeStatusColor(0)
+            self._restore_buttons_after_stop()
+            return
+        
+        self.mainWindow.activeMeasurement()
         self.worker = WorkerThreadFCS(
             parent        = self.parent,
             device        = self.device,
@@ -312,6 +383,11 @@ class FCSLogic():
             num_levels    = self.num_levels,
             m             = self.m,
             total_seconds = total_seconds,
+            stop_channel  = self._get_stop_channel_index(),
+            start_channel = None,
+            num_runs      = num_runs,
+            num_stops     = num_stops,
+            channel_mode  = ch_mode,
         )
         self.worker.dataReady.connect(self.update_plot)
         self.worker.statusUpdate.connect(self.changeStatusThread)
@@ -327,6 +403,7 @@ class FCSLogic():
 
         :return: None
         """
+        self.isStopping = True
         if not self.withoutMeasurement:
             self.startTimerConnection()
 
@@ -341,10 +418,13 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(1, True)
         self.mainWindow.tabs.setTabEnabled(2, True)
         self.mainWindow.tabs.setTabEnabled(3, True)
+        self.mainWindow.tabs.setTabEnabled(4, True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
 
         self.stopButton.setEnabled(False)
+        self.stopChannelComboBox.setEnabled(True)
+        
         if not self.withoutMeasurement:
             self.startButton.setEnabled(True)
 
@@ -352,7 +432,7 @@ class FCSLogic():
             self.saveDataButton.setEnabled(True)
             self.savePlotButton.setEnabled(True)
             self.clearButton.setEnabled(True)
-
+            self.fitButton.setEnabled(True)
     # ── Thread signal handlers ─────────────────────────────────────────────────
 
     def threadRunning(self, status):
@@ -380,7 +460,7 @@ class FCSLogic():
         self.threadCreatedSentinel = False
         self.stop_graphic()
 
-    def update_plot(self, taus_ps, g):
+    def update_plot(self, taus_ps, g, stop_times_ps):
         """
         Update the G(τ) scatter plot with the latest correlation data.
 
@@ -393,17 +473,19 @@ class FCSLogic():
             Lag times in picoseconds (emitted by the thread).
         g : numpy.ndarray
             Normalized autocorrelation values G(τ).
+        stop_times_ps : numpy.ndarray
+            All raw stop times collected so far, in picoseconds.
 
         :return: None
         """
         taus_s = taus_ps * 1e-12
-        # Pyqtgraph requires strictly positive x values in log mode
         mask = taus_s > 0
         self.curve.setData(taus_s[mask], g[mask])
 
         # Cache for saving
-        self.last_taus_s = taus_s[mask]
-        self.last_g      = g[mask]
+        self.last_taus_s        = taus_s[mask]
+        self.last_g             = g[mask]
+        self.last_stop_times_ps = stop_times_ps
         self.hasMeasurementData = True
 
     def changeStatusThread(self, new_text):
@@ -413,7 +495,16 @@ class FCSLogic():
         :param new_text: Text to display (str).
         :return: None
         """
-        self.statusValue.setText(new_text)
+        if self.isStopping:
+            return
+        self.statusValue.setText("Measurement running")
+        try:
+            parts = new_text.split("|")
+            self.callsLabel.setText("Calls: "    + parts[0].split(":")[1].strip())
+            self.eventsLabel.setText("Events: "  + parts[1].split(":")[1].strip())
+            self.elapsedLabel.setText("Elapsed: "+ parts[2].split(":")[1].strip())
+        except (IndexError, AttributeError):
+            pass
 
     def changeColorThread(self, color):
         """
@@ -435,13 +526,16 @@ class FCSLogic():
 
         :return: None
         """
-        self.last_taus_s = np.array([])
-        self.last_g      = np.array([])
+        self.last_taus_s        = np.array([])
+        self.last_g             = np.array([])
+        self.last_stop_times_ps = np.array([])
         self.hasMeasurementData = False
         self.curve.setData([], [])
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
+        self.fit_curve.setData([], [])
+        self.fitResultsFrame.setVisible(False)
 
     # ── Save data ─────────────────────────────────────────────────────────────
 
@@ -462,7 +556,6 @@ class FCSLogic():
 
         dataFolderPrefix = self.savefile.getDataFolderPrefix()
         folder_path      = dataFolderPrefix["saveFolder"]
-        data_prefix      = dataFolderPrefix.get("fcsPrefix", "FCS_")
 
         current_date_str = (
             datetime.datetime.now()
@@ -511,22 +604,22 @@ class FCSLogic():
             msg.exec_()
             return
 
-        filename = data_prefix + current_date_str + "_FCS"
+        filename = dataFolderPrefix['fcsPrefix'] + current_date_str
         setting  = (
             f"tau_0 (ps):\t{self.tau_0}\n"
             f"num_levels:\t{self.num_levels}\n"
             f"m:\t{self.m}"
         )
-        # Pack into the format expected by createsavefile
-        data         = [list(self.last_taus_s), list(self.last_g)]
-        filenames    = [filename]
-        column_names = ["tau_s\tG(tau)"]
-        settings     = [setting]
 
         try:
-            self.savefile.save_lists_as_columns_txt(
-                data, filenames, column_names,
-                folder_path, settings, selected_format,
+            self.savefile.save_fcs_data(
+                stop_times_ps = self.last_stop_times_ps,
+                taus_s        = self.last_taus_s,
+                g_vals        = self.last_g,
+                file_name     = filename,
+                folder_path   = folder_path,
+                settings      = setting,
+                extension     = selected_format,
             )
             if selected_format == "txt":
                 self.sentinelsavetxt = 1
@@ -568,7 +661,7 @@ class FCSLogic():
         try:
             dataFolderPrefix = self.savefile.getDataFolderPrefix()
             folder_path      = dataFolderPrefix["saveFolder"]
-            data_prefix      = dataFolderPrefix.get("fcsPrefix", "FCS_")
+            #data_prefix      = dataFolderPrefix.get("fcsPrefix", "FCS_")
 
             dialog = QDialog(self.parent)
             dialog.setObjectName("ImageFormat")
@@ -596,23 +689,23 @@ class FCSLogic():
                 .strftime("%Y-%m-%d %H:%M:%S")
                 .replace(':', '').replace('-', '').replace(' ', '')
             )
-            graph_name = data_prefix + "FCS_Plot_" + current_date_str
+            #graph_name = data_prefix + "FCS_Plot_" + current_date_str
 
             exporter = pg.exporters.ImageExporter(self.plot)
             exporter.parameters()['width']  = 800
             exporter.parameters()['height'] = 600
 
             sep = '/' if os.name == 'posix' else '\\'
-            exporter.export(
-                folder_path + sep + graph_name + '.' + selected_format
-            )
+            #exporter.export(
+            #    folder_path + sep + graph_name + '.' + selected_format
+            #)
 
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Successful save")
             msg.setText(
                 f"Plot saved in:\n\n{folder_path}\n\n"
-                f"File: {graph_name}.{selected_format}"
+                #f"File: {graph_name}.{selected_format}"
             )
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
@@ -709,6 +802,180 @@ class FCSLogic():
         """
         self.device = device_new
         self.startButton.setEnabled(True)
+    # ── Fit logic ─────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _model_3d(tau, N, tau_D, kappa, offset=1.0):
+        """3D Gaussian diffusion model — κ libre."""
+        return offset + (1.0 / N) * (1.0 / (1.0 + tau / tau_D)) * (
+            1.0 / np.sqrt(1.0 + tau / (kappa**2 * tau_D))
+        )
+
+    @staticmethod
+    def _model_anomalous(tau, N, tau_D, alpha, kappa, offset=1.0):
+        """Difusión anómala 3D con κ libre."""
+        return offset + (1.0 / N) * (
+            1.0 / (
+                (1.0 + (tau / tau_D)**alpha) *
+                np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)**alpha)
+            )
+        )
+    def _apply_offset_to_plot(self):
+        """Desplaza los datos -1 en la gráfica si G(∞) offset está desmarcado."""
+        if len(self.last_g) == 0:
+            return
+        if self.fitOffsetCheckBox.isChecked():
+            self.curve.setData(self.last_taus_s, self.last_g)
+        else:
+            self.curve.setData(self.last_taus_s, self.last_g - 1.0)
+        # Limpia el fit anterior ya que el offset cambió
+        self.fit_curve.setData([], [])
+        self.fitResultsFrame.setVisible(False)
+        self._update_equation_label_preview()
+    def _update_equation_label_preview(self):
+        """Muestra la ecuación del modelo seleccionado sin parámetros (antes del fit)."""
+        offset = 1.0 if self.fitOffsetCheckBox.isChecked() else 0.0
+        idx = self.fitModelCombo.currentIndex()
+        prefix = "G(∞) + " if offset == 1.0 else ""
+        if idx == 0:
+            html = (
+                f"<center>"
+                f"G(τ) = {prefix}"
+                f"<sup>1</sup>/<sub>N</sub> · "
+                f"(1 + τ/τ<sub>D</sub>)<sup>−1</sup> · "
+                f"(1 + τ/(κ<sup>2</sup>·τ<sub>D</sub>))<sup>−½</sup>"
+                f"</center>"
+            )
+        else:
+            html = (
+                f"<center>"
+                f"G(τ) = {prefix}"
+                f"<sup>1</sup>/<sub>N</sub> · "
+                f"[(1 + (τ/τ<sub>D</sub>)<sup>α</sup>) · "
+                f"(1 + κ<sup>−2</sup>·(τ/τ<sub>D</sub>)<sup>α</sup>)<sup>½</sup>]<sup>−1</sup>"
+                f"</center>"
+            )
+        self.fitEquationLabel.setText(html)
+        self.fitResultsFrame.setVisible(True)
+
+    def _update_equation_label(self, N, tD_ms, kappa, alpha=None, offset=1.0):
+        """Muestra la ecuación del modelo en HTML, sin parámetros ajustados."""
+        prefix = "G(∞) + " if offset == 1.0 else ""
+        if alpha is None:
+            html = (
+                f"<center>"
+                f"G(τ) = {prefix}"
+                f"<sup>1</sup>/<sub>N</sub> · "
+                f"(1 + τ/τ<sub>D</sub>)<sup>−1</sup> · "
+                f"(1 + τ/(κ<sup>2</sup>·τ<sub>D</sub>))<sup>−½</sup>"
+                f"</center>"
+            )
+        else:
+            html = (
+                f"<center>"
+                f"G(τ) = {prefix}"
+                f"<sup>1</sup>/<sub>N</sub> · "
+                f"[(1 + (τ/τ<sub>D</sub>)<sup>α</sup>) · "
+                f"(1 + κ<sup>−2</sup>·(τ/τ<sub>D</sub>)<sup>α</sup>)<sup>½</sup>]<sup>−1</sup>"
+                f"</center>"
+            )
+        self.fitEquationLabel.setText(html)
+
+    def _fill_fit_table(self, rows):
+        """
+        Fill fitTable with parameter results.
+
+        Parameters
+        ----------
+        rows : list of (str, str)  — (parameter name, formatted value)
+        """
+        table = self.fitTable
+        table.setRowCount(len(rows))
+        for i, (name, value) in enumerate(rows):
+            item_name  = QTableWidgetItem(name)
+            item_value = QTableWidgetItem(value)
+            item_name.setTextAlignment(Qt.AlignCenter)
+            item_value.setTextAlignment(Qt.AlignCenter)
+            table.setItem(i, 0, item_name)
+            table.setItem(i, 1, item_value)
+        table.resizeRowsToContents()
+        h = table.horizontalHeader().height()
+        for row in range(table.rowCount()):
+            h += table.rowHeight(row)
+        table.setFixedHeight(h + 4)
+
+    def run_fit(self):
+        """Fit the current G(τ) curve with the selected model."""
+        self.fitResultLabel.setVisible(False)
+        self.fitResultsFrame.setVisible(False)
+
+        if self.last_taus_s is None or len(self.last_taus_s) < 5:
+            self.fitResultLabel.setText("No hay suficientes datos para ajustar.")
+            self.fitResultLabel.setVisible(True)
+            self.fitResultsFrame.setVisible(True)
+            return
+
+        taus = self.last_taus_s
+        g    = self.last_g
+        mask = (taus > 0) & np.isfinite(g)
+        taus = taus[mask]
+        g    = g[mask]
+
+        offset = 1.0 if self.fitOffsetCheckBox.isChecked() else 0.0
+        # Si G(∞)→0, desplazar los datos restando 1 antes de fitear
+        g_fit = g if offset == 1.0 else g - 1.0
+
+        idx = self.fitModelCombo.currentIndex()
+        try:
+            if idx == 0:
+                p0     = [1.0, np.median(taus), 5.0]
+                bounds = ([0, 0, 0.01], [np.inf, np.inf, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tD, k: self._model_3d(t, N, tD, k, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, kappa_fit = popt
+                self._update_equation_label(N_fit, tD_fit*1e3, kappa_fit,
+                                            offset=offset)
+                self._fill_fit_table([
+                    ("N",    f"{N_fit:.4f}"),
+                    ("τD",   f"{tD_fit*1e3:.4f} ms"),
+                    ("κ",    f"{kappa_fit:.4f}"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_3d(taus, N_fit, tD_fit, kappa_fit, offset)
+
+            else:
+                p0     = [1.0, np.median(taus), 1.0, 5.0]
+                bounds = ([0, 0, 0.1, 0.01], [np.inf, np.inf, 2.0, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tD, a, k: self._model_anomalous(t, N, tD, a, k, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, alpha_fit, kappa_fit = popt
+                self._update_equation_label(N_fit, tD_fit*1e3, kappa_fit,
+                                            alpha=alpha_fit, offset=offset)
+                self._fill_fit_table([
+                    ("N",    f"{N_fit:.4f}"),
+                    ("τD",   f"{tD_fit*1e3:.4f} ms"),
+                    ("α",    f"{alpha_fit:.4f}"),
+                    ("κ",    f"{kappa_fit:.4f}"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_anomalous(taus, N_fit, tD_fit, alpha_fit,
+                                              kappa_fit, offset)
+
+            self.fit_curve.setData(taus, fit_g)
+            self.fitResultsFrame.setVisible(True)
+
+        except RuntimeError:
+            self.fitResultLabel.setText("El ajuste no convergió.")
+            self.fitResultLabel.setVisible(True)
+            self.fitResultsFrame.setVisible(True)
+        except Exception as e:
+            self.fitResultLabel.setText(f"Error en el ajuste: {e}")
+            self.fitResultLabel.setVisible(True)
+            self.fitResultsFrame.setVisible(True)
 
     def disconnectedDevice(self):
         """
@@ -762,3 +1029,23 @@ class FCSLogic():
         self.sentinelsavetxt = 0
         self.sentinelsavecsv = 0
         self.sentinelsavedat = 0
+    def _show_correlator_help(self):
+        from PySide2.QtWidgets import QMessageBox
+        QMessageBox.information(
+            self.parent,
+            "Autocorrelation (FCS)",
+            "FCS measures fluorescence intensity fluctuations caused by molecules "
+            "diffusing through a focused laser spot.\n\n"
+            "The autocorrelation function G(τ) quantifies how similar the intensity "
+            "signal is to itself at a later time τ:\n"
+            "   G(τ) = ⟨δI(t)·δI(t+τ)⟩ / ⟨I(t)⟩²\n\n"
+            "Its decay encodes the diffusion time τD and the average number "
+            "of molecules N in the focal volume.\n\n"
+            "── Parameters ──\n"
+            "τ₀: Time resolution of the first correlation channel.\n"
+            "Duration: Total acquisition time.\n"
+            "Channel: TDC input receiving the photon detection pulses.\n\n"
+            "This correlator uses a multi-tau algorithm, which computes G(τ) "
+            "over logarithmically spaced lag times — covering µs to ms in a "
+            "single measurement."
+        )

@@ -8,19 +8,20 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import QMetaObject, QCoreApplication, QEvent
+from PySide2.QtCore import QMetaObject, QCoreApplication, QEvent, QObject
 from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QTabWidget, QWidget, QHBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QDialog, QMessageBox, QWhatsThis
 import math
 
 
 
-class Ui_settings(object):
+class Ui_settings(QObject):
     def setupUi(self, Dialog, device):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
         Dialog.resize(527, 366)
        
         self.dialog_1=Dialog
+        Dialog.installEventFilter(self)
         self.device=device
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -775,16 +776,17 @@ class Ui_settings(object):
         
             
         
-    def event(self, event): 
-        if event.type() == QEvent.EnterWhatsThisMode: #Event called when ? is clicked                
-            QWhatsThis.leaveWhatsThisMode() #To change mouse cursor back to arrow
-            self.showHelp()
-            return True
-        return QDialog.event(self, event)       
+    def eventFilter(self, obj, event):
+        if obj == self.dialog_1 and event.type() == QEvent.EnterWhatsThisMode:
+            if self.dialog_1.isActiveWindow():
+                QWhatsThis.leaveWhatsThisMode()
+                self.showHelp()
+                return True
+        return QObject.eventFilter(self, obj, event) 
     
      
     def showHelp(self):
-        QMessageBox.information(self, "Help", 
+        QMessageBox.information(self.dialog_1, "Help", 
                                 "Here is the information about the general settings:\n\n"
                                 "Average Cycles: This setting indicates how many internal measurements the device performs to provide an averaged result for each measurement. Increasing the number of cycles enhances data accuracy but decreases the program's response time.\n\n"
                                 "Mode: This represents the time interval within which stop data will be accepted. Measurements outside this interval will be disregarded.\n\n"

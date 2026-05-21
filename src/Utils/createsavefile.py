@@ -23,7 +23,8 @@ class createsavefile:
                 "startStopHistogramPrefix": "StartStopHistogram",
                 "lifetimePrefix": "Lifetime",
                 "countsEstimationPrefix": "CountsEstimation",
-                "timeStampingPrefix": "TimeStamping"
+                "timeStampingPrefix": "TimeStamping",
+                "fcsPrefix": "Autocorrelation"
             }
             with open(save_path, "w", encoding="utf-8") as f:
                 json.dump(default_data, f, indent=4, ensure_ascii=False)
@@ -127,7 +128,8 @@ class createsavefile:
         dataDict['startStopHistogramPrefix']= data['startStopHistogramPrefix']
         dataDict['lifetimePrefix']= data['lifetimePrefix']
         dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
-        dataDict['timeStampingPrefix']= data['timeStampingPrefix'] 
+        dataDict['timeStampingPrefix']= data['timeStampingPrefix']
+        dataDict['fcsPrefix']= data['fcsPrefix']
         return dataDict
     
     
@@ -144,6 +146,8 @@ class createsavefile:
             data["countsEstimationPrefix"]= newPrefix
         elif tab=="TimeStamping":
             data["timeStampingPrefix"]= newPrefix
+        elif tab=="Autocorrelation":
+            data["fcsPrefix"]= newPrefix
         with open(pathConstants, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
     
@@ -618,3 +622,64 @@ class createsavefile:
         return True
                 
     
+    def save_fcs_data(self, stop_times_ps, taus_s, g_vals,
+                      file_name, folder_path, settings, extension):
+        """
+        Save FCS measurement data to a three-column text file.
+
+        The file contains three columns with potentially different lengths:
+
+        - **Column 1** ``stop_time_ps``: raw photon arrival times in
+          picoseconds, one row per detected photon event.
+        - **Column 2** ``tau_s``: lag times of the autocorrelation function
+          in seconds, one row per ACF channel.
+        - **Column 3** ``G(tau)``: normalized autocorrelation values
+          corresponding to each lag time.
+
+        Because the number of photon events is generally much larger than
+        the number of ACF channels, the shorter columns are padded with
+        empty cells so that every row has three fields.
+
+        The separator is ``\\t`` for *txt* and *dat* files and ``;`` for
+        *csv* files, following the convention used by the rest of
+        ``createsavefile``.
+
+        :param stop_times_ps: 1-D array or list of raw stop times (ps).
+        :param taus_s: 1-D array or list of ACF lag times (s).
+        :param g_vals: 1-D array or list of G(τ) values.
+        :param file_name: Output file name without extension (str).
+        :param folder_path: Directory where the file will be saved (str).
+        :param settings: Multi-line header string written at the top of the
+            file (e.g. tau_0, num_levels, m).
+        :param extension: ``'txt'``, ``'dat'``, or ``'csv'`` (str).
+        :raises OSError: If the directory cannot be created or the file
+            cannot be written.
+        :returns: None
+        """
+        if extension == "csv":
+            separator = ";"
+            settings  = settings.replace("\t", ";")
+        else:
+            separator = "\t"
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        n_stops = len(stop_times_ps)
+        n_acf   = len(taus_s)
+        n_rows  = max(n_stops, n_acf)
+
+        # Pad the shorter columns with empty strings
+        col_stop = list(stop_times_ps) + [''] * (n_rows - n_stops)
+        col_tau  = list(taus_s)        + [''] * (n_rows - n_acf)
+        col_g    = list(g_vals)        + [''] * (n_rows - n_acf)
+
+        full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+
+        with open(full_path, 'w', encoding='utf-8') as f:
+            f.write(settings + '\n')
+            f.write(
+                f"stop_time_ps{separator}tau_s{separator}G(tau)\n"
+            )
+            for s, t, g in zip(col_stop, col_tau, col_g):
+                f.write(f"{s}{separator}{t}{separator}{g}\n")

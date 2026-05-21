@@ -3,5 +3,6 @@
     "startStopHistogramPrefix": "StartStopHistogram",
     "lifetimePrefix": "Lifetime",
     "countsEstimationPrefix": "CountsEstimation",
-    "timeStampingPrefix": "TimeStamping"
+    "timeStampingPrefix": "TimeStamping",
+    "fcsPrefix": "Autocorrelation"
 }

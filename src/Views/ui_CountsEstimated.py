@@ -125,8 +125,6 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_4.addWidget(self.stopMeasurementButton)
 
 
-        self.verticalLayout_2.addWidget(self.StartStopButtonsFrame)
-
         self.grapLabel = QLabel(self.SettingsFrame)
         self.grapLabel.setObjectName(u"grapLabel")
 
@@ -272,6 +270,8 @@ class Ui_CountsEstimated(object):
 
 
         self.verticalLayout_2.addWidget(self.ChannelABButtonFrame)
+        
+        self.verticalLayout_2.addWidget(self.StartStopButtonsFrame)
 
         self.SaveDataPlotsFrame = QFrame(self.SettingsFrame)
         self.SaveDataPlotsFrame.setObjectName(u"SaveDataPlotsFrame")
@@ -609,8 +609,8 @@ class Ui_CountsEstimated(object):
         self.channelCCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
         self.channelBCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
         self.channelDCheckBox.setText(QCoreApplication.translate("Form", u"D", None))
-        self.startMeasurementButton.setText(QCoreApplication.translate("Form", u"Start Measurement", None))
-        self.stopMeasurementButton.setText(QCoreApplication.translate("Form", u"Stop Measurement", None))
+        self.startMeasurementButton.setText(QCoreApplication.translate("Form", u"Start", None))
+        self.stopMeasurementButton.setText(QCoreApplication.translate("Form", u"Stop", None))
         self.grapLabel.setText(QCoreApplication.translate("Form", u"Graph:", None))
         self.mergeGraphicButton.setText(QCoreApplication.translate("Form", u"Merge graphics", None))
         self.separateGraphicButton.setText(QCoreApplication.translate("Form", u"Separate graphics", None))
@@ -631,7 +631,7 @@ class Ui_CountsEstimated(object):
         self.channelBClearButton.setText(QCoreApplication.translate("Form", u"B", None))
         self.channelCClearButton.setText(QCoreApplication.translate("Form", u"C", None))
         self.channelDClearButton.setText(QCoreApplication.translate("Form", u"D", None))
-        self.saveDataButton.setText(QCoreApplication.translate("Form", u"Save data", None))
+        self.saveDataButton.setText(QCoreApplication.translate("Form", u"Save Data File", None))
         self.savePlotsButton.setText(QCoreApplication.translate("Form", u"Save Plots", None))
         self.titleCounts.setText(QCoreApplication.translate("Form", u" <b>Est. counts (cps)<\b>", None))
         self.titleUncertainty.setText(QCoreApplication.translate("Form", u"<b>Uncertainty<\b>", None))

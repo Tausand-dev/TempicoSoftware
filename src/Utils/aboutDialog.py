@@ -13,14 +13,17 @@
 # from PySide2.QtWidgets import *
 #from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QDesktopServices, QPixmap
-from PySide2.QtCore import QUrl
-from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton
+from PySide2.QtCore import QUrl, QEvent, QObject
+from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton, QWhatsThis, QMessageBox
 from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
 from .constants import VERSION
 from .constants import PYTEMPICO_VERSION
 
 
-class Ui_AboutDialog(object):
+class Ui_AboutDialog(QObject):
+    def __init__(self):
+        super().__init__()
+
     def setupUi(self, AboutDialog):
         if not AboutDialog.objectName():
             AboutDialog.setObjectName(u"AboutDialog")
@@ -156,6 +159,7 @@ class Ui_AboutDialog(object):
         self.tempicoLabel.linkActivated.connect(self.open_link)
         ##EndtranslateFuncion
 
+        AboutDialog.installEventFilter(self)
         QMetaObject.connectSlotsByName(AboutDialog)
     
     def acceptButton(self):
@@ -176,4 +180,26 @@ class Ui_AboutDialog(object):
         """
         
         QDesktopServices.openUrl(QUrl(url))
+    def eventFilter(self, obj, event):
+        if obj is self.dialog and event.type() == QEvent.EnterWhatsThisMode:
+            if self.dialog.isActiveWindow():
+                QWhatsThis.leaveWhatsThisMode()
+                self.showHelp()
+                return True
+        return QObject.eventFilter(self, obj, event)
+
+    def showHelp(self):
+        QMessageBox.information(
+            self.dialog,
+            "About",
+            "Tempico Software is a measurement suite developed by Tausand Electronics "
+            "for use with Tempico Time-to-Digital Converter (TDC) devices.\n\n"
+            "It provides tools for:\n"
+            "  • Start-stop histogram measurements\n"
+            "  • Fluorescence lifetime analysis\n"
+            "  • Counts estimation\n"
+            "  • Time stamping\n"
+            "  • Autocorrelation (FCS)\n\n"
+            "For more information visit https://www.tausand.com"
+        )
     

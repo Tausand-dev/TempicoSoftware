@@ -160,9 +160,9 @@ class WorkerThreadFCS(QThread):
 
     Signals
     -------
-    dataReady : Signal(object, object)
-        Emitted after every ``measure()`` call with ``(taus_ps, g)`` arrays.
-        Lag times are in picoseconds; convert to seconds in the Logic layer.
+    dataReady : Signal(object, object, object)
+        Emitted after every ``measure()`` call with ``(taus_ps, g, stop_times_ps)``
+        arrays. Lag times and stop times are in picoseconds.
     statusUpdate : Signal(str)
         Emitted after every ``measure()`` call with a human-readable status
         string (call count, event count, elapsed time).
@@ -188,19 +188,26 @@ class WorkerThreadFCS(QThread):
         Channels per level. Default: 16.
     """
 
-    dataReady    = Signal(object, object)   # (taus_ps, g)
+    dataReady     = Signal(object, object, object)  # (taus_ps, g, stop_times_ps)
     statusUpdate = Signal(str)
     colorValue   = Signal(int)
     stringValue  = Signal(str)
     threadCreated = Signal(int)
 
     def __init__(self, parent, device: tempico.TempicoDevice,
-                 tau_0=1_000_000, num_levels=16, m=16,
-                 total_seconds=None):
+                 stop_channel=1, start_channel=None,
+                 num_runs=100, num_stops=2, channel_mode=2,
+                 tau_0=1_000_000, num_levels=16,
+                 m=16, total_seconds=None):
         super().__init__()
 
         self.parent        = parent
         self.device        = device
+        self.start_channel = start_channel
+        self.stop_channel  = stop_channel
+        self.num_runs      = num_runs
+        self.num_stops     = max(num_stops, 2)   # FCS needs at least 2 stops
+        self.channel_mode  = channel_mode
         self.tau_0         = tau_0
         self.num_levels    = num_levels
         self.m             = m
@@ -284,9 +291,9 @@ class WorkerThreadFCS(QThread):
         self.device.ch4.setStopMask(self.stopMaskChannelD)
 
         self.device.ch1.enableChannel()
-        self.device.ch2.enableChannel()
-        self.device.ch3.enableChannel()
-        self.device.ch4.enableChannel()
+        self.device.ch2.disableChannel()
+        self.device.ch3.disableChannel()
+        self.device.ch4.disableChannel()
 
     # ── Main loop ─────────────────────────────────────────────────────────────
 
@@ -315,27 +322,27 @@ class WorkerThreadFCS(QThread):
         # ensuring no leftover configuration from other tabs interferes.
         self.device.reset()
 
-        self.device.ch1.enableChannel()
-        self.device.ch2.disableChannel()
-        self.device.ch3.disableChannel()
-        self.device.ch4.disableChannel()
+        # Enable only the selected stop channel
+        _all_chs = [self.device.ch1, self.device.ch2,
+                    self.device.ch3, self.device.ch4]
+        for ch in _all_chs:
+            ch.disableChannel()
 
-        # Mode 2: large measurement range (125 ns – 4 ms start-stop window).
-        # With the Arduino generating a 10 kHz START (100 µs period), all
-        # stop events fall comfortably within this range.
-        self.device.ch1.setMode(2)
+        # Enable start channel if selected
+        if self.start_channel is not None:
+            self._start_ch = _all_chs[self.start_channel - 1]
+            self._start_ch.enableChannel()
+            self._start_ch.setMode(self.channel_mode)
+            self._start_ch.setNumberOfStops(1)
+        else:
+            self._start_ch = None
 
-        # 2 stops per run — same as fcsExample NUMBER_OF_STOPS=2.
-        # Critical: cursor_ps advances by stops[-1] ≈ full laser period.
-        # With 1 stop, cursor_ps would advance by the photon arrival time
-        # (~50 µs) instead of the full 100 µs period, compressing the
-        # timeline by ~2× and destroying temporal correlations in G(tau).
-        self.device.ch1.setNumberOfStops(2)
-
-        # 100 runs per measure() call — same as fcsExample NUMBER_OF_RUNS=100.
-        # This gives ~200 photon events per call, enough to update G(tau)
-        # smoothly without overwhelming the GUI thread.
-        self.device.setNumberOfRuns(100)
+        # Enable stop channel
+        self._active_ch = _all_chs[self.stop_channel - 1]
+        self._active_ch.enableChannel()
+        self._active_ch.setMode(self.channel_mode)
+        self._active_ch.setNumberOfStops(self.num_stops)
+        self.device.setNumberOfRuns(self.num_runs)
 
         # ── Correlator and timeline state ──────────────────────────────────
         correlator = _MultiTauCorrelator(
@@ -355,6 +362,11 @@ class WorkerThreadFCS(QThread):
         call_count   = 0   # Number of measure() calls completed
         total_events = 0   # Total photon events collected so far
 
+        # Accumulates every raw stop time (ps) received from the device.
+        # Grows throughout the measurement and is emitted alongside the ACF
+        # so FCSLogic can save it to disk.
+        stop_times_ps = []
+
         t_start = time.time()   # Wall-clock time at acquisition start
 
         # ── Acquisition loop ───────────────────────────────────────────────
@@ -365,18 +377,18 @@ class WorkerThreadFCS(QThread):
                 if (time.time() - t_start) >= self.total_seconds:
                     break
             (cursor_ps, next_bin_edge, photons_in_bin,
-             call_count, total_events) = self._getMeasurements(
+             call_count, total_events, stop_times_ps) = self._getMeasurements(
                 correlator,
                 cursor_ps, next_bin_edge, photons_in_bin,
                 call_count, total_events,
-                t_start,
+                t_start, stop_times_ps,
             )
 
         # ── Flush the last partial bin ─────────────────────────────────────
         correlator.process_datum(photons_in_bin)
         taus, g = correlator.get_correlation_curve()
         if len(taus) > 0:
-            self.dataReady.emit(taus, g)
+            self.dataReady.emit(taus, g, np.array(stop_times_ps))
 
         # Restore device configuration
         self.applyCurrentSettings()
@@ -386,7 +398,7 @@ class WorkerThreadFCS(QThread):
 
     def _getMeasurements(self, correlator, cursor_ps, next_bin_edge,
                          photons_in_bin, call_count, total_events,
-                         t_start):
+                         t_start, stop_times_ps):
         """
         Execute one ``device.measure()`` call and process results.
 
@@ -406,7 +418,7 @@ class WorkerThreadFCS(QThread):
                 self.colorValue.emit(3)
                 self.stringValue.emit("No measurement – check start signal")
                 self.consecutiveErrors = 0
-                return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events
+                return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
             # ── Exact replica of fcsExample.py inner loop ─────────────────
             for row in data:
@@ -432,6 +444,9 @@ class WorkerThreadFCS(QThread):
                     photons_in_bin += 1
                     total_events   += 1
 
+                    # Accumulate the raw stop time for saving to disk
+                    stop_times_ps.append(t_ps)
+
                 # Advance the timeline cursor to the last stop of this run.
                 # The gap between the last stop and the next run's first stop
                 # is intentionally ignored (Option B: relative timeline).
@@ -441,10 +456,11 @@ class WorkerThreadFCS(QThread):
 
             call_count += 1
 
-            # Emit the updated correlation curve
+            # Emit the updated correlation curve together with the full list
+            # of raw stop times collected so far.
             taus, g = correlator.get_correlation_curve()
             if len(taus) > 0:
-                self.dataReady.emit(taus, g)
+                self.dataReady.emit(taus, g, np.array(stop_times_ps))
 
             # Status string
             self.colorValue.emit(1)
@@ -467,7 +483,7 @@ class WorkerThreadFCS(QThread):
             if self.consecutiveErrors > 10:
                 self.stop()
 
-        return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events
+        return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
     # ── Public control interface ──────────────────────────────────────────────
 
