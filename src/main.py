@@ -20,6 +20,7 @@ from Utils.generatorSettingsDialog import Ui_Generator
 from Utils.ParametersDialog import CountParameters
 from Logic.StartStopLogic import StartStopLogic
 from Utils.constants import *
+from Utils.helpDialog import HelpDialog
 import Utils.constants as constants
 from Views.ui_LifeTimemeasurement import UiLifeTime
 from Logic.LifeTimeLogic import LifeTimeLogic
@@ -172,6 +173,11 @@ class MainWindow(QMainWindow):
         #help_menu = menu_bar.addMenu("Help")
         about_menu = menu_bar.addMenu("About")
         #Parameters_menu
+
+        help_menu  = menu_bar.addMenu("Help")
+        help_action = QAction("User Manual", self)
+        help_action.triggered.connect(self.open_help)
+        help_menu.addAction(help_action)
 
 
 
@@ -752,9 +758,6 @@ class MainWindow(QMainWindow):
                     self.uiFCS.stopChannelComboBox,
                     tau_0=tau_0,
                 )
-                self.uiFCS.parametersHelpButton.clicked.connect(
-                    self.fcsGraphic._show_correlator_help
-                )
                 # Provide the duration widgets so FCSLogic can read them at start time
                 self.fcsGraphic.set_parameter_widgets(
                     self.uiFCS.tau0SpinBox,
@@ -1111,6 +1114,9 @@ class MainWindow(QMainWindow):
         settings_windows=Ui_AboutDialog()
         settings_windows.setupUi(settings_windows_dialog)
         settings_windows_dialog.exec_()
+
+    def open_help(self):
+        HelpDialog(self).exec_()
 
 
 #This function is not use for the Tempico Version 1.1

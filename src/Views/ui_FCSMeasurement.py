@@ -154,23 +154,41 @@ class Ui_FCSMeasurement(object):
         self.statusLabel  = QLabel(self.InfoFrame)
         self.valueStatusLabel = QLabel(self.InfoFrame)
         self.pointLabel   = QLabel(self.InfoFrame)
-        self.callsLabel   = QLabel(self.InfoFrame)
-        self.eventsLabel  = QLabel(self.InfoFrame)
-        self.elapsedLabel = QLabel(self.InfoFrame)
+        # Calls row
+        self.callsRowFrame = QFrame(self.InfoFrame)
+        self.callsRowLayout = QHBoxLayout(self.callsRowFrame)
+        self.callsRowLayout.setContentsMargins(0, 0, 0, 0)
+        self.callsKeyLabel = QLabel("Calls:", self.callsRowFrame)
+        self.callsKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.callsLabel = QLabel("0", self.callsRowFrame)
+        self.callsLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.callsRowLayout.addWidget(self.callsKeyLabel)
+        self.callsRowLayout.addWidget(self.callsLabel)
+        self.verticalLayout_info.addWidget(self.callsRowFrame)
 
-        # Status row: dot + text side by side
-        self.statusRowFrame = QFrame(self.InfoFrame)
-        self.horizontalLayout_statusrow = QHBoxLayout(self.statusRowFrame)
-        self.horizontalLayout_statusrow.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_statusrow.addWidget(self.statusLabel)
-        self.horizontalLayout_statusrow.addWidget(self.valueStatusLabel)
-        self.horizontalLayout_statusrow.addWidget(self.pointLabel)
-        self.horizontalLayout_statusrow.addStretch(1)
+        # Events row
+        self.eventsRowFrame = QFrame(self.InfoFrame)
+        self.eventsRowLayout = QHBoxLayout(self.eventsRowFrame)
+        self.eventsRowLayout.setContentsMargins(0, 0, 0, 0)
+        self.eventsKeyLabel = QLabel("Events:", self.eventsRowFrame)
+        self.eventsKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.eventsLabel = QLabel("0", self.eventsRowFrame)
+        self.eventsLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.eventsRowLayout.addWidget(self.eventsKeyLabel)
+        self.eventsRowLayout.addWidget(self.eventsLabel)
+        self.verticalLayout_info.addWidget(self.eventsRowFrame)
 
-        self.verticalLayout_info.addWidget(self.statusRowFrame)
-        self.verticalLayout_info.addWidget(self.callsLabel)
-        self.verticalLayout_info.addWidget(self.eventsLabel)
-        self.verticalLayout_info.addWidget(self.elapsedLabel)
+        # Elapsed row
+        self.elapsedRowFrame = QFrame(self.InfoFrame)
+        self.elapsedRowLayout = QHBoxLayout(self.elapsedRowFrame)
+        self.elapsedRowLayout.setContentsMargins(0, 0, 0, 0)
+        self.elapsedKeyLabel = QLabel("Elapsed:", self.elapsedRowFrame)
+        self.elapsedKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.elapsedLabel = QLabel("0 s", self.elapsedRowFrame)
+        self.elapsedLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.elapsedRowLayout.addWidget(self.elapsedKeyLabel)
+        self.elapsedRowLayout.addWidget(self.elapsedLabel)
+        self.verticalLayout_info.addWidget(self.elapsedRowFrame)
         
 
         # ── Panel: Correlator parameters ──────────────────────────────────
@@ -199,20 +217,6 @@ class Ui_FCSMeasurement(object):
         self.parametersLabel.setObjectName(u"parametersLabel")
         self.horizontalLayout_plabel.addWidget(self.parametersLabel)
 
-        self.parametersHelpButton = QToolButton(self.LabelParametersFrame)
-        self.parametersHelpButton.setObjectName(u"parametersHelpButton")
-        self.parametersHelpButton.setText(u"?")
-        self.parametersHelpButton.setFixedSize(22, 22)
-        self.parametersHelpButton.setStyleSheet(
-            u"QToolButton {"
-            u"  font-weight: bold; font-size: 13px; color: #444444;"
-            u"  border: 1px solid #888888; border-radius: 11px;"
-            u"  background-color: #f0f0f0;"
-            u"}"
-            u"QToolButton:hover { background-color: #ddeeff; border-color: #1a5fa8; color: #1a5fa8; }"
-            u"QToolButton:pressed { background-color: #c0d8f0; }"
-        )
-        self.horizontalLayout_plabel.addWidget(self.parametersHelpButton)
         self.horizontalLayout_plabel.addStretch(1)
 
         self.verticalLayout_params.addWidget(self.LabelParametersFrame)
@@ -577,15 +581,6 @@ class Ui_FCSMeasurement(object):
         self.pointLabel.setText(
             QCoreApplication.translate("FCSMeasurement", u"", None)
         )
-        self.callsLabel.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Calls: 0", None)
-            )
-        self.eventsLabel.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Events: 0", None)
-            )
-        self.elapsedLabel.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Elapsed: 0 s", None)
-            )
         self.statusLabel.setText(
             QCoreApplication.translate("FCSMeasurement", u"Status:", None)
         )

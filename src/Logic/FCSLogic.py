@@ -287,6 +287,9 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(1, True)
         self.mainWindow.tabs.setTabEnabled(2, True)
         self.mainWindow.tabs.setTabEnabled(3, True)
+        self.tau0SpinBox.setEnabled(True) 
+        self.durationSpinBox.setEnabled(True)
+        self.fitOffsetCheckBox.setEnabled(True)
         self.disconnectButton.setEnabled(True)
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
@@ -337,6 +340,9 @@ class FCSLogic():
         self.saveDataButton.setEnabled(False)
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
+        self.tau0SpinBox.setEnabled(False) 
+        self.durationSpinBox.setEnabled(False)
+        self.fitOffsetCheckBox.setEnabled(False)
         self.stopChannelComboBox.setEnabled(False)
         
 
@@ -368,9 +374,16 @@ class FCSLogic():
         ch_mode   = self.device.ch1.getMode()
 
         if num_stops < 2:
-            self.statusValue.setText("Error: need at least 2 stops. Check General Settings.")
-            self.changeStatusColor(0)
             self._restore_buttons_after_stop()
+            msg = QMessageBox(self.parent)
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("Not enough stops")
+            msg.setText(
+                "You must set at least 2 stops to start the FCS measurement.\n\n"
+                "Go to: Settings → Channels → Number of stops"
+            )
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
             return
         
         self.mainWindow.activeMeasurement()
@@ -422,6 +435,9 @@ class FCSLogic():
 
         self.stopButton.setEnabled(False)
         self.stopChannelComboBox.setEnabled(True)
+        self.tau0SpinBox.setEnabled(True)
+        self.durationSpinBox.setEnabled(True)
+        self.fitOffsetCheckBox.setEnabled(True)
         
         if not self.withoutMeasurement:
             self.startButton.setEnabled(True)
@@ -498,9 +514,9 @@ class FCSLogic():
         self.statusValue.setText("Measurement running")
         try:
             parts = new_text.split("|")
-            self.callsLabel.setText("Calls: "    + parts[0].split(":")[1].strip())
-            self.eventsLabel.setText("Events: "  + parts[1].split(":")[1].strip())
-            self.elapsedLabel.setText("Elapsed: "+ parts[2].split(":")[1].strip())
+            self.callsLabel.setText(parts[0].split(":")[1].strip())
+            self.eventsLabel.setText(parts[1].split(":")[1].strip())
+            self.elapsedLabel.setText(parts[2].split(":")[1].strip())
         except (IndexError, AttributeError):
             pass
 
