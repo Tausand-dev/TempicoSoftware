@@ -5,7 +5,7 @@ from PySide2.QtCore import Qt, QEvent, QObject
 
 
 
-class GeneralSettingsWindow(QDialog, QObject):
+class GeneralSettingsWindow(QDialog):
     """
     Represents the General Settings window for the Tempico device.
 

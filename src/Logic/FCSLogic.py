@@ -333,7 +333,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(2, False)  # Counts tab
         self.mainWindow.tabs.setTabEnabled(3, False)  # Time stamp tab
         self.disconnectButton.setEnabled(False)
-        self.mainWindow.activeMeasurement()
+        
 
         # Button states during measurement
         self.startButton.setEnabled(False)
@@ -671,8 +671,7 @@ class FCSLogic():
             msg.setWindowTitle("Successful save")
             msg.setText(
                 f"The files have been saved successfully in path folder:\n\n"
-                f"{folder_path}\n\n"
-                f"with the following names:\n\n"
+                f"{folder_path} with the following names:\n\n"
                 f"File1: {filename_acf}.{selected_format}\n"
                 f"File2: {filename_phot}.{selected_format}"
             )
@@ -1164,23 +1163,3 @@ class FCSLogic():
         self.sentinelsavetxt = 0
         self.sentinelsavecsv = 0
         self.sentinelsavedat = 0
-    def _show_correlator_help(self):
-        from PySide2.QtWidgets import QMessageBox
-        QMessageBox.information(
-            self.parent,
-            "Autocorrelation (FCS)",
-            "FCS measures fluorescence intensity fluctuations caused by molecules "
-            "diffusing through a focused laser spot.\n\n"
-            "The autocorrelation function G(τ) quantifies how similar the intensity "
-            "signal is to itself at a later time τ:\n"
-            "   G(τ) = ⟨δI(t)·δI(t+τ)⟩ / ⟨I(t)⟩²\n\n"
-            "Its decay encodes the diffusion time τD and the average number "
-            "of molecules N in the focal volume.\n\n"
-            "── Parameters ──\n"
-            "τ₀: Time resolution of the first correlation channel.\n"
-            "Duration: Total acquisition time.\n"
-            "Channel: TDC input receiving the photon detection pulses.\n\n"
-            "This correlator uses a multi-tau algorithm, which computes G(τ) "
-            "over logarithmically spaced lag times — covering µs to ms in a "
-            "single measurement."
-        )

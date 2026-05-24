@@ -1,5 +1,4 @@
 import os
-import pathlib
 from datetime import datetime
 import json
 from pathlib import Path
@@ -182,7 +181,7 @@ class createsavefile:
         :raises OSError: If an error occurs during folder or file creation, or when accessing the filesystem.
         :returns: None
         """
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         folder_path = os.path.join(documents_dir, folder_name)
 
@@ -208,7 +207,7 @@ class createsavefile:
 
         :returns: bool: True if the folder and file exist, False otherwise.
         """
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         file_name = "data_constants.txt"
         folder_path = os.path.join(documents_dir, folder_name)
@@ -252,7 +251,7 @@ class createsavefile:
                 an error occurred.
         """
         # Get the path to the "Documents" directory on the current operating system
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
 
         # Specify the folder name and file name
         folder_name = "TempicoSoftwareData"

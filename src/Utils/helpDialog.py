@@ -1,10 +1,10 @@
+import os
 from PySide2.QtWidgets import (
     QDialog, QHBoxLayout, QVBoxLayout, QListWidget, QListWidgetItem,
     QLabel, QFrame, QScrollArea, QWidget, QPushButton
 )
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QIcon, QFont
-
+from PySide2.QtCore import Qt, QUrl
+from PySide2.QtGui import QIcon, QFont, QDesktopServices
 
 HELP_CONTENT = {
     "1. Start-Stop Histogram": {
@@ -127,8 +127,5 @@ class HelpDialog(QDialog):
         self.body_label.setText(data.get("body", ""))
 
     def _open_pdf(self):
-        from PySide2.QtGui import QDesktopServices
-        from PySide2.QtCore import QUrl
-        import os
         pdf_path = os.path.abspath("Sources/UserManual.pdf")
         QDesktopServices.openUrl(QUrl.fromLocalFile(pdf_path))
