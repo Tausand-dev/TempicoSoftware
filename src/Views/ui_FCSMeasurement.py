@@ -217,27 +217,6 @@ class Ui_FCSMeasurement(object):
 
         self.verticalLayout_params.addWidget(self.LabelParametersFrame)
 
-        # Start channel row
-        self.StartChannelFrame = QFrame(self.ParametersFrame)
-        self.StartChannelFrame.setObjectName(u"StartChannelFrame")
-        self.StartChannelFrame.setFrameShape(QFrame.StyledPanel)
-        self.StartChannelFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_startchannel = QHBoxLayout(self.StartChannelFrame)
-
-        self.startChannelLabel = QLabel(self.StartChannelFrame)
-        self.startChannelLabel.setObjectName(u"startChannelLabel")
-        self.horizontalLayout_startchannel.addWidget(self.startChannelLabel)
-
-        self.startChannelComboBox = QComboBox(self.StartChannelFrame)
-        self.startChannelComboBox.setObjectName(u"startChannelComboBox")
-        self.startChannelComboBox.addItem(u"Start channel")
-        self.startChannelComboBox.addItem(u"Channel A")
-        self.startChannelComboBox.addItem(u"Channel B")
-        self.startChannelComboBox.addItem(u"Channel C")
-        self.startChannelComboBox.addItem(u"Channel D")
-        self.horizontalLayout_startchannel.addWidget(self.startChannelComboBox)
-
-        self.verticalLayout_params.addWidget(self.StartChannelFrame)
 
         # Stop channel row
         self.StopChannelFrame = QFrame(self.ParametersFrame)
@@ -646,21 +625,7 @@ class Ui_FCSMeasurement(object):
         self.startChannelLabel.setText(
             QCoreApplication.translate("FCSMeasurement", u"Start Channel:", None)
         )
-        self.startChannelComboBox.setItemText(
-            0, QCoreApplication.translate("FCSMeasurement", u"Start channel", None)
-        )
-        self.startChannelComboBox.setItemText(
-            1, QCoreApplication.translate("FCSMeasurement", u"Channel A", None)
-        )
-        self.startChannelComboBox.setItemText(
-            2, QCoreApplication.translate("FCSMeasurement", u"Channel B", None)
-        )
-        self.startChannelComboBox.setItemText(
-            3, QCoreApplication.translate("FCSMeasurement", u"Channel C", None)
-        )
-        self.startChannelComboBox.setItemText(
-            4, QCoreApplication.translate("FCSMeasurement", u"Channel D", None)
-        )
+        
         
 
     # retranslateUi

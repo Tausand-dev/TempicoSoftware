@@ -749,7 +749,6 @@ class MainWindow(QMainWindow):
                     self.uiFCS.fitResultsFrame,
                     self.uiFCS.fitTable,
                     self.uiFCS.fitOffsetCheckBox,
-                    self.uiFCS.startChannelComboBox,
                     self.uiFCS.stopChannelComboBox,
                     tau_0=tau_0,
                 )

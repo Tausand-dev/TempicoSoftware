@@ -97,7 +97,6 @@ class FCSLogic():
         fitResultsFrame,
         fitTable,
         fitOffsetCheckBox,
-        startChannelComboBox,
         stopChannelComboBox,
         tau_0 = 1_000_000_000,   # 1000 µs = 1 ms in picoseconds
     ):
@@ -133,7 +132,6 @@ class FCSLogic():
         self.fitResultsFrame   = fitResultsFrame
         self.fitTable          = fitTable
         self.fitOffsetCheckBox     = fitOffsetCheckBox
-        self.startChannelComboBox  = startChannelComboBox
         self.stopChannelComboBox   = stopChannelComboBox
 
         self.startButton    = startButton
