@@ -935,28 +935,28 @@ class StartStopLogic():
             total_condition= conditiontxt or conditioncsv or conditiondat
             if not total_condition:
                 if self.setinelSaveA:
-                    filename1=data_prefix+current_date_str+'channelA'
+                    filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
                     setting_A="Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
                     settings.append(setting_A)
                     filenames.append(filename1)
                     data.append(self.datapureA)
                     column_names.append('channelA_data (ps)')
                 if self.setinelSaveB:
-                    filename2=data_prefix+current_date_str+'channelB'
+                    filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
                     setting_B="Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
                     settings.append(setting_B)
                     filenames.append(filename2)
                     data.append(self.datapureB)
                     column_names.append('channelB_data (ps)')
                 if self.setinelSaveC:
-                    filename3=data_prefix+current_date_str+'channelC'
+                    filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
                     setting_C="Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
                     settings.append(setting_C)
                     filenames.append(filename3)
                     data.append(self.datapureC)
                     column_names.append('channelC_data (ps)')
                 if self.setinelSaveD:
-                    filename4=data_prefix+current_date_str+'channelD'
+                    filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
                     setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
                     settings.append(setting_D)
                     filenames.append(filename4)

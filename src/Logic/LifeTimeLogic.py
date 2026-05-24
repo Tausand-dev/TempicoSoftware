@@ -2155,7 +2155,8 @@ class LifeTimeLogic():
                 
                 
                 #Put the settings and fit
-                filename=data_prefix+current_date_str
+                ch_label = self.comboBoxStopChannel.currentText().replace('Channel ', '')
+                filename = data_prefix + '_' + current_date_str + '_Channel' + ch_label
                 #Round the values in order to get a better txt files
                 newMeasuredTime=[]
                 for i in self.measuredTime:

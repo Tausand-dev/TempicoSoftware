@@ -125,11 +125,11 @@ class createsavefile:
             self.changeFolder(default_save_folder)
         else:
             dataDict['saveFolder']= data['saveFolder']
-        dataDict['startStopHistogramPrefix']= data['startStopHistogramPrefix']
-        dataDict['lifetimePrefix']= data['lifetimePrefix']
-        dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
-        dataDict['timeStampingPrefix']= data['timeStampingPrefix']
-        dataDict['fcsPrefix']= data['fcsPrefix']
+        dataDict['startStopHistogramPrefix'] = data.get('startStopHistogramPrefix', 'StartStop')
+        dataDict['lifetimePrefix']           = data.get('lifetimePrefix', 'Lifetime')
+        dataDict['countsEstimationPrefix']   = data.get('countsEstimationPrefix', 'Counts')
+        dataDict['timeStampingPrefix']       = data.get('timeStampingPrefix', 'TimeStamp')
+        dataDict['fcsPrefix']                = data.get('fcsPrefix', 'FCS')
         return dataDict
     
     

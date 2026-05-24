@@ -536,105 +536,125 @@ class FCSLogic():
         self.fitResultsFrame.setVisible(False)
 
     # ── Save data ─────────────────────────────────────────────────────────────
+    def _get_fit_header_lines(self):
+        
+        # Verificar que hay datos de fit visibles
+        if not self.fitResultsFrame.isVisible():
+            return ""
 
+        idx        = self.fitModelCombo.currentIndex()
+        model_name = "3D Gaussian diffusion" if idx == 0 else "Anomalous diffusion"
+        offset     = "G(∞) + " if self.fitOffsetCheckBox.isChecked() else ""
+
+        if idx == 0:
+            eq = f"{offset}(1/N) * (1 + tau/tD)^-1 * (1 + tau/(k^2*tD))^-0.5"
+        else:
+            eq = f"{offset}(1/N) * [(1 + (tau/tD)^a) * (1 + (tau/(k^2*tD))^a)^0.5]^-1"
+
+        lines = [
+            f"Fit model:\t{model_name}",
+            f"Fit equation:\t{eq}",
+        ]
+
+        # Leer parámetros de la tabla
+        table = self.fitTable
+        for row in range(table.rowCount()):
+            name_item  = table.item(row, 0)
+            value_item = table.item(row, 1)
+            if name_item and value_item:
+                lines.append(f"{name_item.text()}:\t{value_item.text()}")
+
+        return "\n".join(lines)
+    
+    
     def save_data(self):
-        """
-        Save the last G(τ) curve to a text file chosen by the user.
-
-        Opens a small dialog to pick the format (txt / csv / dat). The file
-        contains two columns: lag time in seconds and G(τ). A header records
-        the correlator parameters (tau_0, num_levels, m).
-
-        Mirrors the save_graphic flow in ``StartStopLogic``.
-
-        :return: None
-        """
         if len(self.last_taus_s) == 0:
             return
 
         dataFolderPrefix = self.savefile.getDataFolderPrefix()
         folder_path      = dataFolderPrefix["saveFolder"]
 
-        current_date_str = (
-            datetime.datetime.now()
-            .strftime("%Y-%m-%d %H:%M:%S")
-            .replace(':', '').replace('-', '').replace(' ', '')
-        )
+        current_date_str = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+        # Stop channel name para el nombre de archivo
+        ch_names  = ["A", "B", "C", "D"]
+        ch_index  = self.stopChannelComboBox.currentIndex()
+        ch_label  = ch_names[ch_index] if ch_index < len(ch_names) else "A"
 
         # ── Format selection dialog ───────────────────────────────────────
         dialog = QDialog(self.parent)
-        dialog.setObjectName("TextFormat")
-        dialog.resize(282, 105)
         dialog.setWindowTitle("Save")
         vlay = QVBoxLayout(dialog)
-        lbl  = QLabel("Select the text format:")
-        vlay.addWidget(lbl)
+        vlay.addWidget(QLabel("Select the text format:"))
         fmt_box = QComboBox(dialog)
         fmt_box.addItem("txt")
         fmt_box.addItem("csv")
         fmt_box.addItem("dat")
         vlay.addWidget(fmt_box)
         accept_btn = QPushButton("Accept", dialog)
-        vlay.addWidget(accept_btn)
-        QMetaObject.connectSlotsByName(dialog)
         accept_btn.clicked.connect(dialog.accept)
+        vlay.addWidget(accept_btn)
 
         if dialog.exec_() != QDialog.Accepted:
             return
 
         selected_format = fmt_box.currentText()
 
-        # Guard: avoid saving the same format twice in the same session
-        condition_already_saved = (
-            (selected_format == "txt" and self.sentinelsavetxt == 1) or
-            (selected_format == "csv" and self.sentinelsavecsv == 1) or
-            (selected_format == "dat" and self.sentinelsavedat == 1)
-        )
-        if condition_already_saved:
-            msg = QMessageBox(self.parent)
-            msg.setIcon(QMessageBox.Information)
-            msg.setWindowTitle("Already saved")
-            msg.setText(
-                f"The FCS data has already been saved in {selected_format} "
-                "format during this session."
-            )
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
-            return
+        
 
-        filename = dataFolderPrefix['fcsPrefix'] + current_date_str
-        setting  = (
-            f"tau_0 (ps):\t{self.tau_0}\n"
+        prefix   = dataFolderPrefix['fcsPrefix']
+        filename = f"{prefix}_{current_date_str}_Channel{ch_label}"
+
+        # ── Header: parámetros del correlador ────────────────────────────
+        tau_0_us = self.tau0SpinBox.value() if self.tau0SpinBox is not None else self.tau_0 // 1_000_000
+
+        setting = (
+            f"Base bin width τ₀ (µs):\t{tau_0_us}\n"
             f"num_levels:\t{self.num_levels}\n"
-            f"m:\t{self.m}"
+            f"m:\t{self.m}\n"
+            f"Stop Channel:\tChannel {ch_label}"
         )
+
+        # ── Añadir info del fit si existe ─────────────────────────────────
+        fit_header = self._get_fit_header_lines()
+        if fit_header:
+            setting += "\n" + fit_header
 
         try:
-            self.savefile.save_fcs_data(
-                stop_times_ps = self.last_stop_times_ps,
-                taus_s        = self.last_taus_s,
-                g_vals        = self.last_g,
-                file_name     = filename,
-                folder_path   = folder_path,
-                settings      = setting,
-                extension     = selected_format,
-            )
-            if selected_format == "txt":
-                self.sentinelsavetxt = 1
-            elif selected_format == "csv":
-                self.sentinelsavecsv = 1
-            elif selected_format == "dat":
-                self.sentinelsavedat = 1
+            filename_acf  = f"{prefix}_{current_date_str}_Channel{ch_label}_GtauCurve"
+            filename_phot = f"{prefix}_{current_date_str}_Channel{ch_label}_StopTimes"
+
+            sep = ";" if selected_format == "csv" else "\t"
+
+            # --- ACF file ---
+            acf_path = os.path.join(folder_path, f"{filename_acf}.{selected_format}")
+            with open(acf_path, 'w', encoding='utf-8') as f:
+                f.write(setting + '\n')
+                f.write(f"tau_s{sep}G(tau)\n")
+                for t, g in zip(self.last_taus_s, self.last_g):
+                    f.write(f"{t}{sep}{g}\n")
+
+            # --- Photon times file ---
+            phot_path = os.path.join(folder_path, f"{filename_phot}.{selected_format}")
+            with open(phot_path, 'w', encoding='utf-8') as f:
+                f.write(setting + '\n')
+                f.write(f"photon_arrival_time_ps\n")
+                for t in self.last_stop_times_ps:
+                    f.write(f"{t}\n")
 
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Successful save")
             msg.setText(
-                f"File saved in:\n\n{folder_path}\n\n"
-                f"File: {filename}.{selected_format}"
+                f"The files have been saved successfully in path folder:\n\n"
+                f"{folder_path}\n\n"
+                f"with the following names:\n\n"
+                f"File1: {filename_acf}.{selected_format}\n"
+                f"File2: {filename_phot}.{selected_format}"
             )
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
+
         except Exception:
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Critical)
@@ -646,64 +666,53 @@ class FCSLogic():
     # ── Save plot ─────────────────────────────────────────────────────────────
 
     def save_plot(self):
-        """
-        Save the current G(τ) plot as an image file.
-
-        Opens a format-selection dialog (png / tiff / jpg) and exports the
-        pyqtgraph plot using ``pg.exporters.ImageExporter``.
-
-        Mirrors ``save_plots`` in ``StartStopLogic``.
-
-        :return: None
-        """
         try:
             dataFolderPrefix = self.savefile.getDataFolderPrefix()
             folder_path      = dataFolderPrefix["saveFolder"]
-            #data_prefix      = dataFolderPrefix.get("fcsPrefix", "FCS_")
 
             dialog = QDialog(self.parent)
-            dialog.setObjectName("ImageFormat")
-            dialog.resize(282, 105)
             dialog.setWindowTitle("Save plot")
             vlay = QVBoxLayout(dialog)
-            lbl  = QLabel("Select the image format:")
-            vlay.addWidget(lbl)
+            vlay.addWidget(QLabel("Select the image format:"))
             fmt_box = QComboBox(dialog)
             fmt_box.addItem("png")
             fmt_box.addItem("tiff")
             fmt_box.addItem("jpg")
             vlay.addWidget(fmt_box)
             accept_btn = QPushButton("Accept", dialog)
-            vlay.addWidget(accept_btn)
-            QMetaObject.connectSlotsByName(dialog)
             accept_btn.clicked.connect(dialog.accept)
+            vlay.addWidget(accept_btn)
 
             if dialog.exec_() != QDialog.Accepted:
                 return
 
             selected_format  = fmt_box.currentText()
-            current_date_str = (
-                datetime.datetime.now()
-                .strftime("%Y-%m-%d %H:%M:%S")
-                .replace(':', '').replace('-', '').replace(' ', '')
-            )
-            #graph_name = data_prefix + "FCS_Plot_" + current_date_str
+            current_date_str = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+            ch_names = ["A", "B", "C", "D"]
+            ch_index = self.stopChannelComboBox.currentIndex()
+            ch_label = ch_names[ch_index] if ch_index < len(ch_names) else "A"
+
+            prefix    = dataFolderPrefix.get("fcsPrefix", "Autocorrelation")
+            filename  = f"{prefix}_{current_date_str}_Channel{ch_label}"
+
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
+
+            sep       = '/' if os.name == 'posix' else '\\'
+            full_path = folder_path + sep + filename + '.' + selected_format
 
             exporter = pg.exporters.ImageExporter(self.plot)
             exporter.parameters()['width']  = 800
             exporter.parameters()['height'] = 600
-
-            sep = '/' if os.name == 'posix' else '\\'
-            #exporter.export(
-            #    folder_path + sep + graph_name + '.' + selected_format
-            #)
+            exporter.export(full_path)
 
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Successful save")
             msg.setText(
                 f"Plot saved in:\n\n{folder_path}\n\n"
-                #f"File: {graph_name}.{selected_format}"
+                f"File: {filename}.{selected_format}"
             )
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()

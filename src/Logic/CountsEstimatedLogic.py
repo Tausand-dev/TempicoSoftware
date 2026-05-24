@@ -2214,7 +2214,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 800
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelA' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelA'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2233,7 +2233,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelB' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelB'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2251,7 +2251,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelC' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelC'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2269,7 +2269,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelD' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelD'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2290,7 +2290,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'AllChannels' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_AllChannels'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2418,7 +2418,7 @@ class CountEstimatedLogic():
             total_condition= conditiontxt or conditioncsv or conditiondat
             if not total_condition:
                 if self.measurementChannelA:
-                    filename1=data_prefix+current_date_str+'channelA'
+                    filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
                     setting_A=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
                     settings.append(setting_A)
                     filenames.append(filename1)
@@ -2427,7 +2427,7 @@ class CountEstimatedLogic():
                     data.append(self.channelAValues)
                     dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
-                    filename2=data_prefix+current_date_str+'channelB'
+                    filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
                     setting_B=f"Initial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
                     settings.append(setting_B)
                     filenames.append(filename2)
@@ -2436,7 +2436,7 @@ class CountEstimatedLogic():
                     data.append(self.channelBValues)
                     dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
-                    filename3=data_prefix+current_date_str+'channelC'
+                    filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
                     setting_C=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
                     settings.append(setting_C)
                     filenames.append(filename3)
@@ -2445,7 +2445,7 @@ class CountEstimatedLogic():
                     data.append(self.channelCValues)
                     dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
-                    filename4=data_prefix+current_date_str+'channelD'
+                    filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
                     setting_D=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
                     settings.append(setting_D)
                     filenames.append(filename4)
