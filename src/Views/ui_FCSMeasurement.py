@@ -622,9 +622,7 @@ class Ui_FCSMeasurement(object):
         self.stopChannelComboBox.setItemText(
             3, QCoreApplication.translate("FCSMeasurement", u"Channel D", None)
         )
-        self.startChannelLabel.setText(
-            QCoreApplication.translate("FCSMeasurement", u"Start Channel:", None)
-        )
+        
         
         
 
