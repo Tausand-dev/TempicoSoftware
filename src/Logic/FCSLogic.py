@@ -207,7 +207,8 @@ class FCSLogic():
         self.plot.showGrid(x=True, y=True, alpha=0.3)
         # Logarithmic x-axis: standard for FCS curves (ns to ms range)
         self.plot.setLogMode(x=True, y=False)
-        self.plot.addLegend()
+        legend = self.plot.addLegend(offset=(-10, 10))
+        legend.anchor(itemPos=(1, 0), parentPos=(1, 0), offset=(-10, 10))
 
         # Dashed reference line at G = 1 (uncorrelated baseline)
         ref_line = pg.InfiniteLine(
@@ -553,30 +554,37 @@ class FCSLogic():
 
     # ── Save data ─────────────────────────────────────────────────────────────
     def _get_fit_header_lines(self):
-        
-        # Verificar que hay datos de fit visibles
         if not self.fitResultsFrame.isVisible():
             return ""
 
-        idx        = self.fitModelCombo.currentIndex()
-        model_name = "3D Gaussian diffusion" if idx == 0 else "Anomalous diffusion"
-        offset     = "G(∞) + " if self.fitOffsetCheckBox.isChecked() else ""
+        idx = self.fitModelCombo.currentIndex()
+        pre = "G(∞) + " if self.fitOffsetCheckBox.isChecked() else ""
 
-        if idx == 0:
-            eq = f"{offset}(1/N) * (1 + tau/tD)^-1 * (1 + tau/(k^2*tD))^-0.5"
-        else:
-            eq = f"{offset}(1/N) * [(1 + (tau/tD)^a) * (1 + (tau/(k^2*tD))^a)^0.5]^-1"
+        model_names = {
+            0: "3D Gaussian diffusion",
+            1: "Anomalous diffusion",
+            2: "Triplet state correction",
+            3: "Diffusion with flow",
+            4: "Two-component diffusion",
+            5: "Chemical relaxation",
+        }
+        equations = {
+            0: f"{pre}(1/N)·(1 + tau/tD)^-1·(1 + a^-2·tau/tD)^-0.5",
+            1: f"{pre}(1/N)·(1 + (tau/tD)^alpha)^-1·(1 + a^-2·(tau/tD)^alpha)^-0.5",
+            2: f"{pre}(1/N)·[(1-F+F·exp(-tau/tF))/(1-F)]·(1+tau/tD)^-1·(1+a^-2·tau/tD)^-0.5",
+            3: f"{pre}(1/N)·(1+tau/tD)^-1·(1+a^-2·tau/tD)^-0.5·exp[-(tau/tv)^2/(1+tau/tD)]",
+            4: f"{pre}(1/N)·(a1·GD1 + a2·GD2),  GDi=(1+tau/tDi)^-1·(1+a^-2·tau/tDi)^-0.5",
+            5: f"{pre}(K/N)·exp(-tau/tB),  G(0)=K/N, K=kon/koff",
+        }
 
         lines = [
-            f"Fit model:\t{model_name}",
-            f"Fit equation:\t{eq}",
+            f"Fit model:\t{model_names.get(idx, 'Unknown')}",
+            f"Fit equation:\t{equations.get(idx, '')}",
         ]
 
-        # Leer parámetros de la tabla
-        table = self.fitTable
-        for row in range(table.rowCount()):
-            name_item  = table.item(row, 0)
-            value_item = table.item(row, 1)
+        for row in range(self.fitTable.rowCount()):
+            name_item  = self.fitTable.item(row, 0)
+            value_item = self.fitTable.item(row, 1)
             if name_item and value_item:
                 lines.append(f"{name_item.text()}:\t{value_item.text()}")
 
@@ -843,6 +851,34 @@ class FCSLogic():
                 np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)**alpha)
             )
         )
+    @staticmethod
+    def _model_triplet(tau, N, tau_D, kappa, F, tau_F, offset=1.0):
+        """Triplet state correction for normal 3D diffusion."""
+        triplet = (1.0 - F + F * np.exp(-tau / tau_F)) / (1.0 - F)
+        diff    = (1.0 / (1.0 + tau / tau_D)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)))
+        return offset + (1.0 / N) * triplet * diff
+
+    @staticmethod
+    def _model_flow(tau, N, tau_D, kappa, tau_v, offset=1.0):
+        """3D diffusion with uniform lateral flow (τᵥ = ωxy/v)."""
+        diff = (1.0 / (1.0 + tau / tau_D)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)))
+        flow = np.exp(-(tau / tau_v)**2 / (1.0 + tau / tau_D))
+        return offset + (1.0 / N) * diff * flow
+
+    @staticmethod
+    def _model_two_component(tau, N, tau_D1, tau_D2, alpha_1, kappa, offset=1.0):
+        """Two-component 3D diffusion: weighted sum of two species."""
+        alpha_2 = 1.0 - alpha_1
+        d1 = (1.0 / (1.0 + tau / tau_D1)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D1)))
+        d2 = (1.0 / (1.0 + tau / tau_D2)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D2)))
+        return offset + (1.0 / N) * (alpha_1 * d1 + alpha_2 * d2)
+
+    @staticmethod
+    def _model_chemical(tau, N, tau_B, K, offset=1.0):
+        """Pure chemical relaxation (fast diffusion limit). G(0) = (1/N)·K"""
+        G0 = (1.0 / N) * K
+        return offset + G0 * np.exp(-tau / tau_B)
+    
     def _apply_offset_to_plot(self):
         """Desplaza los datos -1 en la gráfica si G(∞) offset está desmarcado."""
         if len(self.last_g) == 0:
@@ -855,34 +891,42 @@ class FCSLogic():
         self.fit_curve.setData([], [])
         self.fitResultsFrame.setVisible(False)
         self._update_equation_label_preview()
+
     def _update_equation_label_preview(self):
-        """Muestra la ecuación del modelo seleccionado sin parámetros (antes del fit)."""
         offset = 1.0 if self.fitOffsetCheckBox.isChecked() else 0.0
-        idx = self.fitModelCombo.currentIndex()
-        prefix = "G(∞) + " if offset == 1.0 else ""
+        idx    = self.fitModelCombo.currentIndex()
+        pre    = "G(∞) + " if offset == 1.0 else ""
+        d      = "(1 + τ/τ<sub>D</sub>)<sup>−1</sup>(1 + a<sup>−2</sup>τ/τ<sub>D</sub>)<sup>−½</sup>"
+
         if idx == 0:
-            html = (
-                f"<center>"
-                f"G(τ) = {prefix}"
-                f"<sup>1</sup>/<sub>N</sub> · "
-                f"(1 + τ/τ<sub>D</sub>)<sup>−1</sup> · "
-                f"(1 + τ/(κ<sup>2</sup>·τ<sub>D</sub>))<sup>−½</sup>"
-                f"</center>"
-            )
+            html = f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · {d}</center>"
+        elif idx == 1:
+            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
+                    f"(1 + (τ/τ<sub>D</sub>)<sup>α</sup>)<sup>−1</sup>"
+                    f"(1 + a<sup>−2</sup>(τ/τ<sub>D</sub>)<sup>α</sup>)<sup>−½</sup></center>")
+        elif idx == 2:
+            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
+                    f"(1 − F + F·e<sup>−τ/τ<sub>F</sub></sup>)/(1 − F) · {d}</center>")
+        elif idx == 3:
+            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · {d} · "
+                    f"exp[−(τ/τ<sub>v</sub>)<sup>2</sup>/(1 + τ/τ<sub>D</sub>)]</center>")
+        elif idx == 4:
+            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
+                    f"(α<sub>1</sub>·(1+τ/τ<sub>D1</sub>)<sup>−1</sup>(1+a<sup>−2</sup>τ/τ<sub>D1</sub>)<sup>−½</sup> + "
+                    f"α<sub>2</sub>·(1+τ/τ<sub>D2</sub>)<sup>−1</sup>(1+a<sup>−2</sup>τ/τ<sub>D2</sub>)<sup>−½</sup>)</center>")
+        elif idx == 5:
+            html = (f"<center>G(τ) = {pre}"
+                    f"<sup>1</sup>/<sub>N</sub> · K · exp(−τ/τ<sub>B</sub>)"
+                    f"&nbsp;&nbsp;[G(0) = K/N, K = k<sub>on</sub>/k<sub>off</sub>]</center>")
         else:
-            html = (
-                f"<center>"
-                f"G(τ) = {prefix}"
-                f"<sup>1</sup>/<sub>N</sub> · "
-                f"[(1 + (τ/τ<sub>D</sub>)<sup>α</sup>) · "
-                f"(1 + κ<sup>−2</sup>·(τ/τ<sub>D</sub>)<sup>α</sup>)<sup>½</sup>]<sup>−1</sup>"
-                f"</center>"
-            )
+            html = ""
         self.fitEquationLabel.setText(html)
         self.fitResultsFrame.setVisible(True)
 
-    def _update_equation_label(self, N, tD_ms, kappa, alpha=None, offset=1.0):
-        """Muestra la ecuación del modelo en HTML, sin parámetros ajustados."""
+    def _update_equation_label(self, N, tD_ms, kappa, alpha=None, offset=1.0,
+                                T=None, tau_T=None, tau_F=None,
+                                tD2_ms=None, f1=None, tau_R=None, A=None):
+        self._update_equation_label_preview()
         prefix = "G(∞) + " if offset == 1.0 else ""
         if alpha is None:
             html = (
@@ -950,7 +994,7 @@ class FCSLogic():
 
         idx = self.fitModelCombo.currentIndex()
         try:
-            if idx == 0:
+            if idx == 0:  # 3D Gaussian
                 p0     = [1.0, np.median(taus), 5.0]
                 bounds = ([0, 0, 0.01], [np.inf, np.inf, np.inf])
                 popt, _ = curve_fit(
@@ -958,8 +1002,6 @@ class FCSLogic():
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, kappa_fit = popt
-                self._update_equation_label(N_fit, tD_fit*1e3, kappa_fit,
-                                            offset=offset)
                 self._fill_fit_table([
                     ("N",    f"{N_fit:.4f}"),
                     ("τD",   f"{tD_fit*1e3:.4f} ms"),
@@ -968,7 +1010,7 @@ class FCSLogic():
                 ])
                 fit_g = self._model_3d(taus, N_fit, tD_fit, kappa_fit, offset)
 
-            else:
+            elif idx == 1:  # Anomalous
                 p0     = [1.0, np.median(taus), 1.0, 5.0]
                 bounds = ([0, 0, 0.1, 0.01], [np.inf, np.inf, 2.0, np.inf])
                 popt, _ = curve_fit(
@@ -976,8 +1018,6 @@ class FCSLogic():
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, alpha_fit, kappa_fit = popt
-                self._update_equation_label(N_fit, tD_fit*1e3, kappa_fit,
-                                            alpha=alpha_fit, offset=offset)
                 self._fill_fit_table([
                     ("N",    f"{N_fit:.4f}"),
                     ("τD",   f"{tD_fit*1e3:.4f} ms"),
@@ -985,9 +1025,81 @@ class FCSLogic():
                     ("κ",    f"{kappa_fit:.4f}"),
                     ("G(∞)", "1" if offset == 1.0 else "0"),
                 ])
-                fit_g = self._model_anomalous(taus, N_fit, tD_fit, alpha_fit,
-                                              kappa_fit, offset)
+                fit_g = self._model_anomalous(taus, N_fit, tD_fit, alpha_fit, kappa_fit, offset)
 
+            elif idx == 2:
+                p0     = [1.0, np.median(taus), 5.0, 0.1, 1e-5]
+                bounds = ([0, 0, 0.01, 0, 0], [np.inf, np.inf, np.inf, 0.99, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tD, k, F, tF: self._model_triplet(t, N, tD, k, F, tF, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, kappa_fit, F_fit, tF_fit = popt
+                self._fill_fit_table([
+                    ("N",   f"{N_fit:.4f}"),
+                    ("τD",  f"{tD_fit*1e3:.4f} ms"),
+                    ("a",   f"{kappa_fit:.4f}"),
+                    ("F",   f"{F_fit:.4f}"),
+                    ("τF",  f"{tF_fit*1e6:.4f} µs"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_triplet(taus, N_fit, tD_fit, kappa_fit, F_fit, tF_fit, offset)
+
+            elif idx == 3:
+                p0     = [1.0, np.median(taus), 5.0, np.median(taus)]
+                bounds = ([0, 0, 0.01, 0], [np.inf, np.inf, np.inf, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tD, k, tv: self._model_flow(t, N, tD, k, tv, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, kappa_fit, tv_fit = popt
+                self._fill_fit_table([
+                    ("N",   f"{N_fit:.4f}"),
+                    ("τD",  f"{tD_fit*1e3:.4f} ms"),
+                    ("a",   f"{kappa_fit:.4f}"),
+                    ("τv",  f"{tv_fit*1e3:.4f} ms"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_flow(taus, N_fit, tD_fit, kappa_fit, tv_fit, offset)
+
+            elif idx == 4:
+                tm = np.median(taus)
+                p0     = [1.0, tm * 0.5, tm * 2.0, 0.5, 5.0]
+                bounds = ([0, 0, 0, 0, 0.01], [np.inf, np.inf, np.inf, 1.0, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tD1, tD2, a1, k: self._model_two_component(t, N, tD1, tD2, a1, k, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit = popt
+                self._fill_fit_table([
+                    ("N",    f"{N_fit:.4f}"),
+                    ("τD1",  f"{tD1_fit*1e3:.4f} ms"),
+                    ("τD2",  f"{tD2_fit*1e3:.4f} ms"),
+                    ("α1",   f"{a1_fit:.4f}"),
+                    ("α2",   f"{1-a1_fit:.4f}"),
+                    ("a",    f"{kappa_fit:.4f}"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_two_component(taus, N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit, offset)
+
+            elif idx == 5:
+                p0     = [1.0, np.median(taus) * 0.1, 1.0]
+                bounds = ([0, 0, 0], [np.inf, np.inf, np.inf])
+                popt, _ = curve_fit(
+                    lambda t, N, tB, K: self._model_chemical(t, N, tB, K, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tB_fit, K_fit = popt
+                self._fill_fit_table([
+                    ("N",    f"{N_fit:.4f}"),
+                    ("τB",   f"{tB_fit*1e3:.4f} ms"),
+                    ("K",    f"{K_fit:.4f}"),
+                    ("G(0)", f"{K_fit/N_fit:.4f}"),
+                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                ])
+                fit_g = self._model_chemical(taus, N_fit, tB_fit, K_fit, offset)
+
+            self._update_equation_label_preview()
             self.fit_curve.setData(taus, fit_g)
             self.fitResultsFrame.setVisible(True)
 

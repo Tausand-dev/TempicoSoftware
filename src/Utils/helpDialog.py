@@ -10,54 +10,51 @@ HELP_CONTENT = {
     "1. Start-Stop Histogram": {
         "title": "1. Start-Stop Histogram",
         "body": (
-            "Measures the time difference between a start pulse and one or more stop pulses. "
-            "The result is a histogram where the x-axis is the time delay (ns) and the y-axis is the number of counts at each delay.\n\n"
-            "You can select any combination of stop channels (A, B, C, D). "
-            "Each selected channel produces its own histogram plotted in the graph area.\n\n"
-            "Available fits: single exponential, double exponential."
+            "Measures the time difference between a start pulse and stop pulses, "
+            "producing a histogram of counts vs time delay (ns) per channel.\n\n"
+            "Select the stop channels (A, B, C, D) and press Start. "
+            "Press Stop to end the acquisition. Each channel produces its own histogram.\n\n"
+            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
         )
     },
-    "2. Lifetime Fitting": {
-        "title": "2. Lifetime Fitting",
+    "2. Lifetime": {
+        "title": "2. Lifetime",
         "body": (
-            "Fits a decay model to a start-stop histogram to extract the fluorescence lifetime τ. "
-            "The graph shows the histogram and the fitted curve overlaid.\n\n"
-            "Select the stop channel to analyze and the fit model. "
-            "The fitted parameters τ and I₀ are displayed once the fit converges.\n\n"
-            "Available fits: single exponential I(t) = I₀·e^(−t/τ), "
-            "double exponential I(t) = I₁·e^(−t/τ₁) + I₂·e^(−t/τ₂)."
+            "Extracts the fluorescence lifetime τ by fitting a decay model "
+            "to a start-stop histogram. The graph shows the histogram and the fitted curve overlaid.\n\n"
+            "Select the stop channel and the fit model, then press Fit. "
+            "The fitted parameters are displayed once the fit converges.\n\n"
+            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
         )
     },
     "3. Counts Estimation": {
         "title": "3. Counts Estimation",
         "body": (
-            "Displays the photon count rate on each channel as a function of time. "
-            "The graph shows count rate (kHz or MHz) on the y-axis and elapsed time on the x-axis, "
-            "with one trace per channel (A, B, C, D) plotted simultaneously.\n\n"
-            "Useful for monitoring signal stability and optimizing optical alignment before a full measurement."
+            "Measures the photon count rate on each channel as a function of time. "
+            "The graph shows count rate (kHz or MHz) vs elapsed time, one trace per channel.\n\n"
+            "Press Start to begin. Useful for checking signal levels "
+            "and optimizing alignment before a full measurement."
         )
     },
     "4. Time Stamping": {
         "title": "4. Time Stamping",
         "body": (
-            "Records the absolute arrival time (in picoseconds) of every photon detected on all channels simultaneously. "
-            "No histogram or correlation is computed — the raw timestamps are saved directly to disk.\n\n"
-            "The output file contains one column per active channel. "
-            "Select the output format (txt, csv, or dat) before starting. "
-            "File naming follows the convention Prefix_Date_MultiChannel.ext."
+            "Records the absolute arrival time (ps) of every photon detected "
+            "on all channels simultaneously, with no histogram or correlation computed.\n\n"
+            "Select the output format (txt, csv, or dat) and press Start. "
+            "The raw timestamps are saved directly to the configured folder.\n\n"
+            "File naming: Prefix_Date_MultiChannel.ext."
         )
     },
     "5. Autocorrelation (FCS)": {
         "title": "5. Autocorrelation (FCS)",
         "body": (
-            "Computes the autocorrelation function G(τ) of the photon arrival times recorded on a selected stop channel. "
-            "The graph shows G(τ) on the y-axis and lag time τ on the x-axis. "
-            "G(τ) quantifies how correlated the fluorescence signal is with itself at a given time lag.\n\n"
-            "Set the base bin width τ₀ (time resolution), the stop channel, and the acquisition duration, "
-            "then press Start. Once the measurement finishes, press Fit to fit the G(τ) curve.\n\n"
-            "Available fits: 3D Gaussian diffusion G(τ) = (1/N)·(1 + τ/τD)⁻¹·(1 + τ/(κ²τD))⁻¹ᐟ², "
-            "and Anomalous diffusion G(τ) = (1/N)·[(1 + (τ/τD)^α)·(1 + (τ/(κ²τD))^α)^0.5]⁻¹. "
-            "An optional G(∞) offset can be included in both models."
+            "Computes the autocorrelation function G(τ) vs lag time τ from photon arrival times "
+            "on a selected stop channel, using the multiple-tau algorithm.\n\n"
+            "Set τ₀, stop channel, and duration, then press Start. Press Fit to fit the curve.\n\n"
+            "Available fits: 3D Gaussian diffusion, Anomalous diffusion, "
+            "Triplet state correction, Diffusion with flow, Two-component diffusion, "
+            "and Chemical relaxation."
         )
     },
 }
@@ -69,6 +66,7 @@ class HelpDialog(QDialog):
         self.setWindowTitle("Tempico Software - User Manual (Help)")
         self.setMinimumSize(400, 450)
         self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
         main_layout = QHBoxLayout(self)
 

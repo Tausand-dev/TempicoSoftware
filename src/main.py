@@ -174,10 +174,9 @@ class MainWindow(QMainWindow):
         about_menu = menu_bar.addMenu("About")
         #Parameters_menu
 
-        help_menu  = menu_bar.addMenu("Help")
-        help_action = QAction("User Manual", self)
+        help_action = QAction("Help", self)
         help_action.triggered.connect(self.open_help)
-        help_menu.addAction(help_action)
+        menu_bar.addAction(help_action)
 
 
 
