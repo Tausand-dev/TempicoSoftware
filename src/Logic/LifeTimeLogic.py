@@ -2072,7 +2072,8 @@ class LifeTimeLogic():
                 exporter.parameters()['height'] = 700
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                graph_name=data_prefix+current_date_str
+                ch_label = self.comboBoxStopChannel.currentText().replace('Channel ', '')
+                graph_name = data_prefix + '_' + current_date_str + '_Channel' + ch_label
                 exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                 initial_text="The plots have been saved successfully in "+"\n"+ str(folder_path)+"\n"+ "with the following names:"
                 text_route="\n"+graph_name+"."+selected_format

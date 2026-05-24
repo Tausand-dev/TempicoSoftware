@@ -1076,7 +1076,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelA'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelA'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1088,7 +1088,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelB'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelB'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1100,7 +1100,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelC'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelC'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1112,7 +1112,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelD'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelD'
                     exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                     
