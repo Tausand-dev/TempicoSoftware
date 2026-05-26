@@ -514,13 +514,16 @@ class FCSLogic():
         if self.isStopping:
             return
         self.statusValue.setText("Measurement running")
+        if self.isStopping:
+            return
         try:
             parts = new_text.split("|")
             self.callsLabel.setText(parts[0].split(":")[1].strip())
             self.eventsLabel.setText(parts[1].split(":")[1].strip())
             self.elapsedLabel.setText(parts[2].split(":")[1].strip())
+            self.statusValue.setText("Measurement running")
         except (IndexError, AttributeError):
-            pass
+            self.statusValue.setText(new_text)
 
     def changeColorThread(self, color):
         """
@@ -832,6 +835,7 @@ class FCSLogic():
         :return: None
         """
         self.device = device_new
+        self.withoutMeasurement = False
         self.startButton.setEnabled(True)
     # ── Fit logic ─────────────────────────────────────────────────────────────
 

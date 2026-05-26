@@ -468,7 +468,6 @@ class WorkerThreadFCS(QThread):
             if len(taus) > 0:
                 self.dataReady.emit(taus, g, np.array(stop_times_ps))
 
-            self.colorValue.emit(1)
             if self.total_seconds is not None:
                 elapsed = time.time() - t_start
                 status_str = (
@@ -477,8 +476,14 @@ class WorkerThreadFCS(QThread):
                 )
             else:
                 status_str = f"calls: {call_count} | events: {total_events}"
-            self.stringValue.emit(status_str)
-            self.statusUpdate.emit(status_str)
+
+            if total_events == 0:
+                self.colorValue.emit(3)
+                self.stringValue.emit("No measurements in channels:  Stop")
+            else:
+                self.colorValue.emit(1)
+                self.stringValue.emit(status_str)
+                self.statusUpdate.emit(status_str)
 
             self.consecutiveErrors = 0
 

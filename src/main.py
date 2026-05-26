@@ -265,6 +265,9 @@ class MainWindow(QMainWindow):
         #------FCS Graphic class---------#
         self.fcsGraphic=None
         self.fcs_init_sentinel=0
+
+        self._previous_tab_index = 0     
+        self._fcs_saved_generator_settings = []
         
 
         #------Layout for the main window---------#
@@ -584,7 +587,10 @@ class MainWindow(QMainWindow):
           It does not take any parameters and does not return a value.
           :returns: None
           """
+          
           valor_padre=self.tabs.currentIndex()
+          if self._previous_tab_index == 4 and valor_padre != 4:        
+              self._restore_generator_settings()        
           padre=self.tab1
           if valor_padre==0:
               padre=self.tab1
@@ -761,6 +767,9 @@ class MainWindow(QMainWindow):
                     self.uiFCS.durationSpinBox,
                     self.uiFCS.indefiniteCheckBox,
                 )
+            self._apply_fcs_generator_settings()   
+          self._previous_tab_index = valor_padre
+            
 
         #   elif valor_padre==1:
 
@@ -1272,6 +1281,40 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.currentMeasurement=False
+    def _apply_fcs_generator_settings(self):
+        if self.conectedDevice is None:
+            return
+        import Utils.constants as constants
+        if "TP12" not in constants.VERSION_PARAMETER:
+            return
+        self._fcs_saved_generator_settings = []
+        self._fcs_saved_generator_settings.append(self.conectedDevice.getGeneratorFrequency())
+        for ch in range(1, 5):
+            self._fcs_saved_generator_settings.append(self.conectedDevice.getStartSource(ch))
+            self._fcs_saved_generator_settings.append(self.conectedDevice.getStopSource(ch))
+        self.conectedDevice.setGeneratorFrequency(2000)
+        for ch in range(1, 5):
+            self.conectedDevice.setStartInternalSource(ch)
+
+    def _restore_generator_settings(self):
+        if self.conectedDevice is None:
+            return
+        if not self._fcs_saved_generator_settings:
+            return
+        saved = self._fcs_saved_generator_settings
+        self.conectedDevice.setGeneratorFrequency(int(saved[0]))
+        for i, ch in enumerate(range(1, 5)):
+            start = saved[1 + i * 2]
+            stop  = saved[2 + i * 2]
+            if start == "INTERNAL":
+                self.conectedDevice.setStartInternalSource(ch)
+            else:
+                self.conectedDevice.setStartExternalSource(ch)
+            if stop == "INTERNAL":
+                self.conectedDevice.setStopInternalSource(ch)
+            else:
+                self.conectedDevice.setStopExternalSource(ch)
+        self._fcs_saved_generator_settings = []
     
     def resetSaveSentinelsAllWindows(self):
         if self.timeStampGraphic!=None:
