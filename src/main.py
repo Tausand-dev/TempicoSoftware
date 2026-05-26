@@ -221,9 +221,9 @@ class MainWindow(QMainWindow):
         self.tab4=QWidget()
         self.tab5=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
-        self.tabs.addTab(self.tab2,"Lifetime")
-        self.tabs.addTab(self.tab3,"Counts estimation")
-        self.tabs.addTab(self.tab4,"Time stamping")
+        self.tabs.addTab(self.tab2,"Counts estimation")
+        self.tabs.addTab(self.tab3,"Time stamping")
+        self.tabs.addTab(self.tab4,"Lifetime")
         self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
         #self.tabs.addTab(self.tab3,"g2 Measurement")
         self.tabs.setGeometry(0,20,1000,700)
@@ -304,24 +304,6 @@ class MainWindow(QMainWindow):
             self.ui.setupUi(parent)
             self.sentinel1=1
 
-    def construct_lifetime(self,parent):
-        """
-        Constructs the Lifetime Measurements window.
-
-        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates
-        an instance of the `UiLifeTime` class and sets up the UI using the given parent.
-
-        It does not return a value.
-
-        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
-        :type parent: QWidget
-        :returns: None
-        """
-        if self.sentinel2==0:
-            self.uiLifeTime = UiLifeTime()
-            self.uiLifeTime.setupUi(parent)
-            self.sentinel2=1
-
     def construct_counts_estimated(self,parent):
         """
         Constructs the Counts Estimated window.
@@ -336,10 +318,10 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         #TO DO Build Documentation
-        if self.sentinel3==0:
+        if self.sentinel2==0:
             self.uiCountsEstimated = Ui_CountsEstimated()
             self.uiCountsEstimated.setupUi(parent)
-            self.sentinel3=1
+            self.sentinel2=1
     
     
     def construct_time_stamping(self,parent):
@@ -356,9 +338,26 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         #TO DO Build Documentation
-        if self.sentinel4==0:
+        if self.sentinel3==0:
             self.uiTimeStamping = Ui_TimeStamping()
             self.uiTimeStamping.setupUi(parent)
+            self.sentinel3=1
+    def construct_lifetime(self,parent):
+        """
+        Constructs the Lifetime Measurements window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates
+        an instance of the `UiLifeTime` class and sets up the UI using the given parent.
+
+        It does not return a value.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
+        :type parent: QWidget
+        :returns: None
+        """
+        if self.sentinel4==0:
+            self.uiLifeTime = UiLifeTime()
+            self.uiLifeTime.setupUi(parent)
             self.sentinel4=1
 
     def construct_fcs(self, parent):
@@ -591,40 +590,7 @@ class MainWindow(QMainWindow):
               padre=self.tab1
               self.construct_start_stop_histogram(padre)
           elif valor_padre==1:
-              padre=self.tab2
-              self.construct_lifetime(padre)
-              if self.LifeTimeGraphic==None:
-                  #Get the data to create the logic class for LifeTime measurement
-                  comboBoxStartChannel=self.uiLifeTime.startChannelComboBox
-                  comboBoxStopChannel=self.uiLifeTime.stopChannelComboBox
-                  graphicsFrame=self.uiLifeTime.graphicFrame
-                  startButton=self.uiLifeTime.startButton
-                  stopButton=self.uiLifeTime.stopButton
-                  clearButton=self.uiLifeTime.clearButton
-                  saveDataButton=self.uiLifeTime.saveDataFileButton
-                  savePlotButton=self.uiLifeTime.savePlotButton
-                  initialParametersButton=self.uiLifeTime.buttonParameterLabel
-                  statusLabel=self.uiLifeTime.statusValue
-                  pointLabel=self.uiLifeTime.drawPointLabel
-                  comboBoxBinWidth=self.uiLifeTime.binWidthComboBox
-                  spinBoxNumberMeasurements=self.uiLifeTime.numberMeasurementsSpinBox
-                  totalTime=self.uiLifeTime.totalStopsValue
-                  totalMeasurements=self.uiLifeTime.totalMeasurementsValue
-                  totalStarts=self.uiLifeTime.totalStartsValue
-                  applyButton=self.uiLifeTime.applyButtton
-                  functionComboBox=self.uiLifeTime.functionComboBox
-                  parametersTable=self.uiLifeTime.parametersTable
-                  self.parametersTable=parametersTable
-                  timeRange=self.uiLifeTime.timeRangeValue
-                  numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
-                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
-                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
-                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
-                                               applyButton,parametersTable,self,self.LifeTimeTimer)
-                  #If this sentinel dont have any use DELETE
-                  self.LifeTime_init_sentinel=1
-          elif valor_padre==2:
-            padre=self.tab3
+            padre=self.tab2
             self.construct_counts_estimated(padre)
             if self.countsEstimatedGraphic==None:
                 #Get the data to create the logic class for Counts Estimated measurement
@@ -667,8 +633,8 @@ class MainWindow(QMainWindow):
                 helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
-          elif valor_padre==3:
-            padre=self.tab4
+          elif valor_padre==2:
+            padre=self.tab3
             self.construct_time_stamping(padre)  
             if self.timeStampGraphic==None:
                 enableCheckBoxA=self.uiTimeStamping.enableChannelACheckBox
@@ -715,7 +681,39 @@ class MainWindow(QMainWindow):
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
                                                      tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
-
+          elif valor_padre==3:
+              padre=self.tab4
+              self.construct_lifetime(padre)
+              if self.LifeTimeGraphic==None:
+                  #Get the data to create the logic class for LifeTime measurement
+                  comboBoxStartChannel=self.uiLifeTime.startChannelComboBox
+                  comboBoxStopChannel=self.uiLifeTime.stopChannelComboBox
+                  graphicsFrame=self.uiLifeTime.graphicFrame
+                  startButton=self.uiLifeTime.startButton
+                  stopButton=self.uiLifeTime.stopButton
+                  clearButton=self.uiLifeTime.clearButton
+                  saveDataButton=self.uiLifeTime.saveDataFileButton
+                  savePlotButton=self.uiLifeTime.savePlotButton
+                  initialParametersButton=self.uiLifeTime.buttonParameterLabel
+                  statusLabel=self.uiLifeTime.statusValue
+                  pointLabel=self.uiLifeTime.drawPointLabel
+                  comboBoxBinWidth=self.uiLifeTime.binWidthComboBox
+                  spinBoxNumberMeasurements=self.uiLifeTime.numberMeasurementsSpinBox
+                  totalTime=self.uiLifeTime.totalStopsValue
+                  totalMeasurements=self.uiLifeTime.totalMeasurementsValue
+                  totalStarts=self.uiLifeTime.totalStartsValue
+                  applyButton=self.uiLifeTime.applyButtton
+                  functionComboBox=self.uiLifeTime.functionComboBox
+                  parametersTable=self.uiLifeTime.parametersTable
+                  self.parametersTable=parametersTable
+                  timeRange=self.uiLifeTime.timeRangeValue
+                  numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
+                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
+                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
+                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
+                                               applyButton,parametersTable,self,self.LifeTimeTimer)
+                  #If this sentinel dont have any use DELETE
+                  self.LifeTime_init_sentinel=1
           elif valor_padre==4:
             padre=self.tab5
             self.construct_fcs(padre)
@@ -917,7 +915,8 @@ class MainWindow(QMainWindow):
                 self.dialog_generator=QDialog(self)
                 self.settings_generator = Ui_Generator()
                 self.settings_generator.setupUi(self.dialog_generator, self.conectedDevice)
-                self.settings_generator.setConfigOnlyRead(self.generatorSettings)
+                if self.generatorSettings:
+                    self.settings_generator.setConfigOnlyRead(self.generatorSettings)
                 self.dialog_generator.exec_()
         else:
             message_box = QMessageBox(self)

@@ -82,29 +82,6 @@ class Ui_DialogFolderPrefix(object):
 
         self.verticalLayout.addWidget(self.StartStopHistogramFrame)
 
-        self.LifeTimeFrame = QFrame(Dialog)
-        self.LifeTimeFrame.setObjectName(u"LifeTimeFrame")
-        self.LifeTimeFrame.setFrameShape(QFrame.StyledPanel)
-        self.LifeTimeFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.LifeTimeFrame)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.lifetimePrefix = QLabel(self.LifeTimeFrame)
-        self.lifetimePrefix.setObjectName(u"lifetimePrefix")
-        sizePolicy.setHeightForWidth(self.lifetimePrefix.sizePolicy().hasHeightForWidth())
-        self.lifetimePrefix.setSizePolicy(sizePolicy)
-
-        self.horizontalLayout_3.addWidget(self.lifetimePrefix)
-
-        self.lifetimeLineEdit = QLineEdit(self.LifeTimeFrame)
-        self.lifetimeLineEdit.setObjectName(u"lifetimeLineEdit")
-        sizePolicy1.setHeightForWidth(self.lifetimeLineEdit.sizePolicy().hasHeightForWidth())
-        self.lifetimeLineEdit.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_3.addWidget(self.lifetimeLineEdit)
-
-
-        self.verticalLayout.addWidget(self.LifeTimeFrame)
-
         self.CountsEstimationFrame = QFrame(Dialog)
         self.CountsEstimationFrame.setObjectName(u"CountsEstimationFrame")
         self.CountsEstimationFrame.setFrameShape(QFrame.StyledPanel)
@@ -150,6 +127,29 @@ class Ui_DialogFolderPrefix(object):
 
 
         self.verticalLayout.addWidget(self.TimeStampingFrame)
+
+        self.LifeTimeFrame = QFrame(Dialog)
+        self.LifeTimeFrame.setObjectName(u"LifeTimeFrame")
+        self.LifeTimeFrame.setFrameShape(QFrame.StyledPanel)
+        self.LifeTimeFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.LifeTimeFrame)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.lifetimePrefix = QLabel(self.LifeTimeFrame)
+        self.lifetimePrefix.setObjectName(u"lifetimePrefix")
+        sizePolicy.setHeightForWidth(self.lifetimePrefix.sizePolicy().hasHeightForWidth())
+        self.lifetimePrefix.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_3.addWidget(self.lifetimePrefix)
+
+        self.lifetimeLineEdit = QLineEdit(self.LifeTimeFrame)
+        self.lifetimeLineEdit.setObjectName(u"lifetimeLineEdit")
+        sizePolicy1.setHeightForWidth(self.lifetimeLineEdit.sizePolicy().hasHeightForWidth())
+        self.lifetimeLineEdit.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_3.addWidget(self.lifetimeLineEdit)
+
+
+        self.verticalLayout.addWidget(self.LifeTimeFrame)
 
         self.AutocorrelationFrame = QFrame(Dialog)
         self.AutocorrelationFrame.setObjectName(u"AutocorrelationFrame")
@@ -223,9 +223,9 @@ class Ui_DialogFolderPrefix(object):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"File path settings", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Save folder path:", None))
         self.startStopHistogramPrefix.setText(QCoreApplication.translate("Dialog", u"Start-stop histogram prefix:", None))
-        self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
         self.countsEstimationPrefix.setText(QCoreApplication.translate("Dialog", u"Counts estimation prefix:", None))
         self.timeStampingLineEdit.setText(QCoreApplication.translate("Dialog", u"Time stamping prefix:", None))
+        self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
         self.autocorrelationPrefix.setText(QCoreApplication.translate("Dialog", u"Autocorrelation prefix:", None))
         self.autocorrelationLineEdit.setText(QCoreApplication.translate("Dialog", u"", None))
         self.applyChangesButton.setText(QCoreApplication.translate("Dialog", u"Apply changes", None))
@@ -295,8 +295,8 @@ class Ui_DialogFolderPrefix(object):
         targetPath = documentsDir / "TempicoSoftwareData"
         self.startStopHistogramLineEdit.setText("StartStopHistogram")
         self.countsEstimationLineEdit.setText("CountsEstimation")
-        self.lifetimeLineEdit.setText("Lifetime")
         self.lineEdit.setText("TimeStamping")
+        self.lifetimeLineEdit.setText("Lifetime")
         self.autocorrelationLineEdit.setText("Autocorrelation")
     def cancelChanges(self):
         self.dialog.close()
@@ -342,7 +342,7 @@ class Ui_DialogFolderPrefix(object):
             "File path settings:\n\n"
             "Save folder path: Folder where all measurement files will be saved.\n\n"
             "Prefixes: Each measurement type uses a prefix for its file name. "
-            "The final file name will be: <prefix><date><time>.<ext>\n\n"
+            "The final file name will be: <prefix>_<date>_<channel>.<ext>\n\n"
             "Use 'Default values' to restore the original folder and prefixes."
         )
 class _DialogEventHelper(QObject):

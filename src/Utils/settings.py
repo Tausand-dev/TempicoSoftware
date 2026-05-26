@@ -79,10 +79,12 @@ class SettingsWindow(QDialog):
              parent=self.tab3
         elif index==3:
              parent=self.tab4
+        elif index==4:
+             parent=self.tab5
      
         
 
-        if (index==0 and self.sentinel1==0) or (index==1 and self.sentinel2==0) or (index==2 and self.sentinel3==0) or (index==3 and self.sentinel4==0):
+        if (index==0 and self.sentinel1==0) or (index==1 and self.sentinel2==0) or (index==2 and self.sentinel3==0) or (index==3 and self.sentinel4==0) or (index==4 and self.sentinel5==0):
           
           if index==0:
               parent=self.tab1
@@ -92,6 +94,8 @@ class SettingsWindow(QDialog):
              parent=self.tab3
           elif index==3:
              parent=self.tab4
+          elif index==4:
+             parent=self.tab5
           
 
           #---------------Average cycles channels-------------------#
@@ -150,6 +154,8 @@ class SettingsWindow(QDialog):
               self.sentinel3=1
           elif index==3:
               self.sentinel4=1
+          elif index==4:
+              self.sentinel5=1
 
     #---------Update tab parent-------#
     def clicked_tab1(self):

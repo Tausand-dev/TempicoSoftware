@@ -397,72 +397,77 @@ class WorkerThreadFCS(QThread):
         self.threadCreated.emit(1)
 
     def _getMeasurements(self, correlator, cursor_ps, next_bin_edge,
-                         photons_in_bin, call_count, total_events,
-                         t_start, stop_times_ps):
-        """
-        Execute one ``device.measure()`` call and process results.
+                     photons_in_bin, call_count, total_events,
+                     t_start, stop_times_ps):
 
-        Inner loop is a direct adaptation of ``fcsExample.py``:
-        each row contributes its stop times to the timeline and the cursor
-        advances unconditionally by the last stop of each run.
-
-        Returns
-        -------
-        cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events
-        """
         try:
-            # Equivalent to: data = device.measure()
             data = self.device.measure()
 
             if not data:
                 self.colorValue.emit(3)
-                self.stringValue.emit("No measurement – check start signal")
+                self.stringValue.emit("No measurements in channels:  Start")
                 self.consecutiveErrors = 0
                 return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
-            # ── Exact replica of fcsExample.py inner loop ─────────────────
+            # Check whether every stop value is -1 (stop channel silent)
+            all_stops_missing = all(
+                all(t == -1 for t in row[3:]) for row in data if row[3:]
+            )
+            if all_stops_missing:
+                self.colorValue.emit(3)
+                self.stringValue.emit("No measurements in channels:  Stop")
+                self.consecutiveErrors = 0
+                return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
+
             for row in data:
-                # Extract stop times in picoseconds (columns 3 onwards)
-                # Identical to fcsExample: stops_ps = row[3:]
                 stops_ps = row[3:]
+                if not stops_ps:
+                    continue
 
+                # ── Figure (b): accumulate inter-stop deltas on the global timeline ─
+                # For each run, prev_t resets to 0 so the first Δt is
+                # stop_1 (relative to the virtual start of this run).
+                # cursor_ps is advanced by each Δt inside the loop, so it
+                # continuously accumulates the real inter-photon intervals and
+                # the 10 ms hardware dead time between runs is never included.
+                prev_t = 0  # virtual start of this run = t=0
                 for t_ps in stops_ps:
-                    # Compute the absolute position of this event on the
-                    # relative timeline by adding the run's cursor offset
-                    abs_t = cursor_ps + t_ps
+                    delta_t = t_ps - prev_t   # Δt between consecutive stops
 
-                    # Close all bins that end before this event arrives.
-                    # Bins with zero photons (empty bins) are also fed to the
-                    # correlator — they carry statistical information about
-                    # periods of silence.
-                    while abs_t >= next_bin_edge:
+                    # Skip invalid (negative or zero) deltas
+                    if delta_t <= 0:
+                        prev_t = t_ps
+                        continue
+
+                    # ── KEY FIX ──────────────────────────────────────────────
+                    # Advance the continuous timeline cursor by this interval.
+                    # Previously abs_t was computed but cursor_ps was NOT
+                    # updated here, so every Δt was being added to the same
+                    # stale cursor position instead of the running total.
+                    cursor_ps += delta_t
+
+                    while cursor_ps >= next_bin_edge:
                         correlator.process_datum(photons_in_bin)
                         photons_in_bin = 0
                         next_bin_edge += self.tau_0
 
-                    # Register this photon in the current open bin
                     photons_in_bin += 1
                     total_events   += 1
+                    stop_times_ps.append(delta_t)   # raw stop time for disk save
 
-                    # Accumulate the raw stop time for saving to disk
-                    stop_times_ps.append(t_ps)
+                    prev_t = t_ps
 
-                # Advance the timeline cursor to the last stop of this run.
-                # The gap between the last stop and the next run's first stop
-                # is intentionally ignored (Option B: relative timeline).
-                # Identical to fcsExample: cursor_ps += stops_ps[-1]
-                cursor_ps += stops_ps[-1]
-            # ── End of fcsExample replica ──────────────────────────────────
+                # cursor_ps already holds the correct end-of-run position
+                # (it accumulated every inter-stop Δt above, which equals
+                # stops_ps[-1] relative to this run's virtual start).
+                # No extra advance is needed here.
 
             call_count += 1
 
-            # Emit the updated correlation curve together with the full list
-            # of raw stop times collected so far.
             taus, g = correlator.get_correlation_curve()
             if len(taus) > 0:
                 self.dataReady.emit(taus, g, np.array(stop_times_ps))
 
-            # Status string
             self.colorValue.emit(1)
             if self.total_seconds is not None:
                 elapsed = time.time() - t_start

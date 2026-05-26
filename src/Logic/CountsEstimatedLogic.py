@@ -845,7 +845,7 @@ class CountEstimatedLogic():
             self.savePlotButton.setEnabled(False)
             #Disable other tabs while the software is taking measurements
             self.mainWindow.tabs.setTabEnabled(0,False)
-            self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.tabs.setTabEnabled(4,False)
             self.mainWindow.saveSettings()
@@ -963,7 +963,7 @@ class CountEstimatedLogic():
         :return: None
         """
         self.mainWindow.tabs.setTabEnabled(0,True)
-        self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
         self.resetSentinels()

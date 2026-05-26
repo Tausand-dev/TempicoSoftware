@@ -374,7 +374,7 @@ class TimeStampLogic():
             self.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
-            self.mainWindow.tabs.setTabEnabled(2,False)
+            self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.tabs.setTabEnabled(4,False) 
             
             #Set values 
@@ -480,7 +480,7 @@ class TimeStampLogic():
         self.startTimerConnection()
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
-        self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
         self.settingsAfterMeasurement()
         self.mainWindow.noMeasurement()
@@ -513,7 +513,7 @@ class TimeStampLogic():
         self.startTimerConnection()
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
-        self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
         
       
@@ -544,7 +544,7 @@ class TimeStampLogic():
             
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
-            self.mainWindow.tabs.setTabEnabled(2,False)
+            self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.tabs.setTabEnabled(4,False)
             dateInit = self.startDate.date()
             hourInit = self.startTime.time()
@@ -789,7 +789,7 @@ class TimeStampLogic():
             self.tabs.setTabEnabled(2,True)
             self.mainWindow.tabs.setTabEnabled(0,True)
             self.mainWindow.tabs.setTabEnabled(1,True)
-            self.mainWindow.tabs.setTabEnabled(2,True)
+            self.mainWindow.tabs.setTabEnabled(3,True)
             self.mainWindow.tabs.setTabEnabled(4,True)
             self.mainWindow.noMeasurement()
             self.mainWindow.enableSettings()
@@ -810,7 +810,7 @@ class TimeStampLogic():
             self.tabs.setTabEnabled(2,True)
             self.mainWindow.tabs.setTabEnabled(0,True)
             self.mainWindow.tabs.setTabEnabled(1,True)
-            self.mainWindow.tabs.setTabEnabled(2,True)
+            self.mainWindow.tabs.setTabEnabled(3,True)
             self.mainWindow.tabs.setTabEnabled(4,True)
             self.mainWindow.noMeasurement()
             self.mainWindow.enableSettings()
@@ -843,7 +843,7 @@ class TimeStampLogic():
         self.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(0,True)
         self.mainWindow.tabs.setTabEnabled(1,True)
-        self.mainWindow.tabs.setTabEnabled(2,True)
+        self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
         self.startTimerConnection()
             
@@ -873,7 +873,7 @@ class TimeStampLogic():
             self.isSelectedFormat=True
             self.mainWindow.tabs.setTabEnabled(0,False)
             self.mainWindow.tabs.setTabEnabled(1,False)
-            self.mainWindow.tabs.setTabEnabled(2,False)
+            self.mainWindow.tabs.setTabEnabled(3,False)
             self.mainWindow.tabs.setTabEnabled(4,False)
             self.startLimitedButton.setEnabled(False)
             self.pauseLimitedButton.setEnabled(True)

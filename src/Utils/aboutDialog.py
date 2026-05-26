@@ -196,9 +196,9 @@ class Ui_AboutDialog(QObject):
             "for use with Tempico Time-to-Digital Converter (TDC) devices.\n\n"
             "It provides tools for:\n"
             "  • Start-stop histogram measurements\n"
-            "  • Fluorescence lifetime analysis\n"
             "  • Counts estimation\n"
             "  • Time stamping\n"
+            "  • Fluorescence lifetime analysis\n"
             "  • Autocorrelation (FCS)\n\n"
             "For more information visit https://www.tausand.com"
         )

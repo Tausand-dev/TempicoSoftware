@@ -17,18 +17,8 @@ HELP_CONTENT = {
             "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
         )
     },
-    "2. Lifetime": {
-        "title": "2. Lifetime",
-        "body": (
-            "Extracts the fluorescence lifetime τ by fitting a decay model "
-            "to a start-stop histogram. The graph shows the histogram and the fitted curve overlaid.\n\n"
-            "Select the stop channel and the fit model, then press Fit. "
-            "The fitted parameters are displayed once the fit converges.\n\n"
-            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
-        )
-    },
-    "3. Counts Estimation": {
-        "title": "3. Counts Estimation",
+    "2. Counts Estimation": {
+        "title": "2. Counts Estimation",
         "body": (
             "Measures the photon count rate on each channel as a function of time. "
             "The graph shows count rate (kHz or MHz) vs elapsed time, one trace per channel.\n\n"
@@ -36,14 +26,24 @@ HELP_CONTENT = {
             "and optimizing alignment before a full measurement."
         )
     },
-    "4. Time Stamping": {
-        "title": "4. Time Stamping",
+    "3. Time Stamping": {
+        "title": "3. Time Stamping",
         "body": (
             "Records the absolute arrival time (ps) of every photon detected "
             "on all channels simultaneously, with no histogram or correlation computed.\n\n"
             "Select the output format (txt, csv, or dat) and press Start. "
             "The raw timestamps are saved directly to the configured folder.\n\n"
             "File naming: Prefix_Date_MultiChannel.ext."
+        )
+    },
+    "4. Lifetime": {
+        "title": "4. Lifetime",
+        "body": (
+            "Extracts the fluorescence lifetime τ by fitting a decay model "
+            "to a start-stop histogram. The graph shows the histogram and the fitted curve overlaid.\n\n"
+            "Select the stop channel and the fit model, then press Fit. "
+            "The fitted parameters are displayed once the fit converges.\n\n"
+            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
         )
     },
     "5. Autocorrelation (FCS)": {

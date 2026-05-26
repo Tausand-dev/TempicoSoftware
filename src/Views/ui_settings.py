@@ -885,6 +885,7 @@ class Ui_settings(QObject):
         # disable apply changes button
         self.AplicarCambios.setEnabled(False)
         
+        
 
     def enableSettings(self):
         # Disable Edge type

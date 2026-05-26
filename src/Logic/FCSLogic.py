@@ -387,6 +387,7 @@ class FCSLogic():
             msg.exec_()
             return
         
+        self.mainWindow.saveSettings()
         self.mainWindow.activeMeasurement()
         self.worker = WorkerThreadFCS(
             parent        = self.parent,
