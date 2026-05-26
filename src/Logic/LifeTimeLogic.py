@@ -2079,6 +2079,7 @@ class LifeTimeLogic():
                 text_route="\n"+graph_name+"."+selected_format
                 graph_names.append(graph_name)
                 message_box = QMessageBox(self.mainWindow)
+                message_box.setIcon(QMessageBox.Information)
                 message_box.setText(initial_text+text_route)
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)
