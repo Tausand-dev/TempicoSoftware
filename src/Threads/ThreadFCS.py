@@ -374,8 +374,15 @@ class WorkerThreadFCS(QThread):
         # have elapsed (when a finite duration was configured).
         while self.itsRunning:
             if self.total_seconds is not None:
-                if (time.time() - t_start) >= self.total_seconds:
+                elapsed = time.time() - t_start
+                if elapsed >= self.total_seconds:
                     break
+                if call_count > 0:
+                    t_per_run   = elapsed / call_count
+                    time_left   = self.total_seconds - elapsed
+                    runs_to_use = max(1, int(time_left / t_per_run))
+                    runs_to_use = min(runs_to_use, self.num_runs)
+                    self.device.setNumberOfRuns(runs_to_use)
             (cursor_ps, next_bin_edge, photons_in_bin,
              call_count, total_events, stop_times_ps) = self._getMeasurements(
                 correlator,
