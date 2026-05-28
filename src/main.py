@@ -169,6 +169,7 @@ class MainWindow(QMainWindow):
 
         #------Menu bar-------------#
         menu_bar = self.menuBar()
+        menu_bar.setNativeMenuBar(False)
         #file_menu = menu_bar.addMenu("File")
         settings_menu = menu_bar.addMenu("Settings")
         #help_menu = menu_bar.addMenu("Help")

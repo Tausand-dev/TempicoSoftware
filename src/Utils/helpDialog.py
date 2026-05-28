@@ -14,7 +14,6 @@ HELP_CONTENT = {
             "producing a histogram of counts vs time delay (ns) per channel.\n\n"
             "Select the stop channels (A, B, C, D) and press Start. "
             "Press Stop to end the acquisition. Each channel produces its own histogram.\n\n"
-            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
         )
     },
     "2. Counts Estimation": {
@@ -43,7 +42,7 @@ HELP_CONTENT = {
             "to a start-stop histogram. The graph shows the histogram and the fitted curve overlaid.\n\n"
             "Select the stop channel and the fit model, then press Fit. "
             "The fitted parameters are displayed once the fit converges.\n\n"
-            "Available fits: Exponential, Kohlrausch, Shifted exponential, Double exponential."
+            "Available fits: Exponential, Double exponential, Kohlrausch, Shifted exponential."
         )
     },
     "5. Autocorrelation (FCS)": {

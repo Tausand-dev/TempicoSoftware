@@ -383,10 +383,19 @@ class FCSLogic():
             msg.setWindowTitle("Not enough stops")
             msg.setText(
                 "You must set at least 2 stops to start the FCS measurement.\n\n"
-                "Go to: Settings → Channels → Number of stops"
+                "Do you want to change the configuration to 2 stops?"
             )
-            msg.setStandardButtons(QMessageBox.Ok)
+            yes_btn      = msg.addButton("Yes",              QMessageBox.YesRole)
+            no_btn       = msg.addButton("No",               QMessageBox.NoRole)
+            settings_btn = msg.addButton("Open Channels",    QMessageBox.ActionRole)
             msg.exec_()
+            clicked = msg.clickedButton()
+            if clicked == yes_btn:
+                for ch in [self.device.ch1, self.device.ch2,
+                           self.device.ch3, self.device.ch4]:
+                    ch.setNumberOfStops(2)
+            elif clicked == settings_btn:
+                self.mainWindow.settings_clicked()
             return
         
         self.mainWindow.saveSettings()
