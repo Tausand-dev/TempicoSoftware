@@ -85,8 +85,8 @@ class Ui_FCSMeasurement(object):
             self.MeasurementControlsFrame.sizePolicy().hasHeightForWidth()
         )
         self.MeasurementControlsFrame.setSizePolicy(sizePolicy3)
-        self.MeasurementControlsFrame.setFrameShape(QFrame.Panel)
-        self.MeasurementControlsFrame.setFrameShadow(QFrame.Sunken)
+        self.MeasurementControlsFrame.setFrameShape(QFrame.StyledPanel)
+        self.MeasurementControlsFrame.setFrameShadow(QFrame.Plain)
 
         self.verticalLayout_controls = QVBoxLayout(self.MeasurementControlsFrame)
         self.verticalLayout_controls.setObjectName(u"verticalLayout_controls")
@@ -145,8 +145,8 @@ class Ui_FCSMeasurement(object):
         # ── Panel: Measurement stats ──────────────────────────────────────
         self.InfoFrame = QFrame(self.ConfigurationArea)
         self.InfoFrame.setObjectName(u"InfoFrame")
-        self.InfoFrame.setFrameShape(QFrame.Panel)
-        self.InfoFrame.setFrameShadow(QFrame.Sunken)
+        self.InfoFrame.setFrameShape(QFrame.StyledPanel)
+        self.InfoFrame.setFrameShadow(QFrame.Plain)
 
         self.verticalLayout_info = QVBoxLayout(self.InfoFrame)
         self.verticalLayout_info.setObjectName(u"verticalLayout_info")
@@ -198,8 +198,8 @@ class Ui_FCSMeasurement(object):
             self.ParametersFrame.sizePolicy().hasHeightForWidth()
         )
         self.ParametersFrame.setSizePolicy(sizePolicy3)
-        self.ParametersFrame.setFrameShape(QFrame.Panel)
-        self.ParametersFrame.setFrameShadow(QFrame.Sunken)
+        self.ParametersFrame.setFrameShape(QFrame.StyledPanel)
+        self.ParametersFrame.setFrameShadow(QFrame.Plain)
 
         self.verticalLayout_params = QVBoxLayout(self.ParametersFrame)
         self.verticalLayout_params.setObjectName(u"verticalLayout_params")
@@ -336,8 +336,8 @@ class Ui_FCSMeasurement(object):
         # ── Fit controls row ──────────────────────────────────────────────
         self.fitFrame = QFrame(self.TotalGraphicArea)
         self.fitFrame.setObjectName(u"fitFrame")
-        self.fitFrame.setFrameShape(QFrame.Panel)
-        self.fitFrame.setFrameShadow(QFrame.Sunken)
+        self.fitFrame.setFrameShape(QFrame.StyledPanel)
+        self.fitFrame.setFrameShadow(QFrame.Plain)
 
         self.horizontalLayout_fit = QHBoxLayout(self.fitFrame)
         self.horizontalLayout_fit.setContentsMargins(8, 4, 8, 4)
@@ -373,8 +373,8 @@ class Ui_FCSMeasurement(object):
         # ── Fit results panel (equation + parameter table) ────────────────
         self.fitResultsFrame = QFrame(self.TotalGraphicArea)
         self.fitResultsFrame.setObjectName(u"fitResultsFrame")
-        self.fitResultsFrame.setFrameShape(QFrame.Panel)
-        self.fitResultsFrame.setFrameShadow(QFrame.Sunken)
+        self.fitResultsFrame.setFrameShape(QFrame.StyledPanel)
+        self.fitResultsFrame.setFrameShadow(QFrame.Plain)
         self.fitResultsFrame.setVisible(False)
 
         self.verticalLayout_fitResults = QVBoxLayout(self.fitResultsFrame)
@@ -468,8 +468,8 @@ class Ui_FCSMeasurement(object):
 
         self.statusFrame = QFrame(self.widgetStatus)
         self.statusFrame.setObjectName(u"statusFrame")
-        self.statusFrame.setFrameShape(QFrame.Panel)
-        self.statusFrame.setFrameShadow(QFrame.Sunken)
+        self.statusFrame.setFrameShape(QFrame.StyledPanel)
+        self.statusFrame.setFrameShadow(QFrame.Plain)
 
         self.horizontalLayout_status = QHBoxLayout(self.statusFrame)
         self.horizontalLayout_status.setObjectName(u"horizontalLayout_status")

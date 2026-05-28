@@ -413,7 +413,8 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
-            self.mainWindow.tabs.setTabEnabled(4,False) 
+            self.mainWindow.tabs.setTabEnabled(4,False)
+            self.mainWindow.tabs.setTabEnabled(5,False) 
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
             if "TP12" in constants.VERSION_PARAMETER:
@@ -502,6 +503,7 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
@@ -531,6 +533,7 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.threadCreated=False
         self.stop_graphic()
     

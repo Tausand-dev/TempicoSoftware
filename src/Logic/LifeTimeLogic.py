@@ -281,6 +281,7 @@ class LifeTimeLogic():
         self.mainWindow.tabs.setTabEnabled(1,False)
         self.mainWindow.tabs.setTabEnabled(2,False)
         self.mainWindow.tabs.setTabEnabled(4,False)
+        self.mainWindow.tabs.setTabEnabled(5,False)
         self.mainWindow.saveSettings()
         self.mainWindow.disconnectButton.setEnabled(False)
         self.stopTimerConnection()
@@ -420,6 +421,7 @@ class LifeTimeLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.changeStatusLabel("No measurement running")
         self.changeStatusColor(0)
         self.threadCreated=False

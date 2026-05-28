@@ -14,7 +14,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{EEBC9717-BADD-410D-ABA6-2E9960391AD1}
+AppId={{E5B850CC-6E6E-4134-9821-07799DC91BE6}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -29,7 +29,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 OutputDir=C:\Instaladores\2.0.1
-OutputBaseFilename=Tempico Software Setup V1
+OutputBaseFilename=Tempico Software V1 Setup
 SetupIconFile=C:\Users\Personal\Programacion\Github\TempicoSoftware\Sources\tausand_small.ico
 SolidCompression=yes
 WizardStyle=modern dynamic

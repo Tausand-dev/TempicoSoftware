@@ -288,6 +288,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(1, True)
         self.mainWindow.tabs.setTabEnabled(2, True)
         self.mainWindow.tabs.setTabEnabled(3, True)
+        self.mainWindow.tabs.setTabEnabled(5, True)
         self.tau0SpinBox.setEnabled(True) 
         self.durationSpinBox.setEnabled(True)
         self.fitOffsetCheckBox.setEnabled(True)
@@ -332,6 +333,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(1, False)  # Lifetime tab
         self.mainWindow.tabs.setTabEnabled(2, False)  # Counts tab
         self.mainWindow.tabs.setTabEnabled(3, False)  # Time stamp tab
+        self.mainWindow.tabs.setTabEnabled(5, False)  # G2 tab
         self.disconnectButton.setEnabled(False)
         
 
@@ -432,6 +434,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(2, True)
         self.mainWindow.tabs.setTabEnabled(3, True)
         self.mainWindow.tabs.setTabEnabled(4, True)
+        self.mainWindow.tabs.setTabEnabled(5, True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
 

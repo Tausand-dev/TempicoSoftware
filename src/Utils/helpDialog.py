@@ -57,6 +57,18 @@ HELP_CONTENT = {
             "and Chemical relaxation."
         )
     },
+    "6. g2 (HBT)": {
+    "title": "6. g2 (HBT)",
+    "body": (
+        "Computes the second-order correlation function g²(τ) from the time differences "
+        "between start and stop photon detection events acquired with two selected channels.\n\n"
+        "Set the stop channel, maximum time, coincidence window, number of bins, "
+        "and acquisition mode, then press Start. The software builds and normalizes "
+        "the coincidence histogram in real time and displays the resulting g²(τ) curve.\n\n"
+        "Available fits: Thermal gaussian, Thermal gaussian shifted, Thermal lorentzian, "
+        "Thermal lorentzian shifted, Antibunching, and Antibunching shifted."
+        )
+    }
 }
 
 

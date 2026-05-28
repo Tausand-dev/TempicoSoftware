@@ -173,6 +173,30 @@ class Ui_DialogFolderPrefix(object):
 
         self.verticalLayout.addWidget(self.AutocorrelationFrame)
 
+
+        self.g2Frame = QFrame(Dialog)
+        self.g2Frame.setObjectName(u"g2Frame")
+        self.g2Frame.setFrameShape(QFrame.StyledPanel)
+        self.g2Frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.g2Frame)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.g2Prefix = QLabel(self.g2Frame)
+        self.g2Prefix.setObjectName(u"g2Prefix")
+        sizePolicy.setHeightForWidth(self.g2Prefix.sizePolicy().hasHeightForWidth())
+        self.g2Prefix.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_7.addWidget(self.g2Prefix)
+
+        self.g2LineEdit = QLineEdit(self.g2Frame)
+        self.g2LineEdit.setObjectName(u"g2LineEdit")
+        sizePolicy1.setHeightForWidth(self.g2LineEdit.sizePolicy().hasHeightForWidth())
+        self.g2LineEdit.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_7.addWidget(self.g2LineEdit)
+
+
+        self.verticalLayout.addWidget(self.g2Frame)
+
         self.ApplyChangesFrame = QFrame(Dialog)
         self.ApplyChangesFrame.setObjectName(u"ApplyChangesFrame")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -228,6 +252,7 @@ class Ui_DialogFolderPrefix(object):
         self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
         self.autocorrelationPrefix.setText(QCoreApplication.translate("Dialog", u"Autocorrelation prefix:", None))
         self.autocorrelationLineEdit.setText(QCoreApplication.translate("Dialog", u"", None))
+        self.g2Prefix.setText(QCoreApplication.translate("Dialog", u"g2 prefix:", None))
         self.applyChangesButton.setText(QCoreApplication.translate("Dialog", u"Apply changes", None))
 
     def selectFolder(self):
@@ -255,6 +280,7 @@ class Ui_DialogFolderPrefix(object):
         self.countsEstimationLineEdit.setText(data["countsEstimationPrefix"])
         self.lineEdit.setText(data["timeStampingPrefix"])
         self.autocorrelationLineEdit.setText(data.get("fcsPrefix", data.get("autocorrelationPrefix", "Autocorrelation")))
+        self.g2LineEdit.setText(data.get("g2Prefix", "g2"))
         
         
     def applySettings(self):
@@ -269,6 +295,8 @@ class Ui_DialogFolderPrefix(object):
             self.dialogShowingProblems("Time stamping prefix")
         elif any(c in self.autocorrelationLineEdit.text() for c in r'\/:*?"<>|'):
             self.dialogShowingProblems("Autocorrelation prefix")
+        elif any(c in self.g2LineEdit.text() for c in r'\/:*?"<>|'):
+            self.dialogShowingProblems("g2 prefix")
         else:
             with open(pathConstants, "r", encoding="utf-8") as file:
                 data = json.load(file)
@@ -278,6 +306,7 @@ class Ui_DialogFolderPrefix(object):
             data["countsEstimationPrefix"]=self.countsEstimationLineEdit.text()
             data["timeStampingPrefix"]=self.lineEdit.text()
             data["fcsPrefix"]=self.autocorrelationLineEdit.text()
+            data["g2Prefix"]=self.g2LineEdit.text()
             with open(pathConstants, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             if self.folderPathLineEdit!=self.initialFolderPath:
@@ -298,6 +327,8 @@ class Ui_DialogFolderPrefix(object):
         self.lineEdit.setText("TimeStamping")
         self.lifetimeLineEdit.setText("Lifetime")
         self.autocorrelationLineEdit.setText("Autocorrelation")
+        self.g2LineEdit.setText("g2")
+
     def cancelChanges(self):
         self.dialog.close()
     
@@ -319,6 +350,7 @@ class Ui_DialogFolderPrefix(object):
         self.countsEstimationLineEdit.setEnabled(False)
         self.lineEdit.setEnabled(False)
         self.autocorrelationLineEdit.setEnabled(False)
+        self.g2LineEdit.setEnabled(False)
         self.applyChangesButton.setEnabled(False)
         self.cancelButton.setEnabled(False)
         self.defaultValuesButton.setEnabled(False)
@@ -331,6 +363,7 @@ class Ui_DialogFolderPrefix(object):
         self.countsEstimationLineEdit.setEnabled(True)
         self.lineEdit.setEnabled(True)
         self.autocorrelationLineEdit.setEnabled(True)
+        self.g2LineEdit.setEnabled(True)
         self.applyChangesButton.setEnabled(True)
         self.cancelButton.setEnabled(True)
         self.defaultValuesButton.setEnabled(True)

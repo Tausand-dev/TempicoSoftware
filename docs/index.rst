@@ -11,6 +11,9 @@
 Welcome to Tempico Software's documentation!
 ============================================
 
+.. contents::
+   :depth: 2
+
 Tempico Software is a program developed by Tausand Electronics, with Joan Amaya and David Guzman as the lead developers. It is implemented in Python, utilizing key libraries such as PyQt5 (integrated with PySide2) for the graphical user interface, HIDAPI for serial communication, and PyGraph for data visualization. The software facilitates the use of Tausand Tempico TP1004 devices, streamlining the creation of histograms and lifetime measurements. For more information, visit tausand.com.
 
 .. toctree::
@@ -22,11 +25,13 @@ Tempico Software is a program developed by Tausand Electronics, with Joan Amaya 
    LifeTimeLogic.rst
    CountsEstimatedLogic.rst
    TimeStampLogic.rst
-   ThreadStartStop.rst
+   G2Logic.rst
+   ThreadG2.rst
    ThreadLifeTime.rst
-   ThreadTimeStamping.rst
-   ThreadCountEstimated.rst
    ThreadProccessData.rst
+   ThreadTimeStamping.rst
+   ThreadStartStop.rst
+
    
    
    

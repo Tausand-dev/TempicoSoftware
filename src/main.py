@@ -26,6 +26,7 @@ from Views.ui_LifeTimemeasurement import UiLifeTime
 from Logic.LifeTimeLogic import LifeTimeLogic
 from Logic.CountsEstimatedLogic import CountEstimatedLogic
 from Logic.TimeStampLogic import TimeStampLogic
+from Logic.G2Logic import G2Logic
 from Views.ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
 from Views.ui_FCSMeasurement import Ui_FCSMeasurement
 from Logic.FCSLogic import FCSLogic
@@ -119,8 +120,8 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(800,600)
         self.conectedDevice=None
-        self.LifeTimeTimer=QTimer()
-        self.LifeTimeTimer.timeout.connect(self.manageConection)
+        self.connectedTimer=QTimer()
+        self.connectedTimer.timeout.connect(self.manageConection)
         self.currentMeasurement=False
         # save old settings state
         self.averageCycleChannelA= 0
@@ -220,12 +221,13 @@ class MainWindow(QMainWindow):
         self.tab3=QWidget()
         self.tab4=QWidget()
         self.tab5=QWidget()
+        self.tab6=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
         self.tabs.addTab(self.tab2,"Counts estimation")
         self.tabs.addTab(self.tab3,"Time stamping")
         self.tabs.addTab(self.tab4,"Lifetime")
         self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
-        #self.tabs.addTab(self.tab3,"g2 Measurement")
+        self.tabs.addTab(self.tab6,"g2 (HBT)")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
         layout = QVBoxLayout()
@@ -265,6 +267,9 @@ class MainWindow(QMainWindow):
         #------FCS Graphic class---------#
         self.fcsGraphic=None
         self.fcs_init_sentinel=0
+        #------g2 Graphic class---------#
+        self.g2Graphic=None
+        self.g2_init_sentinel=0
 
         self._previous_tab_index = 0     
         self._fcs_saved_generator_settings = []
@@ -282,6 +287,7 @@ class MainWindow(QMainWindow):
         self.sentinel3=0
         self.sentinel4=0
         self.sentinel5=0
+        self.sentinel6=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
         self.open_dialog()
@@ -396,10 +402,10 @@ class MainWindow(QMainWindow):
         :type parent: QWidget
         :returns: None
         """
-        if self.sentinel3==0:
+        if self.sentinel6==0:
             self.uig2 = Ui_G2()
             self.uig2.setupUi(parent)
-            self.sentinel3=1
+            self.sentinel6=1
 
     def open_dialog(self):
         """
@@ -430,19 +436,24 @@ class MainWindow(QMainWindow):
                 self.disconnectButton.setEnabled(True)
                 try:
                     self.conectedDevice.open()
+                    self.connectedTimer.start(500)
                     self.getVersionParameters()
-                    self.LifeTimeTimer.start(500)
-                    if self.g2Graphic!=None:
-                         self.g2Graphic.connectDevice()
-                    if self.LifeTimeGraphic!=None:
-                        self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+
                     if self.countsEstimatedGraphic!=None:
                         self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
-                    #To do implement connect device
+                    
                     if self.timeStampGraphic!=None:
                         self.timeStampGraphic.connectedDevice(self.conectedDevice)
+                    
+                    if self.LifeTimeGraphic!=None:
+                        self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                    
+                    #To do implement connect device
                     if self.fcsGraphic!=None:
                         self.fcsGraphic.connectedDevice(self.conectedDevice)
+                    
+                    if self.g2Graphic!=None:
+                         self.g2Graphic.connectDevice(self.conectedDevice)
 
                     checkchannel1=self.ui.Channel1Graph1
                     checkchannel2=self.ui.Channel4Graph1
@@ -470,10 +481,10 @@ class MainWindow(QMainWindow):
 
 
                     self.connectsentinel=1
-                    self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel, self.LifeTimeTimer)
+                    self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel, self.connectedTimer)
 
                 except:
-                    self.LifeTimeTimer.stop()
+                    self.connectedTimer.stop()
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
@@ -492,20 +503,21 @@ class MainWindow(QMainWindow):
                         try:
                             self.conectedDevice.open()
                             self.getVersionParameters()
-                            self.LifeTimeTimer.start(500)
+                            self.connectedTimer.start(500)
                             openSentinel=True
                         except:
-                            self.LifeTimeTimer.stop()
-                        if self.g2Graphic!=None and openSentinel:
-                             self.g2Graphic.connectDevice()
-                        if self.LifeTimeGraphic!=None and openSentinel:
-                            self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                            self.connectedTimer.stop()
+                        
                         if self.countsEstimatedGraphic!=None and openSentinel:
                             self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
                         if self.timeStampGraphic!=None and openSentinel:
                             self.timeStampGraphic.connectedDevice(self.conectedDevice)
+                        if self.LifeTimeGraphic!=None and openSentinel:
+                            self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
                         if self.fcsGraphic!=None and openSentinel:
                             self.fcsGraphic.connectedDevice(self.conectedDevice)
+                        if self.g2Graphic!=None and openSentinel:
+                             self.g2Graphic.connectDevice()
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -524,20 +536,22 @@ class MainWindow(QMainWindow):
             try:
                 self.conectedDevice.open()
                 self.getVersionParameters()
-                self.LifeTimeTimer.start(500)
+                self.connectedTimer.start(500)
                 openSentinel=True
             except:
-                self.LifeTimeTimer.stop()
-            if self.g2Graphic!=None and openSentinel:
-                    self.g2Graphic.connectDevice()
-            if self.LifeTimeGraphic!=None and openSentinel:
-                    self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                self.connectedTimer.stop()
+
+            
             if self.countsEstimatedGraphic!=None and openSentinel:
                     self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
             if self.timeStampGraphic!=None and openSentinel:
                     self.timeStampGraphic.connectedDevice(self.conectedDevice)
+            if self.LifeTimeGraphic!=None and openSentinel:
+                    self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
             if self.fcsGraphic!=None and openSentinel:
                     self.fcsGraphic.connectedDevice(self.conectedDevice)
+            if self.g2Graphic!=None and openSentinel:
+                    self.g2Graphic.connectDevice()
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -559,8 +573,6 @@ class MainWindow(QMainWindow):
             self.disconnectButton.setEnabled(False)
             self.conectedDevice.close()
             self.conectedDevice=None
-        if self.g2Graphic!=None:
-            self.g2Graphic.disconnectDevice()
         if self.LifeTimeGraphic!=None:
             self.LifeTimeGraphic.disconnectedDevice()
         if self.countsEstimatedGraphic!=None:
@@ -569,7 +581,8 @@ class MainWindow(QMainWindow):
             self.timeStampGraphic.disconnectedDevice()
         if self.fcsGraphic!=None:
             self.fcsGraphic.disconnectedDevice()
-
+        if self.g2Graphic!=None:
+            self.g2Graphic.disconnectedDevice()
 
 
 
@@ -638,7 +651,7 @@ class MainWindow(QMainWindow):
                 detachedLabelCheckBox=self.uiCountsEstimated.labelCheckBox
                 helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
-                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
+                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.connectedTimer)
           elif valor_padre==2:
             padre=self.tab3
             self.construct_time_stamping(padre)  
@@ -686,7 +699,7 @@ class MainWindow(QMainWindow):
                                                      pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
-                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.connectedTimer)
           elif valor_padre==3:
               padre=self.tab4
               self.construct_lifetime(padre)
@@ -717,7 +730,7 @@ class MainWindow(QMainWindow):
                   self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
                                                clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
                                                spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
-                                               applyButton,parametersTable,self,self.LifeTimeTimer)
+                                               applyButton,parametersTable,self,self.connectedTimer)
                   #If this sentinel dont have any use DELETE
                   self.LifeTime_init_sentinel=1
           elif valor_padre==4:
@@ -747,7 +760,7 @@ class MainWindow(QMainWindow):
                     self,
                     valueStatusLabel,
                     pointLabel,
-                    self.LifeTimeTimer,
+                    self.connectedTimer,
                     self.uiFCS.callsLabel,
                     self.uiFCS.eventsLabel,
                     self.uiFCS.elapsedLabel,
@@ -761,14 +774,52 @@ class MainWindow(QMainWindow):
                     self.uiFCS.stopChannelComboBox,
                     tau_0=tau_0,
                 )
-                # Provide the duration widgets so FCSLogic can read them at start time
                 self.fcsGraphic.set_parameter_widgets(
                     self.uiFCS.tau0SpinBox,
                     self.uiFCS.durationSpinBox,
                     self.uiFCS.indefiniteCheckBox,
                 )
             self._apply_fcs_generator_settings()   
-          self._previous_tab_index = valor_padre
+          elif valor_padre==5:
+            padre=self.tab6
+            self.construct_g2(padre)
+            if self.g2Graphic==None:
+                stopChannelComboBox=self.uig2.stopChannelComboBox
+                coincidenceWindowComboBox=self.uig2.coincidenceWindowComboBox
+                numberMeasurementsSpinBoxg2=self.uig2.numberMeasurementsSpinBox
+                numberBinsLabel=self.uig2.numberBinsValue
+                startButtong2=self.uig2.startButton
+                stopButtong2=self.uig2.stopButton
+                clearButtong2= self.uig2.clearButton
+                saveDataButtong2=self.uig2.saveDataButton
+                savePlotButtong2=self.uig2.savePlotButton
+                comboBoxEquation=self.uig2.equationComboBox
+                applyFitButton=self.uig2.applyFitButton
+                parametersTableg2=self.uig2.parametersTable
+                initialParametersButton=self.uig2.initialParametersButton
+                statusValueLabel=self.uig2.stateValueLabel
+                statusColorLabel=self.uig2.colorLabel
+                totalStartsLabel=self.uig2.totalStartsValue
+                totalStopsLabel=self.uig2.totalStopsValue
+                calculatedParameter=self.uig2.estimateValueLabel
+                helButtong2=self.uig2.helpButton
+                graphicFrameg2=self.uig2.GraphicFrame
+                startLimitedButtong2=self.uig2.startLimitedButton
+                stopLimitedButtong2=self.uig2.stopLimitedButton
+                clearLimitedButtong2=self.uig2.clearLimitedButton
+                autoClearSpinBox=self.uig2.autoClearSpinBox
+                startAutoClearButton=self.uig2.startAutoClearButton
+                stopAutoClearButton=self.uig2.stopAutoClearButton
+                clearAutoClearButton=self.uig2.cleanAutoClearButton
+                tabSettingsg2=self.uig2.tabWidget
+                maximumTimeRangeComboBox=self.uig2.timeRangeComboBox
+                fixedDelayCheckBox=self.uig2.fixedDelayCheckBox
+                externalDelaySpinBox=self.uig2.externalDelaySpinBox
+                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsLabel,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
+                                    parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
+                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,fixedDelayCheckBox,externalDelaySpinBox,self.conectedDevice,self,self.connectedTimer)
+                # Provide the duration widgets so FCSLogic can read them at start time
+                
             
 
         #   elif valor_padre==1:
@@ -1221,13 +1272,15 @@ class MainWindow(QMainWindow):
                     self.countsEstimatedGraphic.disconnectedDevice()
                 if self.timeStampGraphic:
                     self.timeStampGraphic.disconnectedDevice()
-                if self.fcsGraphic:
-                    self.fcsGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
+                if self.fcsGraphic:
+                    self.fcsGraphic.disconnectedDevice()
+                if self.g2Graphic:
+                    self.g2Graphic.disconnectedDevice()
                 if self.grafico:
                     self.grafico.disconnectedDevice()
-                self.LifeTimeTimer.stop()
+                self.connectedTimer.stop()
                 self.conectedDevice=None
                 msg_box = QMessageBox(self)
                 msg_box.setText("Connection with the device has been lost")
@@ -1250,10 +1303,12 @@ class MainWindow(QMainWindow):
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.timeStampGraphic:
             self.timeStampGraphic.disconnectedDevice()
-        if self.fcsGraphic:
-            self.fcsGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
+        if self.fcsGraphic:
+            self.fcsGraphic.disconnectedDevice()
+        if self.g2Graphic:
+            self.g2Graphic.disconnectedDevice()
         if self.grafico:
             self.grafico.disconnectedDevice()
         self.conectedDevice=None
@@ -1327,6 +1382,8 @@ class MainWindow(QMainWindow):
             self.grafico.resetSaveSentinels()
         if self.fcsGraphic!=None:
             self.fcsGraphic.resetSaveSentinels()
+        if self.g2Graphic!=None:
+            self.g2Graphic.resetSaveSentinels()
         
 
 

@@ -1,5 +1,5 @@
 ThreadStartStop module
-=======================
+=========================
 
 .. automodule:: Threads.ThreadStartStop
    :members:
