@@ -819,7 +819,7 @@ class MainWindow(QMainWindow):
                                     parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
                                     graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,fixedDelayCheckBox,externalDelaySpinBox,self.conectedDevice,self,self.connectedTimer)
                 # Provide the duration widgets so FCSLogic can read them at start time
-                
+          self._previous_tab_index = valor_padre      
             
 
         #   elif valor_padre==1:
