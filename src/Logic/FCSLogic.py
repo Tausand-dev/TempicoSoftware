@@ -711,7 +711,7 @@ class FCSLogic():
             phot_path = os.path.join(folder_path, f"{filename_phot}.{selected_format}")
             with open(phot_path, 'w', encoding='utf-8') as f:
                 f.write(setting + '\n')
-                f.write(f"photon_arrival_time_ps\n")
+                f.write(f"stop_stop_time_ps\n")
                 for t in self.last_stop_times_ps:
                     f.write(f"{t}\n")
 
