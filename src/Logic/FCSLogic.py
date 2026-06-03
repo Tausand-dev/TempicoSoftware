@@ -380,6 +380,7 @@ class FCSLogic():
             self._restore_buttons_after_stop()
             dlg = QDialog(self.parent)
             dlg.setWindowTitle("Not enough stops")
+            dlg.setWindowFlags(dlg.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dlg.setMinimumWidth(420)
             outer = QVBoxLayout(dlg)
 
