@@ -323,8 +323,9 @@ class UiLifeTime(object):
 
         self.functionComboBox = QComboBox(self.functionFrame)
         self.functionComboBox.setObjectName(u"functionComboBox")
-        self.functionsFit = ["Exponential","Double exponential","Kohlrausch","Shifted exponential"]
+        self.functionsFit = ["Double exponential", "Exponential","Kohlrausch","Shifted exponential"]
         self.functionComboBox.addItems(self.functionsFit)
+        self.functionComboBox.setCurrentIndex(1)
 
         self.horizontalLayout_9.addWidget(self.functionComboBox)
         self.functionComboBox.currentIndexChanged.connect(self.functionChange)

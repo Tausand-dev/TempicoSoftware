@@ -18,7 +18,7 @@ import pyqtgraph as pg
 from PySide2.QtCore  import QMetaObject, Qt
 from PySide2.QtGui   import QPixmap, QPainter, QColor
 from PySide2.QtWidgets import (QTableWidget,
-    QTableWidgetItem, QGridLayout, QDialog, QVBoxLayout, 
+    QTableWidgetItem, QGridLayout, QDialog, QVBoxLayout, QHBoxLayout,
     QLabel, QComboBox, QPushButton, QMessageBox
 )
 
@@ -378,23 +378,55 @@ class FCSLogic():
 
         if num_stops < 2:
             self._restore_buttons_after_stop()
-            msg = QMessageBox(self.parent)
-            msg.setIcon(QMessageBox.Warning)
-            msg.setWindowTitle("Not enough stops")
-            msg.setText(
-                "You must set at least 2 stops to start the FCS measurement.\n\n"
+            dlg = QDialog(self.parent)
+            dlg.setWindowTitle("Not enough stops")
+            dlg.setMinimumWidth(420)
+            outer = QVBoxLayout(dlg)
+
+            # Fila superior: icono warning + texto (replica QMessageBox)
+            top_row = QHBoxLayout()
+            icon_label = QLabel()
+            icon_label.setPixmap(
+                dlg.style().standardIcon(dlg.style().SP_MessageBoxWarning)
+                .pixmap(32, 32)
+            )
+            icon_label.setAlignment(Qt.AlignTop)
+            top_row.addWidget(icon_label)
+            top_row.addSpacing(10)
+            text_label = QLabel(
+                "You must set at least 2 stops to start the "
+                "autocorrelation (FCS) measurement.\n\n"
                 "Do you want to change the configuration to 2 stops?"
             )
-            yes_btn      = msg.addButton("Yes",              QMessageBox.YesRole)
-            no_btn       = msg.addButton("No",               QMessageBox.NoRole)
-            settings_btn = msg.addButton("Open Channels",    QMessageBox.ActionRole)
-            msg.exec_()
-            clicked = msg.clickedButton()
-            if clicked == yes_btn:
+            text_label.setWordWrap(True)
+            top_row.addWidget(text_label, stretch=1)
+            outer.addLayout(top_row)
+            outer.addSpacing(12)
+
+            # Fila de botones equiespaciados
+            btn_row = QHBoxLayout()
+            yes_btn      = QPushButton("Yes")
+            no_btn       = QPushButton("No")
+            settings_btn = QPushButton("Go to settings")
+            for b in (yes_btn, no_btn, settings_btn):
+                btn_row.addWidget(b, stretch=1)
+            outer.addLayout(btn_row)
+
+            clicked = [None]
+            yes_btn.clicked.connect(
+                lambda: (clicked.__setitem__(0, "yes"), dlg.accept()))
+            no_btn.clicked.connect(
+                lambda: (clicked.__setitem__(0, "no"),  dlg.accept()))
+            settings_btn.clicked.connect(
+                lambda: (clicked.__setitem__(0, "settings"), dlg.accept()))
+            dlg.exec_()
+
+            if clicked[0] == "yes":
                 for ch in [self.device.ch1, self.device.ch2,
                            self.device.ch3, self.device.ch4]:
                     ch.setNumberOfStops(2)
-            elif clicked == settings_btn:
+                self.start_graphic()
+            elif clicked[0] == "settings":
                 self.mainWindow.settings_clicked()
             return
         
