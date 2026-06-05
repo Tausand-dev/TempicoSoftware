@@ -475,14 +475,17 @@ class WorkerThreadFCS(QThread):
             if len(taus) > 0:
                 self.dataReady.emit(taus, g, np.array(stop_times_ps))
 
+            elapsed = time.time() - t_start
             if self.total_seconds is not None:
-                elapsed = time.time() - t_start
                 status_str = (
                     f"calls: {call_count} | events: {total_events} | "
                     f"elapsed: {elapsed:.1f} s / {self.total_seconds} s"
                 )
             else:
-                status_str = f"calls: {call_count} | events: {total_events}"
+                status_str = (
+                    f"calls: {call_count} | events: {total_events} | "
+                    f"elapsed: {elapsed:.1f} s"
+                )
 
             if total_events == 0:
                 self.colorValue.emit(3)

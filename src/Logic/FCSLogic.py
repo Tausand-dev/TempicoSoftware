@@ -352,6 +352,11 @@ class FCSLogic():
         self.statusValue.setText("Measurement running")
         self.changeStatusColor(1)
 
+        # Reset counters so the previous measurement's values don't persist
+        self.callsLabel.setText("0")
+        self.eventsLabel.setText("0")
+        self.elapsedLabel.setText("0 s")
+
         # Stop the connection-polling timer while the thread owns the device
         self.stopTimerConnection()
 
