@@ -432,13 +432,19 @@ class WorkerThreadFCS(QThread):
                     continue
 
                 # ── Figure (b): accumulate inter-stop deltas on the global timeline ─
-                # For each run, prev_t resets to 0 so the first Δt is
-                # stop_1 (relative to the virtual start of this run).
+                # Each stop_psN is the start→stopN timelapse (per pytempico docs),
+                # NOT a direct inter-stop delta. stops_ps[0] (start→stop1) is
+                # discarded — it depends on the arbitrary start-start interval,
+                # not on real inter-photon spacing. It's only used as the
+                # reference to compute the delta to stop2.
                 # cursor_ps is advanced by each Δt inside the loop, so it
                 # continuously accumulates the real inter-photon intervals and
                 # the 10 ms hardware dead time between runs is never included.
-                prev_t = 0  # virtual start of this run = t=0
-                for t_ps in stops_ps:
+                if len(stops_ps) < 2:
+                    continue
+
+                prev_t = stops_ps[0]  # start→stop1, discarded as a delta
+                for t_ps in stops_ps[1:]:
                     delta_t = t_ps - prev_t   # Δt between consecutive stops
 
                     # Skip invalid (negative or zero) deltas
@@ -446,11 +452,6 @@ class WorkerThreadFCS(QThread):
                         prev_t = t_ps
                         continue
 
-                    # ── KEY FIX ──────────────────────────────────────────────
-                    # Advance the continuous timeline cursor by this interval.
-                    # Previously abs_t was computed but cursor_ps was NOT
-                    # updated here, so every Δt was being added to the same
-                    # stale cursor position instead of the running total.
                     cursor_ps += delta_t
 
                     while cursor_ps >= next_bin_edge:
