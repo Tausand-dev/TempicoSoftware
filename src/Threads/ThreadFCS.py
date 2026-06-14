@@ -311,16 +311,35 @@ class WorkerThreadFCS(QThread):
         self.threadCreated.emit(0)
 
         # ── FCS-specific device configuration ──────────────────────────────
-        # Mirrors fcsExample.py exactly:
-        #   device.reset()
-        #   device.ch1.enableChannel()  / ch2-4 disable
-        #   device.ch1.setMode(2)
-        #   device.ch1.setNumberOfStops(NUMBER_OF_STOPS=2)
-        #   device.setNumberOfRuns(NUMBER_OF_RUNS=100)
+        # Save current generator settings that would be lost on reset (for TP12)
+        is_tp12 = "TP12" in self.device.getModelIdn()
+        if is_tp12:
+            saved_gen_freq = self.device.getGeneratorFrequency()
+            saved_start_sources = [self.device.getStartSource(ch) for ch in [1, 2, 3, 4]]
+            saved_stop_sources = [self.device.getStopSource(ch) for ch in [1, 2, 3, 4]]
 
         # Reset clears all previous measurements and restores default settings,
         # ensuring no leftover configuration from other tabs interferes.
         self.device.reset()
+
+        # Restore generator settings if TP12
+        if is_tp12:
+            if saved_gen_freq:
+                self.device.setGeneratorFrequency(saved_gen_freq)
+            for ch_idx in range(1, 5):
+                start_src = saved_start_sources[ch_idx - 1]
+                stop_src = saved_stop_sources[ch_idx - 1]
+                if start_src == "INTERNAL":
+                    self.device.setStartInternalSource(ch_idx)
+                else:
+                    self.device.setStartExternalSource(ch_idx)
+                if stop_src == "INTERNAL":
+                    self.device.setStopInternalSource(ch_idx)
+                else:
+                    self.device.setStopExternalSource(ch_idx)
+
+        # Restore threshold voltage
+        self.device.setThresholdVoltage(self.thresholdVoltage)
 
         # Enable only the selected stop channel
         _all_chs = [self.device.ch1, self.device.ch2,
@@ -328,12 +347,19 @@ class WorkerThreadFCS(QThread):
         for ch in _all_chs:
             ch.disableChannel()
 
+        _stop_edges = [self.stopEdgeTypeChannelA, self.stopEdgeTypeChannelB,
+                       self.stopEdgeTypeChannelC, self.stopEdgeTypeChannelD]
+
         # Enable start channel if selected
         if self.start_channel is not None:
             self._start_ch = _all_chs[self.start_channel - 1]
             self._start_ch.enableChannel()
             self._start_ch.setMode(self.channel_mode)
             self._start_ch.setNumberOfStops(1)
+            self._start_ch.setStopMask(0)
+            self._start_ch.setAverageCycles(1)
+            start_stop_edge = _stop_edges[self.start_channel - 1]
+            self._start_ch.setStopEdge(start_stop_edge)
         else:
             self._start_ch = None
 
@@ -342,6 +368,11 @@ class WorkerThreadFCS(QThread):
         self._active_ch.enableChannel()
         self._active_ch.setMode(self.channel_mode)
         self._active_ch.setNumberOfStops(self.num_stops)
+        self._active_ch.setStopMask(0)  # Explicitly set stop mask to 0 to avoid overflow above 17.6 MHz
+        self._active_ch.setAverageCycles(1)  # Explicitly set average cycles to 1 for FCS
+        active_stop_edge = _stop_edges[self.stop_channel - 1]
+        self._active_ch.setStopEdge(active_stop_edge)
+
         self.device.setNumberOfRuns(self.num_runs)
 
         # ── Correlator and timeline state ──────────────────────────────────
@@ -416,9 +447,11 @@ class WorkerThreadFCS(QThread):
                 self.consecutiveErrors = 0
                 return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
-            # Check whether every stop value is -1 (stop channel silent)
+            overflow_val = self.device.getOverflowParameter()
+
+            # Check whether every stop value is -1 or the overflow parameter (stop channel silent)
             all_stops_missing = all(
-                all(t == -1 for t in row[3:]) for row in data if row[3:]
+                all(t == -1 or t == overflow_val for t in row[3:]) for row in data if row[3:]
             )
             if all_stops_missing:
                 self.colorValue.emit(3)
@@ -431,6 +464,9 @@ class WorkerThreadFCS(QThread):
                 if not stops_ps:
                     continue
 
+                # Filter out any overflow or invalid values before processing deltas
+                valid_stops = [t for t in stops_ps if t != overflow_val and t != -1]
+
                 # ── Figure (b): accumulate inter-stop deltas on the global timeline ─
                 # Each stop_psN is the start→stopN timelapse (per pytempico docs),
                 # NOT a direct inter-stop delta. stops_ps[0] (start→stop1) is
@@ -440,11 +476,11 @@ class WorkerThreadFCS(QThread):
                 # cursor_ps is advanced by each Δt inside the loop, so it
                 # continuously accumulates the real inter-photon intervals and
                 # the 10 ms hardware dead time between runs is never included.
-                if len(stops_ps) < 2:
+                if len(valid_stops) < 2:
                     continue
 
-                prev_t = stops_ps[0]  # start→stop1, discarded as a delta
-                for t_ps in stops_ps[1:]:
+                prev_t = valid_stops[0]  # start→stop1, discarded as a delta
+                for t_ps in valid_stops[1:]:
                     delta_t = t_ps - prev_t   # Δt between consecutive stops
 
                     # Skip invalid (negative or zero) deltas

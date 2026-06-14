@@ -28,6 +28,49 @@ from Threads.ThreadFCS import WorkerThreadFCS
 from scipy.optimize import curve_fit
 
 
+class FCSLogAxis(pg.AxisItem):
+    """
+    Custom logarithmic AxisItem for FCS.
+    Only labels decade boundary ticks (e.g. 10^-6, 10^-5) to prevent overlapping labels.
+    If zoomed in very closely (less than a decade visible), labels intermediate ticks with units.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.enableAutoSIPrefix(False)
+
+    def tickStrings(self, values, scale, spacing):
+        if not self.logMode:
+            return super().tickStrings(values, scale, spacing)
+
+        # Count how many integer decades are in values
+        major_count = sum(1 for val in values if abs(val - round(val)) < 1e-9)
+
+        if major_count > 0:
+            strings = []
+            for val in values:
+                if abs(val - round(val)) < 1e-9:
+                    exponent = int(round(val))
+                    strings.append(f"10^{exponent}")
+                else:
+                    strings.append("")
+            return strings
+        else:
+            strings = []
+            for val in values:
+                t_s = 10**val
+                if t_s < 9.9e-7:
+                    strings.append(f"{t_s * 1e9:.1f} ns")
+                elif t_s < 9.9e-4:
+                    strings.append(f"{t_s * 1e6:.1f} µs")
+                elif t_s < 0.99:
+                    strings.append(f"{t_s * 1e3:.1f} ms")
+                elif t_s < 99.0:
+                    strings.append(f"{t_s:.1f} s")
+                else:
+                    strings.append(f"{t_s:.1e} s")
+            return strings
+
+
 class FCSLogic():
     """
     Orchestration layer for the FCS measurement tab.
@@ -199,7 +242,8 @@ class FCSLogic():
         """
         self.win = pg.GraphicsLayoutWidget()
         self.win.setBackground('w')
-        self.plot = self.win.addPlot()
+        custom_axis = FCSLogAxis(orientation='bottom')
+        self.plot = self.win.addPlot(axisItems={'bottom': custom_axis})
 
         self.plot.setTitle('Autocorrelation Function — FCS')
         self.plot.setLabel('left',   'G(τ)')
