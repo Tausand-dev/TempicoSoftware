@@ -454,7 +454,7 @@ class MainWindow(QMainWindow):
                         self.fcsGraphic.connectedDevice(self.conectedDevice)
                     
                     if self.g2Graphic!=None:
-                         self.g2Graphic.connectDevice(self.conectedDevice)
+                         self.g2Graphic.connectedDevice(self.conectedDevice)
 
                     checkchannel1=self.ui.Channel1Graph1
                     checkchannel2=self.ui.Channel4Graph1
@@ -518,7 +518,7 @@ class MainWindow(QMainWindow):
                         if self.fcsGraphic!=None and openSentinel:
                             self.fcsGraphic.connectedDevice(self.conectedDevice)
                         if self.g2Graphic!=None and openSentinel:
-                             self.g2Graphic.connectDevice()
+                             self.g2Graphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -552,7 +552,7 @@ class MainWindow(QMainWindow):
             if self.fcsGraphic!=None and openSentinel:
                     self.fcsGraphic.connectedDevice(self.conectedDevice)
             if self.g2Graphic!=None and openSentinel:
-                    self.g2Graphic.connectDevice()
+                    self.g2Graphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -785,41 +785,83 @@ class MainWindow(QMainWindow):
             padre=self.tab6
             self.construct_g2(padre)
             if self.g2Graphic==None:
-                stopChannelComboBox=self.uig2.stopChannelComboBox
-                coincidenceWindowComboBox=self.uig2.coincidenceWindowComboBox
-                numberMeasurementsSpinBoxg2=self.uig2.numberMeasurementsSpinBox
-                numberBinsLabel=self.uig2.numberBinsValue
-                startButtong2=self.uig2.startButton
-                stopButtong2=self.uig2.stopButton
-                clearButtong2= self.uig2.clearButton
-                saveDataButtong2=self.uig2.saveDataButton
-                savePlotButtong2=self.uig2.savePlotButton
-                comboBoxEquation=self.uig2.equationComboBox
-                applyFitButton=self.uig2.applyFitButton
-                parametersTableg2=self.uig2.parametersTable
-                initialParametersButton=self.uig2.initialParametersButton
-                statusValueLabel=self.uig2.stateValueLabel
-                statusColorLabel=self.uig2.colorLabel
-                totalStartsLabel=self.uig2.totalStartsValue
-                totalStopsLabel=self.uig2.totalStopsValue
-                calculatedParameter=self.uig2.estimateValueLabel
-                helButtong2=self.uig2.helpButton
-                graphicFrameg2=self.uig2.GraphicFrame
-                startLimitedButtong2=self.uig2.startLimitedButton
-                stopLimitedButtong2=self.uig2.stopLimitedButton
-                clearLimitedButtong2=self.uig2.clearLimitedButton
-                autoClearSpinBox=self.uig2.autoClearSpinBox
-                startAutoClearButton=self.uig2.startAutoClearButton
-                stopAutoClearButton=self.uig2.stopAutoClearButton
-                clearAutoClearButton=self.uig2.cleanAutoClearButton
-                tabSettingsg2=self.uig2.tabWidget
-                maximumTimeRangeComboBox=self.uig2.timeRangeComboBox
-                fixedDelayCheckBox=self.uig2.fixedDelayCheckBox
-                externalDelaySpinBox=self.uig2.externalDelaySpinBox
-                self.g2Graphic=G2Logic(stopChannelComboBox,coincidenceWindowComboBox,numberMeasurementsSpinBoxg2,numberBinsLabel,startButtong2,stopButtong2,clearButtong2,saveDataButtong2,savePlotButtong2,comboBoxEquation,applyFitButton,
-                                    parametersTableg2,initialParametersButton,statusValueLabel,statusColorLabel,totalStartsLabel,totalStopsLabel,calculatedParameter,helButtong2,
-                                    graphicFrameg2,startLimitedButtong2,stopLimitedButtong2,clearLimitedButtong2,autoClearSpinBox,startAutoClearButton,stopAutoClearButton,clearAutoClearButton,maximumTimeRangeComboBox,tabSettingsg2,fixedDelayCheckBox,externalDelaySpinBox,self.conectedDevice,self,self.connectedTimer)
-                # Provide the duration widgets so FCSLogic can read them at start time
+                # ── Collect widget references from the new Ui_G2 layout ──────────
+                graphicFrameg2    = self.uig2.graphicFrame
+                startButtong2     = self.uig2.startButton
+                stopButtong2      = self.uig2.stopButton
+                saveDataButtong2  = self.uig2.saveDataButton
+                savePlotButtong2  = self.uig2.savePlotButton
+                clearButtong2     = self.uig2.clearButton
+                valueStatusLabel  = self.uig2.valueStatusLabel
+                pointLabel        = self.uig2.pointLabel
+                eventsLabel       = self.uig2.eventsLabel
+                elapsedLabel      = self.uig2.elapsedLabel
+                g2ZeroLabel       = self.uig2.g2ZeroLabel
+                rateStartLabel    = self.uig2.rateStartLabel
+                rateStopLabel     = self.uig2.rateStopLabel
+                stopChannelComboBox = self.uig2.stopChannelComboBox
+
+                # ── Construct G2Logic (mirrors FCSLogic constructor) ─────────
+                self.g2Graphic = G2Logic(
+                    graphicFrameg2,
+                    self.disconnectButton,
+                    self.conectedDevice,
+                    startButtong2,
+                    stopButtong2,
+                    saveDataButtong2,
+                    savePlotButtong2,
+                    clearButtong2,
+                    self.connectButton,
+                    self,
+                    valueStatusLabel,
+                    pointLabel,
+                    self.connectedTimer,
+                    eventsLabel,
+                    elapsedLabel,
+                    g2ZeroLabel,
+                    rateStartLabel,
+                    rateStopLabel,
+                    stopChannelComboBox,
+                )
+                # Provide parameter widgets so G2Logic reads them at start time
+                self.g2Graphic.set_parameter_widgets(
+                    self.uig2.binWidthSpinBox,
+                    self.uig2.windowSpinBox,
+                    self.uig2.durationSpinBox,
+                    self.uig2.indefiniteCheckBox,
+                )
+                # Provide cursor widgets (τ spinbox + g²(τ) label)
+                self.g2Graphic.set_cursor_widgets(
+                    self.uig2.tauQuerySpinBox,
+                    self.uig2.g2CursorLabel,
+                )
+                # Provide fit widgets so G2Logic can connect and use them
+                self.g2Graphic.set_fit_widgets(
+                    self.uig2.fitButton,
+                    self.uig2.fitModelCombo,
+                    self.uig2.fitEquationLabel,
+                    self.uig2.fitResultLabel,
+                    self.uig2.fitResultsFrame,
+                    self.uig2.fitTable,
+                )
+
+                # Keep the plot's X-axis limits in lockstep with "Window
+                # (±)": same value the user types in windowSpinBox, on
+                # both sides of zero. Re-applied every time Window changes.
+                def _sync_plot_x_range(half_window_ns):
+                    self.g2Graphic.plot.setXRange(
+                        -float(half_window_ns), float(half_window_ns),
+                        padding=0,
+                    )
+                self.uig2.windowSpinBox.valueChanged.connect(_sync_plot_x_range)
+                _sync_plot_x_range(self.uig2.windowSpinBox.value())
+
+                # When the UI resets the cursor to 0 ns (triggered by a
+                # Window change — see ui_g2measurement.py), also refresh
+                # the cursor line / g²(τ) readout on the plot, since that
+                # reset uses blockSignals() and skips the normal
+                # valueChanged → _query_tau connection.
+                self.uig2._on_tau_cursor_reset = self.g2Graphic._query_tau
           self._previous_tab_index = valor_padre      
             
 
@@ -1187,7 +1229,7 @@ class MainWindow(QMainWindow):
                 self.uiParameter = UiParameters()
                 self.uiParameter.setupUi(self.dialogParameters)
                 if self.g2Graphic!=None:
-                    self.g2Graphic.timerStatus.stop()
+                    self.g2Graphic.timerConnection.stop()
                 self.parametersLogic=CountParameters(self.uiParameter.channelComboBox,self.conectedDevice,self.uiParameter.measurementLabel,
                                                      self.uiParameter.measuremetStatusLabel,self.uiParameter.informationMeasureLabel,
                                                      self.uiParameter.startButton,self.uiParameter.stopButton,self.dialogParameters, self.g2Graphic,self)

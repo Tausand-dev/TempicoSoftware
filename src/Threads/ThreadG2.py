@@ -1,536 +1,539 @@
-import pyTempico as tempico
-from PySide2.QtCore import QThread, Signal
-import pyTempico as tempico
+# -*- coding: utf-8 -*-
+"""ThreadG2
+
+    Worker thread for computing the g²(τ) second-order correlation function
+    (HBT experiment) in real time from start-stop events acquired with a
+    Tausand Tempico TDC device.
+
+    The algorithm is based on the HBT histogram approach from Prueba7.py:
+    a symmetric histogram of τ delays is accumulated and normalized by the
+    mean of all non-zero bins (tail-normalization), yielding g²(τ) = 1 in
+    the uncorrelated baseline. Color classification and "light type" labels
+    are deliberately excluded.
+
+    The thread mirrors the WorkerThreadFCS structure exactly:
+    - Same five signals (dataReady, statusUpdate, colorValue, stringValue,
+      threadCreated).
+    - Same saveCurrentSettings / applyCurrentSettings lifecycle.
+    - Same loop structure with a total_seconds finite-duration option.
+
+    | @author: Miguelangel García Castillo, Tausand Electronics
+    | mgarcia@tausand.com
+    | https://www.tausand.com
+"""
+
+import sys
+import time
+import io
+
 import numpy as np
-from Utils.constants import *
+from PySide2.QtCore import QThread, Signal, Slot
+import pyTempico as tempico
+
+
+# Overflow sentinel returned by pyTempico when no valid stop is recorded.
+_OVERFLOW_SENTINEL = -1_000_000
+
+
 class WorkerThreadG2(QThread):
     """
-    Worker thread for handling g² (second-order correlation) measurements in a separate thread 
-    to ensure that the GUI remains responsive during data acquisition.
+    Worker thread for g²(τ) HBT acquisition and real-time histogram update.
 
-    This class is responsible for running the correlation measurement in the background using 
-    the Tempico device. It collects start-stop events, builds and normalizes the g² histogram, 
-    estimates parameters such as counts per second, and communicates results and status updates 
-    back to the GUI via signals.
+    Runs entirely in the background so the GUI thread stays responsive during
+    the measurement. Communicates with the GUI exclusively through Qt signals.
 
-    Signals:
-        - updateMeasurement: Signal emitted to update the g² histogram, total starts, and total stops (list, int, int).
-        - updateTauValues: Signal emitted to update tau values along with the total starts and stops (list, int, int).
-        - updateStatusLabel: Signal emitted to update the measurement status message in the GUI (str).
-        - updateColorLabel: Signal emitted to update the color indicator of the status label (int).
-        - updateEstimatedParameter: Signal emitted to update the current estimated counts per second (str).
-        - updateDeterminedParameters: Signal emitted when determined parameters are ready to be updated.
-        - updateFirstParameter: Signal emitted with the first calculated parameter for display (str).
+    The thread calls ``device.measure()`` in a continuous loop and processes
+    each row's stop_ps1 time into a nanosecond delay τ.  Valid τ values are
+    accumulated into a symmetric histogram spanning [−window_ns, +window_ns]
+    with bin width bin_ns.  After every batch the normalized g²(τ) curve is
+    emitted via ``dataReady``.
 
-    :param stopChannel: The stop channel selected for the measurement ("A", "B", "C", or "D") (str).
-    :param maximumTime: The maximum measurement time range (float, in picoseconds).
-    :param numberBins: The number of bins used for building the histogram (int).
-    :param coincidenceWindow: The coincidence window size (float, in picoseconds).
-    :param device: The Tempico device used for data acquisition (tempico.TempicoDevice).
-    :param mode: The mode setting that defines measurement configuration (int or str depending on GUI settings).
-    :param units: The time units selected for display and processing (str).
-    :param limitedMeasurement: Whether the measurement is limited to a fixed number of acquisitions (bool, default=False).
-    :param numberOfMeasurements: The number of measurements when in limited mode (int, default=0).
-    :param autoclearMeasure: Whether the measurement should periodically auto-clear accumulated histograms (bool, default=False).
+    Normalization (from Prueba7.py):
+        baseline = mean( counts[counts > 0] )
+        g²(τ)   = counts(τ) / baseline
+
+    Signals
+    -------
+    dataReady : Signal(object, object, int, float, float)
+        Emitted after every ``measure()`` call with
+        ``(centres_ns, g2, total_events, rate_starts, rate_stops)``.
+    statusUpdate : Signal(str)
+        Emitted after every ``measure()`` call with a human-readable status
+        string (event count, elapsed time).
+    colorValue : Signal(int)
+        Status-indicator colour code: 1 = running OK, 3 = warning / no data.
+    stringValue : Signal(str)
+        Short status messages for the status label.
+    threadCreated : Signal(int)
+        Emitted with 0 when the loop starts, 1 when it stops.
+
+    Parameters
+    ----------
+    parent : QWidget
+        Parent widget that owns this thread.
+    device : tempico.TempicoDevice
+        Open Tempico device instance.
+    stop_channel : int
+        Which TDC channel (1–4) carries the stop signal. Default: 1.
+    bin_ns : float
+        Histogram bin width in nanoseconds. Default: 2.0 ns.
+    window_ns : float
+        Half-window in nanoseconds; histogram spans [−window_ns, +window_ns].
+        Default: 200.0 ns.
+    mode : int
+        TDC acquisition mode (1 = ±200 ns typical, 2 = up to 4 ms). Default: 1.
+    num_runs : int
+        Number of runs per ``measure()`` call. Default: 100.
+    channel_mode : int
+        TDC mode applied to the stop channel at device configuration time.
+        Kept for symmetry with WorkerThreadFCS; mirrors ``mode``. Default: 1.
+    total_seconds : float or None
+        If set, the loop exits after this many wall-clock seconds. If None,
+        the loop runs until ``stop()`` is called. Default: None.
     """
-    updateMeasurement=Signal(list, int, int)
-    updateTauValues=Signal(list,int,int)
-    updateStatusLabel=Signal(str)
-    updateColorLabel=Signal(int)
-    updateEstimatedParameter=Signal(str)
-    updateDeterminedParameters=Signal()
-    updateFirstParameter=Signal(str)
-    cannotEstimate=Signal()
-    def __init__(self, stopChannel: str, maximumTime: float, numberBins:int, coincidenceWindow: float, device: tempico.TempicoDevice, 
-                 mode,units,limitedMeasurement=False,numberOfMeasurements=0,autoclearMeasure=False):
+
+    dataReady     = Signal(object, object, int, float, float)
+    statusUpdate  = Signal(str)
+    colorValue    = Signal(int)
+    stringValue   = Signal(str)
+    threadCreated = Signal(int)
+
+    def __init__(
+        self,
+        parent,
+        device: tempico.TempicoDevice,
+        stop_channel: int   = 1,
+        bin_ns:       float = 2.0,
+        window_ns:    float = 200.0,
+        total_seconds       = None,
+    ):
         super().__init__()
-        self.totalStarts=0
-        self.totalStops=0
-        self.running=True
-        self.stopChannel=stopChannel
-        self.maximumTime=maximumTime
-        self.maximumTimeSeconds=self.psToS(maximumTime)
-        self.modeSettings=mode
-        self.units=units
-        self.cumulatedEstimatedParameter=0
-        self.totalEstimatedParameter=0
-        self.numberBins=numberBins
-        self.coincidenceWindow=self.psToS(coincidenceWindow)
-        self.isLimitedMeasurement=limitedMeasurement
-        self.numberMeasurements=numberOfMeasurements
-        self.autoclearMeasure=autoclearMeasure
-        self.device=device
-        self.totalTimeIntegration=0
-        self.bins=self.generateBinList()
-        self.divisionFactor=self.getDivisionFactor()
-        self.TauValues = (0.5 * (self.bins[:-1] + self.bins[1:])/self.divisionFactor)
-        self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
-        self.baseg2Histogram=np.array(np.zeros(len(self.TauValues)))
-        self.saveSettings()
-        self.settingsForEstimate()
-        
-    
+
+        self.parent        = parent
+        self.device        = device
+        self.stop_channel  = stop_channel
+        self.bin_ns        = bin_ns
+        self.window_ns     = window_ns
+        self.total_seconds = total_seconds
+
+        # Loop-control sentinel; set to False by stop()
+        self.itsRunning        = True
+        # Consecutive device errors — auto-stop on persistent hardware fault
+        self.consecutiveErrors = 0
+
+        # ── Photon counters ───────────────────────────────────────────────────
+        self.n_starts     = 0
+        self.n_stops      = 0
+        self.total_events = 0
+
+        # ── Build symmetric histogram [-window_ns, +window_ns] ───────────────
+        # Edges are offset by half a bin so bin centres fall exactly on
+        # 0, ±bin_ns, ±2·bin_ns, …  (always a bin centred at τ = 0).
+        # n_half bins on each side → 2*n_half bins total → 2*n_half+1 edges.
+        n_half   = max(int(np.ceil(window_ns / bin_ns)), 1)
+        half_bin = bin_ns / 2.0
+        # Left edge of bin 0 … right edge of bin 2*n_half-1
+        edges = np.arange(-n_half, n_half + 1, dtype=np.float64) * bin_ns - half_bin
+        # 'edges' already has 2*n_half+1 elements — no extra np.append needed.
+        self.edges   = edges
+        self.n_bins  = len(self.edges) - 1
+        self.centres = 0.5 * (self.edges[:-1] + self.edges[1:])
+        self.counts  = np.zeros(self.n_bins, dtype=np.float64)
+
+        # isBatched and num_runs are determined in run() after reading the device
+        self.isBatched = False
+        self.num_runs  = 100   # placeholder; overwritten in run()
+
+    # ── Device configuration snapshot ────────────────────────────────────────
+
+    def saveCurrentSettings(self):
+        """
+        Snapshot the current device configuration.
+
+        Stores all relevant channel and global parameters so they can be
+        re-applied with ``applyCurrentSettings()`` after the thread finishes.
+        Mirrors ``WorkerThreadFCS.saveCurrentSettings``.
+
+        :return: None
+        """
+        self.numberRunsSetting    = self.device.getNumberOfRuns()
+        self.thresholdVoltage     = self.device.getThresholdVoltage()
+
+        self.modeChannelA         = self.device.ch1.getMode()
+        self.numberStopsChannelA  = self.device.ch1.getNumberOfStops()
+        self.stopEdgeTypeChannelA = self.device.ch1.getStopEdge()
+        self.stopMaskChannelA     = self.device.ch1.getStopMask()
+
+        self.modeChannelB         = self.device.ch2.getMode()
+        self.numberStopsChannelB  = self.device.ch2.getNumberOfStops()
+        self.stopEdgeTypeChannelB = self.device.ch2.getStopEdge()
+        self.stopMaskChannelB     = self.device.ch2.getStopMask()
+
+        self.modeChannelC         = self.device.ch3.getMode()
+        self.numberStopsChannelC  = self.device.ch3.getNumberOfStops()
+        self.stopEdgeTypeChannelC = self.device.ch3.getStopEdge()
+        self.stopMaskChannelC     = self.device.ch3.getStopMask()
+
+        self.modeChannelD         = self.device.ch4.getMode()
+        self.numberStopsChannelD  = self.device.ch4.getNumberOfStops()
+        self.stopEdgeTypeChannelD = self.device.ch4.getStopEdge()
+        self.stopMaskChannelD     = self.device.ch4.getStopMask()
+
+    def applyCurrentSettings(self):
+        """
+        Re-apply the snapshotted device configuration.
+
+        Called after the acquisition loop exits to restore the device to the
+        state it was in before the G2 measurement started.
+        Mirrors ``WorkerThreadFCS.applyCurrentSettings``.
+
+        :return: None
+        """
+        self.device.setNumberOfRuns(self.numberRunsSetting)
+        self.device.setThresholdVoltage(self.thresholdVoltage)
+
+        self.device.ch1.setMode(self.modeChannelA)
+        self.device.ch1.setNumberOfStops(self.numberStopsChannelA)
+        self.device.ch1.setStopEdge(self.stopEdgeTypeChannelA)
+        self.device.ch1.setStopMask(self.stopMaskChannelA)
+
+        self.device.ch2.setMode(self.modeChannelB)
+        self.device.ch2.setNumberOfStops(self.numberStopsChannelB)
+        self.device.ch2.setStopEdge(self.stopEdgeTypeChannelB)
+        self.device.ch2.setStopMask(self.stopMaskChannelB)
+
+        self.device.ch3.setMode(self.modeChannelC)
+        self.device.ch3.setNumberOfStops(self.numberStopsChannelC)
+        self.device.ch3.setStopEdge(self.stopEdgeTypeChannelC)
+        self.device.ch3.setStopMask(self.stopMaskChannelC)
+
+        self.device.ch4.setMode(self.modeChannelD)
+        self.device.ch4.setNumberOfStops(self.numberStopsChannelD)
+        self.device.ch4.setStopEdge(self.stopEdgeTypeChannelD)
+        self.device.ch4.setStopMask(self.stopMaskChannelD)
+
+        # Re-enable all channels after the single-channel HBT configuration
+        self.device.ch1.enableChannel()
+        self.device.ch2.disableChannel()
+        self.device.ch3.disableChannel()
+        self.device.ch4.disableChannel()
+
+    # ── Main loop ─────────────────────────────────────────────────────────────
+
     def run(self):
-        self.estimatedParameter=self.estimatedParameterValue()
-        if self.estimatedParameter==-1 and self.running:
-            self.running=False
-        elif self.estimatedParameter!=-1 and self.running:
-            self.cumulatedEstimatedParameter+=self.estimatedParameter
-            self.totalEstimatedParameter+=1
-            if not self.autoclearMeasure:
-                self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
-            else:
-                self.updateFirstParameter.emit(str(int(self.estimatedParameter)))
-            self.updateDeterminedParameters.emit()
-            self.updateTauValues.emit(self.TauValues,self.divisionFactor,self.modeSettings)
-        self.settingsForMeasurement()
-        self.updateStatusLabel.emit("Running measurement")
-        self.updateColorLabel.emit(1)
-        while self.running:
-            self.getMeasurement()
-        self.recoverSettings()
-    
-    def getDivisionFactor(self):
         """
-        Returns the normalization factor based on the selected time unit.
+        Acquisition loop for g²(τ) HBT measurement.  Runs in a separate QThread.
 
-        :return: Factor for unit conversion (int).
-        """
-        factor=1
-        if self.units=="ns":
-            factor=10**3
-        elif self.units=="us":
-            factor=10**6
-        elif self.units=="ms":
-            factor=10**9
-        return factor
-            
-    
-    def settingsForEstimate(self):
-        """
-        Configures the device to estimate the photon arrival rate on the selected stop channel.
-
-        The function sets the device to perform a single run, disables all channels,
-        and then enables only the selected stop channel (A–D).  
-        For the chosen channel, it configures the acquisition mode, stop mask, average cycles,  
-        and ensures that two stop events are captured for pulse estimation.
+        Configures the selected stop channel for HBT (mode, 1 stop, stop_mask
+        = −0.25 µs to capture negative delays), then enters a loop that calls
+        ``device.measure()`` until ``stop()`` is called or ``total_seconds``
+        have elapsed.  Each batch accumulates τ values into the symmetric
+        histogram, recomputes g²(τ), and emits the updated curve.
 
         :return: None
         """
-        self.device.setNumberOfRuns(1)
-        self.device.disableChannel(1)
-        self.device.disableChannel(2)
-        self.device.disableChannel(3)
-        self.device.disableChannel(4)
-        if self.stopChannel=="A":
-            self.device.enableChannel(1)
-            self.device.setAverageCycles(1,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(1,2)
-        elif self.stopChannel=="B":
-            self.device.enableChannel(2)
-            self.device.setAverageCycles(2,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(2,2)
-        elif self.stopChannel=="C":
-            self.device.enableChannel(3)
-            self.device.setAverageCycles(3,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(3,2)
-        elif self.stopChannel=="D":
-            self.device.enableChannel(4)
-            self.device.setAverageCycles(2,1)
-            self.device.setStopMask(1,0)
-            self.device.setMode(1,self.modeSettings)
-            self.device.setNumberOfStops(4,2)
-    
-    def settingsForMeasurement(self):
-        """
-        Applies the configuration required to perform the g² measurement.
+        self.threadCreated.emit(0)
 
-        It sets the device to run 100 acquisitions, assigns one stop channel 
-        (A–D), and configures its acquisition mode according to `self.modeSettings`.
+        # ── Snapshot device settings as the very first thing in run() ─────────
+        # Doing this here (not in __init__) guarantees that no device API call
+        # can throw a silent exception that kills the Qt slot before the thread
+        # even starts — exactly the pattern WorkerThreadFCS follows.
+        self.saveCurrentSettings()
 
-        :return: None
-        """
-        self.device.setNumberOfRuns(100)
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,1)
-            self.device.setMode(1,self.modeSettings)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,1)
-            self.device.setMode(2,self.modeSettings)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,1)
-            self.device.setMode(3,self.modeSettings)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,1)
-            self.device.setMode(4,self.modeSettings)
-    
-    def settingsForEstimatedParameters(self):
-        """
-        Applies minimal configuration to the device for parameter estimation.
+        # Read the currently configured number of runs and decide batching
+        self.num_runs  = self.numberRunsSetting
+        self.isBatched = (self.num_runs > 50)
 
-        Unlike the initial setup, this function only sets the number of stops 
-        for the selected stop channel (A–D) and configures the acquisition mode.  
-        It assumes that the general configuration has already been applied.
+        # HBT always uses TDC Mode 1 (≈±200 ns range); no user selection needed.
+        _mode = 1
 
-        :return: None
-        """
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,2)
-            self.device.setMode(1,2)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,2)
-            self.device.setMode(1,2)
-        
-        
-        
-    def saveSettings(self):
-        """
-        Saves the current configuration of the device into instance variables.
+        # ── Save generator settings for TP12 (reset clears them) ─────────────
+        is_tp12 = "TP12" in self.device.getModelIdn()
+        if is_tp12:
+            saved_gen_freq   = self.device.getGeneratorFrequency()
+            saved_start_srcs = [self.device.getStartSource(ch) for ch in [1, 2, 3, 4]]
+            saved_stop_srcs  = [self.device.getStopSource(ch)  for ch in [1, 2, 3, 4]]
 
-        This includes number of runs, number of stops, stop masks, average cycles, 
-        and acquisition modes for each channel (A–D).
+        # Reset clears previous measurements and default-restores settings
+        self.device.reset()
 
-        :return: None
-        """
-        self.numberRunsSaved=self.device.getNumberOfRuns()
-        self.numberStopsChannelA=self.device.getNumberOfStops(1)
-        self.numberStopsChannelB=self.device.getNumberOfStops(2)
-        self.numberStopsChannelC=self.device.getNumberOfStops(3)
-        self.numberStopsChannelD=self.device.getNumberOfStops(4)
-        self.stopMaskChannelA=self.device.getStopMask(1)
-        self.stopMaskChannelB=self.device.getStopMask(2)
-        self.stopMaskChannelC=self.device.getStopMask(3)
-        self.stopMaskChannelD=self.device.getStopMask(4)
-        self.averageCyclesChannelA=self.device.getAverageCycles(1)
-        self.averageCyclesChannelB=self.device.getAverageCycles(2)
-        self.averageCyclesChannelC=self.device.getAverageCycles(3)
-        self.averageCyclesChannelD=self.device.getAverageCycles(4)
-        self.modeChannelA=self.device.getMode(1)
-        self.modeChannelB=self.device.getMode(2)
-        self.modeChannelC=self.device.getMode(3)
-        self.modeChannelD=self.device.getMode(4)
-    
-    def recoverSettings(self):
-        """
-        Restores the previously saved configuration to the device.
-
-        This re-enables all channels (A–D) and applies the saved values for 
-        number of runs, number of stops, stop masks, average cycles, 
-        and acquisition modes.
-
-        :return: None
-        """
-        self.device.enableChannel(1)
-        self.device.enableChannel(2)
-        self.device.enableChannel(3)
-        self.device.enableChannel(4)
-        self.device.setNumberOfRuns(self.numberRunsSaved)
-        self.device.setNumberOfStops(1,self.numberStopsChannelA)
-        self.device.setNumberOfStops(2,self.numberStopsChannelB)
-        self.device.setNumberOfStops(3,self.numberStopsChannelC)
-        self.device.setNumberOfStops(4,self.numberStopsChannelD)
-        self.device.setStopMask(1,self.stopMaskChannelA)
-        self.device.setStopMask(2,self.stopMaskChannelB)
-        self.device.setStopMask(3,self.stopMaskChannelC)
-        self.device.setStopMask(4,self.stopMaskChannelD)
-        self.device.setAverageCycles(1,self.averageCyclesChannelA)
-        self.device.setAverageCycles(2,self.averageCyclesChannelB)
-        self.device.setAverageCycles(3,self.averageCyclesChannelC)
-        self.device.setAverageCycles(4,self.averageCyclesChannelD)
-        self.device.setMode(1,self.modeChannelA)
-        self.device.setMode(2,self.modeChannelB)
-        self.device.setMode(3,self.modeChannelC)
-        self.device.setMode(4,self.modeChannelD)
-    
-    def estimatedParameterValue(self):
-        """
-        Estimates an initial parameter value based on device measurements.
-
-        The method configures the device for estimation, collects up to 100 
-        measurements, and computes the time differences between stop channels. 
-        Progress updates are emitted through `updateStatusLabel` and 
-        `updateColorLabel`. If too many measurements are invalid or no start 
-        signals are detected, the function returns -1.
-
-        :return: Estimated parameter value (float) or -1 if estimation fails.
-        """
-        self.settingsForEstimatedParameters()
-        notRegisteredMeasurements=0
-        percentage=0
-        self.updateStatusLabel.emit(f"Taking initial parameters {percentage}%")
-        self.updateColorLabel.emit(2)
-        estimatedDifferences=[]
-        notStartsDetected=0
-        for i in range(100):
-            if not self.running:
-                return -1
-            measurement=self.device.measure()
-            if notStartsDetected>=10:
-                self.updateStatusLabel.emit(f"Taking initial parameters 100% (Waiting start 10/10)")
-                return -1
-            if not measurement:
-                notRegisteredMeasurements+=1
-                notStartsDetected+=1
-                
-            else:
-                notStartsDetected=0
-                if len(measurement[0])==5:
-                    stop1=measurement[0][3]
-                    stop2=measurement[0][4]
-                    differenceEstimated=stop2-stop1
-                    estimatedDifferences.append(differenceEstimated)
+        # Restore generator settings if TP12
+        if is_tp12:
+            if saved_gen_freq:
+                self.device.setGeneratorFrequency(saved_gen_freq)
+            for idx, ch_num in enumerate([1, 2, 3, 4]):
+                if saved_start_srcs[idx] == "INTERNAL":
+                    self.device.setStartInternalSource(ch_num)
                 else:
-                    notRegisteredMeasurements+=1
-            percentage=i+1
-            if notRegisteredMeasurements>0:
-                self.updateStatusLabel.emit(f"Taking initial parameters {percentage}% (Waiting start {notRegisteredMeasurements}/10)")
-            else:
-                self.updateStatusLabel.emit(f"Taking initial parameters {percentage}%")
-                
-        self.updateStatusLabel.emit(f"Taking initial parameters 100%")
-        if notRegisteredMeasurements>700:
-            return -1
-        else:
-            return self.getCountPerSecondParameter(estimatedDifferences)
-    
-    
-    def getMeasurement(self):
+                    self.device.setStartExternalSource(ch_num)
+                if saved_stop_srcs[idx] == "INTERNAL":
+                    self.device.setStopInternalSource(ch_num)
+                else:
+                    self.device.setStopExternalSource(ch_num)
+
+        # Restore threshold voltage
+        self.device.setThresholdVoltage(self.thresholdVoltage)
+
+        # ── Disable all channels, then enable only the stop channel ───────────
+        _all_chs = [self.device.ch1, self.device.ch2,
+                    self.device.ch3, self.device.ch4]
+        for ch in _all_chs:
+            ch.disableChannel()
+
+        _stop_edges = [
+            self.stopEdgeTypeChannelA, self.stopEdgeTypeChannelB,
+            self.stopEdgeTypeChannelC, self.stopEdgeTypeChannelD,
+        ]
+
+        self._active_ch = _all_chs[self.stop_channel - 1]
+        self._active_ch.enableChannel()
+        self._active_ch.setMode(_mode)
+        self._active_ch.setNumberOfStops(1)
+        # Stop mask = −0.25 µs: allows the TP1204 to capture negative delays natively
+        self._active_ch.setStopMask(-0.25)
+        self._active_ch.setAverageCycles(1)
+        active_stop_edge = _stop_edges[self.stop_channel - 1]
+        self._active_ch.setStopEdge(active_stop_edge)
+
+        self.device.setNumberOfRuns(self.num_runs)
+
+        call_count = 0
+        t_start    = time.time()
+
+        # ── Acquisition loop ───────────────────────────────────────────────
+        while self.itsRunning:
+            if self.total_seconds is not None:
+                elapsed = time.time() - t_start
+                if elapsed >= self.total_seconds:
+                    break
+                if call_count > 0:
+                    t_per_run   = elapsed / call_count
+                    time_left   = self.total_seconds - elapsed
+                    runs_to_use = max(1, int(time_left / t_per_run))
+                    runs_to_use = min(runs_to_use, self.num_runs)
+                    self.device.setNumberOfRuns(runs_to_use)
+
+            call_count = self._getMeasurements(call_count, t_start)
+
+        # Restore device configuration and signal completion
+        self.applyCurrentSettings()
+        self.stringValue.emit("G2 acquisition finished.")
+        self.colorValue.emit(1)
+        self.threadCreated.emit(1)
+
+    # ── Batch measurement step ────────────────────────────────────────────────
+
+    def _getMeasurements(self, call_count: int, t_start: float) -> int:
         """
-        Performs a measurement cycle to obtain data for g2 analysis.
+        Acquire one batch from the device, accumulate τ into the histogram,
+        recompute g²(τ), and emit all relevant signals.
 
-        The method applies measurement settings, collects runs from the device, 
-        processes stop events, and builds a g2 histogram from the detected time 
-        differences. It also estimates an auxiliary parameter from stop differences 
-        and updates status/measurement signals accordingly.
+        Mirrors ``WorkerThreadFCS._getMeasurements`` in structure.
 
-        If there are too many missing start events or stops, error messages are 
-        emitted. Otherwise, the g2 values and estimated parameters are updated 
-        in real time.
+        :param call_count: Number of ``measure()`` calls completed so far.
+        :param t_start: Wall-clock timestamp at acquisition start (seconds).
+        :return: Updated call_count.
+        """
+        try:
+            # Suppress pyTempico console output (same pattern as Prueba7.py)
+            _orig_stdout = sys.stdout
+            sys.stdout   = io.StringIO()
+            data         = self.device.measure()
+            sys.stdout   = _orig_stdout
 
+            if not data:
+                self.colorValue.emit(3)
+                self.stringValue.emit("No measurements in channel: Start")
+                self.consecutiveErrors = 0
+                return call_count
+
+            overflow_val = self.device.getOverflowParameter()
+
+            # Check whether all stops on the active channel are missing
+            all_missing = all(
+                all(t == -1 or t == overflow_val for t in row[3:])
+                for row in data
+                if len(row) > 3
+            )
+            if all_missing:
+                self.colorValue.emit(3)
+                self.stringValue.emit(
+                    f"No measurements in stop channel {self.stop_channel}"
+                )
+                self.consecutiveErrors = 0
+                return call_count
+
+            taus_batch_ns = []
+
+            for run_row in data:
+                if not run_row:
+                    # Empty row → no START in this run
+                    continue
+
+                ch = run_row[0]
+                if ch != self.stop_channel:
+                    continue          # Only the selected stop channel
+
+                # Number of valid stops in this row (HBT uses exactly 1 stop)
+                n_stops_row = self._getRange(run_row, 1)
+                for i in range(n_stops_row):
+                    raw_ps = run_row[3 + i]
+
+                    # Discard overflow / sentinel
+                    if raw_ps == overflow_val or raw_ps == -1:
+                        continue
+
+                    self.n_starts += 1
+
+                    # Convert ps → ns (sign preserved — TP1204 can give τ < 0)
+                    tau_ns = raw_ps / 1_000.0
+
+                    self.n_stops      += 1
+                    self.total_events += 1
+
+                    if self.isBatched:
+                        taus_batch_ns.append(tau_ns)
+                    else:
+                        self._accumulate([tau_ns])
+
+            # Flush the batch
+            if self.isBatched and taus_batch_ns:
+                self._accumulate(taus_batch_ns)
+
+            call_count += 1
+
+            # Recompute g²(τ) and emit
+            elapsed = time.time() - t_start
+            g2, rate_s, rate_p, baseline = self._compute_g2(elapsed)
+
+            self.dataReady.emit(
+                self.centres, g2, self.total_events, rate_s, rate_p
+            )
+
+            # Status string (same format as FCS so G2Logic can reuse parser)
+            if self.total_seconds is not None:
+                status_str = (
+                    f"events: {self.total_events} | "
+                    f"elapsed: {elapsed:.1f} s / {self.total_seconds} s"
+                )
+            else:
+                status_str = (
+                    f"events: {self.total_events} | "
+                    f"elapsed: {elapsed:.1f} s"
+                )
+
+            if self.total_events == 0:
+                self.colorValue.emit(3)
+                self.stringValue.emit(
+                    f"No measurements in stop channel {self.stop_channel}"
+                )
+            else:
+                self.colorValue.emit(1)
+                self.stringValue.emit(status_str)
+                self.statusUpdate.emit(status_str)
+
+            self.consecutiveErrors = 0
+
+        except Exception as e:
+            # Restore stdout if it was intercepted when the exception occurred
+            try:
+                sys.stdout = sys.__stdout__
+            except Exception:
+                pass
+            if isinstance(e, PermissionError) or "PermissionError" in str(e):
+                self.consecutiveErrors += 1
+            if self.consecutiveErrors > 10:
+                self.stop()
+
+        return call_count
+
+    # ── Histogram helpers (ported from Prueba7.py HBTWorker) ─────────────────
+
+    def _accumulate(self, taus_ns):
+        """
+        Accumulate a list of τ values [ns] into the histogram.
+
+        Only values that fall inside the pre-computed edges are counted.
+        Uses np.digitize for robust bin assignment consistent with self.edges.
+
+        :param taus_ns: Iterable of delay values in nanoseconds.
         :return: None
         """
-        self.settingsForMeasurement()
-        measurement = self.device.measure()
-        totalStopPerMeasurement=0
-        timeDifferences, stopDifferences = [], []
-        notStartsMeasurement=0
-        for run in measurement:
-            if not run:
-                notStartsMeasurement+=1
-                continue
-            totalStopPerMeasurement+=self.processRun(run, timeDifferences)
-            if self.isLimitedMeasurement and self.totalStops>=self.numberMeasurements:
-                self.updateDeterminedParameters.emit()
-                self.running=False
-                break
-        stopDifferences=self.estimateParameterInMeasurement()
-        if self.totalTimeIntegration>0:
-            g2Values=self.buildG2Histogram(timeDifferences)
-            self.updateMeasurement.emit(g2Values, self.totalStarts,self.totalStops)
+        arr = np.asarray(taus_ns, dtype=np.float64)
+        # Keep only values strictly inside the histogram range
+        lo = self.edges[0]
+        hi = self.edges[-1]
+        valid = (arr >= lo) & (arr < hi)
+        arr = arr[valid]
+        if len(arr) == 0:
+            return
+        # np.digitize returns 1-based bin indices; subtract 1 for 0-based
+        idx = np.digitize(arr, self.edges) - 1
+        idx = np.clip(idx, 0, self.n_bins - 1)
+        np.add.at(self.counts, idx, 1)
+
+    def _compute_g2(self, t_elapsed: float):
+        """
+        Normalize the accumulated histogram to produce g²(τ).
+
+        Normalization (tail method, Prueba7.py):
+            baseline = mean( counts[counts > 0] )
+            g²(τ)   = counts(τ) / baseline
+
+        This is correct for a single-TDC start→stop measurement where
+        n_stops ≈ n_starts and the classical ``r·r·T·Δt`` formula would
+        produce a vanishingly small baseline.
+
+        Also computes start and stop rates for display.
+
+        :param t_elapsed: Wall-clock seconds since acquisition began.
+        :return: Tuple (g2, rate_starts, rate_stops, baseline).
+        """
+        g2     = np.zeros(self.n_bins, dtype=np.float64)
+        rate_s = self.n_starts / t_elapsed if t_elapsed > 0 else 0.0
+        rate_p = self.n_stops  / t_elapsed if t_elapsed > 0 else 0.0
+
+        if self.n_stops < 10:
+            return g2, rate_s, rate_p, 0.0
+
+        # Baseline = mean of all non-empty bins
+        all_nonzero = self.counts[self.counts > 0]
+        if len(all_nonzero) >= 2:
+            baseline = float(np.mean(all_nonzero))
         else:
-            self.updateMeasurement.emit(self.g2Histogram, self.totalStarts,self.totalStops)
-        if stopDifferences:
-            self.cumulatedEstimatedParameter+=self.getCountPerSecondParameter(stopDifferences)
-            self.totalEstimatedParameter+=1
-            self.estimatedParameter=self.cumulatedEstimatedParameter/self.totalEstimatedParameter
-            self.updateEstimatedParameter.emit(str(int(self.estimatedParameter)))
-        if len(measurement)==0:
-            self.updateStatusLabel.emit(f"No measurements in start channel")
-            self.updateColorLabel.emit(3)
-        elif notStartsMeasurement>70:
-            self.updateStatusLabel.emit(f"No measurements in start channel")
-            self.updateColorLabel.emit(3)
-        elif totalStopPerMeasurement>70:
-            self.updateStatusLabel.emit(f"No measurements in channels {self.stopChannel}")
-            self.updateColorLabel.emit(3)
-        else:
-            self.updateStatusLabel.emit(f"Running measurement")
-            self.updateColorLabel.emit(1)
-            
-    def estimateParameterInMeasurement(self):
-        """
-        Estimates differences between stop signals during a measurement.
+            baseline = 1.0
 
-        The method applies the settings for estimated parameters, performs a device
-        measurement, and calculates the time difference between two stop channels 
-        when valid data is detected.
+        if baseline > 0:
+            g2 = self.counts / baseline
 
-        :return: A list of time differences between stop signals (list).
-        """
-        self.settingsForEstimatedParameters()
-        estimatedDifferences=[]
-        measure=self.device.measure()
-        for run in measure:
-            if not run:
-                continue
-            if len(run)==5:
-                stop1=run[3]
-                stop2=run[4]
-                differenceEstimated=stop2-stop1
-                estimatedDifferences.append(differenceEstimated)
-        return estimatedDifferences
-            
-            
-    
-    
-    def processRun(self, run, timeDifferences):
-        """
-        Processes a single run from the Tempico measurement.
+        return g2, rate_s, rate_p, baseline
 
-        Adds stop values to the list of time differences if valid, updates the 
-        total number of starts, stops, and the total integration time.
-
-        :param run: A single measurement run from the Tempico device (list).
-        :param timeDifferences: List where valid stop times are appended (list).
-        :return: 1 if the stop value is invalid (-1), otherwise 0 (int).
+    def _getRange(self, run_row, stop_number: int) -> int:
         """
-        self.totalStarts += 1
-        if run[3] == OVERFLOW_PARAMETER:
-            return 1
-        if run[3]<self.maximumTime:
-            timeDifferences.append(run[3])
-            self.totalStops += 1
-        self.totalTimeIntegration += run[3]
+        Return the number of valid stop values in a measurement row.
+
+        Mirrors the ``getRange`` helper from Prueba7.py / ThreadStartStop.
+
+        :param run_row: A single measurement row from pyTempico.
+        :param stop_number: Maximum number of stops to expect.
+        :return: Number of valid stop slots in the row.
+        """
+        total_len = len(run_row)
+        if total_len >= 4:
+            return min(total_len - 3, stop_number)
         return 0
 
- 
-    def getCountPerSecondParameter(self,estimatedDifferences):
-        """
-        Calculates the counts per second parameter from stop differences.
+    # ── Public control interface ──────────────────────────────────────────────
 
-        It computes the mean of the given stop time differences and converts it 
-        into counts per second, assuming values are in picoseconds.
-
-        :param estimatedDifferences: List of stop time differences (list).
-        :return: Estimated counts per second, rounded to the nearest integer (float).
-        """
-        meanDifferences=np.mean(estimatedDifferences)
-        estimatedValue= (10**(12))/meanDifferences
-        return round(estimatedValue,0)
-
-    
-    def buildG2Histogram(self,timeDifferences):
-        """
-        Builds and normalizes the g2 histogram from time differences.
-
-        It computes a histogram of the given time differences, accumulates the results 
-        with previous data, and normalizes the values using the estimated counts per second, 
-        the total integration time, and the coincidence window.
-
-        :param timeDifferences: List of stop time differences from the measurement (list).
-        :return: Normalized g2 histogram as a NumPy array (ndarray).
-        """
-        g2TemporalHistogram,_=np.histogram(timeDifferences, bins=self.bins)
-        if len(g2TemporalHistogram)==0:
-            g2TemporalHistogram=self.baseg2Histogram
-        if len(self.g2Histogram)!=0:
-            self.g2Histogram=self.g2Histogram+ g2TemporalHistogram
-        else:
-            self.g2Histogram=g2TemporalHistogram
-        integrationTimeS=self.psToS(self.totalTimeIntegration)
-        normalizedParameter=1/((self.estimatedParameter**2)*integrationTimeS*self.coincidenceWindow)
-        histogramToEmit=self.g2Histogram*normalizedParameter
-        return histogramToEmit
-        
-    
-    
-    def generateBinList(self):
-        """
-        Generates the list of histogram bins based on the selected mode and user-defined parameters.
-
-        If mode 1 is selected, bins start from 12,500 ps.  
-        If mode 2 is selected, bins start from 125,000 ps.  
-        The bins extend up to the maximum time with the number of bins specified.
-
-        :return: Array of bin edges for the histogram (ndarray).
-        """
-        if self.modeSettings==1:
-            histogramToBuild=np.linspace(12500, self.maximumTime, self.numberBins + 1)
-        elif self.modeSettings==2:
-            histogramToBuild=np.linspace(125000, self.maximumTime, self.numberBins + 1)
-        return histogramToBuild
-    
-    
-    def getG2Average(self,g2Histogram):
-        """
-        Calculates the average value of the given g2 histogram.
-
-        :param g2Histogram: Histogram values to average (ndarray or list).
-        :return: Average value of the histogram (float).
-        """
-        valueSum=np.sum(g2Histogram)
-        return valueSum/len(g2Histogram)
-    
-    def sortByStart(self, measurement):
-        """
-        Sorts the measurement runs based on the start value.
-
-        :param measurement: List of measurement runs (list).
-        :return: Sorted list of runs by the start value (list).
-        """
-        dataFiltered=[]
-        for run in measurement:
-            if run:
-                dataFiltered.append(run)
-        dataFiltered.sort(key=lambda x: x[2])
-        return dataFiltered
-    
-    def changeToOneStop(self):
-        """
-        Sets the selected stop channel to use only one stop.
-
-        :return: None
-        """
-        if self.stopChannel=="A":
-            self.device.setNumberOfStops(1,1)
-        elif self.stopChannel=="B":
-            self.device.setNumberOfStops(2,1)
-        elif self.stopChannel=="C":
-            self.device.setNumberOfStops(3,1)
-        elif self.stopChannel=="D":
-            self.device.setNumberOfStops(4,1)
-    
-    def psToS(self,picoseconds):
-        """
-        Converts a value from picoseconds (ps) to seconds (s).
-
-        :param picoseconds: Time value in picoseconds (int or float).
-        :return: Converted value in seconds (float).
-        """
-        return picoseconds * 1e-12
-
-    def clearG2(self):
-        """
-        Resets all g2 measurement values to start a new measurement.
-
-        :return: None
-        """
-        self.totalTimeIntegration=0
-        self.g2Histogram=np.array(np.zeros(len(self.TauValues)))
-        self.totalStarts=0
-        self.totalStops=0
-        self.cumulatedEstimatedParameter=0
-        self.totalEstimatedParameter=0
-        
-    
+    @Slot()
     def stop(self):
         """
-        Stops the execution thread by changing the sentinel flag and 
-        emitting the signal to terminate all processes related to the thread.
+        Request the acquisition loop to exit on the next iteration.
+
+        Sets ``itsRunning`` to False and emits ``threadCreated(1)`` to notify
+        the GUI that the thread is stopping.
 
         :return: None
         """
-        self.updateDeterminedParameters.emit()
-        self.running=False
+        self.threadCreated.emit(1)
+        self.itsRunning = False

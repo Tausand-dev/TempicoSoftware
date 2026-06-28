@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ; Non-commercial use only
 
-#define MyAppName "Tempico Software V1"
-#define MyAppVersion "2.0.1"
+#define MyAppName "Tempico Software"
+#define MyAppVersion "2.1.0"
 #define MyAppPublisher "Tausand Electronics"
 #define MyAppURL "https://www.tausand.com/"
 #define MyAppExeName "TempicoSoftware.exe"
@@ -14,7 +14,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{E5B850CC-6E6E-4134-9821-07799DC91BE6}
+AppId={{6696089F-4B73-404B-89F7-7EF2BAD1072D}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -28,8 +28,8 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
-OutputDir=C:\Instaladores\2.0.1
-OutputBaseFilename=Tempico Software V1 Setup
+OutputDir=C:\Instaladores\2.1.0
+OutputBaseFilename=Tempico Software Setup
 SetupIconFile=C:\Users\Personal\Programacion\Github\TempicoSoftware\Sources\tausand_small.ico
 SolidCompression=yes
 WizardStyle=modern dynamic
@@ -42,7 +42,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\Personal\Programacion\Github\TempicoSoftware\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Personal\Programacion\Github\TempicoSoftware\Sources\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Personal\Programacion\Github\TempicoSoftware\src\Sources\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

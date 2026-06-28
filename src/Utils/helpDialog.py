@@ -60,12 +60,13 @@ HELP_CONTENT = {
     "title": "6. g2 (HBT)",
     "body": (
         "Computes the second-order correlation function g²(τ) from the time differences "
-        "between start and stop photon detection events acquired with two selected channels.\n\n"
-        "Set the stop channel, maximum time, coincidence window, number of bins, "
-        "and acquisition mode, then press Start. The software builds and normalizes "
-        "the coincidence histogram in real time and displays the resulting g²(τ) curve.\n\n"
-        "Available fits: Thermal gaussian, Thermal gaussian shifted, Thermal lorentzian, "
-        "Thermal lorentzian shifted, Antibunching, and Antibunching shifted."
+        "between photon detection events on a start and a stop channel.\n\n"
+        "Select the stop channel (A–D), set the bin width, window ±, and duration, "
+        "then press Start. The normalized coincidence histogram updates in real time. "
+        "Press Stop to end the acquisition, or check 'Continuous measurement' to run until manually stopped.\n\n"
+        "Press Fit to fit the curve with one of the available models: "
+        "Antibunched Gaussian, Antibunched Lorentzian, "
+        "Bunched Gaussian, Bunched Lorentzian, and Three-level system."
         )
     }
 }
