@@ -892,26 +892,6 @@ class MainWindow(QMainWindow):
         #Important when g2 is unified with LifeTime CHANGE THE INDEX TO 2
 
 
-#The g2 functions are not use for the versions 1.1 comment for future versions
-
-    def Helpg2Button(self):
-        message_box = QMessageBox(self)
-        message_box.setIcon(QMessageBox.Information)
-        message_box.setWindowTitle("g2 measurement information")
-        message_box.setStandardButtons(QMessageBox.Ok)
-        custom_widget = QWidget()
-        layout = QVBoxLayout(custom_widget)
-        label = QLabel(custom_widget)
-        layout.addWidget(label)
-        pixmap = QPixmap('Sources/Help.png')
-
-        pixmap = pixmap.scaledToWidth(700)
-        label.setPixmap(pixmap)
-
-        message_box.layout().addWidget(custom_widget)
-
-
-        message_box.exec_()
 
 
 

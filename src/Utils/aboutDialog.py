@@ -199,7 +199,8 @@ class Ui_AboutDialog(QObject):
             "  • Counts estimation\n"
             "  • Time stamping\n"
             "  • Fluorescence lifetime analysis\n"
-            "  • Autocorrelation (FCS)\n\n"
+            "  • Autocorrelation (FCS)\n"
+            "  • g2 (HBT)\n\n"
             "For more information visit https://www.tausand.com"
         )
     
