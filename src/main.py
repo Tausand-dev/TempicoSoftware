@@ -82,6 +82,7 @@ class SplashScreen(QMainWindow):
         self.main_window = MainWindow()
         self.main_window.show()
         self.close()
+        self.deleteLater()
 
 class MainWindow(QMainWindow):
     """
@@ -291,8 +292,16 @@ class MainWindow(QMainWindow):
         self.sentinel6=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
-        self.open_dialog()
-        self.show()
+        # Se difiere la apertura del diálogo "Connect Tempico" con QTimer
+        # en vez de llamarlo directamente aquí. self.dialog.exec_() dentro
+        # de open_dialog() es MODAL y bloquea el hilo: si se llama de forma
+        # directa, el constructor de MainWindow (y por lo tanto la línea
+        # `MainWindow()` en SplashScreen) no termina hasta que el usuario
+        # cierre ese diálogo, dejando el splash atrapado encima todo ese
+        # tiempo. Al diferirlo con singleShot(0, ...), el constructor
+        # termina de inmediato, el splash se cierra, y solo DESPUÉS de eso
+        # (en la siguiente vuelta del event loop) se abre el diálogo modal.
+        QTimer.singleShot(0, self.open_dialog)
 
 
     #-----Functions for construc every Qtab--------#
@@ -1448,28 +1457,16 @@ if __name__ == '__main__':
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setFixedSize(desired_size)
-    # Comprobar si estamos en Ubuntu
-    if sys.platform != 'linux':  # Si no estamos en Ubuntu, aplicar opacidad
-        opaqueness = 0.0
-        step = 0.1
-        splash.setWindowOpacity(opaqueness)
+    splash.show()
 
-        while opaqueness < 1:
-            splash.setWindowOpacity(opaqueness)
-            time.sleep(step)
-            opaqueness += step
-
-        splash.show()
-        time.sleep(1)  # Mostrar splash por 1 segundo
-        splash.close()
+    def show_main_window():
+        global window
         window = MainWindow()
         window.show()
-    else:
-        splash.show()
-        time.sleep(1)
         splash.close()
-        window = MainWindow()
-        window.show()
+
+    # Muestra la ventana principal después de 1 segundo, sin bloquear el event loop
+    QTimer.singleShot(1000, show_main_window)
 
     app.exec_()
 
