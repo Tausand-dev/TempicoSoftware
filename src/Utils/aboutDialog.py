@@ -18,6 +18,7 @@ from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushBut
 from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
 from .constants import VERSION
 from .constants import PYTEMPICO_VERSION
+from .constants import BANNER
 
 
 class Ui_AboutDialog(QObject):
@@ -92,7 +93,7 @@ class Ui_AboutDialog(QObject):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.imageLabel = QLabel(self.pictureFrame)
         self.imageLabel.setObjectName(u"imageLabel")
-        image = QPixmap('Sources/splash.png')
+        image = QPixmap(BANNER)
         image = image.scaled(500, 320, Qt.KeepAspectRatio)
         self.imageLabel.setPixmap(image)
         self.imageLabel.setFixedSize(300,150)
@@ -143,7 +144,7 @@ class Ui_AboutDialog(QObject):
         
 
         # Cargar la imagen desde el archivo
-        pixmap = QPixmap('Sources/splash.png')
+        pixmap = QPixmap(BANNER)
         self.imageLabel.setPixmap(pixmap.scaled(self.imageLabel.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.linkTausand.setOpenExternalLinks(True)
         self.linkGitHub.setOpenExternalLinks(True)
@@ -203,4 +204,3 @@ class Ui_AboutDialog(QObject):
             "  • g2 (HBT)\n\n"
             "For more information visit https://www.tausand.com"
         )
-    

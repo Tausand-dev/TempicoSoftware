@@ -3,6 +3,7 @@
 
 from PySide2.QtWidgets import QDialog, QLabel, QCheckBox, QTabWidget, QWidget, QComboBox, QSpinBox
 from PySide2.QtGui import QIcon
+from .constants import ICON_LOCATION
 
 
 
@@ -11,7 +12,7 @@ class SettingsWindow(QDialog):
         super().__init__()
         self.setWindowTitle("Channels settings")
         self.setFixedSize(400,240)
-        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
+        self.setWindowIcon(QIcon(ICON_LOCATION))
         #----------construct enable channel----------#
         self.sentinel1=0
         self.sentinel2=0

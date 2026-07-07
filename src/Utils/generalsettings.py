@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QDialog, QDoubleSpinBox, QSpinBox, QPushButton, QMessageBox, QWhatsThis, QLabel, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QIcon
 from PySide2.QtCore import Qt, QEvent, QObject
+from .constants import ICON_LOCATION
 
 
 
@@ -20,7 +21,7 @@ class GeneralSettingsWindow(QDialog):
         self.installEventFilter(self)
         self.setWindowTitle("General settings")
         self.setFixedSize(350, 140)
-        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
+        self.setWindowIcon(QIcon(ICON_LOCATION))
 
         # Main Layout
         main_layout = QVBoxLayout(self)  # Main vertical layout for the window

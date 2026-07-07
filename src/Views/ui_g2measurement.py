@@ -47,6 +47,7 @@ from PySide2.QtWidgets import (
 )
 # QDoubleSpinBox already imported above; listed explicitly for clarity
 import sys
+import types
 
 
 class Ui_G2(object):
@@ -256,9 +257,48 @@ class Ui_G2(object):
         self.tauQuerySpinBox.setSuffix(" ns")
         self.tauQuerySpinBox.setSingleStep(1.0)
         self.tauQuerySpinBox.setValue(0.0)
+        # IMPORTANT: by default QAbstractSpinBox has keyboardTracking=True,
+        # which fires valueChanged on EVERY keystroke while typing. Since
+        # G2Logic._query_tau() reacts to valueChanged by snapping the value
+        # to the nearest bin centre (and calling setValue() again), the box
+        # would overwrite itself mid-typing — the number you type gets
+        # replaced before you finish entering it. Disabling keyboard
+        # tracking makes valueChanged fire only once editing is committed
+        # (Enter/Tab/focus-out), so the snap-to-bin behaviour still happens,
+        # but only against the final value you intended to enter.
+        self.tauQuerySpinBox.setKeyboardTracking(False)
         self.tauQuerySpinBox.setToolTip(
             "Enter a τ value manually, or left-click on the plot."
         )
+
+        # ── Make the up/down arrows step bin-by-bin ─────────────────────
+        # By default, clicking the arrows (or pressing Up/Down) adds/
+        # subtracts a fixed ``singleStep`` (1.0 ns), which almost never
+        # lines up with an actual bin centre — so the arrows looked like
+        # they "didn't do anything" (the value moved, but the displayed
+        # g²(τ) and cursor line didn't change, since _query_tau always
+        # snaps back to the nearest bin, i.e. the *same* bin).
+        #
+        # Instead, we override stepBy() on this specific spinbox instance
+        # so that "up" advances to the next bin centre (higher τ) and
+        # "down" moves to the previous bin centre (lower τ). The actual
+        # bin data lives in G2Logic, not here, so the real work is
+        # delegated to an optional hook — ``_on_tau_step`` — that G2Logic
+        # attaches onto the spinbox itself via ``set_cursor_widgets``.
+        # If no hook is attached yet (e.g. before a measurement has ever
+        # produced data), we fall back to Qt's normal stepBy behaviour.
+        def _tau_step_by(spinbox_self, steps):
+            hook = getattr(spinbox_self, "_on_tau_step", None)
+            if callable(hook):
+                hook(steps)
+            else:
+                QDoubleSpinBox.stepBy(spinbox_self, steps)
+
+        self.tauQuerySpinBox._on_tau_step = None
+        self.tauQuerySpinBox.stepBy = types.MethodType(
+            _tau_step_by, self.tauQuerySpinBox
+        )
+
         self.tauQueryRowLayout.addWidget(self.tauQueryKeyLabel)
         self.tauQueryRowLayout.addWidget(self.tauQuerySpinBox)
         self.verticalLayout_info.addWidget(self.tauQueryRowFrame)

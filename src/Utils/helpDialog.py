@@ -5,6 +5,7 @@ from PySide2.QtWidgets import (
 )
 from PySide2.QtCore import Qt, QUrl
 from PySide2.QtGui import QIcon, QFont, QDesktopServices
+from .constants import ICON_LOCATION, BASE_PATH
 
 HELP_CONTENT = {
     "1. Start-Stop Histogram": {
@@ -77,7 +78,7 @@ class HelpDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Tempico Software - User Manual (Help)")
         self.setMinimumSize(400, 450)
-        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
+        self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
         main_layout = QHBoxLayout(self)
@@ -139,5 +140,5 @@ class HelpDialog(QDialog):
         self.body_label.setText(data.get("body", ""))
 
     def _open_pdf(self):
-        pdf_path = os.path.abspath("Sources/UserManual.pdf")
+        pdf_path = os.path.join(BASE_PATH, "Sources", "UserManual.pdf")
         QDesktopServices.openUrl(QUrl.fromLocalFile(pdf_path))

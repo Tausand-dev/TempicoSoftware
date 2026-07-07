@@ -236,29 +236,49 @@ class G2Logic:
         self.plot.setLabel('bottom', 'Delay \u03c4 (ns)')
         self.plot.showGrid(x=True, y=True, alpha=0.3)
 
-        # Disable pyqtgraph's built-in "A" auto-range button.
+        # Re-enable pyqtgraph's built-in "A" auto-range button.
         #
-        # That button calls ViewBox.autoRange(), which fits the view to
-        # childrenBoundingRect() of EVERYTHING in the plot — including the
-        # decorative InfiniteLines (_cursor_line, the g²=1 reference line,
-        # the τ=0 dotted line). An InfiniteLine's bounding rect is not a
-        # normal data bound, and mixing it into autoRange() is what made
-        # the X-axis (and therefore the visual position of the cursor
-        # relative to the view) snap to an unrelated, usually far-left,
-        # range instead of respecting "Window (±)". Hiding the button
-        # avoids the bug entirely; the X-range is instead kept in sync
-        # with windowSpinBox from main.py.
-        self.plot.hideButtons()
+        # It was previously hidden because ViewBox.autoRange() fits the
+        # view to childrenBoundingRect() of EVERYTHING added to the plot —
+        # including the decorative InfiniteLines (the g²=1 reference line,
+        # the τ=0 dotted line, and _cursor_line). The earlier attempt to
+        # exclude them called ``item.setIgnoreBounds(True)``, but stock
+        # pyqtgraph's InfiniteLine has no such method — the ``hasattr``
+        # guard silently no-op'd, so those lines were still included, and
+        # that's what made the range (and therefore the cursor's apparent
+        # position within the view) jump around.
+        #
+        # The correct way to exclude an item from auto-range is to tell
+        # the ViewBox at the moment it's added, via the ``ignoreBounds``
+        # keyword on ``addItem()`` (see below). With that actually applied,
+        # autoRange() only ever measures the real histogram/fit curves, so
+        # pressing "A" now gives a sane fit and never moves the τ cursor
+        # line off its real bin position.
+        self.plot.showButtons()
+
+        # Even with the cursor line excluded from the fit above, clicking
+        # "A" still rescales the x/y axes to whatever the histogram/fit
+        # curves currently span. Since the cursor's on-screen spot depends
+        # on the axis range, that rescale reads as "the cursor jumped
+        # left" — and if it happens repeatedly (e.g. during a running
+        # measurement, as the histogram keeps growing) it looks like it
+        # keeps drifting further left each time it's pressed.
+        #
+        # Rather than leave that side-effect unpredictable, make it
+        # deterministic: every "A" click also snaps the τ cursor back to
+        # 0 ns, exactly like changing "Window (±)" already does (see
+        # ``_sync_tau_cursor_range`` in ui_g2measurement.py). The cursor
+        # never ends up somewhere arbitrary; it always lands on tau_0 = 0.
+        self.plot.autoBtn.clicked.connect(self._on_autorange_clicked)
 
         # Dashed reference line at g² = 1 (uncorrelated baseline)
         ref_line = pg.InfiniteLine(
             pos=1.0, angle=0,
             pen=pg.mkPen('gray', width=1, style=Qt.DashLine)
         )
-        # Decorative line — must never influence autoRange()/childrenBoundingRect().
-        if hasattr(ref_line, "setIgnoreBounds"):
-            ref_line.setIgnoreBounds(True)
-        self.plot.addItem(ref_line)
+        # Decorative line — excluded from autoRange()/childrenBoundingRect()
+        # via ignoreBounds, not the (non-existent) setIgnoreBounds() method.
+        self.plot.addItem(ref_line, ignoreBounds=True)
 
         # Fit curve – drawn after the user clicks Fit
         self.fit_curve = self.plot.plot(
@@ -300,17 +320,14 @@ class G2Logic:
             labelOpts={'color': '#16a085', 'position': 0.75},
         )
         self._cursor_line.setVisible(False)
-        # Decorative line — must never influence autoRange()/childrenBoundingRect().
-        if hasattr(self._cursor_line, "setIgnoreBounds"):
-            self._cursor_line.setIgnoreBounds(True)
-        self.plot.addItem(self._cursor_line)
+        # Decorative line — excluded from autoRange()/childrenBoundingRect()
+        # via ignoreBounds, so pressing "A" never repositions the cursor.
+        self.plot.addItem(self._cursor_line, ignoreBounds=True)
         zero_line = pg.InfiniteLine(
             pos=0.0, angle=90,
             pen=pg.mkPen('gray', width=1, style=Qt.DotLine)
         )
-        if hasattr(zero_line, "setIgnoreBounds"):
-            zero_line.setIgnoreBounds(True)
-        self.plot.addItem(zero_line)
+        self.plot.addItem(zero_line, ignoreBounds=True)
 
         # Reuse the existing layout on parent if it already has one
         existing_layout = self.parent.layout()
@@ -347,10 +364,74 @@ class G2Logic:
         # Connect spinbox → query update
         self.tauQuerySpinBox.valueChanged.connect(self._query_tau)
 
+        # Wire up the bin-by-bin stepping hook (see the ``stepBy`` override
+        # in ``Ui_G2.setupUi``). Clicking the spinbox's up/down arrows, or
+        # pressing the Up/Down keys while it has focus, now calls
+        # ``_step_tau_by_bin`` instead of Qt's default fixed-increment step.
+        self.tauQuerySpinBox._on_tau_step = self._step_tau_by_bin
+
         # Connect plot click → τ query
         self.plot.scene().sigMouseClicked.connect(self._on_plot_clicked)
 
     # ── Cursor helpers ────────────────────────────────────────────────────────
+
+    def _on_autorange_clicked(self, *_args):
+        """
+        Handle a click on pyqtgraph's built-in auto-range "A" button.
+
+        The button's own default handler (connected by pyqtgraph itself)
+        rescales the plot's axes to fit the histogram/fit curves. That
+        rescale doesn't change the τ cursor's underlying value, but it
+        does change where the cursor line *appears* relative to the new
+        axes — which looks like the cursor jumping to the left, and can
+        look like it keeps drifting further left with repeated clicks.
+
+        To make this predictable, every "A" click also snaps the τ
+        cursor back to 0 ns (same behaviour already used when "Window
+        (±)" changes, in ``ui_g2measurement.py``'s
+        ``_sync_tau_cursor_range``), so the cursor always lands on a
+        known reference point instead of an arbitrary spot.
+
+        :param _args: Ignored. pyqtgraph's ButtonItem.clicked emits the
+            button instance itself; this handler doesn't need it.
+        :return: None
+        """
+        if self.tauQuerySpinBox is not None:
+            self.tauQuerySpinBox.blockSignals(True)
+            self.tauQuerySpinBox.setValue(0.0)
+            self.tauQuerySpinBox.blockSignals(False)
+        self._query_tau(0.0)
+
+    def _step_tau_by_bin(self, steps):
+        """
+        Move the τ cursor to the next/previous histogram bin.
+
+        Called from the ``stepBy`` override installed on ``tauQuerySpinBox``
+        (see ``Ui_G2.setupUi``) whenever the spinbox's up/down arrows are
+        clicked or the Up/Down keys are pressed while it has focus.
+
+        Finds the bin closest to the spinbox's current value, then moves
+        ``steps`` bins away from it (``steps`` is positive for "up" /
+        higher τ, negative for "down" / lower τ — this is exactly what Qt
+        passes into ``stepBy``). The move is clamped to stay within the
+        available bin range, and the usual ``_query_tau`` update (g² label,
+        cursor line, spinbox value) is triggered so everything stays in
+        sync — exactly as if the user had clicked that bin directly.
+
+        :param steps: Number of bins to move; positive = next bin(s)
+            (increasing τ), negative = previous bin(s) (decreasing τ).
+        :return: None
+        """
+        if len(self.last_centres_ns) == 0 or self.tauQuerySpinBox is None:
+            return
+
+        current  = self.tauQuerySpinBox.value()
+        idx      = int(np.argmin(np.abs(self.last_centres_ns - current)))
+        new_idx  = idx + int(steps)
+        new_idx  = max(0, min(new_idx, len(self.last_centres_ns) - 1))
+        tau_next = float(self.last_centres_ns[new_idx])
+
+        self._query_tau(tau_next)
 
     def _on_plot_clicked(self, event):
         """
@@ -1168,10 +1249,19 @@ class G2Logic:
             sep       = '/' if os.name == 'posix' else '\\'
             full_path = folder_path + sep + filename + '.' + selected_format
 
-            exporter = pg.exporters.ImageExporter(self.plot)
-            exporter.parameters()['width']  = 800
-            exporter.parameters()['height'] = 600
-            exporter.export(full_path)
+            # Hide the tau cursor line just for the export so it doesn't end
+            # up in the saved image, then restore its on-screen state
+            # (visible/hidden) exactly as it was, whether the export
+            # succeeds or fails.
+            cursor_was_visible = self._cursor_line.isVisible()
+            self._cursor_line.setVisible(False)
+            try:
+                exporter = pg.exporters.ImageExporter(self.plot)
+                exporter.parameters()['width']  = 800
+                exporter.parameters()['height'] = 600
+                exporter.export(full_path)
+            finally:
+                self._cursor_line.setVisible(cursor_was_visible)
 
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Information)
