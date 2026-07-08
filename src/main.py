@@ -50,24 +50,33 @@ class SplashScreen(QMainWindow):
     :type parent: QWidget, optional
     """
     def __init__(self):
+        """
+        Initializes the splash screen window and starts the transition timer.
+
+        Sets a fixed window size, loads and displays the banner image inside a
+        `QLabel`, and configures a single-shot `QTimer` that, after a short
+        delay, triggers the transition to the main application window.
+
+        :return: None
+        """
         super().__init__()
         self.setWindowTitle("Splash Screen")
         self.setFixedSize(400, 300)
 
 
-        # Crear una etiqueta para mostrar la imagen
+        # Label used to display the banner image
         self.image_label = QLabel(self)
         self.image_label.setGeometry(0, 0, 400, 300)
 
-        # Cargar la imagen
-        pixmap = QPixmap(BANNER)  # Ajusta la ruta de tu imagen
+        # Load the banner image
+        pixmap = QPixmap(BANNER)  # Adjust the image path if needed
         self.image_label.setPixmap(pixmap)
 
-        # Mostrar la ventana principal después de 3 segundos
+        # Show the main window after a short delay
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.show_main_window)
-        self.timer.start(1000)  # Tiempo en milisegundos
+        self.timer.start(1000)  # Time in milliseconds
 
     def show_main_window(self):
         """
@@ -102,6 +111,24 @@ class MainWindow(QMainWindow):
     :type args: tuple
     """
     def __init__(self, parent=None, *args):
+        """
+        Builds the main window: geometry, menu bar, actions, and internal state.
+
+        Creates the default save folder, sizes and centers the window based on
+        the primary screen resolution, sets the window icon, and initializes
+        the sentinels and cached device-configuration variables (average
+        cycles, mode, number of stops, edge type, and stop mask per channel)
+        used later when a measurement tab is opened. It also builds the menu
+        bar ("Settings", "About", "Help") and connects each menu action to its
+        corresponding slot, and configures the system tray icon on Linux or
+        the taskbar app id on Windows.
+
+        :param parent: The parent widget (optional).
+        :param args: Additional positional arguments (unused).
+        :type parent: QWidget, optional
+        :type args: tuple
+        :return: None
+        """
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
         self.savefile=savefile()
@@ -859,6 +886,14 @@ class MainWindow(QMainWindow):
                 # (±)": same value the user types in windowSpinBox, on
                 # both sides of zero. Re-applied every time Window changes.
                 def _sync_plot_x_range(half_window_ns):
+                    """
+                    Applies the "Window (±)" value as symmetric plot X-axis limits.
+
+                    :param half_window_ns: Half-window value, in nanoseconds, taken
+                        from ``windowSpinBox``. The plot is set to range from
+                        ``-half_window_ns`` to ``+half_window_ns``.
+                    :return: None
+                    """
                     self.g2Graphic.plot.setXRange(
                         -float(half_window_ns), float(half_window_ns),
                         padding=0,
@@ -962,6 +997,17 @@ class MainWindow(QMainWindow):
             message_box.exec_()
     
     def folderPrefixClicked(self):
+        """
+        Opens the folder/file-prefix settings dialog.
+
+        If no measurement is currently running, the dialog is opened in fully
+        editable mode. If a measurement is running, a warning message box is
+        shown first to inform the user that settings can only be read while a
+        measurement is in progress, and the dialog is then reopened in
+        read-only mode via `onlyReading()`.
+
+        :return: None
+        """
         if not self.currentMeasurement:
             self.openPrefixSettings=True
             self.prefixFolderDialog=QDialog(self)
@@ -986,6 +1032,18 @@ class MainWindow(QMainWindow):
             self.prefixFolderDialog.exec_()
     
     def generatorClicked(self):
+        """
+        Opens the signal-generator settings dialog for the connected device.
+
+        If no device is connected, an informational message box is shown
+        instead. If a device is connected and no measurement is running, the
+        dialog opens fully editable. If a measurement is running, a warning
+        is displayed and the dialog is reopened in read-only mode, restoring
+        the previously cached generator settings (`self.generatorSettings`)
+        if available.
+
+        :return: None
+        """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
                 self.openGenerator=True
@@ -1023,6 +1081,17 @@ class MainWindow(QMainWindow):
             
         
     def getVersionParameters(self):
+        """
+        Reads and caches device-specific identification parameters.
+
+        Retrieves the connected device's model identifier and overflow
+        parameter and stores them in `constants.VERSION_PARAMETER` and
+        `constants.OVERFLOW_PARAMETER` respectively. The signal-generator
+        settings menu action is shown only for "TP12" model devices and
+        hidden otherwise.
+
+        :return: None
+        """
         constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
         constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
         if "TP12" in constants.VERSION_PARAMETER:
@@ -1207,12 +1276,35 @@ class MainWindow(QMainWindow):
         settings_windows_dialog.exec_()
 
     def open_help(self):
+        """
+        Opens the application's help dialog.
+
+        Instantiates `HelpDialog` with this window as parent and displays it
+        modally.
+
+        :return: None
+        """
         HelpDialog(self).exec_()
 
 
 #This function is not use for the Tempico Version 1.1
 #TO DO: Comment the function for a future version
     def parameters_action(self):
+        """
+        Opens the count-parameters measurement dialog.
+
+        .. note::
+           Not used in Tempico Version 1.1. Kept for a possible future
+           version.
+
+        If a device is connected and no measurement is running, builds the
+        parameters dialog (`UiParameters`) together with its logic handler
+        (`CountParameters`), stopping the G2 connection timer beforehand if
+        the G2 tab is active. If a measurement is running, a warning message
+        box is shown instead and no dialog is created.
+
+        :return: None
+        """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
                 self.dialogParameters=QDialog(self)
@@ -1370,11 +1462,25 @@ class MainWindow(QMainWindow):
         """
         self.currentMeasurement=False
     def _apply_fcs_generator_settings(self):
+        """
+        Saves the device's current generator configuration and forces FCS mode.
+
+        Only applies to "TP12" model devices; does nothing if no device is
+        connected or the connected device is not a TP12. Before making any
+        change, it caches the generator frequency and the start/stop source
+        of each of the four channels in `self._fcs_saved_generator_settings`
+        so they can be restored later by `_restore_generator_settings`. It
+        then sets the generator frequency to 2000 Hz and forces all channels
+        to use the internal start source, as required for FCS measurements.
+
+        :return: None
+        """
         if self.conectedDevice is None:
             return
         import Utils.constants as constants
         if "TP12" not in constants.VERSION_PARAMETER:
             return
+        # Cache current generator settings before overwriting them
         self._fcs_saved_generator_settings = []
         self._fcs_saved_generator_settings.append(self.conectedDevice.getGeneratorFrequency())
         for ch in range(1, 5):
@@ -1385,6 +1491,18 @@ class MainWindow(QMainWindow):
             self.conectedDevice.setStartInternalSource(ch)
 
     def _restore_generator_settings(self):
+        """
+        Restores the generator configuration previously cached for FCS mode.
+
+        Reapplies the generator frequency and, for each of the four channels,
+        the previously saved start and stop source (internal or external)
+        stored in `self._fcs_saved_generator_settings` by
+        `_apply_fcs_generator_settings`. Does nothing if no device is
+        connected or if there are no cached settings to restore. The cache
+        is cleared after being applied.
+
+        :return: None
+        """
         if self.conectedDevice is None:
             return
         if not self._fcs_saved_generator_settings:
@@ -1405,6 +1523,16 @@ class MainWindow(QMainWindow):
         self._fcs_saved_generator_settings = []
     
     def resetSaveSentinelsAllWindows(self):
+        """
+        Resets the save sentinels of every measurement tab that has been created.
+
+        Calls `resetSaveSentinels()` on each measurement logic instance
+        (Time Stamp, Counts Estimated, Lifetime, Start-Stop histogram, FCS,
+        and G2) that is not `None`, so each tab clears its internal flag
+        tracking whether data has already been saved.
+
+        :return: None
+        """
         if self.timeStampGraphic!=None:
             self.timeStampGraphic.resetSaveSentinels()
         if self.countsEstimatedGraphic!=None:
@@ -1461,17 +1589,38 @@ if __name__ == '__main__':
     splash.show()
 
     def show_main_window():
+        """
+        Creates and shows the main window, then closes the splash screen.
+
+        Stores the created `MainWindow` instance in the module-level global
+        `window` variable so it is not garbage-collected once this function
+        returns.
+
+        :return: None
+        """
         global window
         window = MainWindow()
         window.show()
         splash.close()
 
-    # Muestra la ventana principal después de 1 segundo, sin bloquear el event loop
+    # Show the main window after 1 second, without blocking the event loop
     QTimer.singleShot(1000, show_main_window)
 
     app.exec_()
 
 def execProgram():
+    """
+    Alternative application entry point with a fade-in splash screen.
+
+    Creates the `QApplication`, displays the splash screen and gradually
+    increases its opacity from 0 to 1 in fixed steps (a simple fade-in
+    effect), waits one additional second, then closes the splash screen and
+    shows the main window. Unlike the `if __name__ == '__main__'` block
+    above, this function blocks while animating the fade-in instead of using
+    a `QTimer`.
+
+    :return: None
+    """
     app = QApplication([])
     splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)

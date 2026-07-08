@@ -1,26 +1,4 @@
 # -*- coding: utf-8 -*-
-"""G2Logic
-
-    Orchestration layer for the g²(τ) HBT measurement tab.  Manages the
-    pyqtgraph plot widget, button states, thread lifecycle, data saving, and
-    status indicators.
-
-    Architecture mirrors FCSLogic exactly:
-    - Same constructor parameter order and naming conventions.
-    - Same signal-slot wiring pattern (dataReady → update_plot,
-      statusUpdate → changeStatusThread, colorValue → changeColorThread,
-      threadCreated → threadRunning, finished → threadComplete).
-    - Same tab-disable / re-enable pattern during acquisition.
-    - Same _draw_status_dot / startTimerConnection / stopTimerConnection helpers.
-
-    Color classification and "light type" labels are deliberately excluded
-    per project requirements.  The plot is a step-mode bar histogram of g²(τ)
-    with a dashed reference line at g² = 1.
-
-    | @author: Miguelangel García Castillo, Tausand Electronics
-    | mgarcia@tausand.com
-    | https://www.tausand.com
-"""
 
 import os
 import time
@@ -125,6 +103,49 @@ class G2Logic:
         fitTable=None,
         fitResetParamsButton=None,
     ):
+        """
+        Initializes the g²(τ) logic layer and wires up the tab's widgets.
+
+        Stores references to the device and every widget used by the G2 tab
+        (start/stop/save/clear buttons, status labels, live-count labels,
+        cursor/τ-query widgets, and the optional fitting controls), sets the
+        initial enabled/disabled state of each button, and connects each
+        control's signal to its corresponding handler. Fit-related widgets
+        (``fitButton``, ``fitModelCombo``, etc.) may be provided here or set
+        later via ``set_fit_widgets``; cursor widgets may likewise be set
+        later via ``set_cursor_widgets``.
+
+        :param parent: The ``QFrame`` where the pyqtgraph plot is injected.
+        :param disconnectButton: Main-window Disconnect button.
+        :param device: Open ``Tempico.TempicoDevice`` instance.
+        :param startButton: Button that starts the acquisition.
+        :param stopButton: Button that stops the acquisition.
+        :param saveDataButton: Button that saves the g²(τ) data.
+        :param savePlotButton: Button that saves the plot image.
+        :param clearButton: Button that clears the accumulated curve.
+        :param connectButton: Main-window Connect button.
+        :param mainWindow: Reference to the application's main window.
+        :param statusValue: Label showing the current status text.
+        :param statusPoint: Label used as a coloured status dot.
+        :param timerStatus: Shared connection-polling timer.
+        :param eventsLabel: Label showing the total number of photon events.
+        :param elapsedLabel: Label showing the elapsed measurement time.
+        :param g2ZeroLabel: Label showing the g²(τ=0) value.
+        :param rateStartLabel: Label showing the start-channel count rate.
+        :param rateStopLabel: Label showing the stop-channel count rate.
+        :param stopChannelComboBox: Combo box to select the stop channel.
+        :param tauQuerySpinBox: Optional spin box to query g²(τ) at a
+            specific τ value.
+        :param g2CursorLabel: Optional label showing g²(τ) at the queried τ.
+        :param fitButton: Optional button that runs the correlation curve fit.
+        :param fitModelCombo: Optional combo box to select the fit model.
+        :param fitEquationLabel: Optional label displaying the fit equation.
+        :param fitResultLabel: Optional label displaying the fit result summary.
+        :param fitResultsFrame: Optional frame containing the fit results widgets.
+        :param fitTable: Optional table widget showing fitted parameter values.
+        :param fitResetParamsButton: Optional button to reset fit parameters.
+        :return: None
+        """
         super().__init__()
 
         # ── Utility ──────────────────────────────────────────────────────────

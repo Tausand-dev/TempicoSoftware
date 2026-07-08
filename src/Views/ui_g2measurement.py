@@ -1,43 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Ui_G2Measurement
-
-    Pure layout class for the g²(τ) HBT measurement tab.
-
-    Follows the exact same structure as ``Ui_FCSMeasurement``:
-    - Left column  (``ConfigurationArea``): all controls and parameters,
-      stretch factor 3.
-    - Right column (``TotalGraphicArea``):  empty ``graphicFrame`` where
-      ``G2Logic`` injects the pyqtgraph plot, plus the status bar at the
-      bottom, stretch factor 7.
-
-    Widget names exposed to ``G2Logic`` (and to ``main.py``)
-    ----------------------------------------------------------
-    startButton          QPushButton    Begin measurement
-    stopButton           QPushButton    End measurement
-    saveDataButton       QPushButton    Save g²(τ) data
-    savePlotButton       QPushButton    Save plot image
-    clearButton          QPushButton    Clear curve
-    stopChannelComboBox  QComboBox      TDC stop channel (A–D)
-    binWidthSpinBox      QDoubleSpinBox Bin width in ns (0.1 – 10 000 ns)
-    windowSpinBox        QSpinBox       Half-window in ns (10 – 100 000 ns)
-    modeComboBox         — removed; TDC Mode 1 is always used for HBT
-    durationSpinBox      QSpinBox       Measurement duration in seconds
-    indefiniteCheckBox   QCheckBox      When checked, runs until Stop is pressed
-    graphicFrame         QFrame         Container for the live plot
-    valueStatusLabel     QLabel         Status text
-    pointLabel           QLabel         Coloured status dot
-    eventsLabel          QLabel         Total photon events count
-    elapsedLabel         QLabel         Elapsed measurement time
-    g2ZeroLabel          QLabel         g²(τ=0) value
-    rateStartLabel       QLabel         Start-channel count rate (cps)
-    rateStopLabel        QLabel         Stop-channel count rate (cps)
-    fitTable              QTableWidget  Merged fit table: Parámetro | Valor inicial (editable) | Resultado del fit
-    fitResetParamsButton QPushButton    Resets the "Valor inicial" column to auto-computed defaults
-
-    The class is intentionally named ``Ui_G2`` (keeping the original class
-    name) so that the ``construct_g2`` method in ``main.py`` does not need to
-    change its ``Ui_G2()`` instantiation line.
-"""
 
 from PySide2.QtCore    import QMetaObject, QCoreApplication, Qt
 from PySide2.QtGui     import QPixmap, QPainter, QColor
@@ -66,6 +27,22 @@ class Ui_G2(object):
     """
 
     def setupUi(self, G2Measurement):
+        """
+        Builds and lays out every widget of the g²(τ) HBT measurement tab.
+
+        Constructs the two-column layout described in the class docstring:
+        the left ``ConfigurationArea`` (measurement controls, correlator
+        parameters, cursor/fit widgets, and measurement stats panels) and the
+        right ``TotalGraphicArea`` (the empty ``graphicFrame`` where
+        ``G2Logic`` injects the live plot, plus the status bar). Also sets
+        the initial enabled/disabled state of the action buttons, draws the
+        initial grey status dot, and calls ``retranslateUi`` to set every
+        widget's display text.
+
+        :param G2Measurement: The widget (typically a ``QWidget`` tab page)
+            that this UI class will populate.
+        :return: None
+        """
         if not G2Measurement.objectName():
             G2Measurement.setObjectName(u"G2Measurement")
         G2Measurement.setEnabled(True)
@@ -291,6 +268,24 @@ class Ui_G2(object):
         # If no hook is attached yet (e.g. before a measurement has ever
         # produced data), we fall back to Qt's normal stepBy behaviour.
         def _tau_step_by(spinbox_self, steps):
+            """
+            Overridden ``stepBy`` that moves the τ cursor by whole bins.
+
+            Delegates the actual bin-stepping logic to the ``_on_tau_step``
+            hook attached by ``G2Logic`` (via ``set_cursor_widgets``), so the
+            arrows/Up-Down keys land on the next or previous bin centre
+            instead of an arbitrary fixed step. Falls back to Qt's default
+            ``QDoubleSpinBox.stepBy`` behaviour if no hook has been attached
+            yet.
+
+            :param spinbox_self: The spin box instance this method is bound
+                to (passed explicitly since it is assigned as an unbound
+                function via ``types.MethodType``).
+            :param steps: Number of steps to move; positive to increase τ,
+                negative to decrease it.
+            :type steps: int
+            :return: None
+            """
             hook = getattr(spinbox_self, "_on_tau_step", None)
             if callable(hook):
                 hook(steps)
@@ -457,6 +452,20 @@ class Ui_G2(object):
         self._on_tau_cursor_reset = None
 
         def _sync_tau_cursor_range(half_window_ns):
+            """
+            Resets the τ-cursor spin box range to match ``±half_window_ns``.
+
+            Blocks signals while updating the range and resetting the value
+            to 0 ns, to avoid Qt's implicit clamping from producing a
+            surprising jump to the new range's edge. Since blocking signals
+            skips the normal ``valueChanged`` → ``_query_tau`` connection,
+            the optional ``_on_tau_cursor_reset`` hook is called afterward so
+            the plot's cursor line and g²(τ) readout stay in sync.
+
+            :param half_window_ns: New half-window value, in nanoseconds,
+                taken from ``windowSpinBox``.
+            :return: None
+            """
             self.tauQuerySpinBox.blockSignals(True)
             self.tauQuerySpinBox.setRange(
                 -float(half_window_ns), float(half_window_ns)
@@ -757,6 +766,17 @@ class Ui_G2(object):
     # setupUi
 
     def retranslateUi(self, G2Measurement):
+        """
+        Sets the translatable display text of every widget built in ``setupUi``.
+
+        Assigns the window title and the text of every label and button
+        using ``QCoreApplication.translate``, so the UI can be localized
+        through Qt's translation mechanism without touching the layout code
+        in ``setupUi``.
+
+        :param G2Measurement: The widget whose window title is set.
+        :return: None
+        """
         G2Measurement.setWindowTitle(
             QCoreApplication.translate("G2Measurement", u"Form", None)
         )
@@ -857,7 +877,23 @@ class Ui_G2(object):
 # ── Quick preview ────────────────────────────────────
 
 class _PreviewWindow(QMainWindow):
+    """
+    Standalone preview window used to visually inspect the G2 tab layout.
+
+    Only used when this module is run directly (``python
+    ui_g2measurement.py``); not imported or used by the rest of the
+    application.
+    """
     def __init__(self):
+        """
+        Builds the G2 UI inside a bare `QMainWindow` for quick visual review.
+
+        Instantiates `Ui_G2`, runs its `setupUi`, expands the configuration
+        area horizontally, and places both columns in the window's central
+        widget.
+
+        :return: None
+        """
         super().__init__()
         self.ui = Ui_G2()
         self.ui.setupUi(self)

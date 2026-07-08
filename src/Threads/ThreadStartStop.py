@@ -69,6 +69,38 @@ class WorkerThreadStartStopHistogram(QThread):
     
     
     def __init__(self,parent,device: tempico.TempicoDevice,sentinelSaveA,sentinelSaveB,sentinelSaveC,sentinelSaveD,checkA,checkB,checkC,checkD):
+        """
+        Initializes counters, sentinels, and device state for the Start-Stop thread.
+
+        Stores the parent widget and device instance, resets the per-channel
+        total and out-of-range counters, applies the initial enabled/disabled
+        state of each channel via `enableDisableChannels`, initializes the
+        dialog and max-value sentinels used to track histogram range changes,
+        and takes an initial snapshot of the device configuration via
+        `saveCurrentSettings`. Also determines whether batched measurement
+        mode should be used via `isBashedMeasurement`.
+
+        :param parent: The parent widget or window managing this thread.
+        :param device: Instance of `tempico.TempicoDevice` used to acquire
+            measurements.
+        :param sentinelSaveA: Boolean indicating if channel A measurements
+            should be saved.
+        :param sentinelSaveB: Boolean indicating if channel B measurements
+            should be saved.
+        :param sentinelSaveC: Boolean indicating if channel C measurements
+            should be saved.
+        :param sentinelSaveD: Boolean indicating if channel D measurements
+            should be saved.
+        :param checkA: Boolean indicating if channel A should be checked for
+            measurement validity.
+        :param checkB: Boolean indicating if channel B should be checked for
+            measurement validity.
+        :param checkC: Boolean indicating if channel C should be checked for
+            measurement validity.
+        :param checkD: Boolean indicating if channel D should be checked for
+            measurement validity.
+        :return: None
+        """
         super().__init__()
         self.totalA=0
         self.outOfRangeA=0
@@ -147,6 +179,15 @@ class WorkerThreadStartStopHistogram(QThread):
         self.device.ch4.enableChannel()
     
     def enableDisableChannels(self):
+        """
+        Enables or disables each device channel according to the check sentinels.
+
+        Disables all four channels first, then re-enables only the ones
+        whose corresponding sentinel (`checkA`, `checkB`, `checkC`,
+        `checkD`) is `True`.
+
+        :return: None
+        """
         self.device.ch1.disableChannel()
         self.device.ch2.disableChannel()
         self.device.ch3.disableChannel()

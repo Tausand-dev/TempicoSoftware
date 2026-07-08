@@ -32,6 +32,44 @@ class StartStopLogic():
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
     def __init__(self, parent, disconnect,device: Tempico.TempicoDevice,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
+        """
+        Initializes the Start-Stop tab logic and wires up its widgets.
+
+        Stores references to the device and every widget used by the
+        Start-Stop tab (channel checkboxes, start/stop/save/clear buttons,
+        status labels, and the shared connection timer), sets the initial
+        enabled/disabled state of each button, and connects each control's
+        clicked signal to its corresponding handler (start/stop measurement,
+        save data, save plots, clear each channel). It also initializes the
+        empty per-channel histogram data and sentinels used to track zoom
+        state, save state, and thread lifecycle, and computes the initial
+        minimum X-axis value via `getMinimumValue`.
+
+        :param parent: The parent QWidget for the logic (used as the grid
+            layout's container).
+        :param disconnect: Main-window Disconnect button.
+        :param device: The Tempico device instance that handles the measurements.
+        :param check1: QCheckBox that enables channel A.
+        :param check2: QCheckBox that enables channel B.
+        :param check3: QCheckBox that enables channel C.
+        :param check4: QCheckBox that enables channel D.
+        :param startbutton: QPushButton that starts the measurement.
+        :param stopbutton: QPushButton that stops the measurement.
+        :param savebutton: QPushButton that saves the histogram data.
+        :param save_graph_1: QPushButton that saves the plot images.
+        :param clear_channel_A: QPushButton that clears channel A's histogram.
+        :param clear_channel_B: QPushButton that clears channel B's histogram.
+        :param clear_channel_C: QPushButton that clears channel C's histogram.
+        :param clear_channel_D: QPushButton that clears channel D's histogram.
+        :param connect: Main-window Connect button.
+        :param mainWindow: Reference to the application's main window.
+        :param statusValue: Label showing the current status text.
+        :param statusPoint: Label used as a coloured status dot.
+        :param timerStatus: Shared connection-polling timer.
+        :param args: Additional positional arguments (unused).
+        :param kwargs: Additional keyword arguments (unused).
+        :return: None
+        """
         super().__init__()
         self.savefile=savefile()
         #Measurement window (used when saving data)
@@ -379,6 +417,16 @@ class StartStopLogic():
     
     
     def getMinimumValue(self):
+        """
+        Sets the initial plot X-axis minimum according to the device model.
+
+        "TP12" model devices support negative Start-Stop delays, so the
+        minimum is set slightly below zero (``-250`` ns / ``-0.00025`` ms).
+        Other models only support non-negative delays, so the minimum is
+        set to 0.
+
+        :return: None
+        """
         if "TP12" in constants.VERSION_PARAMETER:
             self.minimumMs=-0.00025
             self.minimumNs=-250
@@ -437,6 +485,15 @@ class StartStopLogic():
             
     
     def calibrateDeviceDelay(self):
+        """
+        Runs the device's delay calibration routine.
+
+        Called from `start_graphic` before creating the graphs, only for
+        "TP12" model devices, to compensate for channel-to-channel timing
+        offsets before a new measurement begins.
+
+        :return: None
+        """
         self.device.calibrateDelay()
     
     def stopTimerConnection(self):
@@ -1011,10 +1068,10 @@ class StartStopLogic():
             
             QMetaObject.connectSlotsByName(dialog)
             
-            # Conectar el botón "Accept" al método accept del diálogo
+            # Connect the "Accept" button to the dialog's accept method
             accepButton.clicked.connect(dialog.accept)
             
-            # Mostrar el diálogo y esperar a que se cierre
+            # Show the dialog and wait until it is closed
             if dialog.exec_() == QDialog.Accepted:
                 selected_format = FormatBox.currentText()
                 if self.setinelSaveA:
@@ -1115,6 +1172,25 @@ class StartStopLogic():
             self.update_histogram(self.dataD,self.curveD,"D")
     
     def updateBashSignal(self,valueListA,valueListB,valueListC,valueListD):
+        """
+        Appends a batch of processed measurement values and refreshes each channel's histogram.
+
+        Used in batched measurement mode, where the worker thread emits
+        lists of values accumulated over several runs instead of one value
+        at a time. Every value in each list is appended to the
+        corresponding channel's data, and the histogram is refreshed once
+        per channel (not per value) if that channel received any new data.
+
+        :param valueListA: List of new processed measurement values for
+            channel A.
+        :param valueListB: List of new processed measurement values for
+            channel B.
+        :param valueListC: List of new processed measurement values for
+            channel C.
+        :param valueListD: List of new processed measurement values for
+            channel D.
+        :return: None
+        """
         for value in valueListA:
             self.dataA.append(value)
         if self.dataA:
@@ -1157,7 +1233,25 @@ class StartStopLogic():
             self.datapureD.append(int(value))
 
     def updateBashDataPure(self,valuesPureA,valuesPureB,valuesPureC,valuesPureD):
-        
+        """
+        Appends a batch of raw measurement values for each channel.
+
+        Used in batched measurement mode, where the worker thread emits
+        lists of raw (picosecond) values accumulated over several runs
+        instead of one value at a time. Every value in each list is
+        appended, as an integer, to the corresponding channel's raw data
+        list.
+
+        :param valuesPureA: List of new raw measurement values, in
+            picoseconds, for channel A.
+        :param valuesPureB: List of new raw measurement values, in
+            picoseconds, for channel B.
+        :param valuesPureC: List of new raw measurement values, in
+            picoseconds, for channel C.
+        :param valuesPureD: List of new raw measurement values, in
+            picoseconds, for channel D.
+        :return: None
+        """
         for value in valuesPureA:
             self.datapureA.append(int(value))
         for value in valuesPureB:
@@ -1255,6 +1349,18 @@ class StartStopLogic():
         self.statusPoint.setPixmap(pixmap)
     
     def changeColorThread(self, color):
+        """
+        Updates the status-indicator dot colour from a worker-thread signal.
+
+        Equivalent to `changeStatusColor`, provided as a separate slot so it
+        can be connected directly to the worker thread's `colorValue`
+        signal. Draws a filled circle on `statusPoint` using the same
+        colour code: 0 = gray, 1 = green, 2 = yellow, 3 = orange.
+
+        :param color: Colour code (int). 0 for gray, 1 for green, 2 for
+            yellow, 3 for orange.
+        :return: None
+        """
         pixmap = QPixmap(self.statusPoint.size())
         pixmap.fill(Qt.transparent)  
         painter = QPainter(pixmap)
@@ -1281,6 +1387,14 @@ class StartStopLogic():
         self.statusPoint.setPixmap(pixmap)
         
     def resetSaveSentinels(self):
+        """
+        Clears the sentinels that track which file formats have already been saved.
+
+        Resets the txt/csv/dat save sentinels to 0, allowing the data to be
+        saved again in any format (e.g. after a new measurement starts).
+
+        :return: None
+        """
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0  

@@ -38,6 +38,22 @@ class Ui_FCSMeasurement(object):
     """
 
     def setupUi(self, FCSMeasurement):
+        """
+        Builds and lays out every widget of the FCS measurement tab.
+
+        Constructs the two-column layout described in the class docstring:
+        the left ``ConfigurationArea`` (measurement controls, correlator
+        parameters, and measurement stats panels) and the right
+        ``TotalGraphicArea`` (the empty ``graphicFrame`` where ``FCSLogic``
+        injects the live plot, plus the status bar). Also sets the initial
+        enabled/disabled state of the action buttons, draws the initial grey
+        status dot, and calls ``retranslateUi`` to set every widget's
+        display text.
+
+        :param FCSMeasurement: The widget (typically a ``QWidget`` tab page)
+            that this UI class will populate.
+        :return: None
+        """
         if not FCSMeasurement.objectName():
             FCSMeasurement.setObjectName(u"FCSMeasurement")
         FCSMeasurement.setEnabled(True)
@@ -524,6 +540,17 @@ class Ui_FCSMeasurement(object):
     # setupUi
 
     def retranslateUi(self, FCSMeasurement):
+        """
+        Sets the translatable display text of every widget built in ``setupUi``.
+
+        Assigns the window title and the text of every label, button, and
+        combo-box item using ``QCoreApplication.translate``, so the UI can be
+        localized through Qt's translation mechanism without touching the
+        layout code in ``setupUi``.
+
+        :param FCSMeasurement: The widget whose window title is set.
+        :return: None
+        """
         FCSMeasurement.setWindowTitle(
             QCoreApplication.translate("FCSMeasurement", u"Form", None)
         )
@@ -653,7 +680,25 @@ class Ui_FCSMeasurement(object):
 # ── Quick preview ────────────────────────────────────
 
 class _PreviewWindow(QMainWindow):
+    """
+    Standalone preview window used to visually inspect the FCS tab layout.
+
+    Only used when this module is run directly (``python
+    ui_FCSMeasurement.py``); not imported or used by the rest of the
+    application.
+    """
     def __init__(self):
+        """
+        Builds the FCS UI inside a bare `QMainWindow` for quick visual review.
+
+        Instantiates `Ui_FCSMeasurement`, runs its `setupUi`, expands the
+        configuration area horizontally, and places both columns in the
+        window's central widget. The start button is force-enabled so it is
+        visible in the preview even though `setupUi` normally disables it
+        until a device is connected.
+
+        :return: None
+        """
         super().__init__()
         self.ui = Ui_FCSMeasurement()
         self.ui.setupUi(self)

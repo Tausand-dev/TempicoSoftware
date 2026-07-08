@@ -1,18 +1,4 @@
 # -*- coding: utf-8 -*-
-"""ThreadFCS
-
-    Worker thread for computing the normalized autocorrelation function G(tau)
-    in real time from photon arrival times acquired with a Tausand Tempico TDC
-    device. Runs the multi-tau algorithm entirely in background so the GUI
-    thread stays responsive during acquisition.
-
-    The ``MultiTauCorrelator`` class is embedded directly in this module: it
-    is an internal implementation detail of the thread and is not exported.
-
-    | @author: Miguelangel García Castillo, Tausand Electronics
-    | mgarcia@tausand.com
-    | https://www.tausand.com
-"""
 
 from PySide2.QtCore import QThread, Signal, Slot
 import numpy as np
@@ -50,6 +36,25 @@ class _MultiTauCorrelator:
     """
 
     def __init__(self, tau_0=1_000_000, num_levels=16, m=16):
+        """
+        Allocates and zero-initializes the multi-tau accumulator hierarchy.
+
+        Creates, for each of the ``num_levels`` levels, a circular shift
+        register of length ``m`` along with its associated accumulators
+        (cross-products, delayed values, direct values, and processed-bin
+        count), plus a single coarsening buffer used to combine pairs of
+        bins when passing data from one level to the next.
+
+        :param tau_0: Base lag time (duration of the smallest bin), in
+            picoseconds.
+        :type tau_0: float
+        :param num_levels: Number of levels in the multi-tau hierarchy.
+        :type num_levels: int
+        :param m: Number of channels (shift-register length) per level.
+            Must be a positive even integer.
+        :type m: int
+        :return: None
+        """
         self.tau_0      = tau_0
         self.num_levels = num_levels
         self.m          = m
@@ -199,6 +204,33 @@ class WorkerThreadFCS(QThread):
                  num_runs=100, num_stops=2, channel_mode=2,
                  tau_0=1_000_000, num_levels=16,
                  m=16, total_seconds=None):
+        """
+        Configures the acquisition parameters and snapshots the device state.
+
+        Stores the device and acquisition settings used by ``run()`` /
+        ``_getMeasurements()`` (stop/start channel, number of runs, number of
+        stops per run, channel mode, and multi-tau correlator parameters),
+        initializes the loop-control and error-tracking sentinels, and saves
+        a snapshot of the device's current configuration via
+        ``saveCurrentSettings()`` so it can be restored once the thread
+        finishes.
+
+        :param parent: Parent widget that owns this thread.
+        :param device: Open ``tempico.TempicoDevice`` instance.
+        :param stop_channel: TDC channel (1-4) used as the stop signal.
+        :param start_channel: Optional TDC channel used as the start signal;
+            ``None`` uses the device's internal start source.
+        :param num_runs: Number of runs requested per ``measure()`` call.
+        :param num_stops: Minimum number of stops per run; forced to at
+            least 2, since FCS needs pairs of stops to compute lag times.
+        :param channel_mode: Device channel mode applied to the stop channel.
+        :param tau_0: Base bin size, in picoseconds. Default: 1 000 000 ps (1 µs).
+        :param num_levels: Number of levels in the multi-tau hierarchy.
+        :param m: Number of channels (shift-register length) per level.
+        :param total_seconds: Total measurement duration in seconds, or
+            ``None`` to run indefinitely until ``stop()`` is called.
+        :return: None
+        """
         super().__init__()
 
         self.parent        = parent
@@ -437,7 +469,44 @@ class WorkerThreadFCS(QThread):
     def _getMeasurements(self, correlator, cursor_ps, next_bin_edge,
                      photons_in_bin, call_count, total_events,
                      t_start, stop_times_ps):
+        """
+        Acquires one batch of measurements and feeds them into the correlator.
 
+        Calls ``device.measure()`` once and, for every run returned,
+        reconstructs the relative photon-arrival timeline from the raw
+        start→stop timelapses (discarding the first, arbitrary stop as it
+        only serves as the delta reference for the following ones). Each
+        valid inter-stop interval advances a running cursor; whenever the
+        cursor crosses a bin boundary of width ``tau_0``, the accumulated
+        photon count for that bin is pushed into ``correlator`` and a new bin
+        starts. After processing all runs, the current G(tau) curve is read
+        from the correlator and emitted via ``dataReady``, and a status
+        string with the call count, event count, and elapsed time is emitted
+        via ``statusUpdate`` / ``stringValue``. If no data, or no valid stop
+        values, are returned by the device, a warning status is emitted
+        instead and the running totals are returned unchanged. Consecutive
+        ``PermissionError`` exceptions are counted and, past a threshold, the
+        thread is stopped automatically.
+
+        :param correlator: ``_MultiTauCorrelator`` instance accumulating the
+            autocorrelation statistics across calls.
+        :param cursor_ps: Current position of the reconstructed photon
+            timeline, in picoseconds.
+        :param next_bin_edge: Picosecond position of the next bin boundary
+            (multiple of ``tau_0``).
+        :param photons_in_bin: Number of photon events accumulated in the
+            current, not-yet-closed bin.
+        :param call_count: Number of ``measure()`` calls processed so far.
+        :param total_events: Total number of valid stop events processed so far.
+        :param t_start: Timestamp (from ``time.time()``) when the acquisition
+            loop started, used to compute the elapsed time.
+        :param stop_times_ps: List accumulating every valid inter-stop delta,
+            in picoseconds, for later disk saving.
+        :return: Updated tuple ``(cursor_ps, next_bin_edge, photons_in_bin,
+            call_count, total_events, stop_times_ps)`` reflecting the state
+            after processing this batch.
+        :rtype: tuple
+        """
         try:
             data = self.device.measure()
 

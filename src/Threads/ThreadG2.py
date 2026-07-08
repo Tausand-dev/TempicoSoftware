@@ -1,26 +1,4 @@
 # -*- coding: utf-8 -*-
-"""ThreadG2
-
-    Worker thread for computing the g²(τ) second-order correlation function
-    (HBT experiment) in real time from start-stop events acquired with a
-    Tausand Tempico TDC device.
-
-    The algorithm is based on the HBT histogram approach from Prueba7.py:
-    a symmetric histogram of τ delays is accumulated and normalized by the
-    mean of all non-zero bins (tail-normalization), yielding g²(τ) = 1 in
-    the uncorrelated baseline. Color classification and "light type" labels
-    are deliberately excluded.
-
-    The thread mirrors the WorkerThreadFCS structure exactly:
-    - Same five signals (dataReady, statusUpdate, colorValue, stringValue,
-      threadCreated).
-    - Same saveCurrentSettings / applyCurrentSettings lifecycle.
-    - Same loop structure with a total_seconds finite-duration option.
-
-    | @author: Miguelangel García Castillo, Tausand Electronics
-    | mgarcia@tausand.com
-    | https://www.tausand.com
-"""
 
 import sys
 import time
@@ -115,6 +93,30 @@ class WorkerThreadG2(QThread):
         window_ns:    float = 200.0,
         total_seconds       = None,
     ):
+        """
+        Configures the acquisition parameters and builds the τ histogram.
+
+        Stores the device and acquisition settings, initializes the
+        loop-control and error-tracking sentinels, resets the photon
+        counters, and builds the symmetric τ histogram spanning
+        ``[-window_ns, +window_ns]`` with bin width ``bin_ns``. Bin edges are
+        offset by half a bin so that bin centres always fall exactly on
+        ``0, ±bin_ns, ±2*bin_ns, ...``, guaranteeing a bin centred at τ = 0.
+
+        :param parent: Parent widget that owns this thread.
+        :param device: Open ``tempico.TempicoDevice`` instance.
+        :param stop_channel: TDC channel (1-4) carrying the stop signal.
+        :type stop_channel: int
+        :param bin_ns: Histogram bin width, in nanoseconds.
+        :type bin_ns: float
+        :param window_ns: Half-window, in nanoseconds; the histogram spans
+            ``[-window_ns, +window_ns]``.
+        :type window_ns: float
+        :param total_seconds: Duration, in seconds, after which the
+            acquisition loop exits automatically, or ``None`` to run until
+            ``stop()`` is called.
+        :return: None
+        """
         super().__init__()
 
         self.parent        = parent

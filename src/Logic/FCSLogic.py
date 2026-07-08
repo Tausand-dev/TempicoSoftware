@@ -1,14 +1,4 @@
 # -*- coding: utf-8 -*-
-"""FCSLogic
-
-    Orchestration layer for the FCS (Fluorescence Correlation Spectroscopy)
-    measurement tab. Manages the pyqtgraph plot widget, button states, thread
-    lifecycle, data saving, and status indicators.
-
-    | @author: Miguelangel García Castillo, Tausand Electronics
-    | mgarcia@tausand.com
-    | https://www.tausand.com
-"""
 
 import os
 import datetime
@@ -35,10 +25,35 @@ class FCSLogAxis(pg.AxisItem):
     If zoomed in very closely (less than a decade visible), labels intermediate ticks with units.
     """
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the axis item and disables automatic SI-prefix scaling.
+
+        :param args: Positional arguments forwarded to ``pg.AxisItem``.
+        :param kwargs: Keyword arguments forwarded to ``pg.AxisItem``.
+        :return: None
+        """
         super().__init__(*args, **kwargs)
         self.enableAutoSIPrefix(False)
 
     def tickStrings(self, values, scale, spacing):
+        """
+        Formats tick labels for the logarithmic τ axis.
+
+        When not in log mode, delegates to the base class implementation. In
+        log mode, if any of the given tick ``values`` sit on an integer decade
+        boundary, only those decades are labeled (as ``10^n``) and all other
+        ticks are left blank to avoid overlapping text. If no decade boundary
+        is visible (i.e. the view is zoomed in to less than one decade),
+        every tick is instead labeled with its time value converted to the
+        most readable unit (ns, µs, ms, or s).
+
+        :param values: Tick positions, expressed as ``log10`` of the
+            underlying value.
+        :param scale: Axis scale factor, as provided by pyqtgraph.
+        :param spacing: Spacing between major ticks, as provided by
+            pyqtgraph.
+        :return: List of formatted tick label strings, one per value.
+        """
         if not self.logMode:
             return super().tickStrings(values, scale, spacing)
 
@@ -143,6 +158,49 @@ class FCSLogic():
         stopChannelComboBox,
         tau_0 = 1_000_000_000,   # 1000 µs = 1 ms in picoseconds
     ):
+        """
+        Initializes the FCS logic layer and wires up the tab's widgets.
+
+        Stores references to the device and every widget used by the FCS tab
+        (start/stop/save/clear buttons, status labels, live-count labels,
+        fitting controls, and the stop-channel selector), sets the initial
+        enabled/disabled state of each button, and connects each control's
+        signal to its corresponding handler (start/stop measurement, save
+        data, save plot, clear curve, run fit, update fit equation preview,
+        apply offset). It also initializes the correlator parameters
+        (``tau_0``, number of multi-tau levels, and grouping factor ``m``)
+        and the internal sentinels used to track thread lifecycle and
+        measurement state.
+
+        :param parent: The widget where the pyqtgraph plot is injected.
+        :param disconnectButton: Main-window Disconnect button.
+        :param device: Open ``Tempico.TempicoDevice`` instance.
+        :param startButton: Button that starts the acquisition.
+        :param stopButton: Button that stops the acquisition.
+        :param saveDataButton: Button that saves the G(τ) data.
+        :param savePlotButton: Button that saves the plot image.
+        :param clearButton: Button that clears the accumulated curve.
+        :param connectButton: Main-window Connect button.
+        :param mainWindow: Reference to the application's main window.
+        :param statusValue: Label showing the current status text.
+        :param statusPoint: Label used as a coloured status dot.
+        :param timerStatus: Shared connection-polling timer.
+        :param callsLabel: Label showing the number of calls received.
+        :param eventsLabel: Label showing the number of events detected.
+        :param elapsedLabel: Label showing the elapsed measurement time.
+        :param fitButton: Button that runs the correlation curve fit.
+        :param fitModelCombo: Combo box to select the fit model.
+        :param fitEquationLabel: Label displaying the fit equation.
+        :param fitResultLabel: Label displaying the fit result summary.
+        :param fitResultsFrame: Frame containing the fit results widgets.
+        :param fitTable: Table widget showing fitted parameter values.
+        :param fitOffsetCheckBox: Checkbox to toggle the G(∞) offset in the fit.
+        :param stopChannelComboBox: Combo box to select the stop channel.
+        :param tau_0: Base bin size in picoseconds. Defaults to
+            ``1_000_000_000`` ps (1 ms).
+        :type tau_0: int, optional
+        :return: None
+        """
         super().__init__()
 
         # ── Utility ──────────────────────────────────────────────────────────
@@ -327,7 +385,7 @@ class FCSLogic():
 
 
     def _get_stop_channel_index(self):
-        """Devuelve 1-4 según el combo de stop channel."""
+        """Returns 1-4 based on the selected stop-channel combo box index."""
         return self.stopChannelComboBox.currentIndex() + 1
     
     def _restore_buttons_after_stop(self):
@@ -659,6 +717,19 @@ class FCSLogic():
 
     # ── Save data ─────────────────────────────────────────────────────────────
     def _get_fit_header_lines(self):
+        """
+        Builds header lines describing the current curve fit, for saved files.
+
+        Returns an empty string if no fit results are currently shown
+        (``fitResultsFrame`` is hidden). Otherwise, builds a multi-line
+        string with the selected fit model's name, its equation (including
+        the optional G(∞) offset term), and one line per fitted parameter
+        read from ``fitTable``.
+
+        :return: Tab-separated header lines describing the fit, or an empty
+            string if no fit is currently displayed.
+        :rtype: str
+        """
         if not self.fitResultsFrame.isVisible():
             return ""
 
@@ -697,6 +768,21 @@ class FCSLogic():
     
     
     def save_data(self):
+        """
+        Prompts for a file format and saves the current G(τ) curve and photon times.
+
+        Does nothing if there is no measurement data cached. Otherwise, shows
+        a small dialog to let the user choose the output format (txt, csv, or
+        dat), then writes two files into the configured save folder: one with
+        the ``tau_s`` / ``G(tau)`` pairs of the autocorrelation curve, and
+        another with the raw stop timestamps in picoseconds. Both files share
+        a header with the measurement window, device model, correlator
+        parameters, selected stop channel, and — if a fit was run — the fit
+        model, equation, and fitted parameter values. Shows a confirmation or
+        error message box depending on the outcome.
+
+        :return: None
+        """
         if len(self.last_taus_s) == 0:
             return
 
@@ -706,7 +792,7 @@ class FCSLogic():
         now               = datetime.datetime.now()
         current_date_str  = now.strftime("%Y%m%d%H%M%S")
 
-        # Stop channel name para el nombre de archivo
+        # Stop channel name used for the output file name
         ch_names  = ["A", "B", "C", "D"]
         ch_index  = self.stopChannelComboBox.currentIndex()
         ch_label  = ch_names[ch_index] if ch_index < len(ch_names) else "A"
@@ -735,7 +821,7 @@ class FCSLogic():
         prefix   = dataFolderPrefix['fcsPrefix']
         filename = f"{prefix}_{current_date_str}_Channel{ch_label}"
 
-        # ── Header: parámetros del correlador ────────────────────────────
+        # ── Header: correlator parameters ─────────────────────────────────
         tau_0_us = self.tau0SpinBox.value() if self.tau0SpinBox is not None else self.tau_0 // 1_000_000
 
         setting = (
@@ -749,7 +835,7 @@ class FCSLogic():
             f"Stop Channel:\tChannel {ch_label}"
         )
 
-        # ── Añadir info del fit si existe ─────────────────────────────────
+        # ── Add fit info if present ────────────────────────────────────────
         fit_header = self._get_fit_header_lines()
         if fit_header:
             setting += "\n" + fit_header
@@ -799,6 +885,19 @@ class FCSLogic():
     # ── Save plot ─────────────────────────────────────────────────────────────
 
     def save_plot(self):
+        """
+        Prompts for an image format and exports the current plot to a file.
+
+        Shows a small dialog to let the user choose the output image format
+        (png, tiff, or jpg), builds the destination file name from the
+        configured file prefix, the current timestamp, and the selected stop
+        channel, then exports the plot at 800x600 pixels using pyqtgraph's
+        ``ImageExporter``. The destination folder is created if it does not
+        already exist. Shows a confirmation or error message box depending on
+        the outcome.
+
+        :return: None
+        """
         try:
             dataFolderPrefix = self.savefile.getDataFolderPrefix()
             folder_path      = dataFolderPrefix["saveFolder"]
@@ -947,14 +1046,14 @@ class FCSLogic():
 
     @staticmethod
     def _model_3d(tau, N, tau_D, kappa, offset=1.0):
-        """3D Gaussian diffusion model — κ libre."""
+        """3D Gaussian diffusion model — free structural parameter κ."""
         return offset + (1.0 / N) * (1.0 / (1.0 + tau / tau_D)) * (
             1.0 / np.sqrt(1.0 + tau / (kappa**2 * tau_D))
         )
 
     @staticmethod
     def _model_anomalous(tau, N, tau_D, alpha, kappa, offset=1.0):
-        """Difusión anómala 3D con κ libre."""
+        """3D anomalous diffusion model — free structural parameter κ."""
         return offset + (1.0 / N) * (
             1.0 / (
                 (1.0 + (tau / tau_D)**alpha) *
@@ -990,19 +1089,41 @@ class FCSLogic():
         return offset + G0 * np.exp(-tau / tau_B)
     
     def _apply_offset_to_plot(self):
-        """Desplaza los datos -1 en la gráfica si G(∞) offset está desmarcado."""
+        """
+        Redraws the plotted curve shifted by -1 when the G(∞) offset is unchecked.
+
+        If the G(∞) offset checkbox is checked, the curve is plotted with
+        its original values; otherwise, the curve is shifted down by 1 so it
+        matches the convention where G(∞) = 0. Since changing the offset
+        invalidates any previous fit, the fit curve is cleared, the fit
+        results panel is hidden, and the equation preview label is
+        refreshed.
+
+        :return: None
+        """
         if len(self.last_g) == 0:
             return
         if self.fitOffsetCheckBox.isChecked():
             self.curve.setData(self.last_taus_s, self.last_g)
         else:
             self.curve.setData(self.last_taus_s, self.last_g - 1.0)
-        # Limpia el fit anterior ya que el offset cambió
+        # Clear the previous fit since the offset changed
         self.fit_curve.setData([], [])
         self.fitResultsFrame.setVisible(False)
         self._update_equation_label_preview()
 
     def _update_equation_label_preview(self):
+        """
+        Shows the HTML-formatted equation for the currently selected fit model.
+
+        Builds an HTML string with the mathematical expression of the model
+        selected in ``fitModelCombo``, including the optional G(∞) offset
+        term when ``fitOffsetCheckBox`` is checked, and displays it in
+        ``fitEquationLabel``. Also makes the fit results panel visible so
+        the equation is shown even before a fit has been run.
+
+        :return: None
+        """
         offset = 1.0 if self.fitOffsetCheckBox.isChecked() else 0.0
         idx    = self.fitModelCombo.currentIndex()
         pre    = "G(∞) + " if offset == 1.0 else ""
@@ -1036,6 +1157,33 @@ class FCSLogic():
     def _update_equation_label(self, N, tD_ms, kappa, alpha=None, offset=1.0,
                                 T=None, tau_T=None, tau_F=None,
                                 tD2_ms=None, f1=None, tau_R=None, A=None):
+        """
+        Shows the HTML-formatted equation for the 3D or anomalous diffusion model.
+
+        Refreshes the generic preview first (via
+        `_update_equation_label_preview`), then overwrites `fitEquationLabel`
+        with the specific equation for the normal 3D diffusion model (when
+        `alpha` is ``None``) or the anomalous diffusion model (when `alpha`
+        is provided), including the G(∞) offset term when `offset` equals 1.0.
+
+        :param N: Fitted average number of particles in the observation volume.
+        :param tD_ms: Fitted diffusion time, in milliseconds.
+        :param kappa: Fitted structural parameter (κ).
+        :param alpha: Fitted anomalous diffusion exponent (α); if ``None``,
+            the normal (non-anomalous) diffusion equation is shown.
+        :param offset: 1.0 to include the G(∞) offset term, 0.0 otherwise.
+        :param T: Unused placeholder for the triplet-state fraction, kept for
+            interface consistency with other fit models.
+        :param tau_T: Unused placeholder for the triplet relaxation time.
+        :param tau_F: Unused placeholder for the flow time.
+        :param tD2_ms: Unused placeholder for the second diffusion time
+            (two-component model).
+        :param f1: Unused placeholder for the first-species fraction
+            (two-component model).
+        :param tau_R: Unused placeholder for the chemical relaxation time.
+        :param A: Unused placeholder for the chemical relaxation amplitude.
+        :return: None
+        """
         self._update_equation_label_preview()
         prefix = "G(∞) + " if offset == 1.0 else ""
         if alpha is None:
