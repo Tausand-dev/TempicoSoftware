@@ -319,15 +319,6 @@ class MainWindow(QMainWindow):
         self.sentinel6=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
-        # Se difiere la apertura del diálogo "Connect Tempico" con QTimer
-        # en vez de llamarlo directamente aquí. self.dialog.exec_() dentro
-        # de open_dialog() es MODAL y bloquea el hilo: si se llama de forma
-        # directa, el constructor de MainWindow (y por lo tanto la línea
-        # `MainWindow()` en SplashScreen) no termina hasta que el usuario
-        # cierre ese diálogo, dejando el splash atrapado encima todo ese
-        # tiempo. Al diferirlo con singleShot(0, ...), el constructor
-        # termina de inmediato, el splash se cierra, y solo DESPUÉS de eso
-        # (en la siguiente vuelta del event loop) se abre el diálogo modal.
         QTimer.singleShot(0, self.open_dialog)
 
 
@@ -833,8 +824,7 @@ class MainWindow(QMainWindow):
                 eventsLabel       = self.uig2.eventsLabel
                 elapsedLabel      = self.uig2.elapsedLabel
                 g2ZeroLabel       = self.uig2.g2ZeroLabel
-                rateStartLabel    = self.uig2.rateStartLabel
-                rateStopLabel     = self.uig2.rateStopLabel
+                rateStopStopLabel = self.uig2.rateStopStopLabel
                 stopChannelComboBox = self.uig2.stopChannelComboBox
 
                 # ── Construct G2Logic (mirrors FCSLogic constructor) ─────────
@@ -855,8 +845,7 @@ class MainWindow(QMainWindow):
                     eventsLabel,
                     elapsedLabel,
                     g2ZeroLabel,
-                    rateStartLabel,
-                    rateStopLabel,
+                    rateStopStopLabel,
                     stopChannelComboBox,
                 )
                 # Provide parameter widgets so G2Logic reads them at start time

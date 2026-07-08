@@ -30,11 +30,31 @@ class WorkerThreadG2(QThread):
         baseline = mean( counts[counts > 0] )
         g²(τ)   = counts(τ) / baseline
 
+    Rate (stop-stop):
+        The displayed rate is NOT total_events / elapsed_time — that naive
+        estimate is skewed by the hardware dead-time between acquisition
+        runs. Instead, the stop channel is configured for exactly the
+        number of stops per run requested by the caller (``num_stops``,
+        no forced minimum), and, within each individual run, the delta
+        between consecutive valid stops is accumulated (mirroring
+        ``WorkerThreadFCS``'s inter-stop delta logic). The gap between the
+        last stop of one run and the first stop of the next run is never
+        computed, so the inter-run dead-time can't contaminate the
+        estimate. The rate is then::
+
+            Rate (stop-stop) = 1 / mean(delta_stop)
+
+        with a guard against delta_stop <= 0 to avoid a division by zero.
+        If ``num_stops`` is 1, no intra-run delta ever exists, so
+        Rate (stop-stop) has no data and the UI shows it as unavailable —
+        the g²(τ) histogram itself is unaffected either way, since it only
+        ever uses the first stop of each run.
+
     Signals
     -------
-    dataReady : Signal(object, object, int, float, float)
+    dataReady : Signal(object, object, int, float)
         Emitted after every ``measure()`` call with
-        ``(centres_ns, g2, total_events, rate_starts, rate_stops)``.
+        ``(centres_ns, g2, total_events, rate_stop_stop)``.
     statusUpdate : Signal(str)
         Emitted after every ``measure()`` call with a human-readable status
         string (event count, elapsed time).
@@ -70,6 +90,13 @@ class WorkerThreadG2(QThread):
         TDC acquisition mode (1 = ±200 ns typical, 2 = up to 4 ms). Default: 1.
     num_runs : int
         Number of runs per ``measure()`` call. Default: 100.
+    num_stops : int
+        Number of stops requested per run on the active channel, exactly
+        as configured by the caller (no forced minimum; 1 is the hardware
+        floor). Only the first valid stop of each run is used to build the
+        g²(τ) histogram regardless of this value. If less than 2, no
+        intra-run stop-to-stop delta can be computed, so Rate (stop-stop)
+        has no data to show. Default: 2.
     channel_mode : int
         TDC mode applied to the stop channel at device configuration time.
         Kept for symmetry with WorkerThreadFCS; mirrors ``mode``. Default: 1.
@@ -78,7 +105,7 @@ class WorkerThreadG2(QThread):
         the loop runs until ``stop()`` is called. Default: None.
     """
 
-    dataReady     = Signal(object, object, int, float, float)
+    dataReady     = Signal(object, object, int, float)
     statusUpdate  = Signal(str)
     colorValue    = Signal(int)
     stringValue   = Signal(str)
@@ -91,6 +118,7 @@ class WorkerThreadG2(QThread):
         stop_channel: int   = 1,
         bin_ns:       float = 2.0,
         window_ns:    float = 200.0,
+        num_stops:    int   = 2,
         total_seconds       = None,
     ):
         """
@@ -112,6 +140,13 @@ class WorkerThreadG2(QThread):
         :param window_ns: Half-window, in nanoseconds; the histogram spans
             ``[-window_ns, +window_ns]``.
         :type window_ns: float
+        :param num_stops: Number of stops requested per run on the active
+            channel, exactly as configured by the user (e.g. via the
+            Channels settings dialog). If 1, the g²(τ) histogram still
+            works normally, but the Rate (stop-stop) display will have no
+            data to show, since it needs at least 2 stops in the same run
+            to compute an intra-run delta.
+        :type num_stops: int
         :param total_seconds: Duration, in seconds, after which the
             acquisition loop exits automatically, or ``None`` to run until
             ``stop()`` is called.
@@ -124,6 +159,13 @@ class WorkerThreadG2(QThread):
         self.stop_channel  = stop_channel
         self.bin_ns        = bin_ns
         self.window_ns     = window_ns
+        # Respect exactly what was requested (no silent minimum). If the
+        # caller passes 1, the active channel genuinely runs with 1 stop
+        # per run: the g²(τ) histogram is unaffected (it only ever uses
+        # the first stop), but no intra-run stop-to-stop delta will exist,
+        # so Rate (stop-stop) will show as unavailable — see the
+        # len(valid_stops) >= 2 guard further down.
+        self.num_stops     = max(num_stops, 1)   # 1 is the hardware minimum
         self.total_seconds = total_seconds
 
         # Loop-control sentinel; set to False by stop()
@@ -141,6 +183,14 @@ class WorkerThreadG2(QThread):
         # kept for the whole acquisition so it can be exported as raw
         # start-stop data (independent from the accumulated g²(τ) histogram).
         self.raw_stop_ps = []
+
+        # ── Stop-to-stop deltas (Rate stop-stop) ──────────────────────────────
+        # Running accumulators for the dead-time-safe stop-stop rate: only
+        # deltas between consecutive valid stops WITHIN the same run are
+        # ever added here (see _getMeasurements), so the hardware dead-time
+        # between runs never contaminates the estimate.
+        self._sum_delta_stop_ps = 0.0
+        self._n_delta_stop      = 0
 
         # ── Build symmetric histogram [-window_ns, +window_ns] ───────────────
         # Edges are offset by half a bin so bin centres fall exactly on
@@ -304,7 +354,15 @@ class WorkerThreadG2(QThread):
         self._active_ch = _all_chs[self.stop_channel - 1]
         self._active_ch.enableChannel()
         self._active_ch.setMode(_mode)
-        self._active_ch.setNumberOfStops(1)
+        # Use exactly the number of stops the user configured for this
+        # channel. The first stop is still the only one used to build the
+        # g²(τ) histogram; if 2+ stops are requested, the extra stop(s)
+        # let us compute a genuine intra-run stop-to-stop delta for the
+        # Rate (stop-stop) display, free of inter-run hardware dead-time.
+        # If only 1 stop is configured, Rate (stop-stop) has no data to
+        # show and the UI falls back to "—" (see the len(valid_stops) >= 2
+        # guard below).
+        self._active_ch.setNumberOfStops(self.num_stops)
         # Stop mask = −0.25 µs: allows the TP1204 to capture negative delays natively
         self._active_ch.setStopMask(-0.25)
         self._active_ch.setAverageCycles(1)
@@ -390,31 +448,64 @@ class WorkerThreadG2(QThread):
                 if ch != self.stop_channel:
                     continue          # Only the selected stop channel
 
-                # Number of valid stops in this row (HBT uses exactly 1 stop)
-                n_stops_row = self._getRange(run_row, 1)
+                # Number of valid stop slots present in this row. The active
+                # channel is configured for self.num_stops (>= 2) so that,
+                # when available, a second (or later) stop lets us compute a
+                # genuine intra-run stop-to-stop delta.
+                n_stops_row = self._getRange(run_row, self.num_stops)
+
+                valid_stops = []
                 for i in range(n_stops_row):
                     raw_ps = run_row[3 + i]
-
                     # Discard overflow / sentinel
                     if raw_ps == overflow_val or raw_ps == -1:
                         continue
+                    valid_stops.append(raw_ps)
 
-                    self.n_starts += 1
+                if not valid_stops:
+                    continue
 
-                    # Convert ps → ns (sign preserved — TP1204 can give τ < 0)
-                    tau_ns = raw_ps / 1_000.0
+                # ── g²(τ) histogram: only the FIRST valid stop of the run ──
+                # is used — exactly as before — since it's the start→stop
+                # delay the correlation histogram is built from. Any extra
+                # stops are used below only for the stop-stop rate, never
+                # added to the histogram.
+                raw_ps0 = valid_stops[0]
 
-                    self.n_stops      += 1
-                    self.total_events += 1
+                self.n_starts += 1
 
-                    # Keep the raw (unbinned) stop time for later export as
-                    # raw start-stop data
-                    self.raw_stop_ps.append(raw_ps)
+                # Convert ps → ns (sign preserved — TP1204 can give τ < 0)
+                tau_ns = raw_ps0 / 1_000.0
 
-                    if self.isBatched:
-                        taus_batch_ns.append(tau_ns)
-                    else:
-                        self._accumulate([tau_ns])
+                self.n_stops      += 1
+                self.total_events += 1
+
+                # Keep the raw (unbinned) stop time for later export as
+                # raw start-stop data
+                self.raw_stop_ps.append(raw_ps0)
+
+                if self.isBatched:
+                    taus_batch_ns.append(tau_ns)
+                else:
+                    self._accumulate([tau_ns])
+
+                # ── Stop-to-stop deltas (Rate stop-stop) ────────────────────
+                # Only intra-run consecutive deltas are used (mirrors
+                # WorkerThreadFCS): the gap between the last stop of this run
+                # and the first stop of the NEXT run includes the hardware
+                # dead-time between runs and is never computed here, so it
+                # can't corrupt the rate estimate.
+                if len(valid_stops) >= 2:
+                    prev_t = valid_stops[0]
+                    for t_ps in valid_stops[1:]:
+                        delta_t_ps = t_ps - prev_t
+                        # Filter: discard non-positive deltas (dead-time /
+                        # ordering artifacts) so they can't corrupt the mean
+                        # or cause a division by zero downstream.
+                        if delta_t_ps > 0:
+                            self._sum_delta_stop_ps += delta_t_ps
+                            self._n_delta_stop      += 1
+                        prev_t = t_ps
 
             # Flush the batch
             if self.isBatched and taus_batch_ns:
@@ -424,10 +515,10 @@ class WorkerThreadG2(QThread):
 
             # Recompute g²(τ) and emit
             elapsed = time.time() - t_start
-            g2, rate_s, rate_p, baseline = self._compute_g2(elapsed)
+            g2, rate_stop_stop, baseline = self._compute_g2(elapsed)
 
             self.dataReady.emit(
-                self.centres, g2, self.total_events, rate_s, rate_p
+                self.centres, g2, self.total_events, rate_stop_stop
             )
 
             # Status string (same format as FCS so G2Logic can reuse parser)
@@ -504,17 +595,28 @@ class WorkerThreadG2(QThread):
         n_stops ≈ n_starts and the classical ``r·r·T·Δt`` formula would
         produce a vanishingly small baseline.
 
-        Also computes start and stop rates for display.
+        Also computes the Rate (stop-stop) for display: 1 / mean(delta_stop),
+        where delta_stop is the mean of every intra-run stop-to-stop delta
+        accumulated so far (see ``_getMeasurements``). Using elapsed time
+        would be biased by the hardware dead-time between runs, so the rate
+        is derived purely from the accumulated deltas instead.
 
         :param t_elapsed: Wall-clock seconds since acquisition began.
-        :return: Tuple (g2, rate_starts, rate_stops, baseline).
+        :return: Tuple (g2, rate_stop_stop, baseline).
         """
-        g2     = np.zeros(self.n_bins, dtype=np.float64)
-        rate_s = self.n_starts / t_elapsed if t_elapsed > 0 else 0.0
-        rate_p = self.n_stops  / t_elapsed if t_elapsed > 0 else 0.0
+        g2 = np.zeros(self.n_bins, dtype=np.float64)
+
+        # Rate (stop-stop) = 1 / mean(delta_stop), guarded against
+        # delta_stop == 0 (division by zero) or no valid deltas yet.
+        if self._n_delta_stop > 0:
+            mean_delta_stop_ps = self._sum_delta_stop_ps / self._n_delta_stop
+            mean_delta_stop_s  = mean_delta_stop_ps * 1e-12   # ps → s
+            rate_stop_stop = (1.0 / mean_delta_stop_s) if mean_delta_stop_s != 0 else 0.0
+        else:
+            rate_stop_stop = 0.0
 
         if self.n_stops < 10:
-            return g2, rate_s, rate_p, 0.0
+            return g2, rate_stop_stop, 0.0
 
         # Baseline = mean of all non-empty bins
         all_nonzero = self.counts[self.counts > 0]
@@ -526,7 +628,7 @@ class WorkerThreadG2(QThread):
         if baseline > 0:
             g2 = self.counts / baseline
 
-        return g2, rate_s, rate_p, baseline
+        return g2, rate_stop_stop, baseline
 
     def _getRange(self, run_row, stop_number: int) -> int:
         """

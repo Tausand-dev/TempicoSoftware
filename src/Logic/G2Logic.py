@@ -64,10 +64,9 @@ class G2Logic:
         Label that displays the elapsed measurement time.
     g2ZeroLabel : QLabel
         Label that displays the g²(τ=0) value.
-    rateStartLabel : QLabel
-        Label that displays the start-channel count rate (cps).
-    rateStopLabel : QLabel
-        Label that displays the stop-channel count rate (cps).
+    rateStopStopLabel : QLabel
+        Label that displays the Rate (stop-stop), i.e. 1 / mean(delta_stop)
+        computed from the time between one stop and the next (cps).
     stopChannelComboBox : QComboBox
         Combo box to select which TDC channel carries the stop signal (A–D).
     """
@@ -90,8 +89,7 @@ class G2Logic:
         eventsLabel,
         elapsedLabel,
         g2ZeroLabel,
-        rateStartLabel,
-        rateStopLabel,
+        rateStopStopLabel,
         stopChannelComboBox,
         tauQuerySpinBox=None,
         g2CursorLabel=None,
@@ -131,8 +129,9 @@ class G2Logic:
         :param eventsLabel: Label showing the total number of photon events.
         :param elapsedLabel: Label showing the elapsed measurement time.
         :param g2ZeroLabel: Label showing the g²(τ=0) value.
-        :param rateStartLabel: Label showing the start-channel count rate.
-        :param rateStopLabel: Label showing the stop-channel count rate.
+        :param rateStopStopLabel: Label showing the Rate (stop-stop), i.e.
+            1 / mean(delta_stop) computed from the time between one stop
+            and the next.
         :param stopChannelComboBox: Combo box to select the stop channel.
         :param tauQuerySpinBox: Optional spin box to query g²(τ) at a
             specific τ value.
@@ -169,8 +168,7 @@ class G2Logic:
         self.eventsLabel         = eventsLabel
         self.elapsedLabel        = elapsedLabel
         self.g2ZeroLabel         = g2ZeroLabel
-        self.rateStartLabel      = rateStartLabel
-        self.rateStopLabel       = rateStopLabel
+        self.rateStopStopLabel  = rateStopStopLabel
         self.stopChannelComboBox = stopChannelComboBox
 
         self.startButton    = startButton
@@ -661,7 +659,11 @@ class G2Logic:
 
         Resets the curve, disables controls that must not be used during
         measurement, stops the connection-polling timer, notifies the main
-        window, and launches the ``WorkerThreadG2``.
+        window, and launches the ``WorkerThreadG2``. The number of stops
+        requested per run is read directly from the selected stop
+        channel's current device configuration (``getNumberOfStops()``),
+        so the measurement always matches what the Channels settings
+        dialog shows — no internal default is silently substituted.
 
         :return: None
         """
@@ -726,8 +728,7 @@ class G2Logic:
         self.eventsLabel.setText("0")
         self.elapsedLabel.setText("0 s")
         self.g2ZeroLabel.setText("—")
-        self.rateStartLabel.setText("—")
-        self.rateStopLabel.setText("—")
+        self.rateStopStopLabel.setText("—")
 
         # Stop the connection-polling timer while the thread owns the device
         self.stopTimerConnection()
@@ -744,6 +745,14 @@ class G2Logic:
 
         stop_ch = self._get_stop_channel_index()
 
+        # Read the number of stops actually configured for the selected
+        # stop channel (set via the Channels settings dialog) so the
+        # measurement uses exactly what the UI shows, instead of an
+        # internal default that could silently disagree with it.
+        _channels  = [self.device.ch1, self.device.ch2,
+                      self.device.ch3, self.device.ch4]
+        num_stops  = _channels[stop_ch - 1].getNumberOfStops()
+
         self.mainWindow.saveSettings()
         self.mainWindow.activeMeasurement()
 
@@ -753,6 +762,7 @@ class G2Logic:
             stop_channel  = stop_ch,
             bin_ns        = bin_ns,
             window_ns     = window_ns,
+            num_stops     = num_stops,
             total_seconds = total_seconds,
         )
         self.worker.dataReady.connect(self.update_plot)
@@ -838,8 +848,7 @@ class G2Logic:
         centres_ns,
         g2,
         total_events: int,
-        rate_s: float,
-        rate_p: float,
+        rate_stop_stop: float,
     ):
         """
         Update the g²(τ) step-histogram with the latest correlation data.
@@ -850,8 +859,9 @@ class G2Logic:
         :param centres_ns: Bin-centre positions in nanoseconds (ndarray).
         :param g2: Normalized g²(τ) values (ndarray).
         :param total_events: Total photon events accumulated so far.
-        :param rate_s: Start-channel count rate in counts per second.
-        :param rate_p: Stop-channel count rate in counts per second.
+        :param rate_stop_stop: Rate (stop-stop) in counts per second, i.e.
+            1 / mean(delta_stop) computed from the time between one stop
+            and the next (dead-time-safe; see ``WorkerThreadG2``).
         :return: None
         """
         centres_ns = np.asarray(centres_ns, dtype=np.float64)
@@ -884,8 +894,10 @@ class G2Logic:
 
         # Update stats labels
         self.eventsLabel.setText(f"{total_events:,}")
-        self.rateStartLabel.setText(f"{rate_s:,.0f} cps")
-        self.rateStopLabel.setText(f"{rate_p:,.0f} cps")
+        if rate_stop_stop and rate_stop_stop > 0:
+            self.rateStopStopLabel.setText(f"{rate_stop_stop:,.0f} cps")
+        else:
+            self.rateStopStopLabel.setText("—")
 
         # g²(0): value in the bin whose centre is closest to τ = 0
         if len(centres_ns) > 0:
@@ -947,8 +959,7 @@ class G2Logic:
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.g2ZeroLabel.setText("—")
-        self.rateStartLabel.setText("—")
-        self.rateStopLabel.setText("—")
+        self.rateStopStopLabel.setText("—")
         self.eventsLabel.setText("0")
         self.elapsedLabel.setText("0 s")
         # Reset cursor

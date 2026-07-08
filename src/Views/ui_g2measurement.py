@@ -193,29 +193,17 @@ class Ui_G2(object):
         self.g2ZeroRowLayout.addWidget(self.g2ZeroLabel)
         self.verticalLayout_info.addWidget(self.g2ZeroRowFrame)
 
-        # Rate start row
-        self.rateStartRowFrame = QFrame(self.InfoFrame)
-        self.rateStartRowLayout = QHBoxLayout(self.rateStartRowFrame)
-        self.rateStartRowLayout.setContentsMargins(0, 0, 0, 0)
-        self.rateStartKeyLabel = QLabel("Rate (start):", self.rateStartRowFrame)
-        self.rateStartKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.rateStartLabel = QLabel("—", self.rateStartRowFrame)
-        self.rateStartLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.rateStartRowLayout.addWidget(self.rateStartKeyLabel)
-        self.rateStartRowLayout.addWidget(self.rateStartLabel)
-        self.verticalLayout_info.addWidget(self.rateStartRowFrame)
-
-        # Rate stop row
-        self.rateStopRowFrame = QFrame(self.InfoFrame)
-        self.rateStopRowLayout = QHBoxLayout(self.rateStopRowFrame)
-        self.rateStopRowLayout.setContentsMargins(0, 0, 0, 0)
-        self.rateStopKeyLabel = QLabel("Rate (stop):", self.rateStopRowFrame)
-        self.rateStopKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.rateStopLabel = QLabel("—", self.rateStopRowFrame)
-        self.rateStopLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.rateStopRowLayout.addWidget(self.rateStopKeyLabel)
-        self.rateStopRowLayout.addWidget(self.rateStopLabel)
-        self.verticalLayout_info.addWidget(self.rateStopRowFrame)
+        # Rate stop-stop row
+        self.rateStopStopRowFrame = QFrame(self.InfoFrame)
+        self.rateStopStopRowLayout = QHBoxLayout(self.rateStopStopRowFrame)
+        self.rateStopStopRowLayout.setContentsMargins(0, 0, 0, 0)
+        self.rateStopStopKeyLabel = QLabel("Rate (stop-stop):", self.rateStopStopRowFrame)
+        self.rateStopStopKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.rateStopStopLabel = QLabel("—", self.rateStopStopRowFrame)
+        self.rateStopStopLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.rateStopStopRowLayout.addWidget(self.rateStopStopKeyLabel)
+        self.rateStopStopRowLayout.addWidget(self.rateStopStopLabel)
+        self.verticalLayout_info.addWidget(self.rateStopStopRowFrame)
 
         # ── Cursor / τ query row ──────────────────────────────────────────
         # Thin separator
@@ -433,22 +421,6 @@ class Ui_G2(object):
         self.verticalLayout_params.addWidget(self.WindowFrame)
 
         # ── Tie the cursor-τ spinbox range to ±Window ───────────────────
-        # The cursor's min/max must always match what is set in "Window
-        # (±)" — not a fixed ±1,000,000 ns range.
-        #
-        # IMPORTANT: when QDoubleSpinBox.setRange() is called, Qt silently
-        # clamps any out-of-range current value to whichever edge it
-        # overshot. In practice the cursor was almost always left of the
-        # new range (e.g. a stale -150 ns when Window shrinks to ±100 ns),
-        # so it always appeared to "snap to the left". To avoid that
-        # surprising jump, the cursor is explicitly reset to 0 ns every
-        # time the window changes, instead of relying on Qt's clamp.
-        #
-        # ``_on_tau_cursor_reset`` is an optional hook (set by G2Logic /
-        # main.py via ``self.uig2._on_tau_cursor_reset = <callable>``) that
-        # lets the plot's cursor line and g²(τ) readout stay in sync with
-        # this programmatic reset, since blockSignals() prevents the
-        # normal valueChanged → _query_tau connection from firing here.
         self._on_tau_cursor_reset = None
 
         def _sync_tau_cursor_range(half_window_ns):
