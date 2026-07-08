@@ -34,6 +34,9 @@ class StartStopLogic():
     def __init__(self, parent, disconnect,device: Tempico.TempicoDevice,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
         super().__init__()
         self.savefile=savefile()
+        #Measurement window (used when saving data)
+        self.initialDate=""
+        self.finalDate=""
         #timer to manage disconnection
         self.timerConnection=timerStatus
         #Disconnect button
@@ -406,6 +409,8 @@ class StartStopLogic():
             self.mainWindow.saveSettings()
             self.withoutMeasurement=False
             self.stopTimerConnection()
+            self.initialDate=datetime.datetime.now()
+            self.finalDate=""
             self.sentinelZoomChangedA=0
             self.sentinelZoomChangedB=0
             self.sentinelZoomChangedC=0
@@ -491,6 +496,7 @@ class StartStopLogic():
 
         :return: None
         """
+        self.finalDate=datetime.datetime.now()
         if not self.withoutMeasurement:
             self.startTimerConnection()
         if self.threadCreatedSentinel:
@@ -832,6 +838,7 @@ class StartStopLogic():
         data_prefix=dataFolderPrefix["startStopHistogramPrefix"]
         current_date=datetime.datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        device_model=self.device.getModelIdn()
         #Init filenames and data list
         filenames=[]
         data=[]
@@ -876,28 +883,28 @@ class StartStopLogic():
             if not total_condition:
                 if self.setinelSaveA:
                     filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
-                    setting_A="Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
+                    setting_A="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
                     settings.append(setting_A)
                     filenames.append(filename1)
                     data.append(self.datapureA)
                     column_names.append('channelA_data (ps)')
                 if self.setinelSaveB:
                     filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
-                    setting_B="Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
+                    setting_B="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
                     settings.append(setting_B)
                     filenames.append(filename2)
                     data.append(self.datapureB)
                     column_names.append('channelB_data (ps)')
                 if self.setinelSaveC:
                     filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
-                    setting_C="Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
+                    setting_C="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
                     settings.append(setting_C)
                     filenames.append(filename3)
                     data.append(self.datapureC)
                     column_names.append('channelC_data (ps)')
                 if self.setinelSaveD:
                     filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
-                    setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
+                    setting_D="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
                     settings.append(setting_D)
                     filenames.append(filename4)
                     data.append(self.datapureD)
@@ -908,12 +915,12 @@ class StartStopLogic():
                     self.savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings,selected_format)
                     message_box = QMessageBox(self.parent)
                     message_box.setIcon(QMessageBox.Information)
-                    inital_text="The files have been saved successfully in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    inital_text="The files have been saved successfully in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
                     index=1
                     for i in filenames:
                         filenumber="File" + str(index)+": "
-                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        text_route+="\n"+filenumber+i+"."+str(selected_format)
                         index+=1
                     message_box.setText(inital_text+text_route)
                     if selected_format=="txt":

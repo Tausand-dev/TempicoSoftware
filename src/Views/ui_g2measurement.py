@@ -31,6 +31,8 @@
     g2ZeroLabel          QLabel         g²(τ=0) value
     rateStartLabel       QLabel         Start-channel count rate (cps)
     rateStopLabel        QLabel         Stop-channel count rate (cps)
+    fitTable              QTableWidget  Merged fit table: Parámetro | Valor inicial (editable) | Resultado del fit
+    fitResetParamsButton QPushButton    Resets the "Valor inicial" column to auto-computed defaults
 
     The class is intentionally named ``Ui_G2`` (keeping the original class
     name) so that the ``construct_g2`` method in ``main.py`` does not need to
@@ -44,6 +46,7 @@ from PySide2.QtWidgets import (
     QFrame, QLabel, QPushButton, QGridLayout,
     QApplication, QWidget, QSpinBox, QDoubleSpinBox,
     QCheckBox, QComboBox, QMainWindow, QTableWidget,
+    QTableWidgetItem, QAbstractItemView,
 )
 # QDoubleSpinBox already imported above; listed explicitly for clarity
 import sys
@@ -576,41 +579,71 @@ class Ui_G2(object):
 
         self.verticalLayoutGraph.addWidget(self.fitFrame)
 
-        # ── Fit results panel (equation + parameter table) ────────────────
+        # ── Fit parameters & results panel (equation + single merged table) ─
+        # Replaces the old pair of duplicate-looking boxes ("Initial
+        # parameters" table + "Fit results" table) with one panel: the
+        # equation on top, and one 3-column table where the user edits the
+        # initial guess right next to where the fit result will appear.
         self.fitResultsFrame = QFrame(self.TotalGraphicArea)
         self.fitResultsFrame.setObjectName(u"fitResultsFrame")
         self.fitResultsFrame.setFrameShape(QFrame.StyledPanel)
         self.fitResultsFrame.setFrameShadow(QFrame.Plain)
-        self.fitResultsFrame.setVisible(False)
 
         self.verticalLayout_fitResults = QVBoxLayout(self.fitResultsFrame)
         self.verticalLayout_fitResults.setContentsMargins(10, 6, 10, 6)
         self.verticalLayout_fitResults.setSpacing(6)
 
-        # Equation label – renders HTML for super/subscripts
+        # Header row: equation (centered, renders HTML for super/subscripts)
+        # plus the "Auto" button that resets the "Valor inicial" column.
+        self.horizontalLayout_fitHeader = QHBoxLayout()
+        self.horizontalLayout_fitHeader.setSpacing(10)
+
         self.fitEquationLabel = QLabel(self.fitResultsFrame)
         self.fitEquationLabel.setObjectName(u"fitEquationLabel")
         self.fitEquationLabel.setStyleSheet(u"font-size: 13px; color: #333333;")
         self.fitEquationLabel.setAlignment(Qt.AlignCenter)
         self.fitEquationLabel.setTextFormat(Qt.RichText)
         self.fitEquationLabel.setWordWrap(True)
-        self.verticalLayout_fitResults.addWidget(self.fitEquationLabel)
+        self.horizontalLayout_fitHeader.addWidget(self.fitEquationLabel, 1)
 
-        # Parameter table
+        # "Auto" button resets the "Valor inicial" column back to the
+        # automatically suggested guesses (computed from the live data).
+        self.fitResetParamsButton = QPushButton(self.fitResultsFrame)
+        self.fitResetParamsButton.setObjectName(u"fitResetParamsButton")
+        self.fitResetParamsButton.setFixedWidth(60)
+        self.fitResetParamsButton.setFixedHeight(24)
+        self.horizontalLayout_fitHeader.addWidget(
+            self.fitResetParamsButton, 0, Qt.AlignTop
+        )
+
+        self.verticalLayout_fitResults.addLayout(self.horizontalLayout_fitHeader)
+
+        # Merged parameter table: Parámetro | Valor inicial (editable) |
+        # Resultado del fit (read-only, filled in after pressing "Fit").
         self.fitTable = QTableWidget(self.fitResultsFrame)
         self.fitTable.setObjectName(u"fitTable")
-        self.fitTable.setColumnCount(2)
-        self.fitTable.setHorizontalHeaderLabels([u"Parameter", u"Value"])
+        self.fitTable.setColumnCount(3)
+        self.fitTable.setHorizontalHeaderLabels(
+            [u"Parámetro", u"Valor inicial", u"Resultado del fit"]
+        )
         self.fitTable.horizontalHeader().setStretchLastSection(True)
         self.fitTable.verticalHeader().setVisible(False)
-        self.fitTable.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.fitTable.setSelectionMode(QTableWidget.NoSelection)
+        # Only the "Valor inicial" column (index 1) is editable; the
+        # parameter names and the fit result stay fixed. G2Logic enforces
+        # this per-item, but default triggers are kept broad (double-click /
+        # edit key) for a smooth UX.
+        self.fitTable.setEditTriggers(
+            QAbstractItemView.DoubleClicked
+            | QAbstractItemView.SelectedClicked
+            | QAbstractItemView.EditKeyPressed
+        )
+        self.fitTable.setSelectionMode(QTableWidget.SingleSelection)
         self.fitTable.setShowGrid(True)
-        self.fitTable.setFixedHeight(100)
+        self.fitTable.setFixedHeight(120)
         self.fitTable.setStyleSheet(u"font-size: 11px;")
         self.verticalLayout_fitResults.addWidget(self.fitTable)
 
-        # Hidden label for G2Logic error messages
+        # Hidden label for G2Logic error messages (e.g. "Fit did not converge.")
         self.fitResultLabel = QLabel(self.fitResultsFrame)
         self.fitResultLabel.setObjectName(u"fitResultLabel")
         self.fitResultLabel.setStyleSheet(u"color: #cc0000; font-size: 11px;")
@@ -785,6 +818,9 @@ class Ui_G2(object):
         )
         self.fitButton.setText(
             QCoreApplication.translate("G2Measurement", u"Fit", None)
+        )
+        self.fitResetParamsButton.setText(
+            QCoreApplication.translate("G2Measurement", u"Auto", None)
         )
         self.fitEquationLabel.setText(
             QCoreApplication.translate("G2Measurement", u"", None)

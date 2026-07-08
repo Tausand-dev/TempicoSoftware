@@ -54,6 +54,9 @@ class LifeTimeLogic():
                  numberMeasurementsSpinBox: QSpinBox, totalMeasurements: QLabel,totalStart: QLabel,totalTime: QLabel,timeRange: QLabel,device,applyButton: QPushButton, parameterTable: QTableWidget,MainWindow, timerConnection: QTimer):
         super().__init__()
         self.savefile=savefile()
+        #Measurement window (used when saving data)
+        self.initialDate=""
+        self.finalDate=""
         #Initialize the main window
         self.mainWindow=MainWindow
         #Initialize the Tempico Device class
@@ -305,6 +308,9 @@ class LifeTimeLogic():
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0
+        #Measurement window
+        self.initialDate=datetime.datetime.now()
+        self.finalDate=""
         #Change status Values
         self.changeStatusLabel("Measurement running")
         self.changeStatusColor(1)
@@ -407,6 +413,7 @@ class LifeTimeLogic():
 
         :return: None
         """
+        self.finalDate=datetime.datetime.now()
         self.startTimerConnection()
         self.numberBins.setEnabled(True)
         self.stopButton.setEnabled(False)
@@ -2079,17 +2086,17 @@ class LifeTimeLogic():
             if not total_condition:
                 current_date=datetime.datetime.now()
                 current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                fitSetting=""
+                fitSetting="Tab:\tLifetime\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{self.device.getModelIdn()}\n"
                 if self.currentFit=="ExpDecay":
-                    fitSetting="Exponential Fit:"+'\t'+'I_0*e^(-t/tau_0)'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+"\n"
+                    fitSetting+="Exponential Fit:"+'\t'+'I_0*e^(-t/tau_0)'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+"\n"
                 elif self.currentFit=="Kohlrausch":
-                    fitSetting="Kohlrausch Fit:"+'\t'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Beta: '+'\t'+ str(self.FitParameters[2])+"\n"
+                    fitSetting+="Kohlrausch Fit:"+'\t'+'I_0*e^((-t/tau_0)^(Beta))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Beta: '+'\t'+ str(self.FitParameters[2])+"\n"
                 elif self.currentFit=="ShiftedExponential":
-                    fitSetting="Shifted Exponential Fit"+'\t'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[2])+'\n'+'b: '+'\t'+ str(self.FitParameters[3])+"\n"
+                    fitSetting+="Shifted Exponential Fit"+'\t'+'I_0*e^((-t+alpha)/tau_0))+b'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[2])+'\n'+'b: '+'\t'+ str(self.FitParameters[3])+"\n"
                 elif self.currentFit=="DoubleExponential":
-                    fitSetting="Double Exponential Fit"+'\t'+'I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Tau_1: '+'\t'+ str(self.FitParameters[2])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[3])+"\n"
+                    fitSetting+="Double Exponential Fit"+'\t'+'I0*(alpha*np.exp(-t/tau0)+(1-alpha)*np.exp(-t/tau1))'+'\n'+'Tau_0:'+'\t'+str(self.FitParameters[0])+'\n'+'I_0:'+'\t'+str(self.FitParameters[1])+'\n'+'Tau_1: '+'\t'+ str(self.FitParameters[2])+'\n'+'alpha: '+'\t'+ str(self.FitParameters[3])+"\n"
                 elif self.currentFit=="":
-                    fitSetting=""
+                    pass
                 
                 #Channel Setting
                 fitSetting+='Start Channel:\t'+'\t'+self.comboBoxStartChannel.currentText()
@@ -2119,11 +2126,11 @@ class LifeTimeLogic():
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Information)
                     if selected_format=="txt":
-                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                        textRoute="The files have been saved successfully in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.oldtxtName+".txt"
                     elif selected_format=="csv":
-                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                        textRoute="The files have been saved successfully in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.oldcsvName+".csv"
                     elif selected_format=="dat":
-                        textRoute="The files have been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                        textRoute="The files have been saved successfully in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.olddatName+".dat"
                     message_box.setText(textRoute)
                     message_box.setWindowTitle("Successful save")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -2139,11 +2146,11 @@ class LifeTimeLogic():
                 message_box = QMessageBox(self.mainWindow)
                 message_box.setIcon(QMessageBox.Information)
                 if selected_format=="txt":
-                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldtxtName+".txt"
+                    textRoute="The files have already been saved in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.oldtxtName+".txt"
                 elif selected_format=="csv":
-                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.oldcsvName+".csv"
+                    textRoute="The files have already been saved in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.oldcsvName+".csv"
                 elif selected_format=="dat":
-                    textRoute="The files have already been saved in path folder: \n"+folder_path+"\n"+"with the name: \n"+self.olddatName+".dat"
+                    textRoute="The files have already been saved in path folder:\n\n"+folder_path+" with the following names:\n\nFile1: "+self.olddatName+".dat"
                 message_box.setText(textRoute)
                 message_box.setWindowTitle("Successful save")
                 message_box.setStandardButtons(QMessageBox.Ok)

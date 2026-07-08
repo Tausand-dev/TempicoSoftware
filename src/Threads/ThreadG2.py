@@ -67,6 +67,14 @@ class WorkerThreadG2(QThread):
     threadCreated : Signal(int)
         Emitted with 0 when the loop starts, 1 when it stops.
 
+    Attributes
+    ----------
+    raw_stop_ps : list
+        Every individual valid stop time recorded during the acquisition,
+        in picoseconds and in arrival order. This is the raw start-stop
+        data behind the accumulated g²(τ) histogram, kept so it can be
+        exported separately (e.g. as ``..._StartStopTimes``).
+
     Parameters
     ----------
     parent : QWidget
@@ -125,6 +133,12 @@ class WorkerThreadG2(QThread):
         self.n_starts     = 0
         self.n_stops      = 0
         self.total_events = 0
+
+        # ── Raw start-stop data ───────────────────────────────────────────────
+        # Every individual valid stop time (ps), in the order it was recorded,
+        # kept for the whole acquisition so it can be exported as raw
+        # start-stop data (independent from the accumulated g²(τ) histogram).
+        self.raw_stop_ps = []
 
         # ── Build symmetric histogram [-window_ns, +window_ns] ───────────────
         # Edges are offset by half a bin so bin centres fall exactly on
@@ -390,6 +404,10 @@ class WorkerThreadG2(QThread):
 
                     self.n_stops      += 1
                     self.total_events += 1
+
+                    # Keep the raw (unbinned) stop time for later export as
+                    # raw start-stop data
+                    self.raw_stop_ps.append(raw_ps)
 
                     if self.isBatched:
                         taus_batch_ns.append(tau_ns)

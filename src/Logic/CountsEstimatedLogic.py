@@ -2307,6 +2307,9 @@ class CountEstimatedLogic():
         data_prefix=dataFolderPrefix["countsEstimationPrefix"]
         current_date=datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        date_str=current_date.strftime("%Y-%m-%d")
+        time_str=current_date.strftime("%H:%M:%S")
+        device_model=self.device.getModelIdn()
         #Init filenames and data list
         filenames=[]
         data=[]
@@ -2354,7 +2357,7 @@ class CountEstimatedLogic():
             if not total_condition:
                 if self.measurementChannelA:
                     filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
-                    setting_A=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
+                    setting_A=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
                     settings.append(setting_A)
                     filenames.append(filename1)
                     timeStamps.append(self.timestampsDateChannelA)
@@ -2363,7 +2366,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
                     filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
-                    setting_B=f"Initial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
+                    setting_B=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
                     settings.append(setting_B)
                     filenames.append(filename2)
                     timeStamps.append(self.timestampsDateChannelB)
@@ -2372,7 +2375,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
                     filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
-                    setting_C=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
+                    setting_C=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
                     settings.append(setting_C)
                     filenames.append(filename3)
                     timeStamps.append(self.timestampsDateChannelC)
@@ -2381,7 +2384,7 @@ class CountEstimatedLogic():
                     dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
                     filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
-                    setting_D=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
+                    setting_D=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
                     settings.append(setting_D)
                     filenames.append(filename4)
                     timeStamps.append(self.timestampsDateChannelD)
@@ -2394,12 +2397,12 @@ class CountEstimatedLogic():
                     self.savefile.save_counts_data(timeStamps,data,dataUncertainties,filenames,folder_path,settings,selected_format,channels)
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Information)
-                    inital_text="The files have been saved successfully in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    inital_text="The files have been saved successfully in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
                     index=1
                     for i in filenames:
                         filenumber="File" + str(index)+": "
-                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        text_route+="\n"+filenumber+i+"."+str(selected_format)
                         index+=1
                     message_box.setText(inital_text+text_route)
                     if selected_format=="txt":
@@ -2470,15 +2473,3 @@ class CountEstimatedLogic():
         message_box.setText("To perform measurements in this window, you must connect a periodic signal to the Start input that is different from the source you want to measure. Then, connect the source you want to estimate pulses from to the Stop channels.")
         message_box.setStandardButtons(QMessageBox.Ok)
         message_box.exec_()
-        
-    
-    
-        
-    
-    
-    
-    
-    
-
-
-        

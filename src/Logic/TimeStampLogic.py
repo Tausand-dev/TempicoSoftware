@@ -209,6 +209,9 @@ class TimeStampLogic():
         self.channelData=[]
         #savefile object
         self.savefile=savefile()
+        #Measurement window (used when saving data)
+        self.initialDate=""
+        self.finalDate=""
         #timer for autosave
         self.autoSaveTimer=QTimer()
         #Deafault format
@@ -1470,7 +1473,13 @@ class TimeStampLogic():
         - General device configurations.
         - Per-channel settings for each active channel.
         """
-        header = "Channels in measurement: "
+        now = datetime.now()
+        self.initialDate = now
+        self.finalDate = ""
+        header = "Tab:\tTime stamping\n"
+        header += f"Initial date:\t{self.initialDate}\n"
+        header += f"Device model:\t{self.device.getModelIdn()}\n"
+        header += "Channels in measurement: "
         channelsList = []
         channelASettings = ""
         channelBSettings = ""
@@ -1542,6 +1551,22 @@ class TimeStampLogic():
         self.header = header
         
         
+    def _captureFinalDate(self):
+        """
+        Stores the timestamp at which the measurement finished and inserts it
+        into the previously built header (right after the initial date), so
+        the saved files report both the initial and final date of the run.
+
+        :return: None
+        """
+        self.finalDate = datetime.now()
+        if getattr(self, "header", "") and f"Initial date:\t{self.initialDate}\n" in self.header and f"Final date:\t{self.finalDate}\n" not in self.header:
+            self.header = self.header.replace(
+                f"Initial date:\t{self.initialDate}\n",
+                f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\n",
+                1
+            )
+
     def finishedThread(self):
         """
         Handles post-measurement actions after the normal measurement thread finishes.
@@ -1549,18 +1574,21 @@ class TimeStampLogic():
         If autosave is enabled, prompts the user to save.
         Then resets saving state and stops the normal measurement.
         """
+        self._captureFinalDate()
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
         self.currenSaving=False
         self.stopNormalMeasurement()
     
     def finishedThreadSchedule(self):
+        self._captureFinalDate()
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
         self.currenSaving=False
         self.stopScheduledMeasurement()
     
     def finishedThreadLimited(self):
+        self._captureFinalDate()
         if self.saveDataComplete.isChecked():
             self.dialogToShowSave()
         self.currenSaving=False
@@ -1826,9 +1854,9 @@ class TimeStampLogic():
                 currentDateStr=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                 self.fileName=os.path.join(folder_path, f"{data_prefix}_{currentDateStr}_MultiChannel.{self.selectedFormat}")
                 self.savefile.convertFileFormat(self.fileName,format,True)
-                inital_text=f"The files have been saved with {format} format in path folder: "
-                text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                name= f"\n\n{data_prefix}_{dateAutoSaved}_MultiChannel.{format}"
+                inital_text=f"The files have been saved with {format} format in path folder:\n\n"
+                text_route=str(folder_path)+" with the following names:\n\n"
+                name= f"File1: {data_prefix}_{dateAutoSaved}_MultiChannel.{format}"
                 message_box.setText(inital_text+text_route+name)
                 message_box.setWindowTitle("Data Saved")
                 message_box.setStandardButtons(QMessageBox.Ok)
@@ -1896,9 +1924,9 @@ class TimeStampLogic():
                 elif (self.dataAutoSavedTxt and format!="txt") or (self.dataAutoSavedCsv and format!="csv") or (self.dataAutoSavedDat and format!="dat"):
                     dateAutoSaved=self.startDateToSave.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     self.savefile.convertFileFormat(self.fileName,format,False)
-                    inital_text=f"The files have been saved with {format} format in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\n{data_prefix}_{dateAutoSaved}_MultiChannel.{format}"
+                    inital_text=f"The files have been saved with {format} format in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
+                    name= f"File1: {data_prefix}_{dateAutoSaved}_MultiChannel.{format}"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -1911,25 +1939,25 @@ class TimeStampLogic():
                         self.dataAutoSavedDat=True
             else:
                 if format=="txt" and self.dataTxtSaved:
-                    inital_text="The files have been already saved with txt format in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\n{data_prefix}_{self.dateTxtSaved}_MultiChannel.txt"
+                    inital_text="The files have been already saved with txt format in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
+                    name= f"File1: {data_prefix}_{self.dateTxtSaved}_MultiChannel.txt"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
                 elif format=="csv" and self.dataCsvSaved:
-                    inital_text="The files have been already saved with csv format in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\n{data_prefix}_{self.dateCsvSaved}_MultiChannel.csv"
+                    inital_text="The files have been already saved with csv format in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
+                    name= f"File1: {data_prefix}_{self.dateCsvSaved}_MultiChannel.csv"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
                     message_box.exec_()
                 elif format=="dat" and self.dataDatSaved:
-                    inital_text="The files have been already saved with dat format in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\n{data_prefix}_{self.dateDatSaved}_MultiChannel.dat"
+                    inital_text="The files have been already saved with dat format in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
+                    name= f"File1: {data_prefix}_{self.dateDatSaved}_MultiChannel.dat"
                     message_box.setText(inital_text+text_route+name)
                     message_box.setWindowTitle("Data Already Saved")
                     message_box.setStandardButtons(QMessageBox.Ok)
@@ -1938,9 +1966,9 @@ class TimeStampLogic():
                     current_date_str=date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
                     filename=data_prefix+'_'+current_date_str+'_MultiChannel'
                     self.savefile.save_time_stamp(self.dateTimeData,self.stopData,self.channelData,filename,folder_path,format, self.header)
-                    inital_text="The files have been saved successfully in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following name:"
-                    name= f"\n\n{filename}.{format}"
+                    inital_text="The files have been saved successfully in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
+                    name= f"File1: {filename}.{format}"
                     allFileName=f"{folder_path}\\{filename}.{format}"
                     self.saveFinalText=inital_text+text_route+name
                     self.showProgressDialog(allFileName)

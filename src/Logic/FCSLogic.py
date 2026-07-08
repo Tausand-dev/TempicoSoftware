@@ -148,6 +148,10 @@ class FCSLogic():
         # ── Utility ──────────────────────────────────────────────────────────
         self.savefile = savefile()
 
+        # ── Measurement window (used when saving data) ─────────────────────
+        self.initialDate = ""
+        self.finalDate   = ""
+
         # ── Device ───────────────────────────────────────────────────────────
         self.device = device
 
@@ -366,6 +370,8 @@ class FCSLogic():
         self.sentinelsavedat = 0
         self.hasMeasurementData = False
         self.isStopping = False
+        self.initialDate = datetime.datetime.now()
+        self.finalDate = ""
         self.last_taus_s = np.array([])
         self.last_g      = np.array([])
 
@@ -510,6 +516,7 @@ class FCSLogic():
         :return: None
         """
         self.isStopping = True
+        self.finalDate = datetime.datetime.now()
         if not self.withoutMeasurement:
             self.startTimerConnection()
 
@@ -696,7 +703,8 @@ class FCSLogic():
         dataFolderPrefix = self.savefile.getDataFolderPrefix()
         folder_path      = dataFolderPrefix["saveFolder"]
 
-        current_date_str = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        now               = datetime.datetime.now()
+        current_date_str  = now.strftime("%Y%m%d%H%M%S")
 
         # Stop channel name para el nombre de archivo
         ch_names  = ["A", "B", "C", "D"]
@@ -731,6 +739,10 @@ class FCSLogic():
         tau_0_us = self.tau0SpinBox.value() if self.tau0SpinBox is not None else self.tau_0 // 1_000_000
 
         setting = (
+            f"Tab:\tAutocorrelation (FCS)\n"
+            f"Initial date:\t{self.initialDate}\n"
+            f"Final date:\t{self.finalDate}\n"
+            f"Device model:\t{self.device.getModelIdn()}\n"
             f"Base bin width τ₀ (µs):\t{tau_0_us}\n"
             f"num_levels:\t{self.num_levels}\n"
             f"m:\t{self.m}\n"

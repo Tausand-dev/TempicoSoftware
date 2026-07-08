@@ -686,6 +686,40 @@ class createsavefile:
             )
             for s, t, g in zip(col_stop, col_tau, col_g):
                 f.write(f"{s}{separator}{t}{separator}{g}\n")
+    def save_g2_start_stop_times(self, stop_times_ps, file_name, folder_path, settings, extension):
+        """
+        Save the raw (unbinned) start-stop data behind a g2 (HBT) measurement.
+
+        This writes every individual stop time recorded during the
+        acquisition, one per row, in the order it was captured. It is the
+        raw data used to build the g2(tau) histogram/curve, as opposed to
+        the analyzed curve itself (see ``save_g2Hbt_data``).
+
+        :param stop_times_ps: 1-D list/array of raw stop times (ps), one
+            value per detected event, in arrival order.
+        :param file_name: Output file name without extension (str).
+        :param folder_path: Directory where the file will be saved (str).
+        :param settings: Multi-line header string written at the top of the
+            file (measurement parameters).
+        :param extension: 'txt', 'dat', or 'csv' (str).
+        :raises OSError: If the directory cannot be created or the file
+            cannot be written.
+        :returns: None
+        """
+        if extension == "csv":
+            settings = settings.replace("\t", ";")
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+
+        with open(full_path, 'w', encoding='utf-8') as f:
+            f.write(settings + '\n')
+            f.write("Stop Time (ps)\n")
+            for stop_ps in stop_times_ps:
+                f.write(f"{stop_ps}\n")
+
     def save_g2Hbt_data(self,data, file_name, folder_path, settings, extension, textLabel):
         """
         Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
@@ -716,7 +750,7 @@ class createsavefile:
 
             full_path = os.path.join(folder_path, f"{file_name}.{extension}")
 
-            with open(full_path, 'w') as file:
+            with open(full_path, 'w', encoding='utf-8') as file:
                 file.write(settings + '\n')
 
                 file.write(f"{textLabel}{separator}g2(Tau)\n")

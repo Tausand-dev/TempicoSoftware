@@ -852,6 +852,7 @@ class MainWindow(QMainWindow):
                     self.uig2.fitResultLabel,
                     self.uig2.fitResultsFrame,
                     self.uig2.fitTable,
+                    self.uig2.fitResetParamsButton,
                 )
 
                 # Keep the plot's X-axis limits in lockstep with "Window

@@ -123,11 +123,16 @@ class G2Logic:
         fitResultLabel=None,
         fitResultsFrame=None,
         fitTable=None,
+        fitResetParamsButton=None,
     ):
         super().__init__()
 
         # ── Utility ──────────────────────────────────────────────────────────
         self.savefile = savefile()
+
+        # ── Measurement window (used when saving data) ─────────────────────
+        self.initialDate = ""
+        self.finalDate   = ""
 
         # ── Device ───────────────────────────────────────────────────────────
         self.device = device
@@ -164,6 +169,16 @@ class G2Logic:
         self.fitResultLabel   = fitResultLabel
         self.fitResultsFrame  = fitResultsFrame
         self.fitTable         = fitTable
+        self.fitResetParamsButton  = fitResetParamsButton
+
+        # Cache of user-edited initial guesses, keyed by fit-model index, so
+        # switching models back and forth doesn't lose what was typed in.
+        self._initial_params_cache = {}
+        # Records the p0 actually used / model index for the last successful
+        # fit, so it can be included in the saved-data header for
+        # reproducibility.
+        self.last_p0_used = None
+        self.last_fit_idx = None
 
         # Parameter widgets — injected after construction via set_parameter_widgets()
         self.binWidthSpinBox    = None
@@ -193,6 +208,20 @@ class G2Logic:
             self.fitModelCombo.currentIndexChanged.connect(
                 self._update_equation_label_preview
             )
+            self.fitModelCombo.currentIndexChanged.connect(
+                self._populate_initial_params_table
+            )
+        if self.fitTable is not None:
+            self.fitTable.cellChanged.connect(
+                self._on_initial_param_edited
+            )
+        if self.fitResetParamsButton is not None:
+            self.fitResetParamsButton.clicked.connect(
+                self._reset_initial_params_to_auto
+            )
+        # Show sensible starting guesses and the equation right away (model index 0)
+        self._populate_initial_params_table()
+        self._update_equation_label_preview()
 
         # ── Internal state ────────────────────────────────────────────────
         # True while the worker thread is alive
@@ -508,6 +537,7 @@ class G2Logic:
         fitResultLabel,
         fitResultsFrame,
         fitTable,
+        fitResetParamsButton=None,
     ):
         """
         Provide references to the fit widgets from ``Ui_G2``.
@@ -523,11 +553,27 @@ class G2Logic:
         self.fitResultLabel   = fitResultLabel
         self.fitResultsFrame  = fitResultsFrame
         self.fitTable         = fitTable
+        self.fitResetParamsButton  = fitResetParamsButton
 
         self.fitButton.clicked.connect(self.run_fit)
         self.fitModelCombo.currentIndexChanged.connect(
             self._update_equation_label_preview
         )
+        self.fitModelCombo.currentIndexChanged.connect(
+            self._populate_initial_params_table
+        )
+        if self.fitTable is not None:
+            self.fitTable.cellChanged.connect(
+                self._on_initial_param_edited
+            )
+        if self.fitResetParamsButton is not None:
+            self.fitResetParamsButton.clicked.connect(
+                self._reset_initial_params_to_auto
+            )
+        # Show sensible starting guesses and the equation right away for the
+        # current model
+        self._populate_initial_params_table()
+        self._update_equation_label_preview()
 
     # ── Parameter widget injection (called from main.py) ─────────────────────
 
@@ -618,6 +664,8 @@ class G2Logic:
         self.isStopping         = False
         self.last_centres_ns    = np.array([])
         self.last_g2            = np.array([])
+        self.initialDate = datetime.datetime.now()
+        self.finalDate = ""
 
         # Clear the curve visually.
         # With stepMode=True, pyqtgraph requires len(x) == len(y)+1.
@@ -701,6 +749,7 @@ class G2Logic:
         :return: None
         """
         self.isStopping = True
+        self.finalDate = datetime.datetime.now()
         if not self.withoutMeasurement:
             self.startTimerConnection()
 
@@ -885,10 +934,11 @@ class G2Logic:
         self._cursor_line.setVisible(False)
         if self.g2CursorLabel is not None:
             self.g2CursorLabel.setText("—")
-        # Reset fit
+        # Reset fit — blank the "Resultado del fit" column only; the
+        # equation and the editable "Valor inicial" guesses stay visible
+        # and untouched.
         self.fit_curve.setData([], [])
-        if self.fitResultsFrame is not None:
-            self.fitResultsFrame.setVisible(False)
+        self._clear_fit_results()
         if self.fitButton is not None:
             self.fitButton.setEnabled(False)
 
@@ -921,6 +971,204 @@ class G2Logic:
         dt = np.abs(tau - tau0)
         return 1.0 - (1.0 + a) * np.exp(-dt / tau1) + a * np.exp(-dt / tau2)
 
+    # Parameter names (and units) per fit model, in curve_fit argument order.
+    # Shared by the editable "initial parameters" table, the results table,
+    # and the saved-data header.
+    PARAM_LABELS = {
+        0: [(u"y₀", ""), (u"V", ""), (u"τ₀", "ns"), (u"σ", "ns")],
+        1: [(u"y₀", ""), (u"V", ""), (u"τ₀", "ns"), (u"Γ", "ns")],
+        2: [(u"y₀", ""), (u"α", ""), (u"τ₀", "ns"), (u"τ_c", "ns")],
+        3: [(u"y₀", ""), (u"α", ""), (u"τ₀", "ns"), (u"τ_c", "ns")],
+        4: [(u"a", ""),  (u"τ₀", "ns"), (u"τ₁", "ns"), (u"τ₂", "ns")],
+    }
+
+    def _default_p0(self, idx):
+        """
+        Automatically suggested initial guesses (p0) for model ``idx``,
+        based on the currently displayed g²(τ) data when available, or on
+        generic placeholders (used to pre-fill the table before any data
+        has been collected).
+
+        :return: list of 4 floats, in curve_fit argument order.
+        """
+        tau_arr = np.array([])
+        g2_arr  = np.array([])
+        if (self.last_centres_ns is not None and self.last_g2 is not None
+                and len(self.last_centres_ns) == len(self.last_g2)):
+            tau_arr = self.last_centres_ns.copy()
+            g2_arr  = self.last_g2.copy()
+            mask    = np.isfinite(g2_arr)
+            tau_arr = tau_arr[mask]
+            g2_arr  = g2_arr[mask]
+
+        hw        = float(np.max(np.abs(tau_arr))) if len(tau_arr) > 0 else 200.0
+        tau_scale = hw / 4.0
+
+        if idx == 0:      # Antibunched Gaussian
+            return [1.0, 0.5, 0.0, tau_scale]
+        elif idx == 1:    # Antibunched Lorentzian
+            y0_guess = float(np.max(g2_arr)) if len(g2_arr) > 0 else 1.0
+            return [y0_guess, 0.5, 0.0, tau_scale]
+        elif idx == 2:    # Bunched Gaussian
+            return [1.0, 0.5, 0.0, tau_scale]
+        elif idx == 3:    # Bunched Lorentzian
+            return [1.0, 0.5, 0.0, tau_scale]
+        elif idx == 4:    # Three-level system
+            return [0.5, 0.0, tau_scale * 0.5, tau_scale * 2.0]
+        return [1.0, 0.5, 0.0, tau_scale]
+
+    @staticmethod
+    def _get_bounds(idx, hw):
+        """Return the (lower, upper) curve_fit bounds tuple for model ``idx``."""
+        if idx == 4:
+            return ([0, -hw, 0.01, 0.01], [np.inf, hw, np.inf, np.inf])
+        return ([0, 0, -hw, 0.01], [np.inf, np.inf, hw, np.inf])
+
+    def _populate_initial_params_table(self, *_args):
+        """
+        (Re)fill the "Parámetro" and "Valor inicial" columns of the merged
+        fit table for the currently selected fit model. Called on startup,
+        whenever ``fitModelCombo`` changes, and by the "Auto" button.
+
+        Values shown come from ``_initial_params_cache`` only once the user
+        has actually edited that model's guesses (or reset them) in this
+        session. Until then, the guess is recomputed fresh from the live
+        g²(τ) data every time this is called, so it keeps tracking the
+        current measurement window instead of freezing on whatever was on
+        screen the first time (e.g. before any data existed).
+
+        The "Resultado del fit" column is always cleared here: changing the
+        model or the initial guess invalidates whatever result was
+        previously shown, so the user is prompted to press "Fit" again.
+        """
+        if self.fitTable is None:
+            return
+
+        idx    = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        labels = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
+
+        values = self._initial_params_cache.get(idx)
+        if values is None:
+            values = self._default_p0(idx)
+
+        table = self.fitTable
+        table.blockSignals(True)
+        table.setRowCount(len(labels))
+        for row, (name, unit) in enumerate(labels):
+            display_name = f"{name} ({unit})" if unit else name
+            item_name = QTableWidgetItem(display_name)
+            item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
+            item_name.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 0, item_name)
+
+            item_value = QTableWidgetItem(f"{values[row]:.4f}")
+            item_value.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 1, item_value)
+
+            item_result = QTableWidgetItem("")
+            item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+            item_result.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 2, item_result)
+        table.resizeRowsToContents()
+        h = table.horizontalHeader().height()
+        for row in range(table.rowCount()):
+            h += table.rowHeight(row)
+        table.setFixedHeight(h + 4)
+        table.blockSignals(False)
+
+        # A model/guess change invalidates any previously displayed result.
+        self.last_p0_used = None
+        self.last_fit_idx = None
+
+    def _on_initial_param_edited(self, row, column):
+        """Keep the per-model cache in sync when the user edits a guess."""
+        if column != 1 or self.fitTable is None:
+            return
+        idx = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        item = self.fitTable.item(row, column)
+        if item is None:
+            return
+        try:
+            value = float(item.text())
+        except ValueError:
+            # Invalid entry — revert to the last known-good value.
+            cached = self._initial_params_cache.get(idx, self._default_p0(idx))
+            self.fitTable.blockSignals(True)
+            item.setText(f"{cached[row]:.4f}")
+            self.fitTable.blockSignals(False)
+            return
+
+        cached = self._initial_params_cache.setdefault(idx, self._default_p0(idx))
+        cached[row] = value
+
+    def _reset_initial_params_to_auto(self):
+        """
+        "Auto" button — discard any manual edits for the current model and
+        go back to tracking the automatically computed guess (which itself
+        keeps following the live g²(τ) data on every subsequent repaint).
+        """
+        idx = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        self._initial_params_cache.pop(idx, None)
+        self._populate_initial_params_table()
+
+    def _clear_fit_results(self):
+        """
+        Blank the "Resultado del fit" column and forget the last successful
+        fit, without touching the editable "Valor inicial" guesses or
+        hiding the equation/table — so the panel stays ready for editing.
+        """
+        if self.fitResultLabel is not None:
+            self.fitResultLabel.setVisible(False)
+        if self.fitTable is not None:
+            self.fitTable.blockSignals(True)
+            for row in range(self.fitTable.rowCount()):
+                item_result = QTableWidgetItem("")
+                item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+                item_result.setTextAlignment(Qt.AlignCenter)
+                self.fitTable.setItem(row, 2, item_result)
+            self.fitTable.blockSignals(False)
+        self.last_p0_used = None
+        self.last_fit_idx = None
+
+    def _read_initial_params(self, idx, bounds=None):
+        """
+        Read the editable p0 guesses for model ``idx``, falling back to the
+        auto-computed defaults for any missing/invalid entry, then clip them
+        into ``bounds`` so a user-entered value outside the allowed range
+        can't make curve_fit raise.
+
+        Reads directly from ``fitTable`` column 1 ("Valor inicial"; the
+        table always reflects the currently selected model, since it is
+        repopulated on every ``fitModelCombo`` change) so whatever is on
+        screen at the moment "Fit" is pressed is what gets used — no
+        reliance on the edit signal having already fired. Falls back to the
+        per-model cache, then to the computed defaults, if the table isn't
+        available.
+        """
+        defaults = self._default_p0(idx)
+        p0 = list(defaults)
+
+        table = self.fitTable
+        if table is not None and table.rowCount() == len(defaults):
+            for row in range(table.rowCount()):
+                item = table.item(row, 1)
+                if item is None:
+                    continue
+                try:
+                    p0[row] = float(item.text())
+                except ValueError:
+                    pass  # keep the default for this entry
+        else:
+            cached = self._initial_params_cache.get(idx)
+            if cached is not None:
+                p0 = list(cached)
+
+        if bounds is not None:
+            lower, upper = bounds
+            p0 = [min(max(v, lo), hi) for v, lo, hi in zip(p0, lower, upper)]
+
+        return p0
+
     def _update_equation_label_preview(self):
         """Show the equation for the currently selected model."""
         if self.fitEquationLabel is None or self.fitModelCombo is None:
@@ -939,31 +1187,34 @@ class G2Logic:
             u"<center>g²(τ) = 1 − (1+a)·exp(−|τ−τ<sub>0</sub>|/τ<sub>1</sub>) + a·exp(−|τ−τ<sub>0</sub>|/τ<sub>2</sub>)</center>",
         ]
         self.fitEquationLabel.setText(eqs[idx] if idx < len(eqs) else "")
-        if self.fitResultsFrame is not None:
-            self.fitResultsFrame.setVisible(True)
 
-    def _fill_fit_table(self, rows):
-        """Fill fitTable with (name, value) rows."""
+    def _fill_fit_results(self, idx, popt):
+        """
+        Write the fit result values into the "Resultado del fit" column
+        (index 2) of the merged table, aligned row-by-row with the
+        "Valor inicial" column already shown for model ``idx`` (the table
+        rows/labels were already set by ``_populate_initial_params_table``
+        for this same model).
+        """
+        if self.fitTable is None:
+            return
+        labels = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
         table = self.fitTable
-        table.setRowCount(len(rows))
-        for i, (name, value) in enumerate(rows):
-            item_name  = QTableWidgetItem(name)
-            item_value = QTableWidgetItem(value)
-            item_name.setTextAlignment(Qt.AlignCenter)
-            item_value.setTextAlignment(Qt.AlignCenter)
-            table.setItem(i, 0, item_name)
-            table.setItem(i, 1, item_value)
-        table.resizeRowsToContents()
-        h = table.horizontalHeader().height()
-        for row in range(table.rowCount()):
-            h += table.rowHeight(row)
-        table.setFixedHeight(h + 4)
+        table.blockSignals(True)
+        for row, ((name, unit), value) in enumerate(zip(labels, popt)):
+            unit_suffix = f" {unit}" if unit else ""
+            item_result = QTableWidgetItem(f"{value:.4f}{unit_suffix}")
+            item_result.setTextAlignment(Qt.AlignCenter)
+            item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+            table.setItem(row, 2, item_result)
+        table.blockSignals(False)
 
     def _get_fit_header_lines(self):
-        """Return fit result lines for the save header, or empty string."""
-        if self.fitResultsFrame is None or not self.fitResultsFrame.isVisible():
-            return ""
-        if self.fitModelCombo is None:
+        """
+        Return fit result lines for the save header, or an empty string if
+        no fit has been run yet.
+        """
+        if self.fitModelCombo is None or self.last_fit_idx is None:
             return ""
 
         idx = self.fitModelCombo.currentIndex()
@@ -985,11 +1236,16 @@ class G2Logic:
             f"Fit model:\t{model_names.get(idx, 'Unknown')}",
             f"Fit equation:\t{equations.get(idx, '')}",
         ]
-        if self.fitTable is not None:
+        if self.last_p0_used is not None and self.last_fit_idx == idx:
+            labels = self.PARAM_LABELS.get(idx, [])
+            for (name, unit), value in zip(labels, self.last_p0_used):
+                unit_suffix = f" {unit}" if unit else ""
+                lines.append(f"Initial {name}:\t{value:.4f}{unit_suffix}")
+        if self.fitTable is not None and self.last_fit_idx == idx:
             for row in range(self.fitTable.rowCount()):
                 n = self.fitTable.item(row, 0)
-                v = self.fitTable.item(row, 1)
-                if n and v:
+                v = self.fitTable.item(row, 2)
+                if n and v and v.text():
                     lines.append(f"{n.text()}:\t{v.text()}")
         return "\n".join(lines)
 
@@ -997,15 +1253,11 @@ class G2Logic:
         """Fit the current g²(τ) histogram with the selected model."""
         if self.fitResultLabel is not None:
             self.fitResultLabel.setVisible(False)
-        if self.fitResultsFrame is not None:
-            self.fitResultsFrame.setVisible(False)
 
         if self.last_centres_ns is None or len(self.last_centres_ns) < 5:
             if self.fitResultLabel is not None:
                 self.fitResultLabel.setText("Not enough data to fit.")
                 self.fitResultLabel.setVisible(True)
-            if self.fitResultsFrame is not None:
-                self.fitResultsFrame.setVisible(True)
             return
 
         tau  = self.last_centres_ns.copy()
@@ -1014,111 +1266,81 @@ class G2Logic:
         tau  = tau[mask]
         g2   = g2[mask]
 
-        idx       = self.fitModelCombo.currentIndex() if self.fitModelCombo else 0
-        hw        = float(np.max(np.abs(tau))) if len(tau) > 0 else 200.0
-        tau_scale = hw / 4.0
+        idx = self.fitModelCombo.currentIndex() if self.fitModelCombo else 0
+        hw  = float(np.max(np.abs(tau))) if len(tau) > 0 else 200.0
+
+        bounds = self._get_bounds(idx, hw)
+        # p0 comes from the editable "Valor inicial" column (falling back
+        # to the auto-computed guess for anything left blank/invalid),
+        # clipped into the fit bounds so an out-of-range guess can't make
+        # curve_fit raise.
+        p0 = self._read_initial_params(idx, bounds=bounds)
 
         try:
             if idx == 0:  # Antibunched Gaussian
-                p0     = [1.0, 0.5, 0.0, tau_scale]
-                bounds = ([0, 0, -hw, 0.01], [np.inf, np.inf, hw, np.inf])
                 popt, _ = curve_fit(self._model_antibunched_gaussian,
                                     tau, g2, p0=p0, bounds=bounds, maxfev=10000)
-                y0, V, tau0, sigma = popt
-                self._fill_fit_table([
-                    ("y₀",    f"{y0:.4f}"),
-                    ("V",     f"{V:.4f}"),
-                    ("τ₀",    f"{tau0:.4f} ns"),
-                    ("σ",     f"{sigma:.4f} ns"),
-                ])
                 fit_g2 = self._model_antibunched_gaussian(tau, *popt)
 
             elif idx == 1:  # Antibunched Lorentzian
-                p0     = [float(np.max(g2)), 0.5, 0.0, tau_scale]
-                bounds = ([0, 0, -hw, 0.01], [np.inf, np.inf, hw, np.inf])
                 popt, _ = curve_fit(self._model_antibunched_lorentzian,
                                     tau, g2, p0=p0, bounds=bounds, maxfev=10000)
-                y0, V, tau0, Gamma = popt
-                self._fill_fit_table([
-                    ("y₀",    f"{y0:.4f}"),
-                    ("V",     f"{V:.4f}"),
-                    ("τ₀",    f"{tau0:.4f} ns"),
-                    ("Γ",     f"{Gamma:.4f} ns"),
-                ])
                 fit_g2 = self._model_antibunched_lorentzian(tau, *popt)
 
             elif idx == 2:  # Bunched Gaussian
-                p0     = [1.0, 0.5, 0.0, tau_scale]
-                bounds = ([0, 0, -hw, 0.01], [np.inf, np.inf, hw, np.inf])
                 popt, _ = curve_fit(self._model_bunched_gaussian,
                                     tau, g2, p0=p0, bounds=bounds, maxfev=10000)
-                y0, alpha, tau0, tau_c = popt
-                self._fill_fit_table([
-                    ("y₀",    f"{y0:.4f}"),
-                    ("α",     f"{alpha:.4f}"),
-                    ("τ₀",    f"{tau0:.4f} ns"),
-                    ("τ_c",   f"{tau_c:.4f} ns"),
-                ])
                 fit_g2 = self._model_bunched_gaussian(tau, *popt)
 
             elif idx == 3:  # Bunched Lorentzian
-                p0     = [1.0, 0.5, 0.0, tau_scale]
-                bounds = ([0, 0, -hw, 0.01], [np.inf, np.inf, hw, np.inf])
                 popt, _ = curve_fit(self._model_bunched_lorentzian,
                                     tau, g2, p0=p0, bounds=bounds, maxfev=10000)
-                y0, alpha, tau0, tau_c = popt
-                self._fill_fit_table([
-                    ("y₀",    f"{y0:.4f}"),
-                    ("α",     f"{alpha:.4f}"),
-                    ("τ₀",    f"{tau0:.4f} ns"),
-                    ("τ_c",   f"{tau_c:.4f} ns"),
-                ])
                 fit_g2 = self._model_bunched_lorentzian(tau, *popt)
 
             elif idx == 4:  # Three-level system
-                p0     = [0.5, 0.0, tau_scale * 0.5, tau_scale * 2.0]
-                bounds = ([0, -hw, 0.01, 0.01], [np.inf, hw, np.inf, np.inf])
                 popt, _ = curve_fit(self._model_three_level,
                                     tau, g2, p0=p0, bounds=bounds, maxfev=10000)
-                a, tau0, tau1, tau2 = popt
-                self._fill_fit_table([
-                    ("a",     f"{a:.4f}"),
-                    ("τ₀",   f"{tau0:.4f} ns"),
-                    ("τ₁",   f"{tau1:.4f} ns"),
-                    ("τ₂",   f"{tau2:.4f} ns"),
-                ])
                 fit_g2 = self._model_three_level(tau, *popt)
 
             else:
                 return
 
+            # Write the results into the "Resultado del fit" column, right
+            # next to the "Valor inicial" guesses that produced them.
+            self._fill_fit_results(idx, popt)
+
+            # Remember the p0 actually used, for the saved-data header.
+            self.last_p0_used = list(p0)
+            self.last_fit_idx = idx
+
             self._update_equation_label_preview()
             self.fit_curve.setData(tau, fit_g2)
-            if self.fitResultsFrame is not None:
-                self.fitResultsFrame.setVisible(True)
 
         except RuntimeError:
             if self.fitResultLabel is not None:
                 self.fitResultLabel.setText("Fit did not converge.")
                 self.fitResultLabel.setVisible(True)
-            if self.fitResultsFrame is not None:
-                self.fitResultsFrame.setVisible(True)
         except Exception as e:
             if self.fitResultLabel is not None:
                 self.fitResultLabel.setText(f"Fit error: {e}")
                 self.fitResultLabel.setVisible(True)
-            if self.fitResultsFrame is not None:
-                self.fitResultsFrame.setVisible(True)
 
     # ── Save data ─────────────────────────────────────────────────────────────
 
     def save_data(self):
         """
-        Save the current g²(τ) curve to a text file.
+        Save the current g²(τ) measurement to two text files.
 
-        Opens a format-selection dialog (txt / csv / dat) and writes two
-        columns: τ (ns) and g²(τ).  The header records the measurement
-        parameters (bin width, window, TDC mode, stop channel).
+        Opens a format-selection dialog (txt / csv / dat) and writes:
+
+        - ``..._StartStopTimes``: the raw (unbinned) stop times recorded
+          during the acquisition, one row per detected event — the raw
+          start-stop data behind the measurement.
+        - ``..._G2Curve``: the analyzed data, i.e. the g²(τ) curve itself
+          (τ in ns and the corresponding normalized g²(τ) value).
+
+        Both files share the same header with the measurement parameters
+        (bin width, window, TDC mode, stop channel).
 
         :return: None
         """
@@ -1127,7 +1349,9 @@ class G2Logic:
 
         dataFolderPrefix = self.savefile.getDataFolderPrefix()
         folder_path      = dataFolderPrefix["saveFolder"]
-        current_date_str = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+        now               = datetime.datetime.now()
+        current_date_str  = now.strftime("%Y%m%d%H%M%S")
 
         ch_names  = ["A", "B", "C", "D"]
         ch_index  = self.stopChannelComboBox.currentIndex()
@@ -1159,6 +1383,10 @@ class G2Logic:
                          if self.windowSpinBox   is not None else "—")
 
         setting = (
+            f"Tab:\tg2 (HBT)\n"
+            f"Initial date:\t{self.initialDate}\n"
+            f"Final date:\t{self.finalDate}\n"
+            f"Device model:\t{self.device.getModelIdn()}\n"
             f"Bin width (ns):\t{bin_ns_val}\n"
             f"Window (ns):\t{window_ns_val}\n"
             f"Stop channel:\tChannel {ch_label}"
@@ -1168,28 +1396,35 @@ class G2Logic:
         if fit_header:
             setting += "\n" + fit_header
 
-        prefix    = dataFolderPrefix.get("g2Prefix", "G2")
-        filename  = f"{prefix}_{current_date_str}_Channel{ch_label}"
-        sep       = ";" if selected_format == "csv" else "\t"
+        prefix = dataFolderPrefix.get("g2Prefix", "G2")
+
+        # Two files: raw start-stop data and the analyzed g²(τ) curve
+        filename_raw   = f"{prefix}_{current_date_str}_Channel{ch_label}_StartStopTimes"
+        filename_curve = f"{prefix}_{current_date_str}_Channel{ch_label}_G2Curve"
+
+        # Raw stop times accumulated by the worker thread during acquisition
+        raw_stop_ps = list(getattr(self.worker, "raw_stop_ps", []))
 
         try:
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
 
-            full_path = os.path.join(folder_path, f"{filename}.{selected_format}")
-            with open(full_path, 'w', encoding='utf-8') as f:
-                f.write(setting + '\n')
-                f.write(f"tau_ns{sep}g2\n")
-                for t, g in zip(self.last_centres_ns, self.last_g2):
-                    f.write(f"{t}{sep}{g}\n")
+            self.savefile.save_g2_start_stop_times(
+                raw_stop_ps, filename_raw, folder_path, setting, selected_format
+            )
+            self.savefile.save_g2Hbt_data(
+                (self.last_centres_ns, self.last_g2), filename_curve,
+                folder_path, setting, selected_format, "tau_ns"
+            )
 
             msg = QMessageBox(self.parent)
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Successful save")
             msg.setText(
-                f"File saved successfully:\n\n"
-                f"{folder_path}\n\n"
-                f"File: {filename}.{selected_format}"
+                f"The files have been saved successfully in path folder:\n\n"
+                f"{folder_path} with the following names:\n\n"
+                f"File1: {filename_curve}.{selected_format}\n"
+                f"File2: {filename_raw}.{selected_format}"
             )
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
