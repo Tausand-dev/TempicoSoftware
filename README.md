@@ -356,19 +356,26 @@ To reduce installer size, exclude unused scipy modules:
 ```bash
 pyinstaller \
   --additional-hooks-dir installers/pyinstaller_hooks/ \
-  --name TempicoSoftware \
-  --onefile \
-  --noconsole \
+  --name TempicoSoftware --onedir --noconsole \
   -i Sources/tausand_small.png \
-  --exclude-module scipy.cluster \
-  --exclude-module scipy.fft \
-  --exclude-module scipy.integrate \
-  --exclude-module scipy.interpolate \
-  --exclude-module scipy.io \
-  --exclude-module scipy.ndimage \
-  --exclude-module scipy.odr \
-  --exclude-module scipy.signal \
-  --exclude-module scipy.stats \
+  --exclude-module matplotlib \
+  --exclude-module PySide2.QtQml --exclude-module PySide2.QtQuick --exclude-module PySide2.QtQuickWidgets \
+  --exclude-module PySide2.QtWebEngineCore --exclude-module PySide2.QtWebEngineWidgets \
+  --exclude-module PySide2.QtWebChannel --exclude-module PySide2.QtWebSockets \
+  --exclude-module PySide2.QtMultimedia --exclude-module PySide2.QtMultimediaWidgets \
+  --exclude-module PySide2.QtNetwork --exclude-module PySide2.QtSql \
+  --exclude-module PySide2.QtTest --exclude-module PySide2.QtXml \
+  --exclude-module PySide2.QtBluetooth --exclude-module PySide2.QtDBus \
+  --exclude-module PySide2.Qt3DCore --exclude-module PySide2.Qt3DRender \
+  --exclude-module PySide2.QtCharts --exclude-module PySide2.QtDataVisualization \
+  --exclude-module PySide2.QtHelp --exclude-module PySide2.QtDesigner --exclude-module PySide2.QtUiTools \
+  --exclude-module PySide2.QtLocation --exclude-module PySide2.QtPositioning \
+  --exclude-module PySide2.QtSensors --exclude-module PySide2.QtNfc --exclude-module PySide2.QtSerialPort \
+  --exclude-module PySide2.QtPrintSupport --exclude-module PySide2.QtVirtualKeyboard \
+  --exclude-module pyqtgraph.opengl \
+  --exclude-module scipy.cluster --exclude-module scipy.fft --exclude-module scipy.integrate \
+  --exclude-module scipy.interpolate --exclude-module scipy.io --exclude-module scipy.ndimage \
+  --exclude-module scipy.odr --exclude-module scipy.signal --exclude-module scipy.stats \
   --exclude-module scipy._lib._uarray \
   src/main.py
 ```
