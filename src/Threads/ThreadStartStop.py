@@ -454,12 +454,12 @@ class WorkerThreadStartStopHistogram(QThread):
                 self.colorValue.emit(3)
                 self.stringValue.emit(self.currentState)
             elif len(self.channelsNM)>0:
-                stringEmit="No measurements in channels: "
-                for i in range(len(self.channelsNM)):
-                    if i==0:
-                        stringEmit+=" "+self.channelsNM[i] 
-                    else:
-                        stringEmit+=", "+self.channelsNM[i] 
+                if "Start" in self.channelsNM:
+                    stringEmit="No measurements in Start Channel"
+                elif len(self.channelsNM)==1:
+                    stringEmit="No measurements in Stop Channel "+self.channelsNM[0]
+                else:
+                    stringEmit="No measurements in Stop Channels "+", ".join(self.channelsNM)
                 self.currentNM=stringEmit
                 emitStringProblems=self.currentNM
                 self.colorValue.emit(3)

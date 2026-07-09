@@ -12,6 +12,10 @@ import pyTempico as tempico
 # Overflow sentinel returned by pyTempico when no valid stop is recorded.
 _OVERFLOW_SENTINEL = -1_000_000
 
+# Maps the 1-4 numeric TDC channel index used internally to the A-D letter
+# shown to the user in status messages.
+_CHANNEL_LETTERS = {1: "A", 2: "B", 3: "C", 4: "D"}
+
 
 class WorkerThreadG2(QThread):
     """
@@ -417,7 +421,7 @@ class WorkerThreadG2(QThread):
 
             if not data:
                 self.colorValue.emit(3)
-                self.stringValue.emit("No measurements in channel: Start")
+                self.stringValue.emit("No measurements in Start Channel")
                 self.consecutiveErrors = 0
                 return call_count
 
@@ -432,7 +436,7 @@ class WorkerThreadG2(QThread):
             if all_missing:
                 self.colorValue.emit(3)
                 self.stringValue.emit(
-                    f"No measurements in stop channel {self.stop_channel}"
+                    f"No measurements in Stop Channel {_CHANNEL_LETTERS.get(self.stop_channel, self.stop_channel)}"
                 )
                 self.consecutiveErrors = 0
                 return call_count
@@ -536,7 +540,7 @@ class WorkerThreadG2(QThread):
             if self.total_events == 0:
                 self.colorValue.emit(3)
                 self.stringValue.emit(
-                    f"No measurements in stop channel {self.stop_channel}"
+                    f"No measurements in Stop Channel {_CHANNEL_LETTERS.get(self.stop_channel, self.stop_channel)}"
                 )
             else:
                 self.colorValue.emit(1)

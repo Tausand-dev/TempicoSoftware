@@ -25,6 +25,10 @@ class WorkerThreadLifeTime(QThread):
     :param numberMeasurements: The number of measurements to be taken (int).
     :param device: The Tempico device used for performing measurements (Tempico).
     :param TimeRange: The time range for the measurements (int).
+    :param startChannelLabel: Letter (A-D) identifying deviceStartChannel, used only to
+        build status messages. None if no start channel is being used (str or None).
+    :param stopChannelLabel: Letter (A-D) identifying deviceStopChannel, used only to
+        build status messages (str).
     :return: None
     """
     createdSignal=Signal()
@@ -34,7 +38,7 @@ class WorkerThreadLifeTime(QThread):
     updateLabel=Signal(str)
     updateMeasurementsLabel=Signal(str,str)
     disconectedSignal=Signal()
-    def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device,TimeRange):
+    def __init__(self,deviceStartChannel,deviceStopChannel,binwidthText,numberMeasurements,device,TimeRange,startChannelLabel=None,stopChannelLabel=None):
         super().__init__()
         #Parameters of the measurement
         self.totalTime=0
@@ -49,6 +53,10 @@ class WorkerThreadLifeTime(QThread):
         self.numberMeasurements=numberMeasurements
         self.device=device
         self.TimeRange=TimeRange
+        #Letters (A-D) identifying the selected channels, only used to build
+        #human-readable status messages (e.g. "No measurements in Stop Channel A")
+        self.startChannelLabel=startChannelLabel
+        self.stopChannelLabel=stopChannelLabel
         #Getting the value in picoSeconds of binWidtrh
         self.getBinWidthNumber()
         #Getting the mode of the device
@@ -57,6 +65,21 @@ class WorkerThreadLifeTime(QThread):
         self.startStopDifferences=[]
         #Get the sequence of no measurements
         self.noMeasurementsCounter=0
+        
+    #Function to build the "No measurements in ..." status text, showing the
+    #channel letter when it's known and falling back to the generic wording
+    #otherwise (kept for backwards compatibility with older callers).
+    def noMeasurementsMessage(self,channelType):
+        """
+        Builds the "No measurements" status text for the given channel type.
+
+        :param channelType: Either "Start" or "Stop" (str).
+        :return: The formatted status message (str).
+        """
+        label=self.startChannelLabel if channelType=="Start" else self.stopChannelLabel
+        if label:
+            return "Measurement running: No measurements in "+channelType+" Channel "+label
+        return "Measurement running: No measurements in "+channelType+" Channel"
         
     #Main Function
     def run(self):
@@ -129,11 +152,11 @@ class WorkerThreadLifeTime(QThread):
             if len(measurement)==0:
                 self.totalRuns+=100
                 self.noMeasurementsCounter+=100
-                self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
+                self.statusSignal.emit(self.noMeasurementsMessage("Start"))
                 self.pointSignal.emit(3)
             else:
                 if self.noMeasurementsCounter>=100:
-                    self.statusSignal.emit("Measurement running: Stop Channel is not taking measurements")
+                    self.statusSignal.emit(self.noMeasurementsMessage("Stop"))
                     self.pointSignal.emit(3)
                 else:
                     self.statusSignal.emit("Measurement running: "+str(percentage)+"%")
@@ -189,13 +212,13 @@ class WorkerThreadLifeTime(QThread):
                     if self.totalMeasurements>=self.numberMeasurements:
                         break
                 if self.noMeasurementsCounter>=100:
-                    self.statusSignal.emit("Measurement running: Stop Channel is not taking measurements")
+                    self.statusSignal.emit(self.noMeasurementsMessage("Stop"))
                     self.pointSignal.emit(3)
                     
         except:
             self.totalRuns+=100
             self.noMeasurementsCounter+=100
-            self.statusSignal.emit("Measurement running: Input Channel is not taking measurements")
+            self.statusSignal.emit(self.noMeasurementsMessage("Start"))
             self.pointSignal.emit(3)
                 
                 

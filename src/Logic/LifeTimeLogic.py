@@ -331,7 +331,7 @@ class LifeTimeLogic():
         self.mainWindow.activeMeasurement()
         #Create the thread object
         self.worker=WorkerThreadLifeTime(self.currentStartChannel,self.currentStopChannel,self.binWidthComboBox.currentText(),self.numberMeasurementsSpinBox.value(),
-                                     self.device,timeRangeps)
+                                     self.device,timeRangeps,self.currentStartChannelLabel,self.currentStopChannelLabel)
         
         #Create connections to main thread 
         self.worker.finished.connect(self.finishedThreadMeasurement)
@@ -532,8 +532,11 @@ class LifeTimeLogic():
         self.device.ch4.disableChannel()
         
         #Get the start channel before begin the measurement
+        #comboBoxStartChannel index 0 means "no start channel", 1-4 map to A-D
+        startChannelLetters={1:"A",2:"B",3:"C",4:"D"}
         if startChannelValue==0:
             self.currentStartChannel=None
+            self.currentStartChannelLabel=None
         elif startChannelValue==1:
             self.device.ch1.enableChannel()
             self.currentStartChannel=self.device.ch1
@@ -546,8 +549,12 @@ class LifeTimeLogic():
         elif startChannelValue==4:
             self.device.ch4.enableChannel()
             self.currentStartChannel=self.device.ch4
+        if startChannelValue!=0:
+            self.currentStartChannelLabel=startChannelLetters.get(startChannelValue)
         
         #Get the stop channel before begin the measurement
+        #comboBoxStopChannel index 0-3 map to A-D
+        stopChannelLetters={0:"A",1:"B",2:"C",3:"D"}
         if stopChannelValue==0:
             self.device.ch1.enableChannel()
             self.currentStopChannel=self.device.ch1
@@ -560,6 +567,7 @@ class LifeTimeLogic():
         elif stopChannelValue==3:
             self.device.ch4.enableChannel()
             self.currentStopChannel=self.device.ch4
+        self.currentStopChannelLabel=stopChannelLetters.get(stopChannelValue)
     
     
     #Get the mode of the channel to save in a variable before start measurement

@@ -5,6 +5,10 @@ import numpy as np
 import time
 import pyTempico as tempico
 
+# Maps the 1-4 numeric TDC channel index used internally to the A-D letter
+# shown to the user in status messages.
+_CHANNEL_LETTERS = {1: "A", 2: "B", 3: "C", 4: "D"}
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Internal helper – Multi-tau autocorrelator
@@ -512,7 +516,7 @@ class WorkerThreadFCS(QThread):
 
             if not data:
                 self.colorValue.emit(3)
-                self.stringValue.emit("No measurements in channels:  Start")
+                self.stringValue.emit("No measurements in Start Channel")
                 self.consecutiveErrors = 0
                 return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
@@ -524,7 +528,9 @@ class WorkerThreadFCS(QThread):
             )
             if all_stops_missing:
                 self.colorValue.emit(3)
-                self.stringValue.emit("No measurements in channels:  Stop")
+                self.stringValue.emit(
+                    f"No measurements in Stop Channel {_CHANNEL_LETTERS.get(self.stop_channel, self.stop_channel)}"
+                )
                 self.consecutiveErrors = 0
                 return cursor_ps, next_bin_edge, photons_in_bin, call_count, total_events, stop_times_ps
 
@@ -595,7 +601,9 @@ class WorkerThreadFCS(QThread):
 
             if total_events == 0:
                 self.colorValue.emit(3)
-                self.stringValue.emit("No measurements in channels:  Stop")
+                self.stringValue.emit(
+                    f"No measurements in Stop Channel {_CHANNEL_LETTERS.get(self.stop_channel, self.stop_channel)}"
+                )
             else:
                 self.colorValue.emit(1)
                 self.stringValue.emit(status_str)
