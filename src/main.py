@@ -800,6 +800,7 @@ class MainWindow(QMainWindow):
                     self.uiFCS.fitTable,
                     self.uiFCS.fitOffsetCheckBox,
                     self.uiFCS.stopChannelComboBox,
+                    fitResetParamsButton=self.uiFCS.fitResetParamsButton,
                     tau_0=tau_0,
                 )
                 self.fcsGraphic.set_parameter_widgets(

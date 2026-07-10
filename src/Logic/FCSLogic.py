@@ -156,6 +156,7 @@ class FCSLogic():
         fitTable,
         fitOffsetCheckBox,
         stopChannelComboBox,
+        fitResetParamsButton=None,
         tau_0 = 1_000_000_000,   # 1000 µs = 1 ms in picoseconds
     ):
         """
@@ -167,10 +168,11 @@ class FCSLogic():
         enabled/disabled state of each button, and connects each control's
         signal to its corresponding handler (start/stop measurement, save
         data, save plot, clear curve, run fit, update fit equation preview,
-        apply offset). It also initializes the correlator parameters
-        (``tau_0``, number of multi-tau levels, and grouping factor ``m``)
-        and the internal sentinels used to track thread lifecycle and
-        measurement state.
+        repopulate the "Initial value" guesses, sync manual edits to the
+        per-model cache, reset those guesses to "Auto", apply offset). It
+        also initializes the correlator parameters (``tau_0``, number of
+        multi-tau levels, and grouping factor ``m``) and the internal
+        sentinels used to track thread lifecycle and measurement state.
 
         :param parent: The widget where the pyqtgraph plot is injected.
         :param disconnectButton: Main-window Disconnect button.
@@ -193,9 +195,14 @@ class FCSLogic():
         :param fitEquationLabel: Label displaying the fit equation.
         :param fitResultLabel: Label displaying the fit result summary.
         :param fitResultsFrame: Frame containing the fit results widgets.
-        :param fitTable: Table widget showing fitted parameter values.
+        :param fitTable: Three-column table ("Parameter" | "Initial value" |
+            "Fit result"); the middle column is user-editable and seeds
+            ``curve_fit``'s ``p0`` the next time "Fit" is pressed.
         :param fitOffsetCheckBox: Checkbox to toggle the G(∞) offset in the fit.
         :param stopChannelComboBox: Combo box to select the stop channel.
+        :param fitResetParamsButton: Optional button ("Auto") that discards
+            manual edits to the "Initial value" column for the current model
+            and restores the automatically computed guess.
         :param tau_0: Base bin size in picoseconds. Defaults to
             ``1_000_000_000`` ps (1 ms).
         :type tau_0: int, optional
@@ -238,6 +245,16 @@ class FCSLogic():
         self.fitTable          = fitTable
         self.fitOffsetCheckBox     = fitOffsetCheckBox
         self.stopChannelComboBox   = stopChannelComboBox
+        self.fitResetParamsButton  = fitResetParamsButton
+
+        # Cache of user-edited initial guesses, keyed by fit-model index, so
+        # switching models back and forth doesn't lose what was typed in.
+        self._initial_params_cache = {}
+        # Records the p0 actually used / model index for the last successful
+        # fit, so it can be included in the saved-data header for
+        # reproducibility.
+        self.last_p0_used = None
+        self.last_fit_idx = None
 
         self.startButton    = startButton
         self.stopButton     = stopButton
@@ -266,6 +283,17 @@ class FCSLogic():
         self.clearButton.clicked.connect(self.clear_curve)
         self.fitButton.clicked.connect(self.run_fit)
         self.fitModelCombo.currentIndexChanged.connect(self._update_equation_label_preview)
+        self.fitModelCombo.currentIndexChanged.connect(
+            self._populate_initial_params_table
+        )
+        if self.fitTable is not None:
+            self.fitTable.cellChanged.connect(
+                self._on_initial_param_edited
+            )
+        if self.fitResetParamsButton is not None:
+            self.fitResetParamsButton.clicked.connect(
+                self._reset_initial_params_to_auto
+            )
         self.fitOffsetCheckBox.stateChanged.connect(self._apply_offset_to_plot)
         # ── Internal state ────────────────────────────────────────────────
         # Sentinel: True while the worker thread is alive
@@ -286,6 +314,10 @@ class FCSLogic():
         self.last_g           = np.array([])
         self.last_stop_times_ps = np.array([])   # raw stop times in ps
 
+        # Show sensible starting guesses and the equation right away for the
+        # currently selected model (mirrors G2Logic).
+        self._populate_initial_params_table()
+        self._update_equation_label_preview()
 
         # ── Build the plot ────────────────────────────────────────────────
         self._build_plot()
@@ -713,6 +745,7 @@ class FCSLogic():
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.fit_curve.setData([], [])
+        self._clear_fit_results()
         self.fitResultsFrame.setVisible(False)
 
     # ── Save data ─────────────────────────────────────────────────────────────
@@ -723,8 +756,10 @@ class FCSLogic():
         Returns an empty string if no fit results are currently shown
         (``fitResultsFrame`` is hidden). Otherwise, builds a multi-line
         string with the selected fit model's name, its equation (including
-        the optional G(∞) offset term), and one line per fitted parameter
-        read from ``fitTable``.
+        the optional G(∞) offset term), one "Initial <param>" line per
+        guess actually used for the last successful fit of this same model
+        (from ``last_p0_used``/``last_fit_idx``), and one line per fitted
+        parameter/derived quantity read from ``fitTable``.
 
         :return: Tab-separated header lines describing the fit, or an empty
             string if no fit is currently displayed.
@@ -758,11 +793,18 @@ class FCSLogic():
             f"Fit equation:\t{equations.get(idx, '')}",
         ]
 
-        for row in range(self.fitTable.rowCount()):
-            name_item  = self.fitTable.item(row, 0)
-            value_item = self.fitTable.item(row, 1)
-            if name_item and value_item:
-                lines.append(f"{name_item.text()}:\t{value_item.text()}")
+        if self.last_p0_used is not None and self.last_fit_idx == idx:
+            labels = self.PARAM_LABELS.get(idx, [])
+            for (name, unit, scale), value in zip(labels, self.last_p0_used):
+                unit_suffix = f" {unit}" if unit else ""
+                lines.append(f"Initial {name}:\t{value * scale:.4f}{unit_suffix}")
+
+        if self.fitTable is not None and self.last_fit_idx == idx:
+            for row in range(self.fitTable.rowCount()):
+                name_item  = self.fitTable.item(row, 0)
+                value_item = self.fitTable.item(row, 2)
+                if name_item and value_item and value_item.text():
+                    lines.append(f"{name_item.text()}:\t{value_item.text()}")
 
         return "\n".join(lines)
     
@@ -1087,7 +1129,282 @@ class FCSLogic():
         """Pure chemical relaxation (fast diffusion limit). G(0) = (1/N)·K"""
         G0 = (1.0 / N) * K
         return offset + G0 * np.exp(-tau / tau_B)
-    
+
+    # Parameter names, display units, and unit-scale factors per fit model,
+    # in curve_fit argument order (the fixed G(∞) offset is controlled by
+    # ``fitOffsetCheckBox`` and is never part of this list). "Scale" converts
+    # curve_fit's internal value (always in seconds for any tau-like
+    # parameter) into the human-friendly unit shown in the table:
+    # display_value = internal_value * scale. Shared by the editable
+    # "Initial value" column, the "Fit result" column, and the saved-data
+    # header.
+    PARAM_LABELS = {
+        0: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"κ", "", 1.0)],
+        1: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"α", "", 1.0), (u"κ", "", 1.0)],
+        2: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"a", "", 1.0),
+            (u"F", "", 1.0), (u"τF", "µs", 1e6)],
+        3: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"a", "", 1.0), (u"τv", "ms", 1e3)],
+        4: [(u"N", "", 1.0), (u"τD1", "ms", 1e3), (u"τD2", "ms", 1e3),
+            (u"α1", "", 1.0), (u"a", "", 1.0)],
+        5: [(u"N", "", 1.0), (u"τB", "ms", 1e3), (u"K", "", 1.0)],
+    }
+
+    def _default_p0(self, idx):
+        """
+        Automatically suggested initial guesses (p0) for model ``idx``, in
+        curve_fit's own internal units (seconds for any tau-like parameter),
+        based on the currently displayed G(τ) data when available, or on a
+        generic placeholder (used to pre-fill the table before any data has
+        been collected).
+
+        :param idx: Selected fit-model index (``fitModelCombo.currentIndex()``).
+        :type idx: int
+        :return: Initial guesses, in curve_fit argument order.
+        :rtype: list[float]
+        """
+        taus = self.last_taus_s
+        if taus is not None and len(taus) > 0:
+            positive = taus[taus > 0]
+            tau_med  = float(np.median(positive)) if len(positive) > 0 else 1e-3
+        else:
+            tau_med = 1e-3  # 1 ms placeholder before any data is collected
+
+        if idx == 0:      # 3D Gaussian
+            return [1.0, tau_med, 5.0]
+        elif idx == 1:    # Anomalous
+            return [1.0, tau_med, 1.0, 5.0]
+        elif idx == 2:    # Triplet
+            return [1.0, tau_med, 5.0, 0.1, 1e-5]
+        elif idx == 3:    # Flow
+            return [1.0, tau_med, 5.0, tau_med]
+        elif idx == 4:    # Two-component
+            return [1.0, tau_med * 0.5, tau_med * 2.0, 0.5, 5.0]
+        elif idx == 5:    # Chemical
+            return [1.0, tau_med * 0.1, 1.0]
+        return [1.0, tau_med, 5.0]
+
+    @staticmethod
+    def _get_bounds(idx):
+        """
+        Lower/upper ``curve_fit`` bounds for model ``idx``, in the same
+        internal units and argument order as ``PARAM_LABELS[idx]`` and
+        ``_default_p0(idx)``. Used both to constrain the fit itself and to
+        clip a user-entered "Initial value" back into a valid range before
+        it is passed to ``curve_fit`` as ``p0``.
+
+        :param idx: Selected fit-model index (``fitModelCombo.currentIndex()``).
+        :type idx: int
+        :return: ``(lower, upper)`` bounds tuple, each a list of floats in
+            curve_fit argument order.
+        :rtype: tuple[list[float], list[float]]
+        """
+        if idx == 0:
+            return ([0, 0, 0.01], [np.inf, np.inf, np.inf])
+        elif idx == 1:
+            return ([0, 0, 0.1, 0.01], [np.inf, np.inf, 2.0, np.inf])
+        elif idx == 2:
+            return ([0, 0, 0.01, 0, 0], [np.inf, np.inf, np.inf, 0.99, np.inf])
+        elif idx == 3:
+            return ([0, 0, 0.01, 0], [np.inf, np.inf, np.inf, np.inf])
+        elif idx == 4:
+            return ([0, 0, 0, 0, 0.01], [np.inf, np.inf, np.inf, 1.0, np.inf])
+        elif idx == 5:
+            return ([0, 0, 0], [np.inf, np.inf, np.inf])
+        return ([0, 0, 0], [np.inf, np.inf, np.inf])
+
+    def _populate_initial_params_table(self, *_args):
+        """
+        (Re)fill the "Parameter" and "Initial value" columns of the merged
+        fit table for the currently selected fit model. Called on startup,
+        whenever ``fitModelCombo`` changes, and by the "Auto" button.
+
+        Values shown come from ``_initial_params_cache`` only once the user
+        has actually edited that model's guesses (or reset them) in this
+        session. Until then, the guess is recomputed fresh from the live
+        G(τ) data every time this is called, so it keeps tracking the
+        current measurement instead of freezing on whatever was on screen
+        the first time (e.g. before any data existed).
+
+        The "Fit result" column is always cleared here: changing the model
+        or the initial guess invalidates whatever result was previously
+        shown, so the user is prompted to press "Fit" again.
+
+        :param _args: Ignored. Accepts and discards whatever arguments the
+            triggering signal passes (e.g. ``fitModelCombo``'s new index),
+            so this can be connected directly as a slot.
+        :return: None
+        """
+        if self.fitTable is None:
+            return
+
+        idx    = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        labels = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
+
+        values = self._initial_params_cache.get(idx)
+        if values is None:
+            values = self._default_p0(idx)
+
+        table = self.fitTable
+        table.blockSignals(True)
+        table.setRowCount(len(labels))
+        for row, (name, unit, scale) in enumerate(labels):
+            display_name = f"{name} ({unit})" if unit else name
+            item_name = QTableWidgetItem(display_name)
+            item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
+            item_name.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 0, item_name)
+
+            item_value = QTableWidgetItem(f"{values[row] * scale:.4f}")
+            item_value.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 1, item_value)
+
+            item_result = QTableWidgetItem("")
+            item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+            item_result.setTextAlignment(Qt.AlignCenter)
+            table.setItem(row, 2, item_result)
+        table.resizeRowsToContents()
+        h = table.horizontalHeader().height()
+        for row in range(table.rowCount()):
+            h += table.rowHeight(row)
+        table.setFixedHeight(h + 4)
+        table.blockSignals(False)
+
+        # A model/guess change invalidates any previously displayed result.
+        self.last_p0_used = None
+        self.last_fit_idx = None
+
+    def _on_initial_param_edited(self, row, column):
+        """
+        Slot for ``fitTable.cellChanged``: keep the per-model initial-guess
+        cache in sync whenever the user edits the "Initial value" column.
+
+        Ignores edits to any other column. An entry that can't be parsed
+        as a number is reverted to its last known-good value (either the
+        cached edit or the auto-computed default) rather than left invalid.
+
+        :param row: Row index of the edited cell (one parameter per row).
+        :type row: int
+        :param column: Column index of the edited cell; only ``1``
+            ("Initial value") is handled.
+        :type column: int
+        :return: None
+        """
+        if column != 1 or self.fitTable is None:
+            return
+        idx    = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        labels = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
+        if row >= len(labels):
+            return
+        item = self.fitTable.item(row, column)
+        if item is None:
+            return
+        scale = labels[row][2]
+        try:
+            display_value = float(item.text())
+        except ValueError:
+            # Invalid entry — revert to the last known-good value.
+            cached = self._initial_params_cache.get(idx, self._default_p0(idx))
+            self.fitTable.blockSignals(True)
+            item.setText(f"{cached[row] * scale:.4f}")
+            self.fitTable.blockSignals(False)
+            return
+
+        cached = self._initial_params_cache.setdefault(idx, self._default_p0(idx))
+        cached[row] = display_value / scale
+
+    def _reset_initial_params_to_auto(self):
+        """
+        "Auto" button — discard any manual edits for the current model and
+        go back to tracking the automatically computed guess (which itself
+        keeps following the live G(τ) data on every subsequent repaint).
+
+        :return: None
+        """
+        idx = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+        self._initial_params_cache.pop(idx, None)
+        self._populate_initial_params_table()
+
+    def _clear_fit_results(self):
+        """
+        Blank the "Fit result" column and forget the last successful fit,
+        without touching the editable "Initial value" guesses or hiding the
+        equation/table — so the panel stays ready for editing.
+
+        Also drops any extra derived-quantity rows (e.g. α2, G(0), G(∞))
+        appended by a previous fit, shrinking the table back to just the
+        base parameters for the currently selected model.
+
+        :return: None
+        """
+        if self.fitResultLabel is not None:
+            self.fitResultLabel.setVisible(False)
+        if self.fitTable is not None:
+            idx    = self.fitModelCombo.currentIndex() if self.fitModelCombo is not None else 0
+            n_base = len(self.PARAM_LABELS.get(idx, []))
+            self.fitTable.blockSignals(True)
+            if self.fitTable.rowCount() > n_base:
+                self.fitTable.setRowCount(n_base)
+            for row in range(self.fitTable.rowCount()):
+                item_result = QTableWidgetItem("")
+                item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+                item_result.setTextAlignment(Qt.AlignCenter)
+                self.fitTable.setItem(row, 2, item_result)
+            self.fitTable.blockSignals(False)
+        self.last_p0_used = None
+        self.last_fit_idx = None
+
+    def _read_initial_params(self, idx, bounds=None):
+        """
+        Read the editable p0 guesses for model ``idx`` (converting from the
+        table's display units back into curve_fit's internal units),
+        falling back to the auto-computed defaults for any missing/invalid
+        entry, then clip them into ``bounds`` so a user-entered value
+        outside the allowed range can't make curve_fit raise.
+
+        Reads directly from ``fitTable`` column 1 ("Initial value"; the
+        table always reflects the currently selected model, since it is
+        repopulated on every ``fitModelCombo`` change) so whatever is on
+        screen at the moment "Fit" is pressed is what gets used — no
+        reliance on the edit signal having already fired. Falls back to the
+        per-model cache, then to the computed defaults, if the table isn't
+        available.
+
+        :param idx: Selected fit-model index (``fitModelCombo.currentIndex()``).
+        :type idx: int
+        :param bounds: Optional ``(lower, upper)`` bounds tuple, as returned
+            by ``_get_bounds(idx)``, used to clip the returned guesses so
+            they satisfy ``curve_fit``'s constraints.
+        :type bounds: tuple[list[float], list[float]], optional
+        :return: p0 guesses, in curve_fit argument order.
+        :rtype: list[float]
+        """
+        defaults = self._default_p0(idx)
+        labels   = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
+        p0 = list(defaults)
+
+        table = self.fitTable
+        if table is not None and table.rowCount() >= len(defaults):
+            for row in range(len(defaults)):
+                item = table.item(row, 1)
+                if item is None:
+                    continue
+                try:
+                    display_value = float(item.text())
+                    scale         = labels[row][2] if row < len(labels) else 1.0
+                    p0[row] = display_value / scale
+                except ValueError:
+                    pass  # keep the default for this entry
+        else:
+            cached = self._initial_params_cache.get(idx)
+            if cached is not None:
+                p0 = list(cached)
+
+        if bounds is not None:
+            lower, upper = bounds
+            p0 = [min(max(v, lo), hi) for v, lo, hi in zip(p0, lower, upper)]
+
+        return p0
+
     def _apply_offset_to_plot(self):
         """
         Redraws the plotted curve shifted by -1 when the G(∞) offset is unchecked.
@@ -1109,6 +1426,7 @@ class FCSLogic():
             self.curve.setData(self.last_taus_s, self.last_g - 1.0)
         # Clear the previous fit since the offset changed
         self.fit_curve.setData([], [])
+        self._clear_fit_results()
         self.fitResultsFrame.setVisible(False)
         self._update_equation_label_preview()
 
@@ -1206,31 +1524,79 @@ class FCSLogic():
             )
         self.fitEquationLabel.setText(html)
 
-    def _fill_fit_table(self, rows):
+    def _fill_fit_results(self, idx, popt, extra_rows=None):
         """
-        Fill fitTable with parameter results.
+        Write the fit result values into the "Fit result" column (index 2)
+        of the merged table, aligned row-by-row with the "Initial value"
+        column already shown for model ``idx`` (the table rows/labels were
+        already set by ``_populate_initial_params_table`` for this same
+        model).
 
-        Parameters
-        ----------
-        rows : list of (str, str)  — (parameter name, formatted value)
+        Any derived quantities that aren't direct curve_fit parameters
+        (e.g. α2 = 1-α1, G(0) = K/N, or the fixed G(∞) offset flag) can be
+        appended as additional read-only rows via ``extra_rows``.
+
+        :param idx: Selected fit-model index.
+        :param popt: Fitted parameter values, in curve_fit argument order
+            (matching ``PARAM_LABELS[idx]``).
+        :param extra_rows: Optional list of ``(name, formatted_value)``
+            tuples for derived/fixed quantities with no editable initial
+            guess.
+        :return: None
         """
-        table = self.fitTable
-        table.setRowCount(len(rows))
-        for i, (name, value) in enumerate(rows):
-            item_name  = QTableWidgetItem(name)
-            item_value = QTableWidgetItem(value)
+        if self.fitTable is None:
+            return
+        labels      = self.PARAM_LABELS.get(idx, self.PARAM_LABELS[0])
+        extra_rows  = extra_rows or []
+        table       = self.fitTable
+        table.blockSignals(True)
+        table.setRowCount(len(labels) + len(extra_rows))
+
+        for row, ((name, unit, scale), value) in enumerate(zip(labels, popt)):
+            item_result = QTableWidgetItem(f"{value * scale:.4f}")
+            item_result.setTextAlignment(Qt.AlignCenter)
+            item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+            table.setItem(row, 2, item_result)
+
+        for i, (name, value_str) in enumerate(extra_rows):
+            row = len(labels) + i
+            item_name = QTableWidgetItem(name)
+            item_name.setFlags(item_name.flags() & ~Qt.ItemIsEditable)
             item_name.setTextAlignment(Qt.AlignCenter)
-            item_value.setTextAlignment(Qt.AlignCenter)
-            table.setItem(i, 0, item_name)
-            table.setItem(i, 1, item_value)
+            table.setItem(row, 0, item_name)
+
+            item_value = QTableWidgetItem("")
+            item_value.setFlags(item_value.flags() & ~Qt.ItemIsEditable)
+            table.setItem(row, 1, item_value)
+
+            item_result = QTableWidgetItem(value_str)
+            item_result.setTextAlignment(Qt.AlignCenter)
+            item_result.setFlags(item_result.flags() & ~Qt.ItemIsEditable)
+            table.setItem(row, 2, item_result)
+
         table.resizeRowsToContents()
         h = table.horizontalHeader().height()
         for row in range(table.rowCount()):
             h += table.rowHeight(row)
         table.setFixedHeight(h + 4)
+        table.blockSignals(False)
 
     def run_fit(self):
-        """Fit the current G(τ) curve with the selected model."""
+        """
+        Fit the current G(τ) curve with the model selected in ``fitModelCombo``.
+
+        The initial guess (``p0``) comes from the editable "Initial value"
+        column of ``fitTable`` (``_read_initial_params``), falling back to
+        the auto-computed guess for anything left blank/invalid, and is
+        clipped into the model's ``curve_fit`` bounds (``_get_bounds``) so
+        an out-of-range entry can't make the fit raise. On success, the
+        "Fit result" column is filled in (``_fill_fit_results``), the fit
+        curve is redrawn, and ``last_p0_used``/``last_fit_idx`` are recorded
+        so the saved-data header can report exactly what guess produced the
+        displayed result.
+
+        :return: None
+        """
         self.fitResultLabel.setVisible(False)
         self.fitResultsFrame.setVisible(False)
 
@@ -1250,112 +1616,82 @@ class FCSLogic():
         # Si G(∞)→0, desplazar los datos restando 1 antes de fitear
         g_fit = g if offset == 1.0 else g - 1.0
 
-        idx = self.fitModelCombo.currentIndex()
+        idx    = self.fitModelCombo.currentIndex()
+        bounds = self._get_bounds(idx)
+        # p0 comes from the editable "Initial value" column (falling back
+        # to the auto-computed guess for anything left blank/invalid),
+        # clipped into the fit bounds so an out-of-range guess can't make
+        # curve_fit raise.
+        p0 = self._read_initial_params(idx, bounds=bounds)
+        g_inf_row = ("G(∞)", "1" if offset == 1.0 else "0")
+
         try:
             if idx == 0:  # 3D Gaussian
-                p0     = [1.0, np.median(taus), 5.0]
-                bounds = ([0, 0, 0.01], [np.inf, np.inf, np.inf])
                 popt, _ = curve_fit(
                     lambda t, N, tD, k: self._model_3d(t, N, tD, k, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, kappa_fit = popt
-                self._fill_fit_table([
-                    ("N",    f"{N_fit:.4f}"),
-                    ("τD",   f"{tD_fit*1e3:.4f} ms"),
-                    ("κ",    f"{kappa_fit:.4f}"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
-                ])
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
                 fit_g = self._model_3d(taus, N_fit, tD_fit, kappa_fit, offset)
 
             elif idx == 1:  # Anomalous
-                p0     = [1.0, np.median(taus), 1.0, 5.0]
-                bounds = ([0, 0, 0.1, 0.01], [np.inf, np.inf, 2.0, np.inf])
                 popt, _ = curve_fit(
                     lambda t, N, tD, a, k: self._model_anomalous(t, N, tD, a, k, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, alpha_fit, kappa_fit = popt
-                self._fill_fit_table([
-                    ("N",    f"{N_fit:.4f}"),
-                    ("τD",   f"{tD_fit*1e3:.4f} ms"),
-                    ("α",    f"{alpha_fit:.4f}"),
-                    ("κ",    f"{kappa_fit:.4f}"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
-                ])
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
                 fit_g = self._model_anomalous(taus, N_fit, tD_fit, alpha_fit, kappa_fit, offset)
 
-            elif idx == 2:
-                p0     = [1.0, np.median(taus), 5.0, 0.1, 1e-5]
-                bounds = ([0, 0, 0.01, 0, 0], [np.inf, np.inf, np.inf, 0.99, np.inf])
+            elif idx == 2:  # Triplet
                 popt, _ = curve_fit(
                     lambda t, N, tD, k, F, tF: self._model_triplet(t, N, tD, k, F, tF, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, kappa_fit, F_fit, tF_fit = popt
-                self._fill_fit_table([
-                    ("N",   f"{N_fit:.4f}"),
-                    ("τD",  f"{tD_fit*1e3:.4f} ms"),
-                    ("a",   f"{kappa_fit:.4f}"),
-                    ("F",   f"{F_fit:.4f}"),
-                    ("τF",  f"{tF_fit*1e6:.4f} µs"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
-                ])
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
                 fit_g = self._model_triplet(taus, N_fit, tD_fit, kappa_fit, F_fit, tF_fit, offset)
 
-            elif idx == 3:
-                p0     = [1.0, np.median(taus), 5.0, np.median(taus)]
-                bounds = ([0, 0, 0.01, 0], [np.inf, np.inf, np.inf, np.inf])
+            elif idx == 3:  # Flow
                 popt, _ = curve_fit(
                     lambda t, N, tD, k, tv: self._model_flow(t, N, tD, k, tv, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD_fit, kappa_fit, tv_fit = popt
-                self._fill_fit_table([
-                    ("N",   f"{N_fit:.4f}"),
-                    ("τD",  f"{tD_fit*1e3:.4f} ms"),
-                    ("a",   f"{kappa_fit:.4f}"),
-                    ("τv",  f"{tv_fit*1e3:.4f} ms"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
-                ])
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
                 fit_g = self._model_flow(taus, N_fit, tD_fit, kappa_fit, tv_fit, offset)
 
-            elif idx == 4:
-                tm = np.median(taus)
-                p0     = [1.0, tm * 0.5, tm * 2.0, 0.5, 5.0]
-                bounds = ([0, 0, 0, 0, 0.01], [np.inf, np.inf, np.inf, 1.0, np.inf])
+            elif idx == 4:  # Two-component
                 popt, _ = curve_fit(
                     lambda t, N, tD1, tD2, a1, k: self._model_two_component(t, N, tD1, tD2, a1, k, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit = popt
-                self._fill_fit_table([
-                    ("N",    f"{N_fit:.4f}"),
-                    ("τD1",  f"{tD1_fit*1e3:.4f} ms"),
-                    ("τD2",  f"{tD2_fit*1e3:.4f} ms"),
-                    ("α1",   f"{a1_fit:.4f}"),
-                    ("α2",   f"{1-a1_fit:.4f}"),
-                    ("a",    f"{kappa_fit:.4f}"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                self._fill_fit_results(idx, popt, extra_rows=[
+                    ("α2", f"{1-a1_fit:.4f}"),
+                    g_inf_row,
                 ])
                 fit_g = self._model_two_component(taus, N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit, offset)
 
-            elif idx == 5:
-                p0     = [1.0, np.median(taus) * 0.1, 1.0]
-                bounds = ([0, 0, 0], [np.inf, np.inf, np.inf])
+            elif idx == 5:  # Chemical
                 popt, _ = curve_fit(
                     lambda t, N, tB, K: self._model_chemical(t, N, tB, K, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
                 )
                 N_fit, tB_fit, K_fit = popt
-                self._fill_fit_table([
-                    ("N",    f"{N_fit:.4f}"),
-                    ("τB",   f"{tB_fit*1e3:.4f} ms"),
-                    ("K",    f"{K_fit:.4f}"),
+                self._fill_fit_results(idx, popt, extra_rows=[
                     ("G(0)", f"{K_fit/N_fit:.4f}"),
-                    ("G(∞)", "1" if offset == 1.0 else "0"),
+                    g_inf_row,
                 ])
                 fit_g = self._model_chemical(taus, N_fit, tB_fit, K_fit, offset)
+
+            else:
+                return
+
+            # Remember the p0 actually used, for the saved-data header.
+            self.last_p0_used = list(p0)
+            self.last_fit_idx = idx
 
             self._update_equation_label_preview()
             self.fit_curve.setData(taus, fit_g)

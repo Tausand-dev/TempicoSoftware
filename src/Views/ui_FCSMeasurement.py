@@ -6,7 +6,7 @@ from PySide2.QtWidgets import (
     QSizePolicy, QHBoxLayout, QVBoxLayout,
     QFrame, QLabel, QPushButton, QGridLayout,
     QMainWindow, QApplication, QWidget, QSpinBox, QCheckBox, QComboBox,
-    QTableWidget, QTableWidgetItem, QToolButton,
+    QTableWidget, QTableWidgetItem, QToolButton, QAbstractItemView,
 )
 import sys
 
@@ -363,10 +363,10 @@ class Ui_FCSMeasurement(object):
         self.fitModelCombo.setObjectName(u"fitModelCombo")
         self.fitModelCombo.addItem(u"3D Gaussian diffusion")
         self.fitModelCombo.addItem(u"Anomalous diffusion")
-        self.fitModelCombo.addItem(u"Chemical relaxation")
-        self.fitModelCombo.addItem(u"Diffusion with flow")
         self.fitModelCombo.addItem(u"Triplet state correction")
+        self.fitModelCombo.addItem(u"Diffusion with flow")
         self.fitModelCombo.addItem(u"Two-component diffusion")
+        self.fitModelCombo.addItem(u"Chemical relaxation")
         self.fitModelCombo.setFixedWidth(230)
         self.fitModelCombo.setFixedHeight(28)
         self.horizontalLayout_fit.addWidget(self.fitModelCombo)
@@ -397,7 +397,11 @@ class Ui_FCSMeasurement(object):
         self.verticalLayout_fitResults.setContentsMargins(10, 6, 10, 6)
         self.verticalLayout_fitResults.setSpacing(6)
 
-        # Equation label – renders HTML for super/subscripts
+        # Header row: equation (centered, renders HTML for super/subscripts)
+        # plus the "Auto" button that resets the "Initial value" column.
+        self.horizontalLayout_fitHeader = QHBoxLayout()
+        self.horizontalLayout_fitHeader.setSpacing(10)
+
         self.fitEquationLabel = QLabel(self.fitResultsFrame)
         self.fitEquationLabel.setObjectName(u"fitEquationLabel")
         self.fitEquationLabel.setStyleSheet(
@@ -406,19 +410,42 @@ class Ui_FCSMeasurement(object):
         self.fitEquationLabel.setAlignment(Qt.AlignCenter)
         self.fitEquationLabel.setTextFormat(Qt.RichText)
         self.fitEquationLabel.setWordWrap(True)
-        self.verticalLayout_fitResults.addWidget(self.fitEquationLabel)
+        self.horizontalLayout_fitHeader.addWidget(self.fitEquationLabel, 1)
 
-        # Parameter table
+        # "Auto" button resets the "Initial value" column back to the
+        # automatically suggested guesses (computed from the live data).
+        self.fitResetParamsButton = QPushButton(self.fitResultsFrame)
+        self.fitResetParamsButton.setObjectName(u"fitResetParamsButton")
+        self.fitResetParamsButton.setFixedWidth(60)
+        self.fitResetParamsButton.setFixedHeight(24)
+        self.horizontalLayout_fitHeader.addWidget(
+            self.fitResetParamsButton, 0, Qt.AlignTop
+        )
+
+        self.verticalLayout_fitResults.addLayout(self.horizontalLayout_fitHeader)
+
+        # Merged parameter table: Parameter | Initial value (editable) |
+        # Fit result (read-only, filled in after pressing "Fit").
         self.fitTable = QTableWidget(self.fitResultsFrame)
         self.fitTable.setObjectName(u"fitTable")
-        self.fitTable.setColumnCount(2)
-        self.fitTable.setHorizontalHeaderLabels([u"Parameter", u"Value"])
+        self.fitTable.setColumnCount(3)
+        self.fitTable.setHorizontalHeaderLabels(
+            [u"Parameter", u"Initial value", u"Fit result"]
+        )
         self.fitTable.horizontalHeader().setStretchLastSection(True)
         self.fitTable.verticalHeader().setVisible(False)
-        self.fitTable.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.fitTable.setSelectionMode(QTableWidget.NoSelection)
+        # Only the "Initial value" column (index 1) is editable; the
+        # parameter names and the fit result stay fixed. FCSLogic enforces
+        # this per-item, but default triggers are kept broad (double-click /
+        # edit key) for a smooth UX.
+        self.fitTable.setEditTriggers(
+            QAbstractItemView.DoubleClicked
+            | QAbstractItemView.SelectedClicked
+            | QAbstractItemView.EditKeyPressed
+        )
+        self.fitTable.setSelectionMode(QTableWidget.SingleSelection)
         self.fitTable.setShowGrid(True)
-        self.fitTable.setFixedHeight(100)
+        self.fitTable.setFixedHeight(120)
         self.fitTable.setStyleSheet(
             u"font-size: 11px;"
         )
@@ -623,6 +650,9 @@ class Ui_FCSMeasurement(object):
         )
         self.fitButton.setText(
             QCoreApplication.translate("FCSMeasurement", u"Fit", None)
+        )
+        self.fitResetParamsButton.setText(
+            QCoreApplication.translate("FCSMeasurement", u"Auto", None)
         )
         self.fitEquationLabel.setText(
             QCoreApplication.translate("FCSMeasurement", u"", None)
