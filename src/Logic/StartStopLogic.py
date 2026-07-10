@@ -13,7 +13,6 @@ from Threads.ThreadStartStop import WorkerThreadStartStopHistogram
 import Utils.constants as constants
 import pyTempico as Tempico
 
-#Create graphic design#
 class StartStopLogic():
     """
     This class handles the functionality for managing buttons, checkboxes, and graphs for histograms related to the Start-Stop measurements. 
@@ -81,7 +80,6 @@ class StartStopLogic():
         self.disconnectButton= disconnect
         #Connect button
         self.connectButton= connect
-        ##----------------##
         self.startbutton=startbutton
         self.stopbutton=stopbutton
         self.savebutton=savebutton
@@ -119,11 +117,7 @@ class StartStopLogic():
         self.setinelSaveD=False
         self.withoutMeasurement=False
 
-        ##---------------------------------##
-        ##---------------------------------##
-        ##-------Begin graphic layout------##
-        ##---------------------------------##
-        ##---------------------------------##
+        #Graphic layout and device channel setup
         self.parent=parent
         self.mainWindow=mainWindow
         self.gridlayout=QGridLayout(self.parent)
@@ -136,11 +130,7 @@ class StartStopLogic():
         self.channel2=self.device.ch2
         self.channel3=self.device.ch3
         self.channel4=self.device.ch4
-        ##---------------------------------##
-        ##---------------------------------##
-        ##------Begin the historam data----##
-        ##---------------------------------##
-        ##---------------------------------##
+        #Initialize per-channel histogram data containers
         self.dataA=[]
         self.histA, self.binsA=histogram(self.dataA,bins=60)
         #Creating the histogram plot channel B
@@ -185,14 +175,6 @@ class StartStopLogic():
         
 
 
-        
-    #Function to know the state of device   
-    ##---------------------------------##
-    ##---------------------------------##
-    ##------Begin the create graphs----##
-    ##---------------------------------##
-    ##---------------------------------##  
-           
         
     def create_graphs(self):
         """
@@ -409,13 +391,6 @@ class StartStopLogic():
         
     
     
-    ##---------------------------------##
-    ##---------------------------------##
-    ##--Begin with start-stop buttons--##
-    ##---------------------------------##
-    ##---------------------------------##  
-    
-    
     def getMinimumValue(self):
         """
         Sets the initial plot X-axis minimum according to the device model.
@@ -602,11 +577,6 @@ class StartStopLogic():
     
     
         
-    ##---------------------------------##
-    ##---------------------------------##
-    ##------Clear graphics buttons-----##
-    ##---------------------------------##
-    ##---------------------------------##  
     
     def clear_a(self):
         """
@@ -691,11 +661,6 @@ class StartStopLogic():
         curve.setData(binsU, hist, fillLevel=0)
         
     
-    ##-------------------------------------------##
-    ##-------------------------------------------##
-    ##--Get the histogram bins according to zoom-##
-    ##-------------------------------------------##
-    ##-------------------------------------------## 
     
     
     def zoom_changedA(self):
@@ -857,11 +822,6 @@ class StartStopLogic():
 
     
     
-    ##--------------##
-    ##--------------##
-    ##--Save files--##
-    ##--------------##
-    ##--------------## 
     def save_graphic(self):
         """
         Saves the current data according to the selected format specified in the dialog box.

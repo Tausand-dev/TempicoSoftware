@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 import Utils.constants as constants
 
 project = 'Tempico Software'
-copyright = '2025,Tausand Electronics'
+copyright = '2026,Tausand Electronics'
 author = 'Tausand Electronics'
 release = constants.VERSION
 

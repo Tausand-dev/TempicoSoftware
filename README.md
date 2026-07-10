@@ -219,25 +219,33 @@ python src/main.py
 
 This will allow the program to run correctly (if using a Linux-based OS, use `sudo` at the beginning). If the command does not work, use `python3 main.py`.
 
-**Note**: It is recommended to use Python version 3.8.10 (32-bit).
+**Note**: It is recommended to use Python version 3.8.10 (32-bit). This is the last version for which numpy, scipy, and PySide2 all still publish 32-bit Windows wheels, which matters if you need to support Windows 7 32-bit (see below).
 
-To generate the executable, run the following command:
+### Generating the Executable and Installer
+
+Once dependencies are installed, the next step is building a standalone executable with PyInstaller and wrapping it in a native installer. The process differs by platform — follow the section below that matches your target OS. **Windows is covered first, then Linux, then macOS.**
+
+#### Windows
+
+##### Standard Build
+
+Run the following command:
 
 ```
 pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.ico src/main.py
 ```
 
-Two folders will be created: build and dist. Inside `dist` you'll find the `.exe` file. To run it correctly, this file must be placed next to the `Sources` folder that contains the images.
+Two folders will be created: `build` and `dist`. Inside `dist` you'll find the `.exe` file. To run it correctly, this file must be placed next to the `Sources` folder that contains the images.
 
-### Generate Installer
+##### Generate Installer
 
 Once the executable is compiled, we will proceed to create the software installer.
 
-#### Step 1: Download and Install Inno Setup Compiler
+###### Step 1: Download and Install Inno Setup Compiler
 
 First, download the Inno Setup Compiler program and install it on your machine. The download page for the program is available at the following link: [https://jrsoftware.org/isdl.php](https://jrsoftware.org/isdl.php). Download the `.exe` file corresponding to the application installer.
 
-#### Step 2a: Create using iss file at Inno Setup Compiler
+###### Step 2a: Create using iss file at Inno Setup Compiler
 
 Using the File Explorer, go to the folder `installer` and double-click `installer_builder.iss` or open it from Inno Setup if it is already opened. Click on the play icon and then follow the process, which includes the creation of the installer and the installation itself.
 
@@ -245,7 +253,7 @@ The installer will be saved in a folder called `Output`.
 
 If the `.iss` file does not exist, follow step 2b.
 
-#### Step 2b: Create using Inno Setup Compiler Wizard
+###### Step 2b: Create using Inno Setup Compiler Wizard
 
 Once Inno Setup is installed correctly, open it and follow these steps:
 
@@ -269,6 +277,8 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 5](./ReadmeSources/Tutorial5.png)
 
+**Important — read before continuing:** see "Correctly including the `Sources` folder" right after this wizard walkthrough. Adding the `Sources` folder here the naive way is a common cause of the splash screen (and other images) not appearing after installation.
+
 6. For the next four windows, leave the default values as they are (ensure they match the values shown in the provided screenshots).
 
 ![Step 6](./ReadmeSources/Tutorial6.png)
@@ -283,7 +293,7 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 7](./ReadmeSources/Tutorial10.png)
 
-8. In the **Custom Compiler Output Folder** field, specify the directory where the installer will be saved once compiled. This path is flexible and should be chosen based on the developer’s preference. In the **Compiler Output Base File Name** field, enter `Tempico Software Setup`. For **Custom Setup Icon File**, locate the `Sources` folder and select the `tausand_small.ico` icon file. Leave the password field empty.
+8. In the **Custom Compiler Output Folder** field, specify the directory where the installer will be saved once compiled. This path is flexible and should be chosen based on the developer's preference. In the **Compiler Output Base File Name** field, enter `Tempico Software Setup`. For **Custom Setup Icon File**, locate the `Sources` folder and select the `tausand_small.ico` icon file. Leave the password field empty.
 
 ![Step 8](./ReadmeSources/Tutorial11.png)
 
@@ -291,69 +301,305 @@ Once Inno Setup is installed correctly, open it and follow these steps:
 
 ![Step 9](./ReadmeSources/Tutorial12.png)
 
-![Step 9](./ReadmeSources/Tutorial13.png) 10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
+![Step 9](./ReadmeSources/Tutorial13.png)
+
+10. Once the setup wizard is completed, a window will appear asking if you want to compile the file. Click **Yes**. Another window will ask if you want to save the script. Click **Yes** and select the path to your GitHub project, saving it in the `installer` folder and naming the file appropriately. Wait for the file to compile; this will automatically generate the installer in the specified output folder, from which you can run the installer.
 
 ![Step 10](./ReadmeSources/Tutorial14.png)
 
 ![Step 10](./ReadmeSources/Tutorial15.png)
 
-#### Building on Windows 7 32-bit
- 
-##### Installing KB2533623 Update
- 
-This update is required to avoid DLL compatibility issues with PyInstaller-generated executables.
- 
-1. Download KB2533623 for Windows 7 32-bit:  
-   [https://archive.org/details/kb-2533623-windows-7](https://archive.org/details/kb-2533623-windows-7)
- 
-2. Run `Windows6.1-KB2533623-x86.msu` and follow the installation wizard.
- 
-3. Restart the system when prompted.
- 
-Once installed, proceed with PyInstaller and Inno Setup as described above.
+##### Correctly including the `Sources` folder (splash screen not appearing)
 
-#### MacOS
+When using the Inno Setup Wizard's **Add Folder** button (sub-step 5 above), Inno Setup copies the *contents* of the folder you select directly into the installation directory (`{app}`) — it does **not** automatically create a `Sources` subfolder for you. If you select the `Sources` folder itself, its files end up directly at `{app}\splash.png`, `{app}\tausand_small.ico`, etc., instead of inside `{app}\Sources\`. Since the app looks for `Sources\splash.png` next to its executable, this results in the splash screen (and the About window's picture) never appearing — with no visible error, since the app is otherwise fully functional.
 
-Run the following command
+**Fix (wizard method):** create a temporary parent folder that contains `Sources` as a subfolder. From a Command Prompt, in your project folder:
 
 ```
-pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png src/main.py
+mkdir SourcesWrapper
+xcopy /E /I Sources SourcesWrapper\Sources
 ```
 
-Two folders will be created: build and dist. Inside `dist` you'll find the `.app` file. This file can be run from a console by executing the command.
-To change the icon of the `.app` file follow the instructions here https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos
+This gives you:
+
+```
+SourcesWrapper/
+└── Sources/
+    ├── splash.png
+    └── tausand_small.ico
+```
+
+
+Then, in the wizard, click **Add Folder** and select `SourcesWrapper` — **not** `Sources` directly. Inno Setup preserves the names of folders nested *inside* the one you select, so the resulting installer correctly places everything under `{app}\Sources\`.
+
+**Fix (`.iss` file method, preferred if editing the script directly):** if you're using Step 2a instead of the wizard, skip the workaround above entirely by setting an explicit destination in the `[Files]` section of `installer_builder.iss`:
+
+```ini
+[Files]
+Source: "dist\TempicoSoftware.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Sources\*"; DestDir: "{app}\Sources"; Flags: ignoreversion recursesubdirs createallsubdirs
+```
+
+This tells Inno Setup exactly where the folder's contents should go, regardless of how the wizard would otherwise flatten it.
+
+After building, verify the fix worked by checking the installation folder (e.g. `C:\Program Files (x86)\Tempico Software\`) — it should contain a `Sources\` subfolder with `splash.png` and `tausand_small.ico` inside.
+
+##### Building for Windows 7 (32-bit)
+
+Windows 7 needs a few prerequisites that aren't present out of the box, both on the machine you build on and on any machine where the installer will be run. Each item below includes the download link and the exact command to install it.
+
+1. **Windows 7 Service Pack 1** — required baseline for everything below. Install it from Windows Update, or download it directly from [https://www.microsoft.com/en-us/download/details.aspx?id=5842](https://www.microsoft.com/en-us/download/details.aspx?id=5842). Restart when prompted.
+
+2. **Universal C Runtime update (UCRT)** — Python 3.8 (and the C extensions in numpy/scipy) depend on the UCRT, which Windows 7 does not ship by default. Without it, the app fails to start with a missing `api-ms-win-crt-*.dll` error. Download one of the following (either works; KB3118401 supersedes KB2999226):
+   - KB2999226 (x86): [https://www.microsoft.com/en-us/download/details.aspx?id=51537](https://www.microsoft.com/en-us/download/details.aspx?id=51537)
+   - KB3118401 (x86): [https://www.microsoft.com/en-us/download/details.aspx?id=51137](https://www.microsoft.com/en-us/download/details.aspx?id=51137)
+
+   Install it silently from an elevated Command Prompt (adjust the filename to whichever you downloaded):
+
+   ```
+   wusa.exe Windows6.1-KB2999226-x86.msu /quiet /norestart
+   ```
+
+   Restart when prompted.
+
+3. **KB2533623** — required to avoid DLL search-order compatibility issues with PyInstaller-generated executables.
+   - Download: [https://archive.org/details/kb-2533623-windows-7](https://archive.org/details/kb-2533623-windows-7) (`Windows6.1-KB2533623-x86.msu`)
+   - Install it silently:
+
+     ```
+     wusa.exe Windows6.1-KB2533623-x86.msu /quiet /norestart
+     ```
+
+   - Restart the system when prompted.
+
+4. **Microsoft Visual C++ Redistributable 2015-2022 (x86)** — provides `vcruntime140.dll` and related libraries needed by numpy, scipy, and Qt.
+   - Download: [https://aka.ms/vs/17/release/vc_redist.x86.exe](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+   - Install it silently:
+
+     ```
+     vc_redist.x86.exe /quiet /norestart
+     ```
+
+   - **To bundle it inside your own installer** (so users don't need to install it manually), add it to `installer/installer_builder.iss`:
+
+     ```ini
+     [Files]
+     Source: "vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+
+     [Run]
+     Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; StatusMsg: "Installing Visual C++ Redistributable..."
+     ```
+
+5. **Python 3.8.10 (32-bit)** — download the installer explicitly marked **"Windows x86 executable installer"** (not "x86-64") from [https://www.python.org/downloads/release/python-3810/](https://www.python.org/downloads/release/python-3810/). Create your `.venv` with it:
+
+   ```
+   C:\Python38-32\python.exe -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+   Confirm you're in a true 32-bit interpreter:
+
+   ```
+   python -c "import struct; print(struct.calcsize('P') * 8)"
+   ```
+
+   This should print `32`.
+
+Once all five items above are installed, proceed with PyInstaller and Inno Setup exactly as described earlier in this section.
 
 #### Linux
 
 ##### Prerequisites
- 
-Install the required FUSE library (needed for PyInstaller single-file executables):
- 
+
+Install the required FUSE library (needed for PyInstaller single-file executables and to run AppImages directly):
+
 ```bash
 sudo apt install libfuse2
 ```
- 
+
 ##### Generate Standard Installer
 
-Run the following command
+Run the following command:
 
 ```
 pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ --name TempicoSoftware --onefile --noconsole -i Sources/tausand_small.png src/main.py
 ```
 
-Two folders will be created: build and dist. Inside dist you'll find the executable file. This file can be run from a console by executing the command
+Two folders will be created: `build` and `dist`. Inside `dist` you'll find the executable file. This file can be run from a console by executing the command:
 
 ```
 ./TempicoSoftware
 ```
 
-If it doesn't run, make sure it has execute permissions. In case it doesn't run `chmod +x TempicoSoftware` and then try again. The executable file could be used to create a Desktop entry so it can be lauched as an application (for example in Gnome, an icon could be assigned)
+If it doesn't run, make sure it has execute permissions. In case it doesn't run `chmod +x TempicoSoftware` and then try again. The executable file could be used to create a Desktop entry so it can be launched as an application (for example in Gnome, an icon could be assigned).
 
 ##### Generate Optimized Installer (< 100 MB)
- 
-To reduce installer size, exclude unused scipy modules:
+
+A plain `--onefile` build (even with only the scipy exclusions) results in an executable of ~112 MB. Packaging that file as-is into an AppImage does **not** shrink it further: PyInstaller's `--onefile` mode already compresses its payload internally, and squashfs (used by AppImage) cannot meaningfully compress data that is already compressed. To get a final AppImage under 100 MB, three things are needed: build with `--onedir` instead (so squashfs has real uncompressed data to work with), remove the duplicated OpenBLAS library that numpy and scipy each bundle separately, and strip a handful of unused Qt plugins. Combined, these take a build that is 300+ MB uncompressed down to a ~96 MB final AppImage.
+
+###### Step 1: Share a single OpenBLAS between numpy and scipy (optional, saves ~30-60 MB)
+
+By default, the numpy and scipy wheels from PyPI each embed their **own private copy** of OpenBLAS (two files of ~32 MB each, in different variants, that cannot be deduplicated by a compressor). Recompiling both from source against the system's OpenBLAS removes this duplication:
 
 ```bash
+sudo apt install libopenblas0-pthread liblapack3 libopenblas-dev liblapack-dev \
+  gfortran python3-dev build-essential pkg-config
+
+pip uninstall -y numpy scipy
+
+# numpy does not depend on pythran, it builds directly
+pip install --no-binary numpy --no-cache-dir numpy
+
+# scipy's build toolchain (pythran/gast/beniget/cython) is version-sensitive
+# on Python 3.8 (EOL); these pinned versions are known to work together
+pip install meson-python ninja pybind11
+pip install "cython<3.0"
+pip install "pythran==0.14.0" "gast==0.5.4" "beniget==0.4.2.post1"
+
+pip install --no-build-isolation --no-binary scipy --no-cache-dir scipy \
+  -Csetup-args=-Dblas=openblas -Csetup-args=-Dlapack=openblas
+```
+
+Verify both now share the same system library (should print the same `openblas-pthread` path for both, and `find .venv -iname "*openblas*"` should return nothing):
+
+```bash
+python3 -c "import numpy; numpy.show_config()" | grep -i blas
+python3 -c "import scipy; scipy.show_config()" | grep -i blas
+```
+
+If this step fails on your machine (old Python 3.8 build toolchains are fragile) or you'd rather not compile from source, skip it — Steps 2 and 3 alone are lower risk and still give meaningful savings.
+
+###### Step 2: Build with PyInstaller in `--onedir` mode
+
+```bash
+pyinstaller \
+  --additional-hooks-dir installers/pyinstaller_hooks/ \
+  --name TempicoSoftware \
+  --onedir \
+  --noconsole \
+  -i Sources/tausand_small.png \
+  --exclude-module matplotlib \
+  --exclude-module PySide2.QtQml --exclude-module PySide2.QtQuick --exclude-module PySide2.QtQuickWidgets \
+  --exclude-module PySide2.QtWebEngineCore --exclude-module PySide2.QtWebEngineWidgets \
+  --exclude-module PySide2.QtWebChannel --exclude-module PySide2.QtWebSockets \
+  --exclude-module PySide2.QtMultimedia --exclude-module PySide2.QtMultimediaWidgets \
+  --exclude-module PySide2.QtNetwork --exclude-module PySide2.QtSql \
+  --exclude-module PySide2.QtTest --exclude-module PySide2.QtXml \
+  --exclude-module PySide2.QtBluetooth --exclude-module PySide2.QtDBus \
+  --exclude-module PySide2.Qt3DCore --exclude-module PySide2.Qt3DRender \
+  --exclude-module PySide2.QtCharts --exclude-module PySide2.QtDataVisualization \
+  --exclude-module PySide2.QtHelp --exclude-module PySide2.QtDesigner --exclude-module PySide2.QtUiTools \
+  --exclude-module PySide2.QtLocation --exclude-module PySide2.QtPositioning \
+  --exclude-module PySide2.QtSensors --exclude-module PySide2.QtNfc --exclude-module PySide2.QtSerialPort \
+  --exclude-module PySide2.QtPrintSupport --exclude-module PySide2.QtVirtualKeyboard \
+  --exclude-module pyqtgraph.opengl \
+  --exclude-module scipy.cluster --exclude-module scipy.fft --exclude-module scipy.integrate \
+  --exclude-module scipy.interpolate --exclude-module scipy.io --exclude-module scipy.ndimage \
+  --exclude-module scipy.odr --exclude-module scipy.signal --exclude-module scipy.stats \
+  --exclude-module scipy._lib._uarray \
+  src/main.py
+```
+
+Two folders will be created: `build` and `dist`. `dist/TempicoSoftware/` now contains the executable plus all of its shared libraries as separate files (instead of a single self-extracting binary).
+
+###### Step 3: Strip unused Qt plugins and translations
+
+The standard PySide2 PyInstaller hook copies every Qt plugin category and all translations, regardless of whether the app uses them. Tempico Software only needs the `xcb` platform plugin (X11) and English text, so the rest can be removed:
+
+```bash
+cd dist/TempicoSoftware
+
+rm -f PySide2/Qt/plugins/platformthemes/libqgtk3.so
+rm -f libgtk-3.so.0
+rm -rf PySide2/Qt/plugins/platforminputcontexts
+rm -f libQt5VirtualKeyboard.so.5
+rm -f PySide2/Qt/plugins/platforms/libqwayland*.so
+rm -rf PySide2/Qt/plugins/wayland-graphics-integration-client
+rm -rf PySide2/Qt/plugins/wayland-decoration-client
+rm -rf PySide2/Qt/plugins/wayland-shell-integration
+rm -f libwayland-egl.so.1 libwayland-cursor.so.0 libwayland-client.so.0
+rm -f libQt5WaylandClient.so.5
+rm -f PySide2/Qt/plugins/platforms/libqminimalegl.so
+rm -f PySide2/Qt/plugins/platforms/libqeglfs.so
+rm -f PySide2/Qt/plugins/platforms/libqlinuxfb.so
+rm -f PySide2/Qt/plugins/platforms/libqvnc.so
+rm -f PySide2/Qt/plugins/platforms/libqwebgl.so
+rm -rf PySide2/Qt/translations
+
+cd ../..
+```
+
+**Always test the app after this step**, with a copy of `Sources/` placed next to the executable, before packaging it:
+
+```bash
+cp -r Sources dist/TempicoSoftware/
+cd dist/TempicoSoftware && ./TempicoSoftware && cd ../..
+```
+
+Confirm the splash screen, window style, device connection, and at least one curve fit (Lifetime/FCS/g2) still work correctly.
+
+##### Create AppImage
+
+To create an AppImage that can be run from multiple Linux distributions and be launched by double clicking, follow the next steps. This assumes the app was built with `--onedir` as described above — a `--onefile` executable does not compress further when packaged this way, since it is already an internally-compressed blob.
+
+- Create the following folder path:
+  `TempicoSoftware.AppDir/usr/bin`
+- Copy the **entire contents** of `dist/TempicoSoftware/` (not just the single executable) inside `usr/bin`
+- Place the `Sources` folder inside the `usr/bin` folder
+- Place the icon `tausand_small.png` located at `Sources/tausand_small.png` inside `TempicoSoftware.AppDir`
+- Create a file called `TempicoSoftware.desktop` inside `TempicoSoftware.AppDir`
+- Edit the `.desktop` file with the following:
+
+```
+[Desktop Entry]
+Name=TempicoSoftware
+Exec=TempicoSoftware
+Icon=tausand_small
+Type=Application
+Categories=Utility;
+```
+
+- Give execution permissions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
+- Create a script called `AppRun` with the following contents:
+
+```
+#!/bin/bash
+SELF=$(readlink -f "$0")
+HERE=${SELF%/*}
+cd "${HERE}/usr/bin"
+exec "${HERE}/usr/bin/TempicoSoftware"
+```
+
+Note the `cd` before the `exec`: the `Sources` folder is located relative to the executable's own directory, and without this `cd` the working directory when double-clicking the AppImage (or launching it from a `.desktop` entry) may not match, causing the splash screen to fail to load even though the rest of the app runs fine.
+
+- Give execution permissions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` in a terminal.
+
+- For 64-bit architecture, download `appimagetool-x86_64.AppImage` from [https://github.com/AppImage/AppImageKit/releases/](https://github.com/AppImage/AppImageKit/releases/) and give execution permissions to it.
+
+- Place `appimagetool` outside `TempicoSoftware.AppDir` and run:
+
+```
+ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
+```
+
+- The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
+
+- Verify the final size with `ls -lh TempicoSoftware-x86_64.AppImage`. Following the Optimized Installer steps above, this should land around 95-100 MB.
+
+#### MacOS
+
+##### Standard Build
+
+Run the following commands:
+
+```bash
+cd ~/Code/TempicoSoftware
+source .venv/bin/activate
+
+# 1. Clean previous builds
+rm -rf build dist
+
+# 2. Build in --onedir mode
 pyinstaller \
   --additional-hooks-dir installers/pyinstaller_hooks/ \
   --name TempicoSoftware --onedir --noconsole \
@@ -378,52 +624,24 @@ pyinstaller \
   --exclude-module scipy.odr --exclude-module scipy.signal --exclude-module scipy.stats \
   --exclude-module scipy._lib._uarray \
   src/main.py
-```
-**Note:** These exclusions reduce installer size by ~20-30 MB.
 
-##### Create AppImage
+# 3. Copy Sources INSIDE the .app bundle (this is the fix for the splash screen)
+cp -r Sources dist/TempicoSoftware.app/Contents/MacOS/
 
-To create an AppImage that can be run from multiple Linux distributions and be launch by double clicking, follow the next steps.
+# 4. Verify it was copied correctly
+ls dist/TempicoSoftware.app/Contents/MacOS/Sources/
 
-- Create the following folder path:
-  TempicoSoftware.AppDir/usr/bin
-- Place the executable inside the bin folder
-- Place the Sources folder inside the bin folder
-- Place the icon tausand_small.png located at Sources/tausand_small.png inside TempicoSoftware.AppDir
-- Create a file called TempicoSoftware.desktop inside TempicoSoftware.AppDir
-- Edit the `.desktop` file with the following
-
-```
-[Desktop Entry]
-Name=TempicoSoftware
-Exec=TempicoSoftware
-Icon=tausand_small
-Type=Application
-Categories=Utility;
+# 5. Open the app the way a user would
+open dist/TempicoSoftware.app
 ```
 
-- Give execution permisions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
-- Create a script called `AppRun` with the following contents
+Two folders will be created: `build` and `dist`. Inside `dist` you'll find the `.app` bundle.
 
-```
-#!/bin/bash
-SELF=$(readlink -f "$0")
-HERE=${SELF%/*}
-EXEC="${HERE}/usr/bin/TempicoSoftware"
-exec "${EXEC}"
-```
+**Why the `Sources` folder must go inside `Contents/MacOS/`:** on macOS, the actual executable inside a `.app` bundle lives at `TempicoSoftware.app/Contents/MacOS/TempicoSoftware`. Since the app looks for the `Sources` folder next to its own executable (`sys.executable`), it must be copied into that exact `Contents/MacOS/` directory — not next to the `.app` bundle itself, and not anywhere else inside `Contents/`. This is the same underlying requirement as on Windows and Linux; only the bundle layout differs.
 
-- Give execution permisions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` on a Terminal.
+##### Changing the icon
 
-- For 64-bit architecture, download appimagetool-x86_64.AppImage from https://github.com/AppImage/AppImageKit/releases/ and give execution permisions to it.
-
-- Place appimagetool outside TempicoSoftware.AppDir and run
-
-```
-  ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
-```
-
-- The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
+To change the icon of the `.app` file, follow the instructions here: [https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos](https://appleinsider.com/articles/21/01/06/how-to-change-app-icons-on-macos)
 
 ## Generate sphinx documentation
 
