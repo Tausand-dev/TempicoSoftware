@@ -348,7 +348,7 @@ After building, verify the fix worked by checking the installation folder (e.g. 
 
 Windows 7 needs a few prerequisites that aren't present out of the box, both on the machine you build on and on any machine where the installer will be run. Each item below includes the download link and the exact command to install it.
 
-1. **Windows 7 Service Pack 1** — required baseline for everything below. Install it from Windows Update, or download it directly from [https://www.microsoft.com/en-us/download/details.aspx?id=5842](https://www.microsoft.com/en-us/download/details.aspx?id=5842). Restart when prompted.
+1. **Windows 7 Service Pack 1** — required baseline for everything below. If you need a full Windows 7 (32-bit) install that already includes SP1 slipstreamed in, this ISO can be used: [https://archive.org/details/en_windows_7_ultimate_with_sp1_x86_dvd_u_677460_202006](https://archive.org/details/en_windows_7_ultimate_with_sp1_x86_dvd_u_677460_202006). If you already have Windows 7 installed without SP1, install it via Windows Update instead.
 
 2. **Universal C Runtime update (UCRT)** — Python 3.8 (and the C extensions in numpy/scipy) depend on the UCRT, which Windows 7 does not ship by default. Without it, the app fails to start with a missing `api-ms-win-crt-*.dll` error. Download one of the following (either works; KB3118401 supersedes KB2999226):
    - KB2999226 (x86): [https://www.microsoft.com/en-us/download/details.aspx?id=51537](https://www.microsoft.com/en-us/download/details.aspx?id=51537)
@@ -542,49 +542,64 @@ Confirm the splash screen, window style, device connection, and at least one cur
 
 To create an AppImage that can be run from multiple Linux distributions and be launched by double clicking, follow the next steps. This assumes the app was built with `--onedir` as described above — a `--onefile` executable does not compress further when packaged this way, since it is already an internally-compressed blob.
 
-- Create the following folder path:
-  `TempicoSoftware.AppDir/usr/bin`
-- Copy the **entire contents** of `dist/TempicoSoftware/` (not just the single executable) inside `usr/bin`
-- Place the `Sources` folder inside the `usr/bin` folder
-- Place the icon `tausand_small.png` located at `Sources/tausand_small.png` inside `TempicoSoftware.AppDir`
-- Create a file called `TempicoSoftware.desktop` inside `TempicoSoftware.AppDir`
-- Edit the `.desktop` file with the following:
+Run the following commands from the project root:
 
-```
+```bash
+# 1. Create the AppDir folder structure
+mkdir -p TempicoSoftware.AppDir/usr/bin
+
+# 2. Copy the entire contents of dist/TempicoSoftware/ (not just the executable)
+cp -r dist/TempicoSoftware/* TempicoSoftware.AppDir/usr/bin/
+
+# 3. Copy the Sources folder next to the executable
+cp -r Sources TempicoSoftware.AppDir/usr/bin/
+
+# 4. Copy the icon to the root of the AppDir (appimagetool looks for it there)
+cp Sources/tausand_small.png TempicoSoftware.AppDir/
+
+# 5. Create the .desktop file
+cat > TempicoSoftware.AppDir/TempicoSoftware.desktop << 'EOF'
 [Desktop Entry]
 Name=TempicoSoftware
 Exec=TempicoSoftware
 Icon=tausand_small
 Type=Application
 Categories=Utility;
-```
+EOF
+chmod +x TempicoSoftware.AppDir/TempicoSoftware.desktop
 
-- Give execution permissions to the `.desktop` file: `chmod +x TempicoSoftware.desktop`
-- Create a script called `AppRun` with the following contents:
-
-```
+# 6. Create the AppRun script
+cat > TempicoSoftware.AppDir/AppRun << 'EOF'
 #!/bin/bash
 SELF=$(readlink -f "$0")
 HERE=${SELF%/*}
 cd "${HERE}/usr/bin"
 exec "${HERE}/usr/bin/TempicoSoftware"
+EOF
+chmod +x TempicoSoftware.AppDir/AppRun
 ```
 
-Note the `cd` before the `exec`: the `Sources` folder is located relative to the executable's own directory, and without this `cd` the working directory when double-clicking the AppImage (or launching it from a `.desktop` entry) may not match, causing the splash screen to fail to load even though the rest of the app runs fine.
+Note the `cd` before the `exec` in `AppRun`: the `Sources` folder is located relative to the executable's own directory, and without this `cd` the working directory when double-clicking the AppImage (or launching it from a `.desktop` entry) may not match, causing the splash screen to fail to load even though the rest of the app runs fine.
 
-- Give execution permissions to the `AppRun` file: `chmod +x AppRun`. After this step, the app should run after doing `./AppRun` in a terminal.
+After this step, the app should run by doing `./TempicoSoftware.AppDir/AppRun` from a terminal.
 
-- For 64-bit architecture, download `appimagetool-x86_64.AppImage` from [https://github.com/AppImage/AppImageKit/releases/](https://github.com/AppImage/AppImageKit/releases/) and give execution permissions to it.
+- For 64-bit architecture, download `appimagetool-x86_64.AppImage` from [https://github.com/AppImage/AppImageKit/releases/](https://github.com/AppImage/AppImageKit/releases/) and give execution permissions to it:
+
+  ```bash
+  wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+  chmod +x appimagetool-x86_64.AppImage
+  ```
 
 - Place `appimagetool` outside `TempicoSoftware.AppDir` and run:
 
-```
-ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
-```
+  ```bash
+  ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
+  ```
 
 - The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
 
 - Verify the final size with `ls -lh TempicoSoftware-x86_64.AppImage`. Following the Optimized Installer steps above, this should land around 95-100 MB.
+
 
 #### MacOS
 
