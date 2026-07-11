@@ -608,7 +608,7 @@ After this step, the app should run by doing `./TempicoSoftware.AppDir/AppRun` f
 Run the following commands:
 
 ```bash
-cd ~/Code/TempicoSoftware
+cd <path-to-your-folder>/TempicoSoftware
 source .venv/bin/activate
 
 # 1. Clean previous builds
