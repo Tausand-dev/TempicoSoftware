@@ -160,27 +160,27 @@ class Ui_HistogramaStartStop(object):
         self.ComboBoxGraph1.setObjectName(u"ComboBoxGraph1")
         self.ComboBoxGraph1.setFrameShape(QFrame.StyledPanel)
         self.ComboBoxGraph1.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_4 = QHBoxLayout(self.ComboBoxGraph1)
+        self.horizontalLayout_4 = QGridLayout(self.ComboBoxGraph1)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.Channel1Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel1Graph1.setObjectName(u"Channel1Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel1Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel1Graph1, 0, 0, 1, 1)
 
         self.Channel4Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel4Graph1.setObjectName(u"Channel4Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel4Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel4Graph1, 0, 1, 1, 1)
 
         self.Channel2Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel2Graph1.setObjectName(u"Channel2Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel2Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel2Graph1, 1, 0, 1, 1)
 
         self.Channel3Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel3Graph1.setObjectName(u"Channel3Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel3Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel3Graph1, 1, 1, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.ComboBoxGraph1)
