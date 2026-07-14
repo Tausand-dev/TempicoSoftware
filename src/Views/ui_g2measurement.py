@@ -193,17 +193,33 @@ class Ui_G2(object):
         self.g2ZeroRowLayout.addWidget(self.g2ZeroLabel)
         self.verticalLayout_info.addWidget(self.g2ZeroRowFrame)
 
-        # Rate stop-stop row
-        self.rateStopStopRowFrame = QFrame(self.InfoFrame)
-        self.rateStopStopRowLayout = QHBoxLayout(self.rateStopStopRowFrame)
-        self.rateStopStopRowLayout.setContentsMargins(0, 0, 0, 0)
-        self.rateStopStopKeyLabel = QLabel("Rate (stop-stop):", self.rateStopStopRowFrame)
-        self.rateStopStopKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.rateStopStopLabel = QLabel("—", self.rateStopStopRowFrame)
-        self.rateStopStopLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.rateStopStopRowLayout.addWidget(self.rateStopStopKeyLabel)
-        self.rateStopStopRowLayout.addWidget(self.rateStopStopLabel)
-        self.verticalLayout_info.addWidget(self.rateStopStopRowFrame)
+        # Count Estimation row (formerly "Rate (stop-stop)").
+        # The checkbox itself is labelled "Count Estimation" and doubles as
+        # the "Enable" toggle: checking it lets the user opt into a
+        # stop-stop rate estimate even when the selected channel is
+        # configured for a single stop — G2Logic bumps the request to 2
+        # stops for the run in that case only. If the channel already has
+        # 2+ stops configured, checking it changes nothing (that count is
+        # kept as-is). The checkbox is disabled while a measurement is
+        # running (see G2Logic.start_graphic / stop_graphic), so it can't
+        # be toggled mid-measurement.
+        self.countEstimationRowFrame = QFrame(self.InfoFrame)
+        self.countEstimationRowLayout = QHBoxLayout(self.countEstimationRowFrame)
+        self.countEstimationRowLayout.setContentsMargins(0, 0, 0, 0)
+
+        self.countEstimationEnableCheckBox = QCheckBox(self.countEstimationRowFrame)
+        self.countEstimationEnableCheckBox.setObjectName(u"countEstimationEnableCheckBox")
+        self.countEstimationEnableCheckBox.setToolTip(
+            "If the stop channel has a single stop configured, forces 2 "
+            "stops per run so a Count Estimation can be shown. Has no "
+            "effect if 2 or more stops are already configured."
+        )
+        self.countEstimationRowLayout.addWidget(self.countEstimationEnableCheckBox)
+
+        self.countEstimationLabel = QLabel("—", self.countEstimationRowFrame)
+        self.countEstimationLabel.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.countEstimationRowLayout.addWidget(self.countEstimationLabel)
+        self.verticalLayout_info.addWidget(self.countEstimationRowFrame)
 
         # ── Cursor / τ query row ──────────────────────────────────────────
         # Thin separator
@@ -796,6 +812,10 @@ class Ui_G2(object):
             QCoreApplication.translate(
                 "G2Measurement", u"Continuous measurement", None
             )
+        )
+        # Info panel
+        self.countEstimationEnableCheckBox.setText(
+            QCoreApplication.translate("G2Measurement", u"Count Estimation", None)
         )
         # Status bar
         self.statusLabel.setText(

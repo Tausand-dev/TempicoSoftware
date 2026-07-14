@@ -64,11 +64,18 @@ class G2Logic:
         Label that displays the elapsed measurement time.
     g2ZeroLabel : QLabel
         Label that displays the g²(τ=0) value.
-    rateStopStopLabel : QLabel
-        Label that displays the Rate (stop-stop), i.e. 1 / mean(delta_stop)
-        computed from the time between one stop and the next (cps).
+    countEstimationLabel : QLabel
+        Label that displays the Count Estimation (formerly "Rate
+        (stop-stop)"), i.e. 1 / mean(delta_stop) computed from the time
+        between one stop and the next (cps).
     stopChannelComboBox : QComboBox
         Combo box to select which TDC channel carries the stop signal (A–D).
+    countEstimationCheckBox : QCheckBox
+        "Enable" checkbox for the Count Estimation feature. When checked
+        and the selected channel is configured for a single stop, the
+        measurement requests 2 stops per run instead of 1 so a rate can be
+        estimated; if 2 or more stops are already configured, checking it
+        has no effect. Disabled while a measurement is running.
     """
 
     def __init__(
@@ -89,8 +96,9 @@ class G2Logic:
         eventsLabel,
         elapsedLabel,
         g2ZeroLabel,
-        rateStopStopLabel,
+        countEstimationLabel,
         stopChannelComboBox,
+        countEstimationCheckBox=None,
         tauQuerySpinBox=None,
         g2CursorLabel=None,
         fitButton=None,
@@ -129,10 +137,16 @@ class G2Logic:
         :param eventsLabel: Label showing the total number of photon events.
         :param elapsedLabel: Label showing the elapsed measurement time.
         :param g2ZeroLabel: Label showing the g²(τ=0) value.
-        :param rateStopStopLabel: Label showing the Rate (stop-stop), i.e.
-            1 / mean(delta_stop) computed from the time between one stop
-            and the next.
+        :param countEstimationLabel: Label showing the Count Estimation
+            (formerly "Rate (stop-stop)"), i.e. 1 / mean(delta_stop)
+            computed from the time between one stop and the next.
         :param stopChannelComboBox: Combo box to select the stop channel.
+        :param countEstimationCheckBox: Optional "Enable" checkbox for the
+            Count Estimation feature. When checked and the selected
+            channel is configured for a single stop, the measurement is
+            bumped to 2 stops per run so a rate can be estimated; if 2 or
+            more stops are already configured, checking it changes
+            nothing. Disabled while a measurement is running.
         :param tauQuerySpinBox: Optional spin box to query g²(τ) at a
             specific τ value.
         :param g2CursorLabel: Optional label showing g²(τ) at the queried τ.
@@ -168,8 +182,9 @@ class G2Logic:
         self.eventsLabel         = eventsLabel
         self.elapsedLabel        = elapsedLabel
         self.g2ZeroLabel         = g2ZeroLabel
-        self.rateStopStopLabel  = rateStopStopLabel
-        self.stopChannelComboBox = stopChannelComboBox
+        self.countEstimationLabel     = countEstimationLabel
+        self.stopChannelComboBox      = stopChannelComboBox
+        self.countEstimationCheckBox  = countEstimationCheckBox
 
         self.startButton    = startButton
         self.stopButton     = stopButton
@@ -628,6 +643,27 @@ class G2Logic:
         """Return 1–4 for the selected stop channel."""
         return self.stopChannelComboBox.currentIndex() + 1
 
+    def _resolve_num_stops(self, configured_num_stops: int) -> int:
+        """
+        Resolve the number of stops to actually request for this run.
+
+        If the Count Estimation "Enable" checkbox is checked and the
+        channel is currently configured for a single stop, bump the
+        request to 2 stops so a stop-stop rate can be estimated. If the
+        channel is already configured for 2 or more stops, the checkbox
+        has no effect — that count is left untouched. If the checkbox is
+        unchecked (or not provided), the configured count is used as-is,
+        whatever it is.
+
+        :param configured_num_stops: Number of stops currently configured
+            for the selected channel, as read from ``getNumberOfStops()``.
+        :return: Number of stops to request for this run.
+        """
+        if (self.countEstimationCheckBox is not None
+                and self.countEstimationCheckBox.isChecked()):
+            return max(configured_num_stops, 2)
+        return configured_num_stops
+
     def _restore_buttons_after_stop(self):
         """Re-enable UI controls after a failed or aborted start."""
         self.mainWindow.tabs.setTabEnabled(0, True)
@@ -643,6 +679,8 @@ class G2Logic:
             self.durationSpinBox.setEnabled(True)
         if self.indefiniteCheckBox is not None:
             self.indefiniteCheckBox.setEnabled(True)
+        if self.countEstimationCheckBox is not None:
+            self.countEstimationCheckBox.setEnabled(True)
         self.disconnectButton.setEnabled(True)
         self.startButton.setEnabled(True)
         self.stopButton.setEnabled(False)
@@ -720,6 +758,10 @@ class G2Logic:
             self.durationSpinBox.setEnabled(False)
         if self.indefiniteCheckBox is not None:
             self.indefiniteCheckBox.setEnabled(False)
+        # The Count Estimation "Enable" checkbox can't be toggled while a
+        # measurement is running.
+        if self.countEstimationCheckBox is not None:
+            self.countEstimationCheckBox.setEnabled(False)
 
         self.statusValue.setText("Measurement running")
         self.changeStatusColor(1)
@@ -728,7 +770,7 @@ class G2Logic:
         self.eventsLabel.setText("0")
         self.elapsedLabel.setText("0 s")
         self.g2ZeroLabel.setText("—")
-        self.rateStopStopLabel.setText("—")
+        self.countEstimationLabel.setText("—")
 
         # Stop the connection-polling timer while the thread owns the device
         self.stopTimerConnection()
@@ -753,7 +795,28 @@ class G2Logic:
                       self.device.ch3, self.device.ch4]
         num_stops  = _channels[stop_ch - 1].getNumberOfStops()
 
+        # If Count Estimation is enabled and only a single stop is
+        # configured, request 2 stops for this run instead so a rate can
+        # be estimated. If 2+ stops are already configured, this is a
+        # no-op — the configured count is kept.
+        num_stops = self._resolve_num_stops(num_stops)
+
         self.mainWindow.saveSettings()
+
+        # saveSettings() just re-read getNumberOfStops() straight from the
+        # device, but at this point the device still has the ORIGINAL count
+        # configured — the bump to `num_stops` (from Count Estimation) is
+        # only applied later, inside WorkerThreadG2.run(), on the worker
+        # thread. Without this, mainWindow.numberOfStops<Channel> stays
+        # cached at the pre-bump value, and that's exactly what the
+        # Channels settings dialog shows (read-only) if it's opened while
+        # this measurement is running — disagreeing with what the device
+        # is actually doing right now. Patch the active channel's cached
+        # value so it matches what this run is really using.
+        _stop_attr = ("numberOfStopsChannelA", "numberOfStopsChannelB",
+                      "numberOfStopsChannelC", "numberOfStopsChannelD")[stop_ch - 1]
+        setattr(self.mainWindow, _stop_attr, num_stops)
+
         self.mainWindow.activeMeasurement()
 
         self.worker = WorkerThreadG2(
@@ -809,6 +872,8 @@ class G2Logic:
             self.durationSpinBox.setEnabled(True)
         if self.indefiniteCheckBox is not None:
             self.indefiniteCheckBox.setEnabled(True)
+        if self.countEstimationCheckBox is not None:
+            self.countEstimationCheckBox.setEnabled(True)
 
         if not self.withoutMeasurement:
             self.startButton.setEnabled(True)
@@ -893,11 +958,11 @@ class G2Logic:
         self._query_tau()
 
         # Update stats labels
-        self.eventsLabel.setText(f"{total_events:,}")
+        self.eventsLabel.setText(f"{total_events}")
         if rate_stop_stop and rate_stop_stop > 0:
-            self.rateStopStopLabel.setText(f"{rate_stop_stop:,.0f} cps")
+            self.countEstimationLabel.setText(f"{rate_stop_stop:.0f} cps")
         else:
-            self.rateStopStopLabel.setText("—")
+            self.countEstimationLabel.setText("—")
 
         # g²(0): value in the bin whose centre is closest to τ = 0
         if len(centres_ns) > 0:
@@ -959,7 +1024,7 @@ class G2Logic:
         self.savePlotButton.setEnabled(False)
         self.clearButton.setEnabled(False)
         self.g2ZeroLabel.setText("—")
-        self.rateStopStopLabel.setText("—")
+        self.countEstimationLabel.setText("—")
         self.eventsLabel.setText("0")
         self.elapsedLabel.setText("0 s")
         # Reset cursor

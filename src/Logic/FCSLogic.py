@@ -774,18 +774,18 @@ class FCSLogic():
         model_names = {
             0: "3D Gaussian diffusion",
             1: "Anomalous diffusion",
-            2: "Triplet state correction",
+            2: "Chemical relaxation",
             3: "Diffusion with flow",
-            4: "Two-component diffusion",
-            5: "Chemical relaxation",
+            4: "Triplet state correction",
+            5: "Two-component diffusion",
         }
         equations = {
             0: f"{pre}(1/N)·(1 + tau/tD)^-1·(1 + a^-2·tau/tD)^-0.5",
             1: f"{pre}(1/N)·(1 + (tau/tD)^alpha)^-1·(1 + a^-2·(tau/tD)^alpha)^-0.5",
-            2: f"{pre}(1/N)·[(1-F+F·exp(-tau/tF))/(1-F)]·(1+tau/tD)^-1·(1+a^-2·tau/tD)^-0.5",
+            2: f"{pre}(K/N)·exp(-tau/tB),  G(0)=K/N, K=kon/koff",
             3: f"{pre}(1/N)·(1+tau/tD)^-1·(1+a^-2·tau/tD)^-0.5·exp[-(tau/tv)^2/(1+tau/tD)]",
-            4: f"{pre}(1/N)·(a1·GD1 + a2·GD2),  GDi=(1+tau/tDi)^-1·(1+a^-2·tau/tDi)^-0.5",
-            5: f"{pre}(K/N)·exp(-tau/tB),  G(0)=K/N, K=kon/koff",
+            4: f"{pre}(1/N)·[(1-F+F·exp(-tau/tF))/(1-F)]·(1+tau/tD)^-1·(1+a^-2·tau/tD)^-0.5",
+            5: f"{pre}(1/N)·(a1·GD1 + a2·GD2),  GDi=(1+tau/tDi)^-1·(1+a^-2·tau/tDi)^-0.5",
         }
 
         lines = [
@@ -1102,12 +1102,12 @@ class FCSLogic():
                 np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)**alpha)
             )
         )
+
     @staticmethod
-    def _model_triplet(tau, N, tau_D, kappa, F, tau_F, offset=1.0):
-        """Triplet state correction for normal 3D diffusion."""
-        triplet = (1.0 - F + F * np.exp(-tau / tau_F)) / (1.0 - F)
-        diff    = (1.0 / (1.0 + tau / tau_D)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)))
-        return offset + (1.0 / N) * triplet * diff
+    def _model_chemical(tau, N, tau_B, K, offset=1.0):
+        """Pure chemical relaxation (fast diffusion limit). G(0) = (1/N)·K"""
+        G0 = (1.0 / N) * K
+        return offset + G0 * np.exp(-tau / tau_B)
 
     @staticmethod
     def _model_flow(tau, N, tau_D, kappa, tau_v, offset=1.0):
@@ -1117,18 +1117,19 @@ class FCSLogic():
         return offset + (1.0 / N) * diff * flow
 
     @staticmethod
+    def _model_triplet(tau, N, tau_D, kappa, F, tau_F, offset=1.0):
+        """Triplet state correction for normal 3D diffusion."""
+        triplet = (1.0 - F + F * np.exp(-tau / tau_F)) / (1.0 - F)
+        diff    = (1.0 / (1.0 + tau / tau_D)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D)))
+        return offset + (1.0 / N) * triplet * diff
+
+    @staticmethod
     def _model_two_component(tau, N, tau_D1, tau_D2, alpha_1, kappa, offset=1.0):
         """Two-component 3D diffusion: weighted sum of two species."""
         alpha_2 = 1.0 - alpha_1
         d1 = (1.0 / (1.0 + tau / tau_D1)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D1)))
         d2 = (1.0 / (1.0 + tau / tau_D2)) * (1.0 / np.sqrt(1.0 + (kappa**-2) * (tau / tau_D2)))
         return offset + (1.0 / N) * (alpha_1 * d1 + alpha_2 * d2)
-
-    @staticmethod
-    def _model_chemical(tau, N, tau_B, K, offset=1.0):
-        """Pure chemical relaxation (fast diffusion limit). G(0) = (1/N)·K"""
-        G0 = (1.0 / N) * K
-        return offset + G0 * np.exp(-tau / tau_B)
 
     # Parameter names, display units, and unit-scale factors per fit model,
     # in curve_fit argument order (the fixed G(∞) offset is controlled by
@@ -1141,12 +1142,12 @@ class FCSLogic():
     PARAM_LABELS = {
         0: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"κ", "", 1.0)],
         1: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"α", "", 1.0), (u"κ", "", 1.0)],
-        2: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"a", "", 1.0),
-            (u"F", "", 1.0), (u"τF", "µs", 1e6)],
+        2: [(u"N", "", 1.0), (u"τB", "ms", 1e3), (u"K", "", 1.0)],
         3: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"a", "", 1.0), (u"τv", "ms", 1e3)],
-        4: [(u"N", "", 1.0), (u"τD1", "ms", 1e3), (u"τD2", "ms", 1e3),
+        4: [(u"N", "", 1.0), (u"τD", "ms", 1e3), (u"a", "", 1.0),
+            (u"F", "", 1.0), (u"τF", "µs", 1e6)],
+        5: [(u"N", "", 1.0), (u"τD1", "ms", 1e3), (u"τD2", "ms", 1e3),
             (u"α1", "", 1.0), (u"a", "", 1.0)],
-        5: [(u"N", "", 1.0), (u"τB", "ms", 1e3), (u"K", "", 1.0)],
     }
 
     def _default_p0(self, idx):
@@ -1173,14 +1174,14 @@ class FCSLogic():
             return [1.0, tau_med, 5.0]
         elif idx == 1:    # Anomalous
             return [1.0, tau_med, 1.0, 5.0]
-        elif idx == 2:    # Triplet
-            return [1.0, tau_med, 5.0, 0.1, 1e-5]
+        elif idx == 2:    # Chemical
+            return [1.0, tau_med * 0.1, 1.0]
         elif idx == 3:    # Flow
             return [1.0, tau_med, 5.0, tau_med]
-        elif idx == 4:    # Two-component
+        elif idx == 4:    # Triplet
+            return [1.0, tau_med, 5.0, 0.1, 1e-5]
+        elif idx == 5:    # Two-component
             return [1.0, tau_med * 0.5, tau_med * 2.0, 0.5, 5.0]
-        elif idx == 5:    # Chemical
-            return [1.0, tau_med * 0.1, 1.0]
         return [1.0, tau_med, 5.0]
 
     @staticmethod
@@ -1203,13 +1204,13 @@ class FCSLogic():
         elif idx == 1:
             return ([0, 0, 0.1, 0.01], [np.inf, np.inf, 2.0, np.inf])
         elif idx == 2:
-            return ([0, 0, 0.01, 0, 0], [np.inf, np.inf, np.inf, 0.99, np.inf])
+            return ([0, 0, 0], [np.inf, np.inf, np.inf])
         elif idx == 3:
             return ([0, 0, 0.01, 0], [np.inf, np.inf, np.inf, np.inf])
         elif idx == 4:
-            return ([0, 0, 0, 0, 0.01], [np.inf, np.inf, np.inf, 1.0, np.inf])
+            return ([0, 0, 0.01, 0, 0], [np.inf, np.inf, np.inf, 0.99, np.inf])
         elif idx == 5:
-            return ([0, 0, 0], [np.inf, np.inf, np.inf])
+            return ([0, 0, 0, 0, 0.01], [np.inf, np.inf, np.inf, 1.0, np.inf])
         return ([0, 0, 0], [np.inf, np.inf, np.inf])
 
     def _populate_initial_params_table(self, *_args):
@@ -1454,19 +1455,19 @@ class FCSLogic():
                     f"(1 + (τ/τ<sub>D</sub>)<sup>α</sup>)<sup>−1</sup>"
                     f"(1 + a<sup>−2</sup>(τ/τ<sub>D</sub>)<sup>α</sup>)<sup>−½</sup></center>")
         elif idx == 2:
-            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
-                    f"(1 − F + F·e<sup>−τ/τ<sub>F</sub></sup>)/(1 − F) · {d}</center>")
+            html = (f"<center>G(τ) = {pre}"
+                    f"<sup>1</sup>/<sub>N</sub> · K · exp(−τ/τ<sub>B</sub>)"
+                    f"&nbsp;&nbsp;[G(0) = K/N, K = k<sub>on</sub>/k<sub>off</sub>]</center>")
         elif idx == 3:
             html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · {d} · "
                     f"exp[−(τ/τ<sub>v</sub>)<sup>2</sup>/(1 + τ/τ<sub>D</sub>)]</center>")
         elif idx == 4:
             html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
+                    f"(1 − F + F·e<sup>−τ/τ<sub>F</sub></sup>)/(1 − F) · {d}</center>")
+        elif idx == 5:
+            html = (f"<center>G(τ) = {pre}<sup>1</sup>/<sub>N</sub> · "
                     f"(α<sub>1</sub>·(1+τ/τ<sub>D1</sub>)<sup>−1</sup>(1+a<sup>−2</sup>τ/τ<sub>D1</sub>)<sup>−½</sup> + "
                     f"α<sub>2</sub>·(1+τ/τ<sub>D2</sub>)<sup>−1</sup>(1+a<sup>−2</sup>τ/τ<sub>D2</sub>)<sup>−½</sup>)</center>")
-        elif idx == 5:
-            html = (f"<center>G(τ) = {pre}"
-                    f"<sup>1</sup>/<sub>N</sub> · K · exp(−τ/τ<sub>B</sub>)"
-                    f"&nbsp;&nbsp;[G(0) = K/N, K = k<sub>on</sub>/k<sub>off</sub>]</center>")
         else:
             html = ""
         self.fitEquationLabel.setText(html)
@@ -1644,37 +1645,7 @@ class FCSLogic():
                 self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
                 fit_g = self._model_anomalous(taus, N_fit, tD_fit, alpha_fit, kappa_fit, offset)
 
-            elif idx == 2:  # Triplet
-                popt, _ = curve_fit(
-                    lambda t, N, tD, k, F, tF: self._model_triplet(t, N, tD, k, F, tF, offset),
-                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
-                )
-                N_fit, tD_fit, kappa_fit, F_fit, tF_fit = popt
-                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
-                fit_g = self._model_triplet(taus, N_fit, tD_fit, kappa_fit, F_fit, tF_fit, offset)
-
-            elif idx == 3:  # Flow
-                popt, _ = curve_fit(
-                    lambda t, N, tD, k, tv: self._model_flow(t, N, tD, k, tv, offset),
-                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
-                )
-                N_fit, tD_fit, kappa_fit, tv_fit = popt
-                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
-                fit_g = self._model_flow(taus, N_fit, tD_fit, kappa_fit, tv_fit, offset)
-
-            elif idx == 4:  # Two-component
-                popt, _ = curve_fit(
-                    lambda t, N, tD1, tD2, a1, k: self._model_two_component(t, N, tD1, tD2, a1, k, offset),
-                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
-                )
-                N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit = popt
-                self._fill_fit_results(idx, popt, extra_rows=[
-                    ("α2", f"{1-a1_fit:.4f}"),
-                    g_inf_row,
-                ])
-                fit_g = self._model_two_component(taus, N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit, offset)
-
-            elif idx == 5:  # Chemical
+            elif idx == 2:  # Chemical
                 popt, _ = curve_fit(
                     lambda t, N, tB, K: self._model_chemical(t, N, tB, K, offset),
                     taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
@@ -1685,6 +1656,36 @@ class FCSLogic():
                     g_inf_row,
                 ])
                 fit_g = self._model_chemical(taus, N_fit, tB_fit, K_fit, offset)
+
+            elif idx == 3:  # Flow
+                popt, _ = curve_fit(
+                    lambda t, N, tD, k, tv: self._model_flow(t, N, tD, k, tv, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, kappa_fit, tv_fit = popt
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
+                fit_g = self._model_flow(taus, N_fit, tD_fit, kappa_fit, tv_fit, offset)
+
+            elif idx == 4:  # Triplet
+                popt, _ = curve_fit(
+                    lambda t, N, tD, k, F, tF: self._model_triplet(t, N, tD, k, F, tF, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD_fit, kappa_fit, F_fit, tF_fit = popt
+                self._fill_fit_results(idx, popt, extra_rows=[g_inf_row])
+                fit_g = self._model_triplet(taus, N_fit, tD_fit, kappa_fit, F_fit, tF_fit, offset)
+
+            elif idx == 5:  # Two-component
+                popt, _ = curve_fit(
+                    lambda t, N, tD1, tD2, a1, k: self._model_two_component(t, N, tD1, tD2, a1, k, offset),
+                    taus, g_fit, p0=p0, bounds=bounds, maxfev=10000
+                )
+                N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit = popt
+                self._fill_fit_results(idx, popt, extra_rows=[
+                    ("α2", f"{1-a1_fit:.4f}"),
+                    g_inf_row,
+                ])
+                fit_g = self._model_two_component(taus, N_fit, tD1_fit, tD2_fit, a1_fit, kappa_fit, offset)
 
             else:
                 return

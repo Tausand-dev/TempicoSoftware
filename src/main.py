@@ -825,8 +825,9 @@ class MainWindow(QMainWindow):
                 eventsLabel       = self.uig2.eventsLabel
                 elapsedLabel      = self.uig2.elapsedLabel
                 g2ZeroLabel       = self.uig2.g2ZeroLabel
-                rateStopStopLabel = self.uig2.rateStopStopLabel
+                countEstimationLabel = self.uig2.countEstimationLabel
                 stopChannelComboBox = self.uig2.stopChannelComboBox
+                countEstimationCheckBox = self.uig2.countEstimationEnableCheckBox
 
                 # ── Construct G2Logic (mirrors FCSLogic constructor) ─────────
                 self.g2Graphic = G2Logic(
@@ -846,8 +847,9 @@ class MainWindow(QMainWindow):
                     eventsLabel,
                     elapsedLabel,
                     g2ZeroLabel,
-                    rateStopStopLabel,
+                    countEstimationLabel,
                     stopChannelComboBox,
+                    countEstimationCheckBox=countEstimationCheckBox,
                 )
                 # Provide parameter widgets so G2Logic reads them at start time
                 self.g2Graphic.set_parameter_widgets(
