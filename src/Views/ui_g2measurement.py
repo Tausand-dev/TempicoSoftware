@@ -606,7 +606,7 @@ class Ui_G2(object):
         self.fitTable.setObjectName(u"fitTable")
         self.fitTable.setColumnCount(3)
         self.fitTable.setHorizontalHeaderLabels(
-            [u"Parámetro", u"Valor inicial", u"Resultado del fit"]
+            [u"Parameter", u"Initial Value", u"Fit Result"]
         )
         self.fitTable.horizontalHeader().setStretchLastSection(True)
         self.fitTable.verticalHeader().setVisible(False)
