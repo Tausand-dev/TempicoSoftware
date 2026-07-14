@@ -156,7 +156,7 @@ class Ui_G2(object):
 
         self.verticalLayout_info = QVBoxLayout(self.InfoFrame)
         self.verticalLayout_info.setObjectName(u"verticalLayout_info")
-
+        self.verticalLayout_info.setContentsMargins(6, 4, 6, 4)
         # Events row
         self.eventsRowFrame = QFrame(self.InfoFrame)
         self.eventsRowLayout = QHBoxLayout(self.eventsRowFrame)
@@ -220,6 +220,7 @@ class Ui_G2(object):
         self.tauQueryKeyLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.tauQuerySpinBox = QDoubleSpinBox(self.tauQueryRowFrame)
         self.tauQuerySpinBox.setObjectName(u"tauQuerySpinBox")
+        self.tauQuerySpinBox.setMinimumHeight(22)
         self.tauQuerySpinBox.setRange(-1_000_000.0, 1_000_000.0)
         self.tauQuerySpinBox.setDecimals(3)
         self.tauQuerySpinBox.setSuffix(" ns")
@@ -348,7 +349,7 @@ class Ui_G2(object):
         self.StopChannelFrame.setFrameShape(QFrame.StyledPanel)
         self.StopChannelFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_stopchannel = QHBoxLayout(self.StopChannelFrame)
-        self.horizontalLayout_stopchannel.setContentsMargins(6, 4, 6, 4)
+        self.horizontalLayout_stopchannel.setContentsMargins(6, 0.75, 6, 0.75)
 
         self.stopChannelLabel = QLabel(self.StopChannelFrame)
         self.stopChannelLabel.setObjectName(u"stopChannelLabel")
@@ -378,7 +379,7 @@ class Ui_G2(object):
         self.BinWidthFrame.setFrameShape(QFrame.StyledPanel)
         self.BinWidthFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_binwidth = QHBoxLayout(self.BinWidthFrame)
-        self.horizontalLayout_binwidth.setContentsMargins(6, 4, 6, 4)
+        self.horizontalLayout_binwidth.setContentsMargins(6, 0.75, 6, 0.75)
         self.horizontalLayout_binwidth.setObjectName(u"horizontalLayout_binwidth")
 
         self.binWidthLabel = QLabel(self.BinWidthFrame)
@@ -403,7 +404,7 @@ class Ui_G2(object):
         self.WindowFrame.setFrameShape(QFrame.StyledPanel)
         self.WindowFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_window = QHBoxLayout(self.WindowFrame)
-        self.horizontalLayout_window.setContentsMargins(6, 4, 6, 4)
+        self.horizontalLayout_window.setContentsMargins(6, 0.75, 6, 0.75)
         self.horizontalLayout_window.setObjectName(u"horizontalLayout_window")
 
         self.windowLabel = QLabel(self.WindowFrame)
@@ -462,7 +463,7 @@ class Ui_G2(object):
         self.DurationFrame.setFrameShape(QFrame.StyledPanel)
         self.DurationFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_duration = QHBoxLayout(self.DurationFrame)
-        self.horizontalLayout_duration.setContentsMargins(6, 4, 6, 4)
+        self.horizontalLayout_duration.setContentsMargins(6, 0.75, 6, 0.75)
         self.horizontalLayout_duration.setObjectName(u"horizontalLayout_duration")
 
         self.durationLabel = QLabel(self.DurationFrame)
@@ -546,14 +547,14 @@ class Ui_G2(object):
         self.fitModelCombo.addItem(u"Bunched Gaussian")
         self.fitModelCombo.addItem(u"Bunched Lorentzian")
         self.fitModelCombo.addItem(u"Three-level system")
-        self.fitModelCombo.setFixedWidth(230)
-        self.fitModelCombo.setFixedHeight(28)
+        self.fitModelCombo.setMinimumWidth(230)
+        self.fitModelCombo.setMinimumHeight(28)
         self.horizontalLayout_fit.addWidget(self.fitModelCombo)
 
         self.fitButton = QPushButton(self.fitFrame)
         self.fitButton.setObjectName(u"fitButton")
-        self.fitButton.setFixedWidth(60)
-        self.fitButton.setFixedHeight(28)
+        self.fitButton.setMinimumWidth(60)
+        self.fitButton.setMinimumHeight(28)
         self.horizontalLayout_fit.addWidget(self.fitButton)
 
         self.horizontalLayout_fit.addStretch(1)
@@ -591,8 +592,8 @@ class Ui_G2(object):
         # automatically suggested guesses (computed from the live data).
         self.fitResetParamsButton = QPushButton(self.fitResultsFrame)
         self.fitResetParamsButton.setObjectName(u"fitResetParamsButton")
-        self.fitResetParamsButton.setFixedWidth(60)
-        self.fitResetParamsButton.setFixedHeight(24)
+        self.fitResetParamsButton.setMinimumWidth(60)
+        self.fitResetParamsButton.setMinimumHeight(24)
         self.horizontalLayout_fitHeader.addWidget(
             self.fitResetParamsButton, 0, Qt.AlignTop
         )
@@ -620,7 +621,7 @@ class Ui_G2(object):
         )
         self.fitTable.setSelectionMode(QTableWidget.SingleSelection)
         self.fitTable.setShowGrid(True)
-        self.fitTable.setFixedHeight(120)
+        self.fitTable.setMinimumHeight(120)
         self.fitTable.setStyleSheet(u"font-size: 11px;")
         self.verticalLayout_fitResults.addWidget(self.fitTable)
 

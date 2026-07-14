@@ -163,6 +163,7 @@ class UiLifeTime(object):
         self.numberMeasurementsSpinBox.setObjectName(u"numberMeasurementsSpinBox")
         self.numberMeasurementsSpinBox.setMinimum(1000)
         self.numberMeasurementsSpinBox.setMaximum(2**28)
+        self.numberMeasurementsSpinBox.setMinimumHeight(18)
 
         self.verticalLayout_3.addWidget(self.numberMeasurementsSpinBox)
 
@@ -172,7 +173,7 @@ class UiLifeTime(object):
         self.startStopClearFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.startStopClearFrame)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(0,0,0,0)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.startButton = QPushButton(self.startStopClearFrame)
         self.startButton.setObjectName(u"startButton")
 

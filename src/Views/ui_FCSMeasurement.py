@@ -219,6 +219,7 @@ class Ui_FCSMeasurement(object):
 
         self.verticalLayout_params = QVBoxLayout(self.ParametersFrame)
         self.verticalLayout_params.setObjectName(u"verticalLayout_params")
+        self.verticalLayout_params.setContentsMargins(6, 4, 6, 4)
 
         # Parameters title label
         self.LabelParametersFrame = QFrame(self.ParametersFrame)
@@ -276,6 +277,7 @@ class Ui_FCSMeasurement(object):
         self.tau0SpinBox.setMinimum(1)           # minimum: 1 µs
         self.tau0SpinBox.setMaximum(10_000_000)  # maximum: 10 s in µs
         self.tau0SpinBox.setValue(5)             # default: 5 µs 
+        self.tau0SpinBox.setMinimumHeight(22)
         self.horizontalLayout_tau0.addWidget(self.tau0SpinBox)
 
         self.verticalLayout_params.addWidget(self.Tau0Frame)
@@ -297,6 +299,7 @@ class Ui_FCSMeasurement(object):
         self.durationSpinBox.setMinimum(1)     # minimum: 1 second
         self.durationSpinBox.setMaximum(86400) # maximum: 24 hours
         self.durationSpinBox.setValue(60)      # default: 60 seconds
+        self.durationSpinBox.setMinimumHeight(22)
         self.horizontalLayout_duration.addWidget(self.durationSpinBox)
 
         self.verticalLayout_params.addWidget(self.DurationFrame)

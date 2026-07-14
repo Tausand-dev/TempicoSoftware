@@ -1546,7 +1546,10 @@ class MainWindow(QMainWindow):
 #--------Execution Test----------#
 
 if __name__ == '__main__':
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication([])
+    app.setStyle('Fusion')
     #Amber theme
     #apply_stylesheet(app, theme='dark_amber.xml')
     #Amber purple
@@ -1611,7 +1614,10 @@ def execProgram():
 
     :return: None
     """
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication([])
+    app.setStyle('Fusion')
     splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
