@@ -20,17 +20,20 @@ Tempico Software is a program developed by Tausand Electronics, with Joan Amaya 
    :maxdepth: 1
    :caption: Contents:
 
-   main.rst
-   StartStopLogic.rst
-   LifeTimeLogic.rst
-   CountsEstimatedLogic.rst
-   TimeStampLogic.rst
-   G2Logic.rst
-   ThreadG2.rst
-   ThreadLifeTime.rst
-   ThreadProccessData.rst
-   ThreadTimeStamping.rst
-   ThreadStartStop.rst
+   main
+   StartStopLogic
+   CountsEstimatedLogic
+   TimeStampLogic
+   LifeTimeLogic
+   FCSLogic
+   G2Logic
+   ThreadProccessData
+   ThreadStartStop
+   ThreadCountEstimated
+   ThreadTimeStamping
+   ThreadLifeTime
+   ThreadFCS
+   ThreadG2
 
    
    

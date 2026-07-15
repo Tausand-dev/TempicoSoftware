@@ -5,17 +5,15 @@ src
    :maxdepth: 4
 
    StartStopLogic
-   CountsEstimatedLogic
-   TimeStampLogic
    LifeTimeLogic
-   FCSLogic
-   G2Logic
+   TimeStampLogic
+   CountsEstimatedLogic
    main
-   ThreadStartStop
+   G2Logic
+   ThreadG2
+   ThreadLifeTime
    ThreadProccessData
    ThreadTimeStamping
-   ThreadLifeTime
-   ThreadFCS
-   ThreadG2
+   ThreadStartStop
    
    

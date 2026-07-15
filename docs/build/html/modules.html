@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>src &mdash; Tempico Software 2.0.0 documentation</title>
+  <title>src &mdash; Tempico Software 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=73cda6fb"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0218eca2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,14 +44,18 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
 </ul>
 
         </div>
@@ -102,10 +106,8 @@
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.dialogChangeMode"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.dialogChangeMode()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.disconnectedDevice()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getMinimumValue"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.getMinimumValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.hide_graphic2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.resetSaveSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_graphic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_plots"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_plots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.show_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.show_graphic()</span></code></a></li>
@@ -150,7 +152,6 @@
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitExpDecay"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitExpDecay()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitKohlrauschFit"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitKohlrauschFit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitShiiftedExponential"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitShiiftedExponential()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getTempicoChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getTempicoChannel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getUnits"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getUnits()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.indexChangeStartChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.indexChangeStartChannel()</span></code></a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetInitialDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetParametersLabels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetSaveSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.roundStringPCov"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.roundStringPCov()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveLifeTimeData"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.saveLifeTimeData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveMode"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.saveMode()</span></code></a></li>
@@ -215,7 +215,6 @@
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.formatWaitingTime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAproxTotalData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getAvailableRam"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAvailableRam()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatLimitedStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatLimitedStop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatNormalStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatNormalStop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatScheduledStop()</span></code></a></li>
@@ -225,7 +224,6 @@
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.pauseScheduledMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetSaveSentinels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetValuesSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataAction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataButtonAction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveSettings"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveSettings()</span></code></a></li>
@@ -294,7 +292,6 @@
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.factoryGraphsAllChannels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.finishedThread"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.finishedThread()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.getChannelsMeasure()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.helpButtonDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.hideColumns()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.lostConnection"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.lostConnection()</span></code></a></li>
@@ -304,7 +301,6 @@
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSentinels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetSentinels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetValues"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetValues()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.returnSettings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.rightAlignedItem()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.saveData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.savePlots"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.savePlots()</span></code></a></li>
@@ -322,12 +318,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="main.html#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.activeMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.activeMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_counts_estimated"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_counts_estimated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_fcs"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_fcs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
@@ -342,6 +338,7 @@
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.open_help"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_help()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.resetSaveSentinelsAllWindows"><code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
@@ -360,138 +357,44 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic"><code class="docutils literal notranslate"><span class="pre">G2Logic</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.antiBunching"><code class="docutils literal notranslate"><span class="pre">G2Logic.antiBunching()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.antiBunchingShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.antiBunchingShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.antiBunchingShiftFixed"><code class="docutils literal notranslate"><span class="pre">G2Logic.antiBunchingShiftFixed()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.applyFit"><code class="docutils literal notranslate"><span class="pre">G2Logic.applyFit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.applyFitAction"><code class="docutils literal notranslate"><span class="pre">G2Logic.applyFitAction()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.applyFitToTable"><code class="docutils literal notranslate"><span class="pre">G2Logic.applyFitToTable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.calculateR2"><code class="docutils literal notranslate"><span class="pre">G2Logic.calculateR2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.cancelParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.cancelParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.cannotEstimateParametersDialog"><code class="docutils literal notranslate"><span class="pre">G2Logic.cannotEstimateParametersDialog()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.captureMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.captureMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.captureTauValues"><code class="docutils literal notranslate"><span class="pre">G2Logic.captureTauValues()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeAntiBunchingTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeAntiBunchingTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeAntibunchingShiftTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeAntibunchingShiftTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeDeterminedParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeDeterminedParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeEstimatedParameter"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeEstimatedParameter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeEstimatedParameterStartTimer"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeEstimatedParameterStartTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeExternalCheckBox"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeExternalCheckBox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeExternalFixed"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeExternalFixed()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeExternalSpinBox"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeExternalSpinBox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeReverseExternalSpinBox"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeReverseExternalSpinBox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatus"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.PARAM_LABELS"><code class="docutils literal notranslate"><span class="pre">G2Logic.PARAM_LABELS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeColorThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeColorThread()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusColor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeTermalGaussianShiftTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeTermalGaussianShiftTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeTermalGaussianTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeTermalGaussianTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeTermalLorentzianShiftTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeTermalLorentzianShiftTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeTermalLorentzianTableParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeTermalLorentzianTableParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.checkParametersValue"><code class="docutils literal notranslate"><span class="pre">G2Logic.checkParametersValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.checkRangesMode"><code class="docutils literal notranslate"><span class="pre">G2Logic.checkRangesMode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.clearManualMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.clearManualMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.clear_curve"><code class="docutils literal notranslate"><span class="pre">G2Logic.clear_curve()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.connectedDevice()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.createGraphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.createGraphic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.createGraphicToSave"><code class="docutils literal notranslate"><span class="pre">G2Logic.createGraphicToSave()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.disableTabs"><code class="docutils literal notranslate"><span class="pre">G2Logic.disableTabs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.disconnectedDevice()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.enableTabs"><code class="docutils literal notranslate"><span class="pre">G2Logic.enableTabs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.finishAutoClearMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.finishAutoClearMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.finishLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.finishLimitedMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.finishManualMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.finishManualMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.formatStd"><code class="docutils literal notranslate"><span class="pre">G2Logic.formatStd()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.formatValue"><code class="docutils literal notranslate"><span class="pre">G2Logic.formatValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.generalSettingsAfterMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.generalSettingsAfterMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.generalSettingsBeforeMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.generalSettingsBeforeMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.getChannelComboBox"><code class="docutils literal notranslate"><span class="pre">G2Logic.getChannelComboBox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.getPicoSecondsValue"><code class="docutils literal notranslate"><span class="pre">G2Logic.getPicoSecondsValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.getUnits"><code class="docutils literal notranslate"><span class="pre">G2Logic.getUnits()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.helpButtonDialog"><code class="docutils literal notranslate"><span class="pre">G2Logic.helpButtonDialog()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.helpEventFilter"><code class="docutils literal notranslate"><span class="pre">G2Logic.helpEventFilter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initLocalDialogParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.initLocalDialogParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationAntiBunching"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationAntiBunching()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationAntiBunchingShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationAntiBunchingShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationThermalGaussian"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationThermalGaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationThermalGaussianShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationThermalGaussianShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationThermalLorentzian"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationThermalLorentzian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initParametersEquationThermalLorentzianShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.initParametersEquationThermalLorentzianShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initalParametersAntiBunching"><code class="docutils literal notranslate"><span class="pre">G2Logic.initalParametersAntiBunching()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initalParametersAntiBunchingShifted"><code class="docutils literal notranslate"><span class="pre">G2Logic.initalParametersAntiBunchingShifted()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initalParametersLorentzian"><code class="docutils literal notranslate"><span class="pre">G2Logic.initalParametersLorentzian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialConfigs"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialConfigs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialExternalDelayCheckbox"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialExternalDelayCheckbox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialParametersGaussian"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialParametersGaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialParametersLorentzianShifted"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialParametersLorentzianShifted()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialParametersWithUnits"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialParametersWithUnits()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.initialParametesGaussianShifted"><code class="docutils literal notranslate"><span class="pre">G2Logic.initialParametesGaussianShifted()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.parametersFitName"><code class="docutils literal notranslate"><span class="pre">G2Logic.parametersFitName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.resetFits"><code class="docutils literal notranslate"><span class="pre">G2Logic.resetFits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">G2Logic.hide_graphic2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">G2Logic.resetSaveSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.saveG2Data"><code class="docutils literal notranslate"><span class="pre">G2Logic.saveG2Data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.saveG2Plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.saveG2Plot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.setDefaultParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.setDefaultParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.setVerticalLabel"><code class="docutils literal notranslate"><span class="pre">G2Logic.setVerticalLabel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.showDialogChangeMode"><code class="docutils literal notranslate"><span class="pre">G2Logic.showDialogChangeMode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.showDialogNoFitParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.showDialogNoFitParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.showDialogNoParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.showDialogNoParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.showParameterDialog"><code class="docutils literal notranslate"><span class="pre">G2Logic.showParameterDialog()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.showParameterHelp"><code class="docutils literal notranslate"><span class="pre">G2Logic.showParameterHelp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.startAutoClearMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.startAutoClearMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.startLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.startLimitedMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.startManualMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.startManualMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.run_fit"><code class="docutils literal notranslate"><span class="pre">G2Logic.run_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.save_data"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.save_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_cursor_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_cursor_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_fit_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_fit_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_parameter_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_parameter_widgets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.startTimerConnection()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stopAutoClearMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopAutoClearMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stopLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopLimitedMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stopManualMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopManualMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.start_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.start_graphic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopTimerConnection()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalGaussian"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalGaussian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalGaussianShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalGaussianShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalGaussianShiftFixed"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalGaussianShiftFixed()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalLorentzian"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalLorentzian()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalLorentzianShift"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalLorentzianShift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.thermalLorentzianShiftFixed"><code class="docutils literal notranslate"><span class="pre">G2Logic.thermalLorentzianShiftFixed()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.threadSettingsBeforeMeasurement"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadSettingsBeforeMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.updateInitialParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.updateInitialParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.updateLocalDialogInitalParameters"><code class="docutils literal notranslate"><span class="pre">G2Logic.updateLocalDialogInitalParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.updateParameterFields"><code class="docutils literal notranslate"><span class="pre">G2Logic.updateParameterFields()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.updateParameterUnits"><code class="docutils literal notranslate"><span class="pre">G2Logic.updateParameterUnits()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.updateSpinBoxSufix"><code class="docutils literal notranslate"><span class="pre">G2Logic.updateSpinBoxSufix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.stop_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.threadComplete"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadComplete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.threadRunning"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadRunning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.update_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.update_plot()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.buildG2Histogram"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.buildG2Histogram()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.cannotEstimate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.cannotEstimate</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.changeToOneStop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.changeToOneStop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.clearG2"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.clearG2()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.estimateParameterInMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.estimateParameterInMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.estimatedParameterValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.estimatedParameterValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.generateBinList"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.generateBinList()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.getCountPerSecondParameter"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.getCountPerSecondParameter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.getDivisionFactor"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.getDivisionFactor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.getG2Average"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.getG2Average()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.getMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.getMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.processRun"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.processRun()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.psToS"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.psToS()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.recoverSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.recoverSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.applyCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.colorValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.colorValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.dataReady"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.dataReady</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.saveSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.saveSettings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.settingsForEstimate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.settingsForEstimate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.settingsForEstimatedParameters"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.settingsForEstimatedParameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.settingsForMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.settingsForMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.sortByStart"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.sortByStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.saveCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.saveCurrentSettings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.statusUpdate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.statusUpdate</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.stop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateColorLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateColorLabel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateDeterminedParameters"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateDeterminedParameters</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateEstimatedParameter"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateEstimatedParameter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateFirstParameter"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateFirstParameter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateMeasurement</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateStatusLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateStatusLabel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.updateTauValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.updateTauValues</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stringValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.stringValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.threadCreated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.threadCreated</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -506,6 +409,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.noMeasurementsMessage()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.pointSignal</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.run()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.staticMetaObject</span></code></a></li>
@@ -600,7 +504,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

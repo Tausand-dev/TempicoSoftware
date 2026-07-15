@@ -44,5 +44,7 @@ latex_elements = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
+latex_engine = 'xelatex'
+latex_use_xindy = False
 html_static_path = ['_static']
 

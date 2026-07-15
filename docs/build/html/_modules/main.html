@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main &mdash; Tempico Software 1.3.0 documentation</title>
+  <title>main &mdash; Tempico Software 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3d533f9b"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=0218eca2"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
@@ -43,9 +43,18 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../StartStopLogic.html">StartStopLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ThreadG2.html">ThreadG2 module</a></li>
 </ul>
 
         </div>
@@ -91,14 +100,20 @@
 <span class="kn">from</span> <span class="nn">Utils.createsavefile</span> <span class="kn">import</span> <span class="n">createsavefile</span> <span class="k">as</span> <span class="n">savefile</span>
 <span class="kn">from</span> <span class="nn">Views.ui_settings</span> <span class="kn">import</span> <span class="n">Ui_settings</span>
 <span class="kn">from</span> <span class="nn">Views.uiParametersDialog</span> <span class="kn">import</span> <span class="n">UiParameters</span>
+<span class="kn">from</span> <span class="nn">Utils.generatorSettingsDialog</span> <span class="kn">import</span> <span class="n">Ui_Generator</span>
 <span class="kn">from</span> <span class="nn">Utils.ParametersDialog</span> <span class="kn">import</span> <span class="n">CountParameters</span>
 <span class="kn">from</span> <span class="nn">Logic.StartStopLogic</span> <span class="kn">import</span> <span class="n">StartStopLogic</span>
 <span class="kn">from</span> <span class="nn">Utils.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Utils.helpDialog</span> <span class="kn">import</span> <span class="n">HelpDialog</span>
+<span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">Views.ui_LifeTimemeasurement</span> <span class="kn">import</span> <span class="n">UiLifeTime</span>
 <span class="kn">from</span> <span class="nn">Logic.LifeTimeLogic</span> <span class="kn">import</span> <span class="n">LifeTimeLogic</span>
 <span class="kn">from</span> <span class="nn">Logic.CountsEstimatedLogic</span> <span class="kn">import</span> <span class="n">CountEstimatedLogic</span>
 <span class="kn">from</span> <span class="nn">Logic.TimeStampLogic</span> <span class="kn">import</span> <span class="n">TimeStampLogic</span>
+<span class="kn">from</span> <span class="nn">Logic.G2Logic</span> <span class="kn">import</span> <span class="n">G2Logic</span>
 <span class="kn">from</span> <span class="nn">Views.ui_DialogFolderPrefixSettings</span> <span class="kn">import</span> <span class="n">Ui_DialogFolderPrefix</span>
+<span class="kn">from</span> <span class="nn">Views.ui_FCSMeasurement</span> <span class="kn">import</span> <span class="n">Ui_FCSMeasurement</span>
+<span class="kn">from</span> <span class="nn">Logic.FCSLogic</span> <span class="kn">import</span> <span class="n">FCSLogic</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="c1">#from qt_material import apply_stylesheet</span>
@@ -119,24 +134,33 @@
 <span class="sd">    :type parent: QWidget, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the splash screen window and starts the transition timer.</span>
+
+<span class="sd">        Sets a fixed window size, loads and displays the banner image inside a</span>
+<span class="sd">        `QLabel`, and configures a single-shot `QTimer` that, after a short</span>
+<span class="sd">        delay, triggers the transition to the main application window.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Splash Screen&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 
 
-        <span class="c1"># Crear una etiqueta para mostrar la imagen</span>
+        <span class="c1"># Label used to display the banner image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_label</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 
-        <span class="c1"># Cargar la imagen</span>
-        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">BANNER</span><span class="p">)</span>  <span class="c1"># Ajusta la ruta de tu imagen</span>
+        <span class="c1"># Load the banner image</span>
+        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">BANNER</span><span class="p">)</span>  <span class="c1"># Adjust the image path if needed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_label</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
 
-        <span class="c1"># Mostrar la ventana principal después de 3 segundos</span>
+        <span class="c1"># Show the main window after a short delay</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setSingleShot</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">show_main_window</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Tiempo en milisegundos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Time in milliseconds</span>
 
 <div class="viewcode-block" id="SplashScreen.show_main_window"><a class="viewcode-back" href="../main.html#main.SplashScreen.show_main_window">[docs]</a>    <span class="k">def</span> <span class="nf">show_main_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -150,7 +174,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span></div></div>
 
 <div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../main.html#main.MainWindow">[docs]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -170,6 +195,24 @@
 <span class="sd">    :type args: tuple</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the main window: geometry, menu bar, actions, and internal state.</span>
+
+<span class="sd">        Creates the default save folder, sizes and centers the window based on</span>
+<span class="sd">        the primary screen resolution, sets the window icon, and initializes</span>
+<span class="sd">        the sentinels and cached device-configuration variables (average</span>
+<span class="sd">        cycles, mode, number of stops, edge type, and stop mask per channel)</span>
+<span class="sd">        used later when a measurement tab is opened. It also builds the menu</span>
+<span class="sd">        bar (&quot;Settings&quot;, &quot;About&quot;, &quot;Help&quot;) and connects each menu action to its</span>
+<span class="sd">        corresponding slot, and configures the system tray icon on Linux or</span>
+<span class="sd">        the taskbar app id on Windows.</span>
+
+<span class="sd">        :param parent: The parent widget (optional).</span>
+<span class="sd">        :param args: Additional positional arguments (unused).</span>
+<span class="sd">        :type parent: QWidget, optional</span>
+<span class="sd">        :type args: tuple</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="c1">#------Window parameters---------#</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span><span class="o">=</span><span class="n">savefile</span><span class="p">()</span>
@@ -189,8 +232,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manageConection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">=</span><span class="n">QTimer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manageConection</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="o">=</span><span class="kc">False</span>
         <span class="c1"># save old settings state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">averageCycleChannelA</span><span class="o">=</span> <span class="mi">0</span>
@@ -221,6 +264,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">openSettings</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openGeneralSettings</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openPrefixSettings</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">False</span>
         <span class="c1">## general settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="mi">0</span>
@@ -237,11 +281,16 @@
 
         <span class="c1">#------Menu bar-------------#</span>
         <span class="n">menu_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menuBar</span><span class="p">()</span>
+        <span class="n">menu_bar</span><span class="o">.</span><span class="n">setNativeMenuBar</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="c1">#file_menu = menu_bar.addMenu(&quot;File&quot;)</span>
         <span class="n">settings_menu</span> <span class="o">=</span> <span class="n">menu_bar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">)</span>
         <span class="c1">#help_menu = menu_bar.addMenu(&quot;Help&quot;)</span>
         <span class="n">about_menu</span> <span class="o">=</span> <span class="n">menu_bar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s2">&quot;About&quot;</span><span class="p">)</span>
         <span class="c1">#Parameters_menu</span>
+
+        <span class="n">help_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Help&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">help_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_help</span><span class="p">)</span>
+        <span class="n">menu_bar</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">help_action</span><span class="p">)</span>
 
 
 
@@ -264,6 +313,12 @@
         <span class="n">folder_prefix_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;File path&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">settings_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">folder_prefix_settings_action</span><span class="p">)</span>
         <span class="n">folder_prefix_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folderPrefixClicked</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Signal generator&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">settings_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generatorClicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        
         <span class="n">general_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">general_settings_clicked</span><span class="p">)</span>
         <span class="n">about_settings_action</span><span class="o">=</span><span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;About Tempico Software&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">about_settings_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">about_settings</span><span class="p">)</span>
@@ -278,11 +333,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab3</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab4</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab5</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab6</span><span class="o">=</span><span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span><span class="p">,</span><span class="s2">&quot;Start-stop histogram&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="p">,</span><span class="s2">&quot;Lifetime&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab3</span><span class="p">,</span><span class="s2">&quot;Counts estimation&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab4</span><span class="p">,</span><span class="s2">&quot;Time stamping&quot;</span><span class="p">)</span>
-        <span class="c1">#self.tabs.addTab(self.tab3,&quot;g2 Measurement&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span><span class="p">,</span><span class="s2">&quot;Counts estimation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab3</span><span class="p">,</span><span class="s2">&quot;Time stamping&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab4</span><span class="p">,</span><span class="s2">&quot;Lifetime&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab5</span><span class="p">,</span><span class="s2">&quot;Autocorrelation (FCS)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab6</span><span class="p">,</span><span class="s2">&quot;g2 (HBT)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">700</span><span class="p">)</span>
         <span class="c1"># Crear un QVBoxLayout para agregar el QTabWidget</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
@@ -319,6 +377,15 @@
         <span class="c1">#------Time Stamping Graphic class---------#</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">=</span><span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#------FCS Graphic class---------#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcs_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#------g2 Graphic class---------#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g2_init_sentinel</span><span class="o">=</span><span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_previous_tab_index</span> <span class="o">=</span> <span class="mi">0</span>     
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span> <span class="o">=</span> <span class="p">[]</span>
         
 
         <span class="c1">#------Layout for the main window---------#</span>
@@ -332,10 +399,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sentinel4</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentinel5</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentinel6</span><span class="o">=</span><span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clicked_tabs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">open_dialog</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_dialog</span><span class="p">)</span>
 
 
     <span class="c1">#-----Functions for construc every Qtab--------#</span>
@@ -357,24 +425,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinel1</span><span class="o">=</span><span class="mi">1</span></div>
 
-<div class="viewcode-block" id="MainWindow.construct_lifetime"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_lifetime">[docs]</a>    <span class="k">def</span> <span class="nf">construct_lifetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructs the Lifetime Measurements window.</span>
-
-<span class="sd">        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates</span>
-<span class="sd">        an instance of the `UiLifeTime` class and sets up the UI using the given parent.</span>
-
-<span class="sd">        It does not return a value.</span>
-
-<span class="sd">        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.</span>
-<span class="sd">        :type parent: QWidget</span>
-<span class="sd">        :returns: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span> <span class="o">=</span> <span class="n">UiLifeTime</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">=</span><span class="mi">1</span></div>
-
 <div class="viewcode-block" id="MainWindow.construct_counts_estimated"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_counts_estimated">[docs]</a>    <span class="k">def</span> <span class="nf">construct_counts_estimated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructs the Counts Estimated window.</span>
@@ -389,10 +439,10 @@
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#TO DO Build Documentation</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span> <span class="o">=</span> <span class="n">Ui_CountsEstimated</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">=</span><span class="mi">1</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel2</span><span class="o">=</span><span class="mi">1</span></div>
     
     
 <div class="viewcode-block" id="MainWindow.construct_time_stamping"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_time_stamping">[docs]</a>    <span class="k">def</span> <span class="nf">construct_time_stamping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
@@ -409,10 +459,45 @@
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#TO DO Build Documentation</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel4</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiTimeStamping</span> <span class="o">=</span> <span class="n">Ui_TimeStamping</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiTimeStamping</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">=</span><span class="mi">1</span></div>
+<div class="viewcode-block" id="MainWindow.construct_lifetime"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_lifetime">[docs]</a>    <span class="k">def</span> <span class="nf">construct_lifetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs the Lifetime Measurements window.</span>
+
+<span class="sd">        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates</span>
+<span class="sd">        an instance of the `UiLifeTime` class and sets up the UI using the given parent.</span>
+
+<span class="sd">        It does not return a value.</span>
+
+<span class="sd">        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.</span>
+<span class="sd">        :type parent: QWidget</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel4</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span> <span class="o">=</span> <span class="n">UiLifeTime</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sentinel4</span><span class="o">=</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="MainWindow.construct_fcs"><a class="viewcode-back" href="../main.html#main.MainWindow.construct_fcs">[docs]</a>    <span class="k">def</span> <span class="nf">construct_fcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs the FCS (Fluorescence Correlation Spectroscopy) window.</span>
+
+<span class="sd">        This function takes a ``QTabWidget`` parent, and if the sentinel is not set,</span>
+<span class="sd">        it creates an instance of ``Ui_FCSMeasurement`` and sets up the UI using</span>
+<span class="sd">        the given parent. It ensures the UI is initialized only once by checking</span>
+<span class="sd">        the ``sentinel5`` flag.</span>
+
+<span class="sd">        :param parent: The parent widget (typically a ``QTabWidget``) for the FCS window.</span>
+<span class="sd">        :type parent: QWidget</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel5</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span> <span class="o">=</span> <span class="n">Ui_FCSMeasurement</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel5</span><span class="o">=</span><span class="mi">1</span></div>
 
 
 
@@ -429,10 +514,10 @@
 <span class="sd">        :type parent: QWidget</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentinel6</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span> <span class="o">=</span> <span class="n">Ui_G2</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel3</span><span class="o">=</span><span class="mi">1</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sentinel6</span><span class="o">=</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="MainWindow.open_dialog"><a class="viewcode-back" href="../main.html#main.MainWindow.open_dialog">[docs]</a>    <span class="k">def</span> <span class="nf">open_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -463,17 +548,24 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
+
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
-                    <span class="c1">#To do implement connect device</span>
+                    
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
-
+                    
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                    
+                    <span class="c1">#To do implement connect device</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
 
                     <span class="n">checkchannel1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Channel1Graph1</span>
                     <span class="n">checkchannel2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Channel4Graph1</span>
@@ -501,10 +593,10 @@
 
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">connectsentinel</span><span class="o">=</span><span class="mi">1</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">=</span><span class="n">StartStopLogic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Graph3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="n">checkchannel1</span><span class="p">,</span><span class="n">checkchannel2</span><span class="p">,</span><span class="n">checkchannel3</span><span class="p">,</span><span class="n">checkchannel4</span><span class="p">,</span><span class="n">startbutton</span><span class="p">,</span><span class="n">stopbutton</span><span class="p">,</span><span class="n">savebutton</span><span class="p">,</span><span class="n">save_graph_1</span><span class="p">,</span><span class="n">clear_channel_A</span><span class="p">,</span><span class="n">clear_channel_B</span><span class="p">,</span><span class="n">clear_channel_C</span><span class="p">,</span><span class="n">clear_channel_D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">valueStatusLabel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pointLabel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">=</span><span class="n">StartStopLogic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Graph3</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="n">checkchannel1</span><span class="p">,</span><span class="n">checkchannel2</span><span class="p">,</span><span class="n">checkchannel3</span><span class="p">,</span><span class="n">checkchannel4</span><span class="p">,</span><span class="n">startbutton</span><span class="p">,</span><span class="n">stopbutton</span><span class="p">,</span><span class="n">savebutton</span><span class="p">,</span><span class="n">save_graph_1</span><span class="p">,</span><span class="n">clear_channel_A</span><span class="p">,</span><span class="n">clear_channel_B</span><span class="p">,</span><span class="n">clear_channel_C</span><span class="p">,</span><span class="n">clear_channel_D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">valueStatusLabel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">pointLabel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">)</span>
 
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
                     <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                     <span class="n">msg_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.&quot;</span><span class="p">)</span>
                     <span class="n">msg_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span>
@@ -522,18 +614,22 @@
                         <span class="n">openSentinel</span><span class="o">=</span><span class="kc">False</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
                             <span class="n">openSentinel</span><span class="o">=</span><span class="kc">True</span>
                         <span class="k">except</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                        
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">show_graphic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -551,18 +647,23 @@
             <span class="n">openSentinel</span><span class="o">=</span><span class="kc">False</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getVersionParameters</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
                 <span class="n">openSentinel</span><span class="o">=</span><span class="kc">True</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectDevice</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+            
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">openSentinel</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">connectedDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
@@ -577,21 +678,23 @@
 <span class="sd">        It does not take any parameters and does not return a value.</span>
 <span class="sd">        :returns: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;grafico&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">hide_graphic2</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">disconnectDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span></div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span></div>
 
 
 
@@ -609,46 +712,16 @@
 <span class="sd">          It does not take any parameters and does not return a value.</span>
 <span class="sd">          :returns: None</span>
 <span class="sd">          &quot;&quot;&quot;</span>
+          
           <span class="n">valor_padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tabs</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_previous_tab_index</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">valor_padre</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>        
+              <span class="bp">self</span><span class="o">.</span><span class="n">_restore_generator_settings</span><span class="p">()</span>        
           <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span>
           <span class="k">if</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
               <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab1</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">construct_start_stop_histogram</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
           <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-              <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">construct_lifetime</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
-              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
-                  <span class="c1">#Get the data to create the logic class for LifeTime measurement</span>
-                  <span class="n">comboBoxStartChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startChannelComboBox</span>
-                  <span class="n">comboBoxStopChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopChannelComboBox</span>
-                  <span class="n">graphicsFrame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">graphicFrame</span>
-                  <span class="n">startButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startButton</span>
-                  <span class="n">stopButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopButton</span>
-                  <span class="n">clearButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">clearButton</span>
-                  <span class="n">saveDataButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">saveDataFileButton</span>
-                  <span class="n">savePlotButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">savePlotButton</span>
-                  <span class="n">initialParametersButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">buttonParameterLabel</span>
-                  <span class="n">statusLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">statusValue</span>
-                  <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">drawPointLabel</span>
-                  <span class="n">comboBoxBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">binWidthComboBox</span>
-                  <span class="n">spinBoxNumberMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span>
-                  <span class="n">totalTime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStopsValue</span>
-                  <span class="n">totalMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalMeasurementsValue</span>
-                  <span class="n">totalStarts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStartsValue</span>
-                  <span class="n">applyButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">applyButtton</span>
-                  <span class="n">functionComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">functionComboBox</span>
-                  <span class="n">parametersTable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">parametersTable</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">=</span><span class="n">parametersTable</span>
-                  <span class="n">timeRange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">timeRangeValue</span>
-                  <span class="n">numberBinsComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberBinsComboBox</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="n">LifeTimeLogic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
-                                               <span class="n">clearButton</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">savePlotButton</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">comboBoxBinWidth</span><span class="p">,</span><span class="n">numberBinsComboBox</span><span class="p">,</span><span class="n">functionComboBox</span><span class="p">,</span>
-                                               <span class="n">spinBoxNumberMeasurements</span><span class="p">,</span><span class="n">totalMeasurements</span><span class="p">,</span><span class="n">totalStarts</span><span class="p">,</span><span class="n">totalTime</span><span class="p">,</span><span class="n">timeRange</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
-                                               <span class="n">applyButton</span><span class="p">,</span><span class="n">parametersTable</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span>
-                  <span class="c1">#If this sentinel dont have any use DELETE</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTime_init_sentinel</span><span class="o">=</span><span class="mi">1</span>
-          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
-            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab3</span>
+            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">construct_counts_estimated</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
                 <span class="c1">#Get the data to create the logic class for Counts Estimated measurement</span>
@@ -690,9 +763,9 @@
                 <span class="n">detachedLabelCheckBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">labelCheckBox</span>
                 <span class="n">helpButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiCountsEstimated</span><span class="o">.</span><span class="n">helpButton</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">=</span><span class="n">CountEstimatedLogic</span><span class="p">(</span><span class="n">channelACheckBox</span><span class="p">,</span><span class="n">channelBCheckBox</span><span class="p">,</span><span class="n">channelCCheckBox</span><span class="p">,</span><span class="n">channelDCheckBox</span><span class="p">,</span><span class="n">startButon</span><span class="p">,</span><span class="n">stopButon</span><span class="p">,</span><span class="n">mergeRadioButton</span><span class="p">,</span><span class="n">separateRadioButton</span><span class="p">,</span> <span class="n">deatachedRadioButton</span><span class="p">,</span><span class="n">timeRangeComboBox</span><span class="p">,</span><span class="n">clearButtonChannelA</span><span class="p">,</span><span class="n">clearButtonChannelB</span><span class="p">,</span><span class="n">clearButtonChannelC</span><span class="p">,</span><span class="n">clearButtonChannelD</span>
-                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="n">detachedLabelCheckBox</span><span class="p">,</span><span class="n">helpButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span>
-          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
-            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab4</span>
+                                                                <span class="p">,</span><span class="n">saveDataButtonCounts</span><span class="p">,</span><span class="n">savePlotButtonCounts</span><span class="p">,</span><span class="n">channelACountValue</span><span class="p">,</span><span class="n">channelBCountValue</span><span class="p">,</span><span class="n">channelCCountValue</span><span class="p">,</span><span class="n">channelDCountValue</span><span class="p">,</span> <span class="n">channelACountUncertainty</span><span class="p">,</span><span class="n">channelBCountUncertainty</span><span class="p">,</span><span class="n">channelCCountUncertainty</span><span class="p">,</span><span class="n">channelDCountUncertainty</span><span class="p">,</span><span class="n">tableCounts</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">channelAFrameLabel</span><span class="p">,</span><span class="n">channelBFrameLabel</span><span class="p">,</span><span class="n">channelCFrameLabel</span><span class="p">,</span><span class="n">channelDFrameLabel</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">deatachedCheckBox</span><span class="p">,</span><span class="n">detachedLabelCheckBox</span><span class="p">,</span><span class="n">helpButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">)</span>
+          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab3</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">construct_time_stamping</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>  
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
                 <span class="n">enableCheckBoxA</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiTimeStamping</span><span class="o">.</span><span class="n">enableChannelACheckBox</span>
@@ -738,8 +811,180 @@
                                                      <span class="n">pauseScheduleButton</span><span class="p">,</span> <span class="n">stopScheduleButton</span><span class="p">,</span> <span class="n">startLimitedButton</span><span class="p">,</span> <span class="n">pauseLimitedButton</span><span class="p">,</span> <span class="n">stopLimitedButton</span><span class="p">,</span> <span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">finishDate</span><span class="p">,</span> <span class="n">finishTime</span><span class="p">,</span>
                                                      <span class="n">numberMeasurementsSpinBox</span><span class="p">,</span><span class="n">showTableCheckBox</span><span class="p">,</span> <span class="n">measurementLabelA</span><span class="p">,</span> <span class="n">measurementLabelB</span><span class="p">,</span> <span class="n">measurementLabelC</span><span class="p">,</span> <span class="n">measurementLabelD</span><span class="p">,</span><span class="n">valueMeasurementA</span><span class="p">,</span><span class="n">valueMeasurementB</span><span class="p">,</span>
                                                      <span class="n">valueMeasurementC</span><span class="p">,</span> <span class="n">valueMeasurementD</span><span class="p">,</span> <span class="n">valueTotalMeasurement</span><span class="p">,</span> <span class="n">tableTimeStamp</span><span class="p">,</span><span class="n">statusLabelTimeStamp</span><span class="p">,</span><span class="n">colorLabelTimeStamp</span><span class="p">,</span> <span class="n">saveDataComplete</span><span class="p">,</span> <span class="n">tabNormalMeasurement</span><span class="p">,</span>
-                                                     <span class="n">tabScheduleMeasurement</span><span class="p">,</span> <span class="n">tabLimitedMeasurement</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">tabsTimeStamp</span><span class="p">,</span><span class="n">autoSaveComboBox</span><span class="p">,</span> <span class="n">helpSaveButton</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="p">)</span></div>
-                
+                                                     <span class="n">tabScheduleMeasurement</span><span class="p">,</span> <span class="n">tabLimitedMeasurement</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">tabsTimeStamp</span><span class="p">,</span><span class="n">autoSaveComboBox</span><span class="p">,</span> <span class="n">helpSaveButton</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">)</span>
+          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+              <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab4</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">construct_lifetime</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
+              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+                  <span class="c1">#Get the data to create the logic class for LifeTime measurement</span>
+                  <span class="n">comboBoxStartChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startChannelComboBox</span>
+                  <span class="n">comboBoxStopChannel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopChannelComboBox</span>
+                  <span class="n">graphicsFrame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">graphicFrame</span>
+                  <span class="n">startButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">startButton</span>
+                  <span class="n">stopButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">stopButton</span>
+                  <span class="n">clearButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">clearButton</span>
+                  <span class="n">saveDataButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">saveDataFileButton</span>
+                  <span class="n">savePlotButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">savePlotButton</span>
+                  <span class="n">initialParametersButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">buttonParameterLabel</span>
+                  <span class="n">statusLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">statusValue</span>
+                  <span class="n">pointLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">drawPointLabel</span>
+                  <span class="n">comboBoxBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">binWidthComboBox</span>
+                  <span class="n">spinBoxNumberMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberMeasurementsSpinBox</span>
+                  <span class="n">totalTime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStopsValue</span>
+                  <span class="n">totalMeasurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalMeasurementsValue</span>
+                  <span class="n">totalStarts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">totalStartsValue</span>
+                  <span class="n">applyButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">applyButtton</span>
+                  <span class="n">functionComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">functionComboBox</span>
+                  <span class="n">parametersTable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">parametersTable</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">parametersTable</span><span class="o">=</span><span class="n">parametersTable</span>
+                  <span class="n">timeRange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">timeRangeValue</span>
+                  <span class="n">numberBinsComboBox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiLifeTime</span><span class="o">.</span><span class="n">numberBinsComboBox</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">=</span><span class="n">LifeTimeLogic</span><span class="p">(</span><span class="n">comboBoxStartChannel</span><span class="p">,</span> <span class="n">comboBoxStopChannel</span><span class="p">,</span><span class="n">graphicsFrame</span><span class="p">,</span><span class="n">startButton</span><span class="p">,</span><span class="n">stopButton</span><span class="p">,</span><span class="n">initialParametersButton</span><span class="p">,</span>
+                                               <span class="n">clearButton</span><span class="p">,</span><span class="n">saveDataButton</span><span class="p">,</span><span class="n">savePlotButton</span><span class="p">,</span><span class="n">statusLabel</span><span class="p">,</span><span class="n">pointLabel</span><span class="p">,</span><span class="n">comboBoxBinWidth</span><span class="p">,</span><span class="n">numberBinsComboBox</span><span class="p">,</span><span class="n">functionComboBox</span><span class="p">,</span>
+                                               <span class="n">spinBoxNumberMeasurements</span><span class="p">,</span><span class="n">totalMeasurements</span><span class="p">,</span><span class="n">totalStarts</span><span class="p">,</span><span class="n">totalTime</span><span class="p">,</span><span class="n">timeRange</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
+                                               <span class="n">applyButton</span><span class="p">,</span><span class="n">parametersTable</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">)</span>
+                  <span class="c1">#If this sentinel dont have any use DELETE</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">LifeTime_init_sentinel</span><span class="o">=</span><span class="mi">1</span>
+          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">construct_fcs</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+                <span class="n">graphicFrame</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">graphicFrame</span>
+                <span class="n">startButton</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">startButton</span>
+                <span class="n">stopButton</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">stopButton</span>
+                <span class="n">saveDataButton</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">saveDataButton</span>
+                <span class="n">savePlotButton</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">savePlotButton</span>
+                <span class="n">clearButton</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">clearButton</span>
+                <span class="n">valueStatusLabel</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">valueStatusLabel</span>
+                <span class="n">pointLabel</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">pointLabel</span>
+                <span class="c1"># tau_0: read from spinbox in µs, convert to picoseconds</span>
+                <span class="n">tau_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">tau0SpinBox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1_000_000</span>  <span class="c1"># µs → ps</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">=</span><span class="n">FCSLogic</span><span class="p">(</span>
+                    <span class="n">graphicFrame</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
+                    <span class="n">startButton</span><span class="p">,</span>
+                    <span class="n">stopButton</span><span class="p">,</span>
+                    <span class="n">saveDataButton</span><span class="p">,</span>
+                    <span class="n">savePlotButton</span><span class="p">,</span>
+                    <span class="n">clearButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="n">valueStatusLabel</span><span class="p">,</span>
+                    <span class="n">pointLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">callsLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">eventsLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">elapsedLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitModelCombo</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitEquationLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitResultLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitResultsFrame</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitTable</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitOffsetCheckBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">stopChannelComboBox</span><span class="p">,</span>
+                    <span class="n">fitResetParamsButton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">fitResetParamsButton</span><span class="p">,</span>
+                    <span class="n">tau_0</span><span class="o">=</span><span class="n">tau_0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">set_parameter_widgets</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">tau0SpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">durationSpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uiFCS</span><span class="o">.</span><span class="n">indefiniteCheckBox</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_fcs_generator_settings</span><span class="p">()</span>   
+          <span class="k">elif</span> <span class="n">valor_padre</span><span class="o">==</span><span class="mi">5</span><span class="p">:</span>
+            <span class="n">padre</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab6</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">construct_g2</span><span class="p">(</span><span class="n">padre</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># ── Collect widget references from the new Ui_G2 layout ──────────</span>
+                <span class="n">graphicFrameg2</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">graphicFrame</span>
+                <span class="n">startButtong2</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">startButton</span>
+                <span class="n">stopButtong2</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">stopButton</span>
+                <span class="n">saveDataButtong2</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">saveDataButton</span>
+                <span class="n">savePlotButtong2</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">savePlotButton</span>
+                <span class="n">clearButtong2</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">clearButton</span>
+                <span class="n">valueStatusLabel</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">valueStatusLabel</span>
+                <span class="n">pointLabel</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">pointLabel</span>
+                <span class="n">eventsLabel</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">eventsLabel</span>
+                <span class="n">elapsedLabel</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">elapsedLabel</span>
+                <span class="n">g2ZeroLabel</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">g2ZeroLabel</span>
+                <span class="n">countEstimationLabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">countEstimationLabel</span>
+                <span class="n">stopChannelComboBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">stopChannelComboBox</span>
+                <span class="n">countEstimationCheckBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">countEstimationEnableCheckBox</span>
+
+                <span class="c1"># ── Construct G2Logic (mirrors FCSLogic constructor) ─────────</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span> <span class="o">=</span> <span class="n">G2Logic</span><span class="p">(</span>
+                    <span class="n">graphicFrameg2</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">disconnectButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span>
+                    <span class="n">startButtong2</span><span class="p">,</span>
+                    <span class="n">stopButtong2</span><span class="p">,</span>
+                    <span class="n">saveDataButtong2</span><span class="p">,</span>
+                    <span class="n">savePlotButtong2</span><span class="p">,</span>
+                    <span class="n">clearButtong2</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="n">valueStatusLabel</span><span class="p">,</span>
+                    <span class="n">pointLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="p">,</span>
+                    <span class="n">eventsLabel</span><span class="p">,</span>
+                    <span class="n">elapsedLabel</span><span class="p">,</span>
+                    <span class="n">g2ZeroLabel</span><span class="p">,</span>
+                    <span class="n">countEstimationLabel</span><span class="p">,</span>
+                    <span class="n">stopChannelComboBox</span><span class="p">,</span>
+                    <span class="n">countEstimationCheckBox</span><span class="o">=</span><span class="n">countEstimationCheckBox</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># Provide parameter widgets so G2Logic reads them at start time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">set_parameter_widgets</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">binWidthSpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">windowSpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">durationSpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">indefiniteCheckBox</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># Provide cursor widgets (τ spinbox + g²(τ) label)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">set_cursor_widgets</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">tauQuerySpinBox</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">g2CursorLabel</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># Provide fit widgets so G2Logic can connect and use them</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">set_fit_widgets</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitButton</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitModelCombo</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitEquationLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitResultLabel</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitResultsFrame</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitTable</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">fitResetParamsButton</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Keep the plot&#39;s X-axis limits in lockstep with &quot;Window</span>
+                <span class="c1"># (±)&quot;: same value the user types in windowSpinBox, on</span>
+                <span class="c1"># both sides of zero. Re-applied every time Window changes.</span>
+                <span class="k">def</span> <span class="nf">_sync_plot_x_range</span><span class="p">(</span><span class="n">half_window_ns</span><span class="p">):</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                    Applies the &quot;Window (±)&quot; value as symmetric plot X-axis limits.</span>
+
+<span class="sd">                    :param half_window_ns: Half-window value, in nanoseconds, taken</span>
+<span class="sd">                        from ``windowSpinBox``. The plot is set to range from</span>
+<span class="sd">                        ``-half_window_ns`` to ``+half_window_ns``.</span>
+<span class="sd">                    :return: None</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">setXRange</span><span class="p">(</span>
+                        <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">half_window_ns</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">half_window_ns</span><span class="p">),</span>
+                        <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">windowSpinBox</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">_sync_plot_x_range</span><span class="p">)</span>
+                <span class="n">_sync_plot_x_range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">windowSpinBox</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+
+                <span class="c1"># When the UI resets the cursor to 0 ns (triggered by a</span>
+                <span class="c1"># Window change — see ui_g2measurement.py), also refresh</span>
+                <span class="c1"># the cursor line / g²(τ) readout on the plot, since that</span>
+                <span class="c1"># reset uses blockSignals() and skips the normal</span>
+                <span class="c1"># valueChanged → _query_tau connection.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uig2</span><span class="o">.</span><span class="n">_on_tau_cursor_reset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">_query_tau</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_previous_tab_index</span> <span class="o">=</span> <span class="n">valor_padre</span>      </div>
+            
 
         <span class="c1">#   elif valor_padre==1:</span>
 
@@ -768,26 +1013,6 @@
         <span class="c1">#Important when g2 is unified with LifeTime CHANGE THE INDEX TO 2</span>
 
 
-<span class="c1">#The g2 functions are not use for the versions 1.1 comment for future versions</span>
-
-<div class="viewcode-block" id="MainWindow.Helpg2Button"><a class="viewcode-back" href="../main.html#main.MainWindow.Helpg2Button">[docs]</a>    <span class="k">def</span> <span class="nf">Helpg2Button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
-        <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;g2 measurement information&quot;</span><span class="p">)</span>
-        <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-        <span class="n">custom_widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
-        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="n">custom_widget</span><span class="p">)</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="n">custom_widget</span><span class="p">)</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s1">&#39;Sources/Help.png&#39;</span><span class="p">)</span>
-
-        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">scaledToWidth</span><span class="p">(</span><span class="mi">700</span><span class="p">)</span>
-        <span class="n">label</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
-
-        <span class="n">message_box</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">custom_widget</span><span class="p">)</span>
-
-
-        <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
 
 
 
@@ -848,6 +1073,17 @@
             <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
     
 <div class="viewcode-block" id="MainWindow.folderPrefixClicked"><a class="viewcode-back" href="../main.html#main.MainWindow.folderPrefixClicked">[docs]</a>    <span class="k">def</span> <span class="nf">folderPrefixClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the folder/file-prefix settings dialog.</span>
+
+<span class="sd">        If no measurement is currently running, the dialog is opened in fully</span>
+<span class="sd">        editable mode. If a measurement is running, a warning message box is</span>
+<span class="sd">        shown first to inform the user that settings can only be read while a</span>
+<span class="sd">        measurement is in progress, and the dialog is then reopened in</span>
+<span class="sd">        read-only mode via `onlyReading()`.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">openPrefixSettings</span><span class="o">=</span><span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -870,9 +1106,76 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">onlyReading</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="MainWindow.generatorClicked"><a class="viewcode-back" href="../main.html#main.MainWindow.generatorClicked">[docs]</a>    <span class="k">def</span> <span class="nf">generatorClicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the signal-generator settings dialog for the connected device.</span>
+
+<span class="sd">        If no device is connected, an informational message box is shown</span>
+<span class="sd">        instead. If a device is connected and no measurement is running, the</span>
+<span class="sd">        dialog opens fully editable. If a measurement is running, a warning</span>
+<span class="sd">        is displayed and the dialog is reopened in read-only mode, restoring</span>
+<span class="sd">        the previously cached generator settings (`self.generatorSettings`)</span>
+<span class="sd">        if available.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span> <span class="o">=</span> <span class="n">Ui_Generator</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">getGeneratorSettings</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Running measurement&quot;</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;The measurement is running, the settings only can be read. Changes cannot be made while a measurement is in progress.&quot;</span><span class="p">)</span>
+                <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="o">=</span><span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span> <span class="o">=</span> <span class="n">Ui_Generator</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">setConfigOnlyRead</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;No connected device&quot;</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;No connected device was found&quot;</span><span class="p">)</span>
+            <span class="n">pixmap</span><span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">ICON_LOCATION</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setIconPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+            <span class="n">message_box</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
             
         
+<div class="viewcode-block" id="MainWindow.getVersionParameters"><a class="viewcode-back" href="../main.html#main.MainWindow.getVersionParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getVersionParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and caches device-specific identification parameters.</span>
 
+<span class="sd">        Retrieves the connected device&#39;s model identifier and overflow</span>
+<span class="sd">        parameter and stores them in `constants.VERSION_PARAMETER` and</span>
+<span class="sd">        `constants.OVERFLOW_PARAMETER` respectively. The signal-generator</span>
+<span class="sd">        settings menu action is shown only for &quot;TP12&quot; model devices and</span>
+<span class="sd">        hidden otherwise.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getModelIdn</span><span class="p">()</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getOverflowParameter</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_settings_action</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+    
+    
 <div class="viewcode-block" id="MainWindow.enableSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.enableSettings">[docs]</a>    <span class="k">def</span> <span class="nf">enableSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-enables the device and general settings dialogs if they are open.</span>
@@ -893,7 +1196,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">settings_windows</span><span class="o">.</span><span class="n">enableSettings</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openPrefixSettings</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefixFolderDialog</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">enableEditing</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uiFolderPrefix</span><span class="o">.</span><span class="n">enableEditing</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openGenerator</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialog_generator</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings_generator</span><span class="o">.</span><span class="n">enableValues</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MainWindow.saveSettings"><a class="viewcode-back" href="../main.html#main.MainWindow.saveSettings">[docs]</a>    <span class="k">def</span> <span class="nf">saveSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -958,7 +1264,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">channel4</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">())</span>
             <span class="c1">#Get the threshold voltage</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numberRuns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">if</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getGeneratorFrequency</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generatorSettings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span></div>
+                
+                
+                
 
 
 
@@ -1031,17 +1351,43 @@
         <span class="n">settings_windows</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="n">settings_windows_dialog</span><span class="p">)</span>
         <span class="n">settings_windows_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="MainWindow.open_help"><a class="viewcode-back" href="../main.html#main.MainWindow.open_help">[docs]</a>    <span class="k">def</span> <span class="nf">open_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the application&#39;s help dialog.</span>
+
+<span class="sd">        Instantiates `HelpDialog` with this window as parent and displays it</span>
+<span class="sd">        modally.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">HelpDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+
 
 <span class="c1">#This function is not use for the Tempico Version 1.1</span>
 <span class="c1">#TO DO: Comment the function for a future version</span>
 <div class="viewcode-block" id="MainWindow.parameters_action"><a class="viewcode-back" href="../main.html#main.MainWindow.parameters_action">[docs]</a>    <span class="k">def</span> <span class="nf">parameters_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens the count-parameters measurement dialog.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">           Not used in Tempico Version 1.1. Kept for a possible future</span>
+<span class="sd">           version.</span>
+
+<span class="sd">        If a device is connected and no measurement is running, builds the</span>
+<span class="sd">        parameters dialog (`UiParameters`) together with its logic handler</span>
+<span class="sd">        (`CountParameters`), stopping the G2 connection timer beforehand if</span>
+<span class="sd">        the G2 tab is active. If a measurement is running, a warning message</span>
+<span class="sd">        box is shown instead and no dialog is created.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dialogParameters</span><span class="o">=</span><span class="n">QDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span> <span class="o">=</span> <span class="n">UiParameters</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialogParameters</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">timerStatus</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">timerConnection</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">parametersLogic</span><span class="o">=</span><span class="n">CountParameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">channelComboBox</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">measurementLabel</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">measuremetStatusLabel</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">informationMeasureLabel</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">startButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">uiParameter</span><span class="o">.</span><span class="n">stopButton</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dialogParameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
@@ -1129,9 +1475,13 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connectedTimer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span>
                 <span class="n">msg_box</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="n">msg_box</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connection with the device has been lost&quot;</span><span class="p">)</span>
@@ -1156,6 +1506,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">=</span><span class="kc">None</span></div>
@@ -1183,8 +1537,78 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentMeasurement</span><span class="o">=</span><span class="kc">False</span></div>
+    <span class="k">def</span> <span class="nf">_apply_fcs_generator_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the device&#39;s current generator configuration and forces FCS mode.</span>
+
+<span class="sd">        Only applies to &quot;TP12&quot; model devices; does nothing if no device is</span>
+<span class="sd">        connected or the connected device is not a TP12. Before making any</span>
+<span class="sd">        change, it caches the generator frequency and the start/stop source</span>
+<span class="sd">        of each of the four channels in `self._fcs_saved_generator_settings`</span>
+<span class="sd">        so they can be restored later by `_restore_generator_settings`. It</span>
+<span class="sd">        then sets the generator frequency to 2000 Hz and forces all channels</span>
+<span class="sd">        to use the internal start source, as required for FCS measurements.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+        <span class="k">if</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">VERSION_PARAMETER</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># Cache current generator settings before overwriting them</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getGeneratorFrequency</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setGeneratorFrequency</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setStartInternalSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_restore_generator_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Restores the generator configuration previously cached for FCS mode.</span>
+
+<span class="sd">        Reapplies the generator frequency and, for each of the four channels,</span>
+<span class="sd">        the previously saved start and stop source (internal or external)</span>
+<span class="sd">        stored in `self._fcs_saved_generator_settings` by</span>
+<span class="sd">        `_apply_fcs_generator_settings`. Does nothing if no device is</span>
+<span class="sd">        connected or if there are no cached settings to restore. The cache</span>
+<span class="sd">        is cleared after being applied.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setGeneratorFrequency</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">saved</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">saved</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">stop</span>  <span class="o">=</span> <span class="n">saved</span><span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="s2">&quot;INTERNAL&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setStartInternalSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setStartExternalSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stop</span> <span class="o">==</span> <span class="s2">&quot;INTERNAL&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setStopInternalSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conectedDevice</span><span class="o">.</span><span class="n">setStopExternalSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fcs_saved_generator_settings</span> <span class="o">=</span> <span class="p">[]</span>
     
 <div class="viewcode-block" id="MainWindow.resetSaveSentinelsAllWindows"><a class="viewcode-back" href="../main.html#main.MainWindow.resetSaveSentinelsAllWindows">[docs]</a>    <span class="k">def</span> <span class="nf">resetSaveSentinelsAllWindows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the save sentinels of every measurement tab that has been created.</span>
+
+<span class="sd">        Calls `resetSaveSentinels()` on each measurement logic instance</span>
+<span class="sd">        (Time Stamp, Counts Estimated, Lifetime, Start-Stop histogram, FCS,</span>
+<span class="sd">        and G2) that is not `None`, so each tab clears its internal flag</span>
+<span class="sd">        tracking whether data has already been saved.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGraphic</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">countsEstimatedGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
@@ -1192,7 +1616,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">LifeTimeGraphic</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grafico</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fcsGraphic</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">g2Graphic</span><span class="o">.</span><span class="n">resetSaveSentinels</span><span class="p">()</span></div></div>
         
 
 
@@ -1204,7 +1632,11 @@
 <span class="c1">#--------Execution Test----------#</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AA_EnableHighDpiScaling</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AA_UseHighDpiPixmaps</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">setStyle</span><span class="p">(</span><span class="s1">&#39;Fusion&#39;</span><span class="p">)</span>
     <span class="c1">#Amber theme</span>
     <span class="c1">#apply_stylesheet(app, theme=&#39;dark_amber.xml&#39;)</span>
     <span class="c1">#Amber purple</span>
@@ -1234,33 +1666,46 @@
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">splash_pix</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="n">desired_size</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">)</span>
     <span class="n">splash</span> <span class="o">=</span> <span class="n">QSplashScreen</span><span class="p">(</span><span class="n">splash_pix</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">)</span>
     <span class="n">splash</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">desired_size</span><span class="p">)</span>
-    <span class="c1"># Comprobar si estamos en Ubuntu</span>
-    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">!=</span> <span class="s1">&#39;linux&#39;</span><span class="p">:</span>  <span class="c1"># Si no estamos en Ubuntu, aplicar opacidad</span>
-        <span class="n">opaqueness</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>
-        <span class="n">splash</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="n">opaqueness</span><span class="p">)</span>
+    <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-        <span class="k">while</span> <span class="n">opaqueness</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">splash</span><span class="o">.</span><span class="n">setWindowOpacity</span><span class="p">(</span><span class="n">opaqueness</span><span class="p">)</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-            <span class="n">opaqueness</span> <span class="o">+=</span> <span class="n">step</span>
+    <span class="k">def</span> <span class="nf">show_main_window</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and shows the main window, then closes the splash screen.</span>
 
-        <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mostrar splash por 1 segundo</span>
-        <span class="n">splash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="sd">        Stores the created `MainWindow` instance in the module-level global</span>
+<span class="sd">        `window` variable so it is not garbage-collected once this function</span>
+<span class="sd">        returns.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">window</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
         <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">splash</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">splash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
-        <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># Show the main window after 1 second, without blocking the event loop</span>
+    <span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">show_main_window</span><span class="p">)</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
 
 <div class="viewcode-block" id="execProgram"><a class="viewcode-back" href="../main.html#main.execProgram">[docs]</a><span class="k">def</span> <span class="nf">execProgram</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Alternative application entry point with a fade-in splash screen.</span>
+
+<span class="sd">    Creates the `QApplication`, displays the splash screen and gradually</span>
+<span class="sd">    increases its opacity from 0 to 1 in fixed steps (a simple fade-in</span>
+<span class="sd">    effect), waits one additional second, then closes the splash screen and</span>
+<span class="sd">    shows the main window. Unlike the `if __name__ == &#39;__main__&#39;` block</span>
+<span class="sd">    above, this function blocks while animating the fade-in instead of using</span>
+<span class="sd">    a `QTimer`.</span>
+
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AA_EnableHighDpiScaling</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AA_UseHighDpiPixmaps</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">setStyle</span><span class="p">(</span><span class="s1">&#39;Fusion&#39;</span><span class="p">)</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="n">BANNER</span><span class="p">)</span>
     <span class="n">desired_size</span> <span class="o">=</span> <span class="n">QSize</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
     <span class="n">splash_pix</span> <span class="o">=</span> <span class="n">splash_pix</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="n">desired_size</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">KeepAspectRatio</span><span class="p">)</span>
@@ -1281,7 +1726,6 @@
     <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
     <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
-
 </pre></div>
 
            </div>
@@ -1291,7 +1735,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
