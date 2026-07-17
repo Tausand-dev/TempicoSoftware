@@ -66,28 +66,6 @@ After finishing a measurement, if the user desires, they can save the measured d
 
 If the user is not in the middle of a measurement, they will be able to disconnect the Tempico device and connect another if they desire. The data will not be lost if the device is disconnected; data is only lost if the user begins a new measurement.
 
-## Lifetime Window
-
-### Before Measurement
-
-Before measurement, the user can define the parameters they want to measure. These include selecting which channel will capture the start pulses and which channel will capture the stop pulses. The user is free to choose any channel; however, if they select a start channel different from the Start Channel, they must connect a signal that emits periodic pulses to capture the differences between the stops. Since the measurements are represented as a frequency histogram, the user can also decide the bin width and the number of bins to plot. These two factors will determine the maximum time range to be graphed. Additionally, the user can choose how many measurements to perform. It is important to note that the mode change has no effect, as the mode will adjust automatically according to the maximum time range.
-
-![Before measurement](./Sources/PreMeasurement.png)
-
-### During Measurement
-
-While the measurement is in progress, the user can monitor several parameters. The first is the total number of successful measurements, meaning those in which both a start and a stop were captured within the specified time range. Another parameter is the total number of start pulses, which indicates how many start pulses have been received, regardless of whether a stop was captured. The total measurement time is also displayed, measured by a timer that starts when the measurement begins. The user has a status bar that indicates the percentage of the measurement completed or whether any channel is not receiving pulses.
-
-![During measurement](./Sources/MientrasMedicion.png)
-
-### After Measurement
-
-After the measurement, the user can decide whether to save the image of the data or the raw data, which are saved by default in the Documents/TempicoSoftwareData directory. Additionally, the user can adjust the graph by specifying the fitting parameters. Four types of fitting are available: Exponential, Kohlrausch, Shifted Exponential, and Double Exponential. The fitting parameters are determined along with an R² value to assess the quality of the fit. If a fit was performed, the values are saved both in the graph's footer and alongside the raw data.
-
-![After measurement](./Sources/Postmeasurement.png)
-
-![Fit measurement](./Sources/AfterFit.png)
-
 ## Counts Estimated Window
 
 ### Before Measurement
@@ -121,25 +99,67 @@ After the measurement is completed, the data can be saved again in a different f
 
 ![After measurement Time Stamping window](./Sources/afterTimeStamping.png)
 
+## Lifetime Window
+
 ### Before Measurement
 
-Before starting the measurement, it is possible to configure key parameters such as the maximum acquisition time for the $g^{(2)}$ function, the coincidence window, and the stop channel. It is important to note that the $g^{(2)}$ measurement assumes a 50/50 beam splitter configuration. Additionally, the measurement mode can be selected between Manual, By Size, or Auto-Clear.
+Before measurement, the user can define the parameters they want to measure. These include selecting which channel will capture the start pulses and which channel will capture the stop pulses. The user is free to choose any channel; however, if they select a start channel different from the Start Channel, they must connect a signal that emits periodic pulses to capture the differences between the stops. Since the measurements are represented as a frequency histogram, the user can also decide the bin width and the number of bins to plot. These two factors will determine the maximum time range to be graphed. Additionally, the user can choose how many measurements to perform. It is important to note that the mode change has no effect, as the mode will adjust automatically according to the maximum time range.
+
+![Before measurement](./Sources/PreMeasurement.png)
+
+### During Measurement
+
+While the measurement is in progress, the user can monitor several parameters. The first is the total number of successful measurements, meaning those in which both a start and a stop were captured within the specified time range. Another parameter is the total number of start pulses, which indicates how many start pulses have been received, regardless of whether a stop was captured. The total measurement time is also displayed, measured by a timer that starts when the measurement begins. The user has a status bar that indicates the percentage of the measurement completed or whether any channel is not receiving pulses.
+
+![During measurement](./Sources/MientrasMedicion.png)
+
+### After Measurement
+
+After the measurement, the user can decide whether to save the image of the data or the raw data, which are saved by default in the Documents/TempicoSoftwareData directory. Additionally, the user can adjust the graph by specifying the fitting parameters. Four types of fitting are available: Exponential, Kohlrausch, Shifted Exponential, and Double Exponential. The fitting parameters are determined along with an R² value to assess the quality of the fit. If a fit was performed, the values are saved both in the graph's footer and alongside the raw data.
+
+![After measurement](./Sources/Postmeasurement.png)
+
+![Fit measurement](./Sources/AfterFit.png)
+
+## Autocorrelation Window
+
+### Before Measurement
+
+In the Autocorrelation (FCS) tab, the user can configure the correlator parameters before starting a measurement: the stop channel (A, B, C, or D), and the base bin width τ₀ in µs (from 1 µs up to 10,000,000 µs). The user can also choose either a fixed measurement duration in seconds (from 1 second up to 24 hours) or enable continuous measurement, which ignores the duration and keeps the correlator running until the user presses "Stop".
+
+![Before measurement](./Sources/beforeMeasureFCS.png)
+
+### During Measurement
+
+While the measurement is running, the stop channel, the bin width τ₀, the duration, and the continuous-measurement option are locked and cannot be changed. The autocorrelation curve G(τ) is plotted live against τ on a logarithmic time axis. A status panel reports the number of calls made to the device, the number of detected events, and the elapsed time, together with a status bar that shows a coloured dot (grey, green, yellow, or orange) and a short text describing the current state of the measurement. At any point the user can press "Clear" to reset the curve or "Stop" to end the measurement.
+
+![During measurement](./Sources/duringMeasureFCS.png)
+
+### After Measurement
+
+Once the measurement finishes, the user can save the data with the "Save Data File" button, choosing between txt, csv, or dat formats; two files are generated: one with the τ / G(τ) pairs of the autocorrelation curve, and another with the raw stop timestamps recorded during the acquisition. The "Save Plot" button exports the graph as png, tiff, or jpg. The user can also fit the curve to one of six correlation models: 3D Gaussian diffusion, Anomalous diffusion, Chemical relaxation, Diffusion with flow, Triplet state correction, or Two-component diffusion. Each model displays its equation together with a table listing an editable "Initial value" column and a read-only "Fit result" column; the "Auto" button restores the automatically suggested initial guesses, and a dedicated checkbox allows adding a G(∞) offset to the fit. If a fit was performed, its model, equation, and resulting parameters are saved alongside the exported data.
+
+![After measurement](./Sources/afterMeasureFCS.png)
+
+## G2 Window
+
+### Before Measurement
+
+In the g2 (HBT) tab, the user can configure the stop channel (A, B, C, or D), the histogram bin width in nanoseconds (from 0.1 ns up to 10,000 ns), and the coincidence window ± in nanoseconds (from 10 ns up to 100,000 ns), which sets the range of τ values displayed around zero. As in the Autocorrelation window, the user can choose a fixed measurement duration in seconds or enable continuous measurement to run until "Stop" is pressed. Optionally, the user can enable "Count Estimation" with a checkbox before starting the measurement, so a coincidence rate can be estimated and shown while measuring.
 
 ![Before measurement](./Sources/beforeMeasureg2.png)
 
 ### During Measurement
 
-During the measurement, the computed $g^{(2)}$ values are displayed in real time as a function of the calculated $\tau$ values, based on the selected parameters. The interface also allows clearing the plot at any time, resetting the $g^{(2)}$ values to zero.
+Once the measurement starts, the stop channel, bin width, window, and duration are locked and cannot be changed. The g²(τ) histogram is plotted live around a reference line at g² = 1. The user can read the g²(τ) value at any τ either by clicking directly on the plot or by entering a τ value manually in the "Cursor τ" field, which is restricted to the currently configured ± window range. A status panel shows the number of detected events and the elapsed time, together with a status bar with a coloured dot and text describing the current state. The user can press "Clear" to reset the histogram or "Stop" to end the measurement. If "Count Estimation" was enabled before starting, its checkbox also stays locked during the measurement, and the status panel additionally shows the estimated coincidence rate.
 
 ![During measurement](./Sources/duringMeasureg2.png)
 
 ### After Measurement
 
-After completing the measurement, the acquired data can be exported in multiple formats, including TXT, CSV, and DAT. The generated plots can also be saved as PNG, JPG, or TIFF images. In addition, curve fitting can be applied using different models such as Thermal Gaussian (and its shifted version), Lorentzian (and its shifted version), and Antibunched (and its shifted version). The user can adjust the initial fitting parameters and save the resulting plot with the applied fit.
+After the measurement, the "Save Data" button lets the user export the results as txt, csv, or dat files; two files are generated: one with the raw start-stop times, and another with the analyzed g²(τ) curve (τ in ns and the corresponding g² value). The "Save Plot" button exports the graph as png, tiff, or jpg. The acquired histogram can also be fit to one of five models: Antibunched Gaussian, Antibunched Lorentzian, Bunched Gaussian, Bunched Lorentzian, or Three-level system. As in the Autocorrelation window, each model displays its equation together with an editable table of initial guesses and fit results, with an "Auto" button to restore the suggested initial values. If a fit was performed, its model, equation, and resulting parameters are included in the header of the exported data files.
 
 ![After measurement](./Sources/afterMeasureg2.png)
-
-=======
 
 ## Compatibility with TP12
 
