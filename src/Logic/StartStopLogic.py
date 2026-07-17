@@ -458,7 +458,7 @@ class StartStopLogic():
             self.checkD.setEnabled(False)
             self.savebutton.setEnabled(False)
             
-    
+            
     def calibrateDeviceDelay(self):
         """
         Runs the device's delay calibration routine.

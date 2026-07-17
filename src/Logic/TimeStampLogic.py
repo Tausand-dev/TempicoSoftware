@@ -1225,7 +1225,7 @@ class TimeStampLogic():
         self.enableCheckBoxC.setEnabled(False)
         self.enableCheckBoxD.setEnabled(False)
     
-    
+
     def calibrateDeviceDelay(self):
         self.device.calibrateDelay()
     
@@ -1277,8 +1277,6 @@ class TimeStampLogic():
         self.enableCheckBoxC.setEnabled(True)
         self.enableCheckBoxD.setEnabled(True)
         
-        
-        
     
     def autoSaveSettings(self,currentTab):
         """
@@ -1308,9 +1306,7 @@ class TimeStampLogic():
         #Set the timer to save
         self.autoSaveTimer.timeout.connect(self.autoSaveAction)
         self.autoSaveTimer.start(milisecondsToInit)
-            
-        
-        
+
     
     def showDialogNoChannels(self):
         """
