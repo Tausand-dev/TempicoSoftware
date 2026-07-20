@@ -1,3 +1,12 @@
+# Release Notes 2.1.0 – June 2026
+
+## New Features
+
+- Added **g2 (HBT)** measurement functionality, enabling Hanbury Brown and Twiss correlation analysis directly within the Tempico software.
+- Introduced **Autocorrelation (FCS)** support using the **multiple-tau algorithm**, allowing Fluorescence Correlation Spectroscopy measurements for single-photon time-tagging applications.
+
+---
+
 # Release Notes 2.0.0 – January 2026
 
 ## New Features

@@ -520,12 +520,12 @@ class WorkerThreadTimeStamping(QThread):
                     else:
                         totalNoStarts+=1
             else:
-                errorMessageInput=f"The start channel is not taking measurements"
+                errorMessageInput=f"No measurements in Start Channel"
                 StartChannelRegister=False
                 self.changeStatusText.emit(errorMessageInput)
                 self.changeStatusColor.emit(3)
             if totalNoStarts==len(measure):
-                errorMessageInput=f"The start channel is not taking measurements"
+                errorMessageInput=f"No measurements in Start Channel"
                 StartChannelRegister=False
                 self.changeStatusText.emit(errorMessageInput)
                 self.changeStatusColor.emit(3)  
@@ -550,9 +550,9 @@ class WorkerThreadTimeStamping(QThread):
             if channelStringList:
                 channelErrorString=", ".join(channelStringList)
                 if len(channelStringList)==1:
-                    errorMessage=f"The channnel {channelErrorString} is not taking measurements {percentage} %"
+                    errorMessage=f"No measurements in Stop Channel {channelErrorString} ({percentage}%)"
                 else:
-                    errorMessage=f"The channnels {channelErrorString} are not taking measurements {percentage} %"
+                    errorMessage=f"No measurements in Stop Channels {channelErrorString} ({percentage}%)"
                 
                 self.changeStatusText.emit(errorMessage)
                 self.changeStatusColor.emit(3)
@@ -793,13 +793,13 @@ class WorkerThreadTimeStamping(QThread):
                     else:
                         totalNoStarts+=1
             else:
-                errorMessageInput=f"The start channel is not taking measurements"
+                errorMessageInput=f"No measurements in Start Channel"
                 StartChannelRegister=False
                 self.changeStatusText.emit(errorMessageInput)
                 self.changeStatusColor.emit(3)
             if measure:
                 if totalNoStarts==len(measure):
-                    errorMessageInput=f"The start channel is not taking measurements"
+                    errorMessageInput=f"No measurements in Start Channel"
                     StartChannelRegister=False
                     self.changeStatusText.emit(errorMessageInput)
                     self.changeStatusColor.emit(3)
@@ -818,9 +818,9 @@ class WorkerThreadTimeStamping(QThread):
             if channelStringList:
                 channelErrorString=", ".join(channelStringList)
                 if len(channelStringList)==1:
-                    errorMessage=f"The channnel {channelErrorString} is not taking measurements"
+                    errorMessage=f"No measurements in Stop Channel {channelErrorString}"
                 else:
-                    errorMessage=f"The channnels {channelErrorString} are not taking measurements"
+                    errorMessage=f"No measurements in Stop Channels {channelErrorString}"
                 
                 self.changeStatusText.emit(errorMessage)
                 self.changeStatusColor.emit(3)
@@ -1117,4 +1117,4 @@ class WorkerThreadTimeStamping(QThread):
 
         :return: None
         """
-        self.running=False    
+        self.running=False

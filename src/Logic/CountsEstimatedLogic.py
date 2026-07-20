@@ -845,8 +845,10 @@ class CountEstimatedLogic():
             self.savePlotButton.setEnabled(False)
             #Disable other tabs while the software is taking measurements
             self.mainWindow.tabs.setTabEnabled(0,False)
-            self.mainWindow.tabs.setTabEnabled(1,False)
+            self.mainWindow.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
+            self.mainWindow.tabs.setTabEnabled(4,False)
+            self.mainWindow.tabs.setTabEnabled(5,False)
             self.mainWindow.saveSettings()
             self.saveSettings()
             if "TP12" in constants.VERSION_PARAMETER:
@@ -872,10 +874,9 @@ class CountEstimatedLogic():
         else:
             self.noChannelsSelected()
     
-    
     def calibrateDeviceDelay(self):
-        self.device.calibrateDelay()       
-        
+        self.device.calibrateDelay()
+
     
     def stopMeasure(self):
         """
@@ -898,8 +899,10 @@ class CountEstimatedLogic():
         :return: None
         """
         self.mainWindow.tabs.setTabEnabled(0,True)
-        self.mainWindow.tabs.setTabEnabled(1,True)
+        self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.resetSentinels()
         self.stopButton.setEnabled(False)
         self.worker.stop()
@@ -2148,7 +2151,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 800
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelA' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelA'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2167,7 +2170,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelB' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelB'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2185,7 +2188,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelC' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelC'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2203,7 +2206,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'ChannelD' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelD'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2224,7 +2227,7 @@ class CountEstimatedLogic():
                     exporter.parameters()['height'] = 1000
                     current_date = datetime.now()
                     current_date_str = current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name = data_prefix+'AllChannels' + current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_AllChannels'
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
@@ -2306,6 +2309,9 @@ class CountEstimatedLogic():
         data_prefix=dataFolderPrefix["countsEstimationPrefix"]
         current_date=datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        date_str=current_date.strftime("%Y-%m-%d")
+        time_str=current_date.strftime("%H:%M:%S")
+        device_model=self.device.getModelIdn()
         #Init filenames and data list
         filenames=[]
         data=[]
@@ -2352,8 +2358,8 @@ class CountEstimatedLogic():
             total_condition= conditiontxt or conditioncsv or conditiondat
             if not total_condition:
                 if self.measurementChannelA:
-                    filename1=data_prefix+current_date_str+'channelA'
-                    setting_A=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
+                    filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
+                    setting_A=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelAEdgeTypeSetting}\n"
                     settings.append(setting_A)
                     filenames.append(filename1)
                     timeStamps.append(self.timestampsDateChannelA)
@@ -2361,8 +2367,8 @@ class CountEstimatedLogic():
                     data.append(self.channelAValues)
                     dataUncertainties.append(self.channelAUncertainties)
                 if self.measurementChannelB:
-                    filename2=data_prefix+current_date_str+'channelB'
-                    setting_B=f"Initial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
+                    filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
+                    setting_B=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate} \nFinal date:\t{self.finalDate} \nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelBEdgeTypeSetting}\n"
                     settings.append(setting_B)
                     filenames.append(filename2)
                     timeStamps.append(self.timestampsDateChannelB)
@@ -2370,8 +2376,8 @@ class CountEstimatedLogic():
                     data.append(self.channelBValues)
                     dataUncertainties.append(self.channelBUncertainties)
                 if self.measurementChannelC:
-                    filename3=data_prefix+current_date_str+'channelC'
-                    setting_C=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
+                    filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
+                    setting_C=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelCEdgeTypeSetting}\n"
                     settings.append(setting_C)
                     filenames.append(filename3)
                     timeStamps.append(self.timestampsDateChannelC)
@@ -2379,8 +2385,8 @@ class CountEstimatedLogic():
                     data.append(self.channelCValues)
                     dataUncertainties.append(self.channelCUncertainties)
                 if self.measurementChannelD:
-                    filename4=data_prefix+current_date_str+'channelD'
-                    setting_D=f"Initial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
+                    filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
+                    setting_D=f"Tab:\tCounts estimation\nInitial date:\t{self.initialDate}\nFinal date:\t{self.finalDate}\nDevice model:\t{device_model}\nThreshold Voltage:\t{self.thresholdVoltageSetting}\nStop Edge:\t{self.channelDEdgeTypeSetting}\n"
                     settings.append(setting_D)
                     filenames.append(filename4)
                     timeStamps.append(self.timestampsDateChannelD)
@@ -2393,12 +2399,12 @@ class CountEstimatedLogic():
                     self.savefile.save_counts_data(timeStamps,data,dataUncertainties,filenames,folder_path,settings,selected_format,channels)
                     message_box = QMessageBox(self.mainWindow)
                     message_box.setIcon(QMessageBox.Information)
-                    inital_text="The files have been saved successfully in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    inital_text="The files have been saved successfully in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
                     index=1
                     for i in filenames:
                         filenumber="File" + str(index)+": "
-                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        text_route+="\n"+filenumber+i+"."+str(selected_format)
                         index+=1
                     message_box.setText(inital_text+text_route)
                     if selected_format=="txt":
@@ -2469,15 +2475,3 @@ class CountEstimatedLogic():
         message_box.setText("To perform measurements in this window, you must connect a periodic signal to the Start input that is different from the source you want to measure. Then, connect the source you want to estimate pulses from to the Stop channels.")
         message_box.setStandardButtons(QMessageBox.Ok)
         message_box.exec_()
-        
-    
-    
-        
-    
-    
-    
-    
-    
-
-
-        

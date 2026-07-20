@@ -275,7 +275,8 @@ class Ui_Generator(object):
 
         self.tabChannelsWidget.setCurrentIndex(0)
         self.applyChangesButton.clicked.connect(self.applyChanges)
-
+        self._eventHelper = _DialogEventHelper(Dialog, self.showHelp)
+        Dialog.installEventFilter(self._eventHelper)
         QMetaObject.connectSlotsByName(Dialog)
     # setupUi
 
@@ -389,6 +390,7 @@ class Ui_Generator(object):
         #Channel D configs
         self.channelDStartSourceComboBox.setEnabled(False)
         self.channelDStopSourceComboBox.setEnabled(False)
+        self.applyChangesButton.setEnabled(False)
     
     def enableValues(self):
         #General configs
@@ -405,6 +407,7 @@ class Ui_Generator(object):
         #Channel D configs
         self.channelDStartSourceComboBox.setEnabled(True)
         self.channelDStopSourceComboBox.setEnabled(True)
+        self.applyChangesButton.setEnabled(True)
     
     def applyChanges(self):
         needDiscrepanceDialog=False
@@ -525,6 +528,31 @@ class Ui_Generator(object):
         else:
             self.channelDStopSourceComboBox.setCurrentIndex(1)
         self.onlyRead()
+    def showHelp(self):
+        QMessageBox.information(
+            self.dialog,
+            "Help",
+            "Signal generator settings:\n\n"
+            "Channel Options: Select the start and stop source for each channel.\n\n"
+            "Internal Source: Uses the built-in periodic pulse generator at the specified frequency.\n\n"
+            "External Source: Requires an external signal provided through the corresponding Tempico input."
+        )
+
+class _DialogEventHelper(QObject):
+    """Handles the ? help button event for Ui_Generator."""
+    def __init__(self, dialog, helpCallback):
+        super().__init__(dialog)
+        self._dialog     = dialog
+        self._helpCallback = helpCallback
+
+    def eventFilter(self, obj, event):
+        if obj is self._dialog and event.type() == QEvent.EnterWhatsThisMode:
+            if self._dialog.isActiveWindow():
+                from PySide2.QtWidgets import QWhatsThis
+                QWhatsThis.leaveWhatsThisMode()
+                self._helpCallback()
+                return True
+        return QObject.eventFilter(self, obj, event)
         
     
         

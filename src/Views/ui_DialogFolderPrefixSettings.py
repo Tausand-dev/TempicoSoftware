@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-################################################################################
-## Form generated from reading UI file 'designeruIgInx.ui'
-##
-## Created by: Qt User Interface Compiler version 5.15.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-from PySide2.QtWidgets import QStyle
+from PySide2.QtCore import Qt, QMetaObject, QCoreApplication, QEvent, QObject, QStandardPaths
+from PySide2.QtGui import QPixmap
+from PySide2.QtWidgets import (
+    QVBoxLayout, QHBoxLayout, QFrame, QLabel, QLineEdit,
+    QPushButton, QSizePolicy, QFileDialog, QMessageBox,
+    QStyle
+)
 from Utils.createsavefile import createsavefile
 import json
 import os
@@ -55,10 +50,14 @@ class Ui_DialogFolderPrefix(object):
         folder_icon = self.folderPathLineEdit.style().standardIcon(QStyle.SP_DirOpenIcon)
         self.folderAction = self.folderPathLineEdit.addAction(folder_icon, QLineEdit.TrailingPosition)
         self.horizontalLayout.addWidget(self.folderPathLineEdit)
-        self.folderAction.triggered.connect(self.selectFolder)
-
-
         self.verticalLayout.addWidget(self.FolderPathFrame)
+
+        # Description label
+        self.descriptionLabel = QLabel(Dialog)
+        self.descriptionLabel.setObjectName(u"descriptionLabel")
+        self.descriptionLabel.setWordWrap(True)
+        self.descriptionLabel.setStyleSheet(u"color: #555555; font-size: 11px; padding: 2px 4px;")
+        self.verticalLayout.addWidget(self.descriptionLabel)
 
         self.StartStopHistogramFrame = QFrame(Dialog)
         self.StartStopHistogramFrame.setObjectName(u"StartStopHistogramFrame")
@@ -82,29 +81,6 @@ class Ui_DialogFolderPrefix(object):
 
 
         self.verticalLayout.addWidget(self.StartStopHistogramFrame)
-
-        self.LifeTimeFrame = QFrame(Dialog)
-        self.LifeTimeFrame.setObjectName(u"LifeTimeFrame")
-        self.LifeTimeFrame.setFrameShape(QFrame.StyledPanel)
-        self.LifeTimeFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.LifeTimeFrame)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.lifetimePrefix = QLabel(self.LifeTimeFrame)
-        self.lifetimePrefix.setObjectName(u"lifetimePrefix")
-        sizePolicy.setHeightForWidth(self.lifetimePrefix.sizePolicy().hasHeightForWidth())
-        self.lifetimePrefix.setSizePolicy(sizePolicy)
-
-        self.horizontalLayout_3.addWidget(self.lifetimePrefix)
-
-        self.lifetimeLineEdit = QLineEdit(self.LifeTimeFrame)
-        self.lifetimeLineEdit.setObjectName(u"lifetimeLineEdit")
-        sizePolicy1.setHeightForWidth(self.lifetimeLineEdit.sizePolicy().hasHeightForWidth())
-        self.lifetimeLineEdit.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_3.addWidget(self.lifetimeLineEdit)
-
-
-        self.verticalLayout.addWidget(self.LifeTimeFrame)
 
         self.CountsEstimationFrame = QFrame(Dialog)
         self.CountsEstimationFrame.setObjectName(u"CountsEstimationFrame")
@@ -152,6 +128,75 @@ class Ui_DialogFolderPrefix(object):
 
         self.verticalLayout.addWidget(self.TimeStampingFrame)
 
+        self.LifeTimeFrame = QFrame(Dialog)
+        self.LifeTimeFrame.setObjectName(u"LifeTimeFrame")
+        self.LifeTimeFrame.setFrameShape(QFrame.StyledPanel)
+        self.LifeTimeFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.LifeTimeFrame)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.lifetimePrefix = QLabel(self.LifeTimeFrame)
+        self.lifetimePrefix.setObjectName(u"lifetimePrefix")
+        sizePolicy.setHeightForWidth(self.lifetimePrefix.sizePolicy().hasHeightForWidth())
+        self.lifetimePrefix.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_3.addWidget(self.lifetimePrefix)
+
+        self.lifetimeLineEdit = QLineEdit(self.LifeTimeFrame)
+        self.lifetimeLineEdit.setObjectName(u"lifetimeLineEdit")
+        sizePolicy1.setHeightForWidth(self.lifetimeLineEdit.sizePolicy().hasHeightForWidth())
+        self.lifetimeLineEdit.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_3.addWidget(self.lifetimeLineEdit)
+
+
+        self.verticalLayout.addWidget(self.LifeTimeFrame)
+
+        self.AutocorrelationFrame = QFrame(Dialog)
+        self.AutocorrelationFrame.setObjectName(u"AutocorrelationFrame")
+        self.AutocorrelationFrame.setFrameShape(QFrame.StyledPanel)
+        self.AutocorrelationFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.AutocorrelationFrame)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.autocorrelationPrefix = QLabel(self.AutocorrelationFrame)
+        self.autocorrelationPrefix.setObjectName(u"autocorrelationPrefix")
+        sizePolicy.setHeightForWidth(self.autocorrelationPrefix.sizePolicy().hasHeightForWidth())
+        self.autocorrelationPrefix.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_7.addWidget(self.autocorrelationPrefix)
+
+        self.autocorrelationLineEdit = QLineEdit(self.AutocorrelationFrame)
+        self.autocorrelationLineEdit.setObjectName(u"autocorrelationLineEdit")
+        sizePolicy1.setHeightForWidth(self.autocorrelationLineEdit.sizePolicy().hasHeightForWidth())
+        self.autocorrelationLineEdit.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_7.addWidget(self.autocorrelationLineEdit)
+
+        self.verticalLayout.addWidget(self.AutocorrelationFrame)
+
+
+        self.g2Frame = QFrame(Dialog)
+        self.g2Frame.setObjectName(u"g2Frame")
+        self.g2Frame.setFrameShape(QFrame.StyledPanel)
+        self.g2Frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_7 = QHBoxLayout(self.g2Frame)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.g2Prefix = QLabel(self.g2Frame)
+        self.g2Prefix.setObjectName(u"g2Prefix")
+        sizePolicy.setHeightForWidth(self.g2Prefix.sizePolicy().hasHeightForWidth())
+        self.g2Prefix.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_7.addWidget(self.g2Prefix)
+
+        self.g2LineEdit = QLineEdit(self.g2Frame)
+        self.g2LineEdit.setObjectName(u"g2LineEdit")
+        sizePolicy1.setHeightForWidth(self.g2LineEdit.sizePolicy().hasHeightForWidth())
+        self.g2LineEdit.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_7.addWidget(self.g2LineEdit)
+
+
+        self.verticalLayout.addWidget(self.g2Frame)
+
         self.ApplyChangesFrame = QFrame(Dialog)
         self.ApplyChangesFrame.setObjectName(u"ApplyChangesFrame")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -192,6 +237,8 @@ class Ui_DialogFolderPrefix(object):
         self.getSettings()
         self.applyChangesButton.clicked.connect(self.applySettings)
 
+        self._eventHelper = _DialogEventHelper(Dialog, self.showHelp)
+        Dialog.installEventFilter(self._eventHelper)
         QMetaObject.connectSlotsByName(Dialog)
         
     # setupUi
@@ -200,9 +247,12 @@ class Ui_DialogFolderPrefix(object):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"File path settings", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Save folder path:", None))
         self.startStopHistogramPrefix.setText(QCoreApplication.translate("Dialog", u"Start-stop histogram prefix:", None))
-        self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
         self.countsEstimationPrefix.setText(QCoreApplication.translate("Dialog", u"Counts estimation prefix:", None))
         self.timeStampingLineEdit.setText(QCoreApplication.translate("Dialog", u"Time stamping prefix:", None))
+        self.lifetimePrefix.setText(QCoreApplication.translate("Dialog", u"Lifetime prefix:", None))
+        self.autocorrelationPrefix.setText(QCoreApplication.translate("Dialog", u"Autocorrelation prefix:", None))
+        self.autocorrelationLineEdit.setText(QCoreApplication.translate("Dialog", u"", None))
+        self.g2Prefix.setText(QCoreApplication.translate("Dialog", u"g2 prefix:", None))
         self.applyChangesButton.setText(QCoreApplication.translate("Dialog", u"Apply changes", None))
 
     def selectFolder(self):
@@ -229,7 +279,8 @@ class Ui_DialogFolderPrefix(object):
         self.lifetimeLineEdit.setText(data["lifetimePrefix"])
         self.countsEstimationLineEdit.setText(data["countsEstimationPrefix"])
         self.lineEdit.setText(data["timeStampingPrefix"])
-        
+        self.autocorrelationLineEdit.setText(data.get("fcsPrefix", data.get("autocorrelationPrefix", "Autocorrelation")))
+        self.g2LineEdit.setText(data.get("g2Prefix", "g2"))
         
         
     def applySettings(self):
@@ -242,6 +293,10 @@ class Ui_DialogFolderPrefix(object):
             self.dialogShowingProblems("Counts estimation prefix")
         elif any(c in self.lineEdit.text() for c in r'\/:*?"<>|'):
             self.dialogShowingProblems("Time stamping prefix")
+        elif any(c in self.autocorrelationLineEdit.text() for c in r'\/:*?"<>|'):
+            self.dialogShowingProblems("Autocorrelation prefix")
+        elif any(c in self.g2LineEdit.text() for c in r'\/:*?"<>|'):
+            self.dialogShowingProblems("g2 prefix")
         else:
             with open(pathConstants, "r", encoding="utf-8") as file:
                 data = json.load(file)
@@ -250,6 +305,8 @@ class Ui_DialogFolderPrefix(object):
             data["lifetimePrefix"]=self.lifetimeLineEdit.text()
             data["countsEstimationPrefix"]=self.countsEstimationLineEdit.text()
             data["timeStampingPrefix"]=self.lineEdit.text()
+            data["fcsPrefix"]=self.autocorrelationLineEdit.text()
+            data["g2Prefix"]=self.g2LineEdit.text()
             with open(pathConstants, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
             if self.folderPathLineEdit!=self.initialFolderPath:
@@ -267,9 +324,11 @@ class Ui_DialogFolderPrefix(object):
         targetPath = documentsDir / "TempicoSoftwareData"
         self.startStopHistogramLineEdit.setText("StartStopHistogram")
         self.countsEstimationLineEdit.setText("CountsEstimation")
-        self.lifetimeLineEdit.setText("Lifetime")
         self.lineEdit.setText("TimeStamping")
-    
+        self.lifetimeLineEdit.setText("Lifetime")
+        self.autocorrelationLineEdit.setText("Autocorrelation")
+        self.g2LineEdit.setText("g2")
+
     def cancelChanges(self):
         self.dialog.close()
     
@@ -290,6 +349,8 @@ class Ui_DialogFolderPrefix(object):
         self.lifetimeLineEdit.setEnabled(False)
         self.countsEstimationLineEdit.setEnabled(False)
         self.lineEdit.setEnabled(False)
+        self.autocorrelationLineEdit.setEnabled(False)
+        self.g2LineEdit.setEnabled(False)
         self.applyChangesButton.setEnabled(False)
         self.cancelButton.setEnabled(False)
         self.defaultValuesButton.setEnabled(False)
@@ -301,6 +362,34 @@ class Ui_DialogFolderPrefix(object):
         self.lifetimeLineEdit.setEnabled(True)
         self.countsEstimationLineEdit.setEnabled(True)
         self.lineEdit.setEnabled(True)
+        self.autocorrelationLineEdit.setEnabled(True)
+        self.g2LineEdit.setEnabled(True)
         self.applyChangesButton.setEnabled(True)
         self.cancelButton.setEnabled(True)
         self.defaultValuesButton.setEnabled(True)
+
+    def showHelp(self):
+        QMessageBox.information(
+            self.dialog,
+            "Help",
+            "File path settings:\n\n"
+            "Save folder path: Folder where all measurement files will be saved.\n\n"
+            "Prefixes: Each measurement type uses a prefix for its file name. "
+            "The final file name will be: <prefix>_<date>_<channel>.<ext>\n\n"
+            "Use 'Default values' to restore the original folder and prefixes."
+        )
+class _DialogEventHelper(QObject):
+    """Handles the ? help button event for Ui_DialogFolderPrefix."""
+    def __init__(self, dialog, helpCallback):
+        super().__init__(dialog)
+        self._dialog     = dialog
+        self._helpCallback = helpCallback
+
+    def eventFilter(self, obj, event):
+        if obj is self._dialog and event.type() == QEvent.EnterWhatsThisMode:
+            if self._dialog.isActiveWindow():
+                from PySide2.QtWidgets import QWhatsThis
+                QWhatsThis.leaveWhatsThisMode()
+                self._helpCallback()
+                return True
+        return QObject.eventFilter(self, obj, event)

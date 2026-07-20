@@ -9,10 +9,11 @@ src
    TimeStampLogic
    CountsEstimatedLogic
    main
-   ThreadStartStop
+   G2Logic
+   ThreadG2
    ThreadLifeTime
-   ThreadTimeStamping
-   ThreadCountEstimated
    ThreadProccessData
+   ThreadTimeStamping
+   ThreadStartStop
    
    

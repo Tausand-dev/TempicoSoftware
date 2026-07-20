@@ -1,5 +1,5 @@
 ThreadTimeStamping module
-=====================
+=========================
 
 .. automodule:: Threads.ThreadTimeStamping
    :members:

@@ -20,12 +20,16 @@ from Utils.generatorSettingsDialog import Ui_Generator
 from Utils.ParametersDialog import CountParameters
 from Logic.StartStopLogic import StartStopLogic
 from Utils.constants import *
+from Utils.helpDialog import HelpDialog
 import Utils.constants as constants
 from Views.ui_LifeTimemeasurement import UiLifeTime
 from Logic.LifeTimeLogic import LifeTimeLogic
 from Logic.CountsEstimatedLogic import CountEstimatedLogic
 from Logic.TimeStampLogic import TimeStampLogic
+from Logic.G2Logic import G2Logic
 from Views.ui_DialogFolderPrefixSettings import Ui_DialogFolderPrefix
+from Views.ui_FCSMeasurement import Ui_FCSMeasurement
+from Logic.FCSLogic import FCSLogic
 import sys
 import math
 #from qt_material import apply_stylesheet
@@ -46,24 +50,33 @@ class SplashScreen(QMainWindow):
     :type parent: QWidget, optional
     """
     def __init__(self):
+        """
+        Initializes the splash screen window and starts the transition timer.
+
+        Sets a fixed window size, loads and displays the banner image inside a
+        `QLabel`, and configures a single-shot `QTimer` that, after a short
+        delay, triggers the transition to the main application window.
+
+        :return: None
+        """
         super().__init__()
         self.setWindowTitle("Splash Screen")
         self.setFixedSize(400, 300)
 
 
-        # Crear una etiqueta para mostrar la imagen
+        # Label used to display the banner image
         self.image_label = QLabel(self)
         self.image_label.setGeometry(0, 0, 400, 300)
 
-        # Cargar la imagen
-        pixmap = QPixmap(BANNER)  # Ajusta la ruta de tu imagen
+        # Load the banner image
+        pixmap = QPixmap(BANNER)  # Adjust the image path if needed
         self.image_label.setPixmap(pixmap)
 
-        # Mostrar la ventana principal después de 3 segundos
+        # Show the main window after a short delay
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.show_main_window)
-        self.timer.start(1000)  # Tiempo en milisegundos
+        self.timer.start(1000)  # Time in milliseconds
 
     def show_main_window(self):
         """
@@ -78,6 +91,7 @@ class SplashScreen(QMainWindow):
         self.main_window = MainWindow()
         self.main_window.show()
         self.close()
+        self.deleteLater()
 
 class MainWindow(QMainWindow):
     """
@@ -97,6 +111,24 @@ class MainWindow(QMainWindow):
     :type args: tuple
     """
     def __init__(self, parent=None, *args):
+        """
+        Builds the main window: geometry, menu bar, actions, and internal state.
+
+        Creates the default save folder, sizes and centers the window based on
+        the primary screen resolution, sets the window icon, and initializes
+        the sentinels and cached device-configuration variables (average
+        cycles, mode, number of stops, edge type, and stop mask per channel)
+        used later when a measurement tab is opened. It also builds the menu
+        bar ("Settings", "About", "Help") and connects each menu action to its
+        corresponding slot, and configures the system tray icon on Linux or
+        the taskbar app id on Windows.
+
+        :param parent: The parent widget (optional).
+        :param args: Additional positional arguments (unused).
+        :type parent: QWidget, optional
+        :type args: tuple
+        :return: None
+        """
         super(MainWindow,self).__init__(parent=parent)
         #------Window parameters---------#
         self.savefile=savefile()
@@ -116,8 +148,8 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(ICON_LOCATION))
         self.setMinimumSize(800,600)
         self.conectedDevice=None
-        self.LifeTimeTimer=QTimer()
-        self.LifeTimeTimer.timeout.connect(self.manageConection)
+        self.connectedTimer=QTimer()
+        self.connectedTimer.timeout.connect(self.manageConection)
         self.currentMeasurement=False
         # save old settings state
         self.averageCycleChannelA= 0
@@ -165,11 +197,16 @@ class MainWindow(QMainWindow):
 
         #------Menu bar-------------#
         menu_bar = self.menuBar()
+        menu_bar.setNativeMenuBar(False)
         #file_menu = menu_bar.addMenu("File")
         settings_menu = menu_bar.addMenu("Settings")
         #help_menu = menu_bar.addMenu("Help")
         about_menu = menu_bar.addMenu("About")
         #Parameters_menu
+
+        help_action = QAction("Help", self)
+        help_action.triggered.connect(self.open_help)
+        menu_bar.addAction(help_action)
 
 
 
@@ -212,11 +249,14 @@ class MainWindow(QMainWindow):
         self.tab2=QWidget()
         self.tab3=QWidget()
         self.tab4=QWidget()
+        self.tab5=QWidget()
+        self.tab6=QWidget()
         self.tabs.addTab(self.tab1,"Start-stop histogram")
-        self.tabs.addTab(self.tab2,"Lifetime")
-        self.tabs.addTab(self.tab3,"Counts estimation")
-        self.tabs.addTab(self.tab4,"Time stamping")
-        #self.tabs.addTab(self.tab3,"g2 Measurement")
+        self.tabs.addTab(self.tab2,"Counts estimation")
+        self.tabs.addTab(self.tab3,"Time stamping")
+        self.tabs.addTab(self.tab4,"Lifetime")
+        self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
+        self.tabs.addTab(self.tab6,"g2 (HBT)")
         self.tabs.setGeometry(0,20,1000,700)
         # Crear un QVBoxLayout para agregar el QTabWidget
         layout = QVBoxLayout()
@@ -253,6 +293,15 @@ class MainWindow(QMainWindow):
         #------Time Stamping Graphic class---------#
         self.timeStampGraphic=None
         self.timeStampGraphic_init_sentinel=0
+        #------FCS Graphic class---------#
+        self.fcsGraphic=None
+        self.fcs_init_sentinel=0
+        #------g2 Graphic class---------#
+        self.g2Graphic=None
+        self.g2_init_sentinel=0
+
+        self._previous_tab_index = 0     
+        self._fcs_saved_generator_settings = []
         
 
         #------Layout for the main window---------#
@@ -266,10 +315,11 @@ class MainWindow(QMainWindow):
         self.sentinel2=0
         self.sentinel3=0
         self.sentinel4=0
+        self.sentinel5=0
+        self.sentinel6=0
         self.tabs.currentChanged.connect(self.clicked_tabs)
         self.show()
-        self.open_dialog()
-        self.show()
+        QTimer.singleShot(0, self.open_dialog)
 
 
     #-----Functions for construc every Qtab--------#
@@ -291,24 +341,6 @@ class MainWindow(QMainWindow):
             self.ui.setupUi(parent)
             self.sentinel1=1
 
-    def construct_lifetime(self,parent):
-        """
-        Constructs the Lifetime Measurements window.
-
-        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates
-        an instance of the `UiLifeTime` class and sets up the UI using the given parent.
-
-        It does not return a value.
-
-        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
-        :type parent: QWidget
-        :returns: None
-        """
-        if self.sentinel2==0:
-            self.uiLifeTime = UiLifeTime()
-            self.uiLifeTime.setupUi(parent)
-            self.sentinel2=1
-
     def construct_counts_estimated(self,parent):
         """
         Constructs the Counts Estimated window.
@@ -323,10 +355,10 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         #TO DO Build Documentation
-        if self.sentinel3==0:
+        if self.sentinel2==0:
             self.uiCountsEstimated = Ui_CountsEstimated()
             self.uiCountsEstimated.setupUi(parent)
-            self.sentinel3=1
+            self.sentinel2=1
     
     
     def construct_time_stamping(self,parent):
@@ -343,10 +375,45 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         #TO DO Build Documentation
-        if self.sentinel4==0:
+        if self.sentinel3==0:
             self.uiTimeStamping = Ui_TimeStamping()
             self.uiTimeStamping.setupUi(parent)
+            self.sentinel3=1
+    def construct_lifetime(self,parent):
+        """
+        Constructs the Lifetime Measurements window.
+
+        This function takes a `QTabWidget` parent, and if the sentinel is not set, it creates
+        an instance of the `UiLifeTime` class and sets up the UI using the given parent.
+
+        It does not return a value.
+
+        :param parent: The parent widget (typically a `QTabWidget`) for the lifetime measurements window.
+        :type parent: QWidget
+        :returns: None
+        """
+        if self.sentinel4==0:
+            self.uiLifeTime = UiLifeTime()
+            self.uiLifeTime.setupUi(parent)
             self.sentinel4=1
+
+    def construct_fcs(self, parent):
+        """
+        Constructs the FCS (Fluorescence Correlation Spectroscopy) window.
+
+        This function takes a ``QTabWidget`` parent, and if the sentinel is not set,
+        it creates an instance of ``Ui_FCSMeasurement`` and sets up the UI using
+        the given parent. It ensures the UI is initialized only once by checking
+        the ``sentinel5`` flag.
+
+        :param parent: The parent widget (typically a ``QTabWidget``) for the FCS window.
+        :type parent: QWidget
+        :returns: None
+        """
+        if self.sentinel5==0:
+            self.uiFCS = Ui_FCSMeasurement()
+            self.uiFCS.setupUi(parent)
+            self.sentinel5=1
 
 
 
@@ -363,10 +430,10 @@ class MainWindow(QMainWindow):
         :type parent: QWidget
         :returns: None
         """
-        if self.sentinel3==0:
+        if self.sentinel6==0:
             self.uig2 = Ui_G2()
             self.uig2.setupUi(parent)
-            self.sentinel3=1
+            self.sentinel6=1
 
     def open_dialog(self):
         """
@@ -397,18 +464,24 @@ class MainWindow(QMainWindow):
                 self.disconnectButton.setEnabled(True)
                 try:
                     self.conectedDevice.open()
+                    self.connectedTimer.start(500)
                     self.getVersionParameters()
-                    self.LifeTimeTimer.start(500)
-                    if self.g2Graphic!=None:
-                         self.g2Graphic.connectDevice()
-                    if self.LifeTimeGraphic!=None:
-                        self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+
                     if self.countsEstimatedGraphic!=None:
                         self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
-                    #To do implement connect device
+                    
                     if self.timeStampGraphic!=None:
                         self.timeStampGraphic.connectedDevice(self.conectedDevice)
-
+                    
+                    if self.LifeTimeGraphic!=None:
+                        self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                    
+                    #To do implement connect device
+                    if self.fcsGraphic!=None:
+                        self.fcsGraphic.connectedDevice(self.conectedDevice)
+                    
+                    if self.g2Graphic!=None:
+                         self.g2Graphic.connectedDevice(self.conectedDevice)
 
                     checkchannel1=self.ui.Channel1Graph1
                     checkchannel2=self.ui.Channel4Graph1
@@ -436,10 +509,10 @@ class MainWindow(QMainWindow):
 
 
                     self.connectsentinel=1
-                    self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel, self.LifeTimeTimer)
+                    self.grafico=StartStopLogic(self.ui.Graph3,self.disconnectButton,self.conectedDevice,checkchannel1,checkchannel2,checkchannel3,checkchannel4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D, self.connectButton,self, self.ui.valueStatusLabel,self.ui.pointLabel, self.connectedTimer)
 
                 except:
-                    self.LifeTimeTimer.stop()
+                    self.connectedTimer.stop()
                     msg_box = QMessageBox(self)
                     msg_box.setText("Connection with the device failed. Check if another software is using the Tempico device or verify the hardware status.")
                     msg_box.setWindowTitle("Connection Error")
@@ -458,18 +531,21 @@ class MainWindow(QMainWindow):
                         try:
                             self.conectedDevice.open()
                             self.getVersionParameters()
-                            self.LifeTimeTimer.start(500)
+                            self.connectedTimer.start(500)
                             openSentinel=True
                         except:
-                            self.LifeTimeTimer.stop()
-                        if self.g2Graphic!=None and openSentinel:
-                             self.g2Graphic.connectDevice()
-                        if self.LifeTimeGraphic!=None and openSentinel:
-                            self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                            self.connectedTimer.stop()
+                        
                         if self.countsEstimatedGraphic!=None and openSentinel:
                             self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
                         if self.timeStampGraphic!=None and openSentinel:
                             self.timeStampGraphic.connectedDevice(self.conectedDevice)
+                        if self.LifeTimeGraphic!=None and openSentinel:
+                            self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                        if self.fcsGraphic!=None and openSentinel:
+                            self.fcsGraphic.connectedDevice(self.conectedDevice)
+                        if self.g2Graphic!=None and openSentinel:
+                             self.g2Graphic.connectedDevice(self.conectedDevice)
                         self.grafico.show_graphic(self.conectedDevice)
                         self.connectButton.setEnabled(False)
                         self.disconnectButton.setEnabled(True)
@@ -488,18 +564,22 @@ class MainWindow(QMainWindow):
             try:
                 self.conectedDevice.open()
                 self.getVersionParameters()
-                self.LifeTimeTimer.start(500)
+                self.connectedTimer.start(500)
                 openSentinel=True
             except:
-                self.LifeTimeTimer.stop()
-            if self.g2Graphic!=None and openSentinel:
-                    self.g2Graphic.connectDevice()
-            if self.LifeTimeGraphic!=None and openSentinel:
-                    self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+                self.connectedTimer.stop()
+
+            
             if self.countsEstimatedGraphic!=None and openSentinel:
                     self.countsEstimatedGraphic.connectedDevice(self.conectedDevice)
             if self.timeStampGraphic!=None and openSentinel:
                     self.timeStampGraphic.connectedDevice(self.conectedDevice)
+            if self.LifeTimeGraphic!=None and openSentinel:
+                    self.LifeTimeGraphic.connectedDevice(self.conectedDevice)
+            if self.fcsGraphic!=None and openSentinel:
+                    self.fcsGraphic.connectedDevice(self.conectedDevice)
+            if self.g2Graphic!=None and openSentinel:
+                    self.g2Graphic.connectedDevice(self.conectedDevice)
             self.connectButton.setEnabled(True)
             self.disconnectButton.setEnabled(False)
 
@@ -521,15 +601,16 @@ class MainWindow(QMainWindow):
             self.disconnectButton.setEnabled(False)
             self.conectedDevice.close()
             self.conectedDevice=None
-        if self.g2Graphic!=None:
-            self.g2Graphic.disconnectDevice()
         if self.LifeTimeGraphic!=None:
             self.LifeTimeGraphic.disconnectedDevice()
         if self.countsEstimatedGraphic!=None:
             self.countsEstimatedGraphic.disconnectedDevice()
         if self.timeStampGraphic!=None:
             self.timeStampGraphic.disconnectedDevice()
-
+        if self.fcsGraphic!=None:
+            self.fcsGraphic.disconnectedDevice()
+        if self.g2Graphic!=None:
+            self.g2Graphic.disconnectedDevice()
 
 
 
@@ -547,46 +628,16 @@ class MainWindow(QMainWindow):
           It does not take any parameters and does not return a value.
           :returns: None
           """
+          
           valor_padre=self.tabs.currentIndex()
+          if self._previous_tab_index == 4 and valor_padre != 4:        
+              self._restore_generator_settings()        
           padre=self.tab1
           if valor_padre==0:
               padre=self.tab1
               self.construct_start_stop_histogram(padre)
           elif valor_padre==1:
-              padre=self.tab2
-              self.construct_lifetime(padre)
-              if self.LifeTimeGraphic==None:
-                  #Get the data to create the logic class for LifeTime measurement
-                  comboBoxStartChannel=self.uiLifeTime.startChannelComboBox
-                  comboBoxStopChannel=self.uiLifeTime.stopChannelComboBox
-                  graphicsFrame=self.uiLifeTime.graphicFrame
-                  startButton=self.uiLifeTime.startButton
-                  stopButton=self.uiLifeTime.stopButton
-                  clearButton=self.uiLifeTime.clearButton
-                  saveDataButton=self.uiLifeTime.saveDataFileButton
-                  savePlotButton=self.uiLifeTime.savePlotButton
-                  initialParametersButton=self.uiLifeTime.buttonParameterLabel
-                  statusLabel=self.uiLifeTime.statusValue
-                  pointLabel=self.uiLifeTime.drawPointLabel
-                  comboBoxBinWidth=self.uiLifeTime.binWidthComboBox
-                  spinBoxNumberMeasurements=self.uiLifeTime.numberMeasurementsSpinBox
-                  totalTime=self.uiLifeTime.totalStopsValue
-                  totalMeasurements=self.uiLifeTime.totalMeasurementsValue
-                  totalStarts=self.uiLifeTime.totalStartsValue
-                  applyButton=self.uiLifeTime.applyButtton
-                  functionComboBox=self.uiLifeTime.functionComboBox
-                  parametersTable=self.uiLifeTime.parametersTable
-                  self.parametersTable=parametersTable
-                  timeRange=self.uiLifeTime.timeRangeValue
-                  numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
-                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
-                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
-                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
-                                               applyButton,parametersTable,self,self.LifeTimeTimer)
-                  #If this sentinel dont have any use DELETE
-                  self.LifeTime_init_sentinel=1
-          elif valor_padre==2:
-            padre=self.tab3
+            padre=self.tab2
             self.construct_counts_estimated(padre)
             if self.countsEstimatedGraphic==None:
                 #Get the data to create the logic class for Counts Estimated measurement
@@ -628,9 +679,9 @@ class MainWindow(QMainWindow):
                 detachedLabelCheckBox=self.uiCountsEstimated.labelCheckBox
                 helpButton=self.uiCountsEstimated.helpButton
                 self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
-                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.LifeTimeTimer)
-          elif valor_padre==3:
-            padre=self.tab4
+                                                                ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.connectedTimer)
+          elif valor_padre==2:
+            padre=self.tab3
             self.construct_time_stamping(padre)  
             if self.timeStampGraphic==None:
                 enableCheckBoxA=self.uiTimeStamping.enableChannelACheckBox
@@ -676,8 +727,180 @@ class MainWindow(QMainWindow):
                                                      pauseScheduleButton, stopScheduleButton, startLimitedButton, pauseLimitedButton, stopLimitedButton, startDate, startTime, finishDate, finishTime,
                                                      numberMeasurementsSpinBox,showTableCheckBox, measurementLabelA, measurementLabelB, measurementLabelC, measurementLabelD,valueMeasurementA,valueMeasurementB,
                                                      valueMeasurementC, valueMeasurementD, valueTotalMeasurement, tableTimeStamp,statusLabelTimeStamp,colorLabelTimeStamp, saveDataComplete, tabNormalMeasurement,
-                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.LifeTimeTimer)
-                
+                                                     tabScheduleMeasurement, tabLimitedMeasurement,saveDataButton,tabsTimeStamp,autoSaveComboBox, helpSaveButton, self,  self.conectedDevice, self.connectedTimer)
+          elif valor_padre==3:
+              padre=self.tab4
+              self.construct_lifetime(padre)
+              if self.LifeTimeGraphic==None:
+                  #Get the data to create the logic class for LifeTime measurement
+                  comboBoxStartChannel=self.uiLifeTime.startChannelComboBox
+                  comboBoxStopChannel=self.uiLifeTime.stopChannelComboBox
+                  graphicsFrame=self.uiLifeTime.graphicFrame
+                  startButton=self.uiLifeTime.startButton
+                  stopButton=self.uiLifeTime.stopButton
+                  clearButton=self.uiLifeTime.clearButton
+                  saveDataButton=self.uiLifeTime.saveDataFileButton
+                  savePlotButton=self.uiLifeTime.savePlotButton
+                  initialParametersButton=self.uiLifeTime.buttonParameterLabel
+                  statusLabel=self.uiLifeTime.statusValue
+                  pointLabel=self.uiLifeTime.drawPointLabel
+                  comboBoxBinWidth=self.uiLifeTime.binWidthComboBox
+                  spinBoxNumberMeasurements=self.uiLifeTime.numberMeasurementsSpinBox
+                  totalTime=self.uiLifeTime.totalStopsValue
+                  totalMeasurements=self.uiLifeTime.totalMeasurementsValue
+                  totalStarts=self.uiLifeTime.totalStartsValue
+                  applyButton=self.uiLifeTime.applyButtton
+                  functionComboBox=self.uiLifeTime.functionComboBox
+                  parametersTable=self.uiLifeTime.parametersTable
+                  self.parametersTable=parametersTable
+                  timeRange=self.uiLifeTime.timeRangeValue
+                  numberBinsComboBox=self.uiLifeTime.numberBinsComboBox
+                  self.LifeTimeGraphic=LifeTimeLogic(comboBoxStartChannel, comboBoxStopChannel,graphicsFrame,startButton,stopButton,initialParametersButton,
+                                               clearButton,saveDataButton,savePlotButton,statusLabel,pointLabel,comboBoxBinWidth,numberBinsComboBox,functionComboBox,
+                                               spinBoxNumberMeasurements,totalMeasurements,totalStarts,totalTime,timeRange,self.conectedDevice,
+                                               applyButton,parametersTable,self,self.connectedTimer)
+                  #If this sentinel dont have any use DELETE
+                  self.LifeTime_init_sentinel=1
+          elif valor_padre==4:
+            padre=self.tab5
+            self.construct_fcs(padre)
+            if self.fcsGraphic==None:
+                graphicFrame      = self.uiFCS.graphicFrame
+                startButton       = self.uiFCS.startButton
+                stopButton        = self.uiFCS.stopButton
+                saveDataButton    = self.uiFCS.saveDataButton
+                savePlotButton    = self.uiFCS.savePlotButton
+                clearButton       = self.uiFCS.clearButton
+                valueStatusLabel  = self.uiFCS.valueStatusLabel
+                pointLabel        = self.uiFCS.pointLabel
+                # tau_0: read from spinbox in µs, convert to picoseconds
+                tau_0 = self.uiFCS.tau0SpinBox.value() * 1_000_000  # µs → ps
+                self.fcsGraphic=FCSLogic(
+                    graphicFrame,
+                    self.disconnectButton,
+                    self.conectedDevice,
+                    startButton,
+                    stopButton,
+                    saveDataButton,
+                    savePlotButton,
+                    clearButton,
+                    self.connectButton,
+                    self,
+                    valueStatusLabel,
+                    pointLabel,
+                    self.connectedTimer,
+                    self.uiFCS.callsLabel,
+                    self.uiFCS.eventsLabel,
+                    self.uiFCS.elapsedLabel,
+                    self.uiFCS.fitButton,
+                    self.uiFCS.fitModelCombo,
+                    self.uiFCS.fitEquationLabel,
+                    self.uiFCS.fitResultLabel,
+                    self.uiFCS.fitResultsFrame,
+                    self.uiFCS.fitTable,
+                    self.uiFCS.fitOffsetCheckBox,
+                    self.uiFCS.stopChannelComboBox,
+                    fitResetParamsButton=self.uiFCS.fitResetParamsButton,
+                    tau_0=tau_0,
+                )
+                self.fcsGraphic.set_parameter_widgets(
+                    self.uiFCS.tau0SpinBox,
+                    self.uiFCS.durationSpinBox,
+                    self.uiFCS.indefiniteCheckBox,
+                )
+            self._apply_fcs_generator_settings()   
+          elif valor_padre==5:
+            padre=self.tab6
+            self.construct_g2(padre)
+            if self.g2Graphic==None:
+                # ── Collect widget references from the new Ui_G2 layout ──────────
+                graphicFrameg2    = self.uig2.graphicFrame
+                startButtong2     = self.uig2.startButton
+                stopButtong2      = self.uig2.stopButton
+                saveDataButtong2  = self.uig2.saveDataButton
+                savePlotButtong2  = self.uig2.savePlotButton
+                clearButtong2     = self.uig2.clearButton
+                valueStatusLabel  = self.uig2.valueStatusLabel
+                pointLabel        = self.uig2.pointLabel
+                eventsLabel       = self.uig2.eventsLabel
+                elapsedLabel      = self.uig2.elapsedLabel
+                g2ZeroLabel       = self.uig2.g2ZeroLabel
+                countEstimationLabel = self.uig2.countEstimationLabel
+                stopChannelComboBox = self.uig2.stopChannelComboBox
+                countEstimationCheckBox = self.uig2.countEstimationEnableCheckBox
+
+                # ── Construct G2Logic (mirrors FCSLogic constructor) ─────────
+                self.g2Graphic = G2Logic(
+                    graphicFrameg2,
+                    self.disconnectButton,
+                    self.conectedDevice,
+                    startButtong2,
+                    stopButtong2,
+                    saveDataButtong2,
+                    savePlotButtong2,
+                    clearButtong2,
+                    self.connectButton,
+                    self,
+                    valueStatusLabel,
+                    pointLabel,
+                    self.connectedTimer,
+                    eventsLabel,
+                    elapsedLabel,
+                    g2ZeroLabel,
+                    countEstimationLabel,
+                    stopChannelComboBox,
+                    countEstimationCheckBox=countEstimationCheckBox,
+                )
+                # Provide parameter widgets so G2Logic reads them at start time
+                self.g2Graphic.set_parameter_widgets(
+                    self.uig2.binWidthSpinBox,
+                    self.uig2.windowSpinBox,
+                    self.uig2.durationSpinBox,
+                    self.uig2.indefiniteCheckBox,
+                )
+                # Provide cursor widgets (τ spinbox + g²(τ) label)
+                self.g2Graphic.set_cursor_widgets(
+                    self.uig2.tauQuerySpinBox,
+                    self.uig2.g2CursorLabel,
+                )
+                # Provide fit widgets so G2Logic can connect and use them
+                self.g2Graphic.set_fit_widgets(
+                    self.uig2.fitButton,
+                    self.uig2.fitModelCombo,
+                    self.uig2.fitEquationLabel,
+                    self.uig2.fitResultLabel,
+                    self.uig2.fitResultsFrame,
+                    self.uig2.fitTable,
+                    self.uig2.fitResetParamsButton,
+                )
+
+                # Keep the plot's X-axis limits in lockstep with "Window
+                # (±)": same value the user types in windowSpinBox, on
+                # both sides of zero. Re-applied every time Window changes.
+                def _sync_plot_x_range(half_window_ns):
+                    """
+                    Applies the "Window (±)" value as symmetric plot X-axis limits.
+
+                    :param half_window_ns: Half-window value, in nanoseconds, taken
+                        from ``windowSpinBox``. The plot is set to range from
+                        ``-half_window_ns`` to ``+half_window_ns``.
+                    :return: None
+                    """
+                    self.g2Graphic.plot.setXRange(
+                        -float(half_window_ns), float(half_window_ns),
+                        padding=0,
+                    )
+                self.uig2.windowSpinBox.valueChanged.connect(_sync_plot_x_range)
+                _sync_plot_x_range(self.uig2.windowSpinBox.value())
+
+                # When the UI resets the cursor to 0 ns (triggered by a
+                # Window change — see ui_g2measurement.py), also refresh
+                # the cursor line / g²(τ) readout on the plot, since that
+                # reset uses blockSignals() and skips the normal
+                # valueChanged → _query_tau connection.
+                self.uig2._on_tau_cursor_reset = self.g2Graphic._query_tau
+          self._previous_tab_index = valor_padre      
+            
 
         #   elif valor_padre==1:
 
@@ -706,26 +929,6 @@ class MainWindow(QMainWindow):
         #Important when g2 is unified with LifeTime CHANGE THE INDEX TO 2
 
 
-#The g2 functions are not use for the versions 1.1 comment for future versions
-
-    def Helpg2Button(self):
-        message_box = QMessageBox(self)
-        message_box.setIcon(QMessageBox.Information)
-        message_box.setWindowTitle("g2 measurement information")
-        message_box.setStandardButtons(QMessageBox.Ok)
-        custom_widget = QWidget()
-        layout = QVBoxLayout(custom_widget)
-        label = QLabel(custom_widget)
-        layout.addWidget(label)
-        pixmap = QPixmap('Sources/Help.png')
-
-        pixmap = pixmap.scaledToWidth(700)
-        label.setPixmap(pixmap)
-
-        message_box.layout().addWidget(custom_widget)
-
-
-        message_box.exec_()
 
 
 
@@ -786,6 +989,17 @@ class MainWindow(QMainWindow):
             message_box.exec_()
     
     def folderPrefixClicked(self):
+        """
+        Opens the folder/file-prefix settings dialog.
+
+        If no measurement is currently running, the dialog is opened in fully
+        editable mode. If a measurement is running, a warning message box is
+        shown first to inform the user that settings can only be read while a
+        measurement is in progress, and the dialog is then reopened in
+        read-only mode via `onlyReading()`.
+
+        :return: None
+        """
         if not self.currentMeasurement:
             self.openPrefixSettings=True
             self.prefixFolderDialog=QDialog(self)
@@ -810,6 +1024,18 @@ class MainWindow(QMainWindow):
             self.prefixFolderDialog.exec_()
     
     def generatorClicked(self):
+        """
+        Opens the signal-generator settings dialog for the connected device.
+
+        If no device is connected, an informational message box is shown
+        instead. If a device is connected and no measurement is running, the
+        dialog opens fully editable. If a measurement is running, a warning
+        is displayed and the dialog is reopened in read-only mode, restoring
+        the previously cached generator settings (`self.generatorSettings`)
+        if available.
+
+        :return: None
+        """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
                 self.openGenerator=True
@@ -832,7 +1058,8 @@ class MainWindow(QMainWindow):
                 self.dialog_generator=QDialog(self)
                 self.settings_generator = Ui_Generator()
                 self.settings_generator.setupUi(self.dialog_generator, self.conectedDevice)
-                self.settings_generator.setConfigOnlyRead(self.generatorSettings)
+                if self.generatorSettings:
+                    self.settings_generator.setConfigOnlyRead(self.generatorSettings)
                 self.dialog_generator.exec_()
         else:
             message_box = QMessageBox(self)
@@ -846,6 +1073,17 @@ class MainWindow(QMainWindow):
             
         
     def getVersionParameters(self):
+        """
+        Reads and caches device-specific identification parameters.
+
+        Retrieves the connected device's model identifier and overflow
+        parameter and stores them in `constants.VERSION_PARAMETER` and
+        `constants.OVERFLOW_PARAMETER` respectively. The signal-generator
+        settings menu action is shown only for "TP12" model devices and
+        hidden otherwise.
+
+        :return: None
+        """
         constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
         constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
         if "TP12" in constants.VERSION_PARAMETER:
@@ -1029,17 +1267,43 @@ class MainWindow(QMainWindow):
         settings_windows.setupUi(settings_windows_dialog)
         settings_windows_dialog.exec_()
 
+    def open_help(self):
+        """
+        Opens the application's help dialog.
+
+        Instantiates `HelpDialog` with this window as parent and displays it
+        modally.
+
+        :return: None
+        """
+        HelpDialog(self).exec_()
+
 
 #This function is not use for the Tempico Version 1.1
 #TO DO: Comment the function for a future version
     def parameters_action(self):
+        """
+        Opens the count-parameters measurement dialog.
+
+        .. note::
+           Not used in Tempico Version 1.1. Kept for a possible future
+           version.
+
+        If a device is connected and no measurement is running, builds the
+        parameters dialog (`UiParameters`) together with its logic handler
+        (`CountParameters`), stopping the G2 connection timer beforehand if
+        the G2 tab is active. If a measurement is running, a warning message
+        box is shown instead and no dialog is created.
+
+        :return: None
+        """
         if self.conectedDevice!=None:
             if not self.currentMeasurement:
                 self.dialogParameters=QDialog(self)
                 self.uiParameter = UiParameters()
                 self.uiParameter.setupUi(self.dialogParameters)
                 if self.g2Graphic!=None:
-                    self.g2Graphic.timerStatus.stop()
+                    self.g2Graphic.timerConnection.stop()
                 self.parametersLogic=CountParameters(self.uiParameter.channelComboBox,self.conectedDevice,self.uiParameter.measurementLabel,
                                                      self.uiParameter.measuremetStatusLabel,self.uiParameter.informationMeasureLabel,
                                                      self.uiParameter.startButton,self.uiParameter.stopButton,self.dialogParameters, self.g2Graphic,self)
@@ -1127,9 +1391,13 @@ class MainWindow(QMainWindow):
                     self.timeStampGraphic.disconnectedDevice()
                 if self.LifeTimeGraphic:
                     self.LifeTimeGraphic.disconnectedDevice()
+                if self.fcsGraphic:
+                    self.fcsGraphic.disconnectedDevice()
+                if self.g2Graphic:
+                    self.g2Graphic.disconnectedDevice()
                 if self.grafico:
                     self.grafico.disconnectedDevice()
-                self.LifeTimeTimer.stop()
+                self.connectedTimer.stop()
                 self.conectedDevice=None
                 msg_box = QMessageBox(self)
                 msg_box.setText("Connection with the device has been lost")
@@ -1154,6 +1422,10 @@ class MainWindow(QMainWindow):
             self.timeStampGraphic.disconnectedDevice()
         if self.LifeTimeGraphic:
             self.LifeTimeGraphic.disconnectedDevice()
+        if self.fcsGraphic:
+            self.fcsGraphic.disconnectedDevice()
+        if self.g2Graphic:
+            self.g2Graphic.disconnectedDevice()
         if self.grafico:
             self.grafico.disconnectedDevice()
         self.conectedDevice=None
@@ -1181,8 +1453,78 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.currentMeasurement=False
+    def _apply_fcs_generator_settings(self):
+        """
+        Saves the device's current generator configuration and forces FCS mode.
+
+        Only applies to "TP12" model devices; does nothing if no device is
+        connected or the connected device is not a TP12. Before making any
+        change, it caches the generator frequency and the start/stop source
+        of each of the four channels in `self._fcs_saved_generator_settings`
+        so they can be restored later by `_restore_generator_settings`. It
+        then sets the generator frequency to 2000 Hz and forces all channels
+        to use the internal start source, as required for FCS measurements.
+
+        :return: None
+        """
+        if self.conectedDevice is None:
+            return
+        import Utils.constants as constants
+        if "TP12" not in constants.VERSION_PARAMETER:
+            return
+        # Cache current generator settings before overwriting them
+        self._fcs_saved_generator_settings = []
+        self._fcs_saved_generator_settings.append(self.conectedDevice.getGeneratorFrequency())
+        for ch in range(1, 5):
+            self._fcs_saved_generator_settings.append(self.conectedDevice.getStartSource(ch))
+            self._fcs_saved_generator_settings.append(self.conectedDevice.getStopSource(ch))
+        self.conectedDevice.setGeneratorFrequency(2000)
+        for ch in range(1, 5):
+            self.conectedDevice.setStartInternalSource(ch)
+
+    def _restore_generator_settings(self):
+        """
+        Restores the generator configuration previously cached for FCS mode.
+
+        Reapplies the generator frequency and, for each of the four channels,
+        the previously saved start and stop source (internal or external)
+        stored in `self._fcs_saved_generator_settings` by
+        `_apply_fcs_generator_settings`. Does nothing if no device is
+        connected or if there are no cached settings to restore. The cache
+        is cleared after being applied.
+
+        :return: None
+        """
+        if self.conectedDevice is None:
+            return
+        if not self._fcs_saved_generator_settings:
+            return
+        saved = self._fcs_saved_generator_settings
+        self.conectedDevice.setGeneratorFrequency(int(saved[0]))
+        for i, ch in enumerate(range(1, 5)):
+            start = saved[1 + i * 2]
+            stop  = saved[2 + i * 2]
+            if start == "INTERNAL":
+                self.conectedDevice.setStartInternalSource(ch)
+            else:
+                self.conectedDevice.setStartExternalSource(ch)
+            if stop == "INTERNAL":
+                self.conectedDevice.setStopInternalSource(ch)
+            else:
+                self.conectedDevice.setStopExternalSource(ch)
+        self._fcs_saved_generator_settings = []
     
     def resetSaveSentinelsAllWindows(self):
+        """
+        Resets the save sentinels of every measurement tab that has been created.
+
+        Calls `resetSaveSentinels()` on each measurement logic instance
+        (Time Stamp, Counts Estimated, Lifetime, Start-Stop histogram, FCS,
+        and G2) that is not `None`, so each tab clears its internal flag
+        tracking whether data has already been saved.
+
+        :return: None
+        """
         if self.timeStampGraphic!=None:
             self.timeStampGraphic.resetSaveSentinels()
         if self.countsEstimatedGraphic!=None:
@@ -1191,6 +1533,10 @@ class MainWindow(QMainWindow):
             self.LifeTimeGraphic.resetSaveSentinels()
         if self.grafico!=None:
             self.grafico.resetSaveSentinels()
+        if self.fcsGraphic!=None:
+            self.fcsGraphic.resetSaveSentinels()
+        if self.g2Graphic!=None:
+            self.g2Graphic.resetSaveSentinels()
         
 
 
@@ -1202,7 +1548,11 @@ class MainWindow(QMainWindow):
 #--------Execution Test----------#
 
 if __name__ == '__main__':
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication([])
+    if sys.platform in ('linux', 'darwin'):
+        app.setStyle('Fusion')
     #Amber theme
     #apply_stylesheet(app, theme='dark_amber.xml')
     #Amber purple
@@ -1232,33 +1582,46 @@ if __name__ == '__main__':
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setFixedSize(desired_size)
-    # Comprobar si estamos en Ubuntu
-    if sys.platform != 'linux':  # Si no estamos en Ubuntu, aplicar opacidad
-        opaqueness = 0.0
-        step = 0.1
-        splash.setWindowOpacity(opaqueness)
+    splash.show()
 
-        while opaqueness < 1:
-            splash.setWindowOpacity(opaqueness)
-            time.sleep(step)
-            opaqueness += step
+    def show_main_window():
+        """
+        Creates and shows the main window, then closes the splash screen.
 
-        splash.show()
-        time.sleep(1)  # Mostrar splash por 1 segundo
-        splash.close()
+        Stores the created `MainWindow` instance in the module-level global
+        `window` variable so it is not garbage-collected once this function
+        returns.
+
+        :return: None
+        """
+        global window
         window = MainWindow()
         window.show()
-    else:
-        splash.show()
-        time.sleep(1)
         splash.close()
-        window = MainWindow()
-        window.show()
+
+    # Show the main window after 1 second, without blocking the event loop
+    QTimer.singleShot(1000, show_main_window)
 
     app.exec_()
 
 def execProgram():
+    """
+    Alternative application entry point with a fade-in splash screen.
+
+    Creates the `QApplication`, displays the splash screen and gradually
+    increases its opacity from 0 to 1 in fixed steps (a simple fade-in
+    effect), waits one additional second, then closes the splash screen and
+    shows the main window. Unlike the `if __name__ == '__main__'` block
+    above, this function blocks while animating the fade-in instead of using
+    a `QTimer`.
+
+    :return: None
+    """
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication([])
+    if sys.platform in ('linux', 'darwin'):
+        app.setStyle('Fusion')
     splash_pix = QPixmap(BANNER)
     desired_size = QSize(400, 300)
     splash_pix = splash_pix.scaled(desired_size, Qt.KeepAspectRatio)
@@ -1279,4 +1642,3 @@ def execProgram():
     window = MainWindow()
     window.show()
     app.exec_()
-

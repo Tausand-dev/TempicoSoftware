@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 import Utils.constants as constants
 
 project = 'Tempico Software'
-copyright = '2025,Tausand Electronics'
+copyright = '2026,Tausand Electronics'
 author = 'Tausand Electronics'
 release = constants.VERSION
 
@@ -44,5 +44,7 @@ latex_elements = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
+latex_engine = 'xelatex'
+latex_use_xindy = False
 html_static_path = ['_static']
 

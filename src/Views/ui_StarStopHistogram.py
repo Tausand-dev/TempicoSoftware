@@ -19,7 +19,47 @@ from PySide2.QtWidgets import QWidget
 
 
 class Ui_HistogramaStartStop(object):
+    """
+    Pure layout class for the Start-Stop histogram measurement tab.
+
+    Builds a two-column layout: a left ``GraphConfigurationArea`` (channel
+    checkboxes, start/stop/save/clear buttons, stretch factor 3) and a right
+    ``TotalGraphicArea`` (the ``Graph3`` frame where ``StartStopLogic``
+    injects the pyqtgraph histogram plots, plus the status bar at the
+    bottom, stretch factor 7).
+
+    Widget names exposed to ``StartStopLogic`` (and to ``main.py``)
+    ----------------------------------------------------------
+    SaveGraph1        QPushButton  Begin measurement
+    StopGraph1        QPushButton  End measurement
+    SaveDoc           QPushButton  Save histogram data file
+    SaveImage1        QPushButton  Save plot images
+    ClearchannelA/B/C/D QPushButton Clear the histogram of the given channel
+    Channel1Graph1    QCheckBox    Enable channel A
+    Channel4Graph1    QCheckBox    Enable channel B
+    Channel2Graph1    QCheckBox    Enable channel C
+    Channel3Graph1    QCheckBox    Enable channel D
+    Graph3            QFrame       Container for the live histogram plots
+    valueStatusLabel  QLabel       Status text
+    pointLabel        QLabel       Coloured status dot
+    """
     def setupUi(self, HistogramaStartStop):
+        """
+        Builds and lays out every widget of the Start-Stop histogram tab.
+
+        Constructs the two-column layout described in the class docstring:
+        the left ``GraphConfigurationArea`` (channel checkboxes and
+        start/stop/save/clear buttons) and the right ``TotalGraphicArea``
+        (the ``Graph3`` frame where ``StartStopLogic`` injects the live
+        histogram plots, plus the status bar). Also sets the initial
+        enabled/disabled state of the action buttons and channel checkboxes,
+        draws the initial grey status dot, and calls ``retranslateUi`` to set
+        every widget's display text.
+
+        :param HistogramaStartStop: The widget (typically a ``QWidget`` tab
+            page) that this UI class will populate.
+        :return: None
+        """
         if not HistogramaStartStop.objectName():
             HistogramaStartStop.setObjectName(u"HistogramaStartStop")
         HistogramaStartStop.setEnabled(True)
@@ -98,8 +138,8 @@ class Ui_HistogramaStartStop(object):
         sizePolicy3.setVerticalStretch(3)
         sizePolicy3.setHeightForWidth(self.Graph1Configuration.sizePolicy().hasHeightForWidth())
         self.Graph1Configuration.setSizePolicy(sizePolicy3)
-        self.Graph1Configuration.setFrameShape(QFrame.Panel)
-        self.Graph1Configuration.setFrameShadow(QFrame.Sunken)
+        self.Graph1Configuration.setFrameShape(QFrame.StyledPanel)
+        self.Graph1Configuration.setFrameShadow(QFrame.Plain)
         self.verticalLayout_3 = QVBoxLayout(self.Graph1Configuration)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.LabelFrameGraph1 = QFrame(self.Graph1Configuration)
@@ -120,27 +160,27 @@ class Ui_HistogramaStartStop(object):
         self.ComboBoxGraph1.setObjectName(u"ComboBoxGraph1")
         self.ComboBoxGraph1.setFrameShape(QFrame.StyledPanel)
         self.ComboBoxGraph1.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_4 = QHBoxLayout(self.ComboBoxGraph1)
+        self.horizontalLayout_4 = QGridLayout(self.ComboBoxGraph1)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.Channel1Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel1Graph1.setObjectName(u"Channel1Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel1Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel1Graph1, 0, 0, 1, 1)
 
         self.Channel4Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel4Graph1.setObjectName(u"Channel4Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel4Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel4Graph1, 0, 1, 1, 1)
 
         self.Channel2Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel2Graph1.setObjectName(u"Channel2Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel2Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel2Graph1, 1, 0, 1, 1)
 
         self.Channel3Graph1 = QCheckBox(self.ComboBoxGraph1)
         self.Channel3Graph1.setObjectName(u"Channel3Graph1")
 
-        self.horizontalLayout_4.addWidget(self.Channel3Graph1)
+        self.horizontalLayout_4.addWidget(self.Channel3Graph1, 1, 1, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.ComboBoxGraph1)
@@ -294,6 +334,7 @@ class Ui_HistogramaStartStop(object):
         
         self.widgetStatus = QWidget(self.TotalGraphicArea)
         self.widgetStatus.setObjectName(u"widgetStatus")
+        self.widgetStatus.setAutoFillBackground(True)
         sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(5)
@@ -303,8 +344,8 @@ class Ui_HistogramaStartStop(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.statusFrame = QFrame(self.widgetStatus)
         self.statusFrame.setObjectName(u"statusFrame")
-        self.statusFrame.setFrameShape(QFrame.Panel)
-        self.statusFrame.setFrameShadow(QFrame.Sunken)
+        self.statusFrame.setFrameShape(QFrame.StyledPanel)
+        self.statusFrame.setFrameShadow(QFrame.Plain)
         self.horizontalLayout_15 = QHBoxLayout(self.statusFrame)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.statusLabel = QLabel(self.statusFrame)
@@ -362,6 +403,17 @@ class Ui_HistogramaStartStop(object):
     #Start the animation    
 
     def retranslateUi(self, HistogramaStartStop):
+        """
+        Sets the translatable display text of every widget built in ``setupUi``.
+
+        Assigns the window title and the text of every label, checkbox, and
+        button using ``QCoreApplication.translate``, so the UI can be
+        localized through Qt's translation mechanism without touching the
+        layout code in ``setupUi``.
+
+        :param HistogramaStartStop: The widget whose window title is set.
+        :return: None
+        """
         HistogramaStartStop.setWindowTitle(QCoreApplication.translate("HistogramaStartStop", u"Form", None))
         # self.numberGraphLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"Number of graphics:", None))
         # self.GraphicsComboBox.setItemText(0, QCoreApplication.translate("HistogramaStartStop", u"1", None))
@@ -374,9 +426,9 @@ class Ui_HistogramaStartStop(object):
         self.Channel4Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel B", None))
         self.Channel2Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel C", None))
         self.Channel3Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel D", None))
-        self.SaveGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Begin measurement", None))
-        self.StopGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"End measurement", None))
-        self.SaveDoc.setText(QCoreApplication.translate("HistogramaStartStop", u"Save", None))
+        self.SaveGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Start", None))
+        self.StopGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Stop", None))
+        self.SaveDoc.setText(QCoreApplication.translate("HistogramaStartStop", u"Save Data File", None))
         self.SaveImage1.setText(QCoreApplication.translate("HistogramaStartStop", u"Save Plots", None))
         self.ClearchannelA.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear A", None))
         self.ClearchannelB.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear B", None))
@@ -391,6 +443,15 @@ class Ui_HistogramaStartStop(object):
 
 #Create graphic design#
     def drawColorPoint(self):
+            """
+            Draw the initial grey status dot on ``pointLabel``.
+
+            Called once at the end of ``setupUi`` so the dot is visible
+            before any measurement starts. The dot's size is derived from
+            ``pointLabel``'s current dimensions and is centred within it.
+
+            :return: None
+            """
             pixmap = QPixmap(self.pointLabel.size())
             pixmap.fill(Qt.transparent)  
 
@@ -399,10 +460,10 @@ class Ui_HistogramaStartStop(object):
             painter.setBrush(QColor(128, 128, 128))  
             painter.setPen(Qt.NoPen)
 
-            # Definir el tamaño del punto (círculo)
+            # Set the dot (circle) size
             point_size = min(self.pointLabel.width(), self.pointLabel.height()) // 2
 
-            # Calcular la posición del círculo para que quede centrado
+            # Compute the circle's position so it stays centred
             x = (self.pointLabel.width() - point_size) // 2
             y = (self.pointLabel.height() - point_size) // 2
 
@@ -414,16 +475,32 @@ class Ui_HistogramaStartStop(object):
 
 
 class UI(QMainWindow):
+    """
+    Standalone preview window used to visually inspect the Start-Stop tab layout.
+
+    Only used when this module is run directly (``python
+    ui_StarStopHistogram.py``); not imported or used by the rest of the
+    application.
+    """
     def __init__(self):
+        """
+        Builds the Start-Stop UI inside a bare `QMainWindow` for quick visual review.
+
+        Instantiates `Ui_HistogramaStartStop`, runs its `setupUi`, expands
+        the configuration area horizontally, and places both columns in the
+        window's central widget.
+
+        :return: None
+        """
         super().__init__()
 
         self.ui = Ui_HistogramaStartStop()
         self.ui.setupUi(self)
 
-        # Ajustar la política de tamaño del área de configuración
+        # Adjust the size policy of the configuration area
         self.ui.GraphConfigurationArea.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-        # Agregar el área de configuración al layout central del widget principal
+        # Add the configuration area to the central layout of the main widget
         central_widget = QWidget()
         layout = QHBoxLayout(central_widget)
         layout.addWidget(self.ui.GraphConfigurationArea)
@@ -437,4 +514,3 @@ if __name__ == "__main__":
     win = UI()
     win.show()
     app.exec_()
-

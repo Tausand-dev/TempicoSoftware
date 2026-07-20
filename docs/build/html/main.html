@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>main module &mdash; Tempico Software 2.0.0 documentation</title>
+  <title>main module &mdash; Tempico Software 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=73cda6fb"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0218eca2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -46,12 +46,12 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">main module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.activeMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.activeMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_counts_estimated"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_counts_estimated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_fcs"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_fcs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
@@ -66,6 +66,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.open_help"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_help()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resetSaveSentinelsAllWindows"><code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
@@ -83,14 +84,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
 </ul>
 
         </div>
@@ -138,11 +143,6 @@ It serves as a bridge between the UI classes that handle the design elements and
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="main.MainWindow.Helpg2Button">
-<span class="sig-name descname"><span class="pre">Helpg2Button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.Helpg2Button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.Helpg2Button" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.about_settings">
 <span class="sig-name descname"><span class="pre">about_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.about_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.about_settings" title="Permalink to this definition"></a></dt>
@@ -208,6 +208,24 @@ it creates an instance of the <cite>Ui_CountsEstimated</cite> class and sets up 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <cite>QTabWidget</cite>) for the counts estimated window.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.construct_fcs">
+<span class="sig-name descname"><span class="pre">construct_fcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.construct_fcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.construct_fcs" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs the FCS (Fluorescence Correlation Spectroscopy) window.</p>
+<p>This function takes a <code class="docutils literal notranslate"><span class="pre">QTabWidget</span></code> parent, and if the sentinel is not set,
+it creates an instance of <code class="docutils literal notranslate"><span class="pre">Ui_FCSMeasurement</span></code> and sets up the UI using
+the given parent. It ensures the UI is initialized only once by checking
+the <code class="docutils literal notranslate"><span class="pre">sentinel5</span></code> flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>QWidget</em>) – The parent widget (typically a <code class="docutils literal notranslate"><span class="pre">QTabWidget</span></code>) for the FCS window.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -325,7 +343,18 @@ corresponding <cite>get_settings()</cite> and <cite>enableSettings()</cite> meth
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.folderPrefixClicked">
 <span class="sig-name descname"><span class="pre">folderPrefixClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.folderPrefixClicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.folderPrefixClicked" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Opens the folder/file-prefix settings dialog.</p>
+<p>If no measurement is currently running, the dialog is opened in fully
+editable mode. If a measurement is running, a warning message box is
+shown first to inform the user that settings can only be read while a
+measurement is in progress, and the dialog is then reopened in
+read-only mode via <cite>onlyReading()</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.general_settings_clicked">
@@ -343,12 +372,35 @@ progress. If no device is connected, a message box is shown indicating that no d
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.generatorClicked">
 <span class="sig-name descname"><span class="pre">generatorClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.generatorClicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.generatorClicked" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Opens the signal-generator settings dialog for the connected device.</p>
+<p>If no device is connected, an informational message box is shown
+instead. If a device is connected and no measurement is running, the
+dialog opens fully editable. If a measurement is running, a warning
+is displayed and the dialog is reopened in read-only mode, restoring
+the previously cached generator settings (<cite>self.generatorSettings</cite>)
+if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.getVersionParameters">
 <span class="sig-name descname"><span class="pre">getVersionParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.getVersionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.getVersionParameters" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reads and caches device-specific identification parameters.</p>
+<p>Retrieves the connected device’s model identifier and overflow
+parameter and stores them in <cite>constants.VERSION_PARAMETER</cite> and
+<cite>constants.OVERFLOW_PARAMETER</cite> respectively. The signal-generator
+settings menu action is shown only for “TP12” model devices and
+hidden otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.manageConection">
@@ -397,14 +449,53 @@ Users can select a device and either connect or cancel the operation.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="main.MainWindow.open_help">
+<span class="sig-name descname"><span class="pre">open_help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.open_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.open_help" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the application’s help dialog.</p>
+<p>Instantiates <cite>HelpDialog</cite> with this window as parent and displays it
+modally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.parameters_action">
 <span class="sig-name descname"><span class="pre">parameters_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.parameters_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.parameters_action" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Opens the count-parameters measurement dialog.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not used in Tempico Version 1.1. Kept for a possible future
+version.</p>
+</div>
+<p>If a device is connected and no measurement is running, builds the
+parameters dialog (<cite>UiParameters</cite>) together with its logic handler
+(<cite>CountParameters</cite>), stopping the G2 connection timer beforehand if
+the G2 tab is active. If a measurement is running, a warning message
+box is shown instead and no dialog is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.resetSaveSentinelsAllWindows">
 <span class="sig-name descname"><span class="pre">resetSaveSentinelsAllWindows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#MainWindow.resetSaveSentinelsAllWindows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.MainWindow.resetSaveSentinelsAllWindows" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Resets the save sentinels of every measurement tab that has been created.</p>
+<p>Calls <cite>resetSaveSentinels()</cite> on each measurement logic instance
+(Time Stamp, Counts Estimated, Lifetime, Start-Stop histogram, FCS,
+and G2) that is not <cite>None</cite>, so each tab clears its internal flag
+tracking whether data has already been saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="main.MainWindow.resizeEvent">
@@ -492,7 +583,19 @@ After showing the main window, it closes the current window.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="main.execProgram">
 <span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">execProgram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#execProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.execProgram" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Alternative application entry point with a fade-in splash screen.</p>
+<p>Creates the <cite>QApplication</cite>, displays the splash screen and gradually
+increases its opacity from 0 to 1 in fixed steps (a simple fade-in
+effect), waits one additional second, then closes the splash screen and
+shows the main window. Unlike the <cite>if __name__ == ‘__main__’</cite> block
+above, this function blocks while animating the fade-in instead of using
+a <cite>QTimer</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -507,7 +610,7 @@ After showing the main window, it closes the current window.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

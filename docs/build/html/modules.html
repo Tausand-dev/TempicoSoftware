@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>src &mdash; Tempico Software 2.0.0 documentation</title>
+  <title>src &mdash; Tempico Software 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=73cda6fb"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0218eca2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,14 +44,18 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
 </ul>
 
         </div>
@@ -102,10 +106,8 @@
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.dialogChangeMode"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.dialogChangeMode()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.disconnectedDevice()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getMinimumValue"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.getMinimumValue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.hide_graphic2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.resetSaveSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_graphic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_plots"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_plots()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.show_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.show_graphic()</span></code></a></li>
@@ -150,7 +152,6 @@
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitExpDecay"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitExpDecay()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitKohlrauschFit"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitKohlrauschFit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.fitShiiftedExponential"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.fitShiiftedExponential()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getTempicoChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getTempicoChannel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getUnits"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.getUnits()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.indexChangeStartChannel"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.indexChangeStartChannel()</span></code></a></li>
@@ -163,7 +164,6 @@
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetInitialDialog"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetInitialDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetParametersLabels"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetParametersLabels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.resetSaveSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.roundStringPCov"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.roundStringPCov()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveLifeTimeData"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.saveLifeTimeData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveMode"><code class="docutils literal notranslate"><span class="pre">LifeTimeLogic.saveMode()</span></code></a></li>
@@ -215,7 +215,6 @@
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.formatWaitingTime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAproxTotalData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getAvailableRam"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAvailableRam()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatLimitedStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatLimitedStop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatNormalStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatNormalStop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatScheduledStop()</span></code></a></li>
@@ -225,7 +224,6 @@
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.pauseScheduledMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetSaveSentinels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetValuesSentinels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataAction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataButtonAction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveSettings"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveSettings()</span></code></a></li>
@@ -294,7 +292,6 @@
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.factoryGraphsAllChannels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.finishedThread"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.finishedThread()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.getChannelsMeasure()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getSettingsSources"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.getSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.helpButtonDialog()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.hideColumns()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.lostConnection"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.lostConnection()</span></code></a></li>
@@ -304,7 +301,6 @@
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSentinels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetSentinels()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetValues"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetValues()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.returnSettings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettingsSources"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.returnSettingsSources()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.rightAlignedItem()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.saveData()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.savePlots"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.savePlots()</span></code></a></li>
@@ -322,12 +318,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="main.html#main.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.Helpg2Button"><code class="docutils literal notranslate"><span class="pre">MainWindow.Helpg2Button()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.about_settings"><code class="docutils literal notranslate"><span class="pre">MainWindow.about_settings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.activeMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.activeMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.clicked_tabs"><code class="docutils literal notranslate"><span class="pre">MainWindow.clicked_tabs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_counts_estimated"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_counts_estimated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_fcs"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_fcs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_g2"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_g2()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_lifetime"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_lifetime()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.construct_start_stop_histogram"><code class="docutils literal notranslate"><span class="pre">MainWindow.construct_start_stop_histogram()</span></code></a></li>
@@ -342,6 +338,7 @@
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.manageConection"><code class="docutils literal notranslate"><span class="pre">MainWindow.manageConection()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.noMeasurement"><code class="docutils literal notranslate"><span class="pre">MainWindow.noMeasurement()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.open_dialog"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.open_help"><code class="docutils literal notranslate"><span class="pre">MainWindow.open_help()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.parameters_action"><code class="docutils literal notranslate"><span class="pre">MainWindow.parameters_action()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.resetSaveSentinelsAllWindows"><code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="main.html#main.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
@@ -356,6 +353,112 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="main.html#main.execProgram"><code class="docutils literal notranslate"><span class="pre">execProgram()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic"><code class="docutils literal notranslate"><span class="pre">G2Logic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.PARAM_LABELS"><code class="docutils literal notranslate"><span class="pre">G2Logic.PARAM_LABELS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeColorThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeColorThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.clear_curve"><code class="docutils literal notranslate"><span class="pre">G2Logic.clear_curve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">G2Logic.hide_graphic2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">G2Logic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.run_fit"><code class="docutils literal notranslate"><span class="pre">G2Logic.run_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.save_data"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.save_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_cursor_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_cursor_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_fit_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_fit_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.set_parameter_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_parameter_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.start_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.start_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.stop_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.threadComplete"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadComplete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.threadRunning"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadRunning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="G2Logic.html#Logic.G2Logic.G2Logic.update_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.update_plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.applyCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.colorValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.colorValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.dataReady"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.dataReady</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.saveCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.saveCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.statusUpdate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.statusUpdate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stringValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.stringValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.threadCreated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadG2.threadCreated</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createLifeTimeData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createdSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.disconectedSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.noMeasurementsMessage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.pointSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.statusSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.takeMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateMeasurementsLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateValues</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.changeProgress"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.changeProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.run"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.sortTimeStamps"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.sortTimeStamps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.applyCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeIsPauseFalse"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeIsPauseFalse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeIsPauseTrue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeIsPauseTrue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeReadyToReorder"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeReadyToReorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeStatusColor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeStatusText"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeStatusText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.checkCorruptData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.checkCorruptData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.detectedErrorSaving"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.detectedErrorSaving</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.enableChannelsAfterFinishedMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.enableChannelsAfterFinishedMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.enableDisableChannels"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.enableDisableChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.finishedMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.finishedMeasurements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getLimitedMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getLimitedMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getRange"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getRange()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.newMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.newMeasurement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.saveCurrentMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.saveCurrentMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.sortMeasurementByStart"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.sortMeasurementByStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.sortTimeStamps"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.sortTimeStamps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.syncTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.syncTime()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a><ul>
@@ -389,90 +492,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.checkDeviceStatus()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.clear()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createLifeTimeData()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createdSignal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.disconectedSignal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.pointSignal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.staticMetaObject</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.statusSignal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.stop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.takeMeasurements()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateLabel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateMeasurementsLabel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateValues</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.applyCurrentSettings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeIsPauseFalse"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeIsPauseFalse()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeIsPauseTrue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeIsPauseTrue()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeReadyToReorder"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeReadyToReorder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeStatusColor</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeStatusText"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.changeStatusText</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.checkCorruptData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.checkCorruptData()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.detectedErrorSaving"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.detectedErrorSaving</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.enableChannelsAfterFinishedMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.enableChannelsAfterFinishedMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.enableDisableChannels"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.enableDisableChannels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.finishedMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.finishedMeasurements</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getLimitedMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getLimitedMeasurements()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getMeasurement()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getRange"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.getRange()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.newMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.newMeasurement</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.saveCurrentMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.saveCurrentMeasurements()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.sortMeasurementByStart"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.sortMeasurementByStart()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.sortTimeStamps"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.sortTimeStamps()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.staticMetaObject</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.stop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.syncTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadTimeStamping.syncTime()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.calculateIntervalWithStops()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.changeStatusColor</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusText"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.changeStatusText</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.determineStopsNumber()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.disconnectedDevice</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.enableDisableChannels"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.enableDisableChannels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.finalDate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.finalDate</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.getMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.getMeasurements()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.initialDate</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.newMeasurement</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.newValue</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noPartialMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.noPartialMeasurements</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noTotalMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.noTotalMeasurements</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.staticMetaObject</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.stop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.updateLabel</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.changeProgress"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.changeProgress</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.run"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.sortTimeStamps"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.sortTimeStamps()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.staticMetaObject</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </div>
 </section>
@@ -485,7 +504,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

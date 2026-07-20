@@ -13,7 +13,6 @@ from Threads.ThreadStartStop import WorkerThreadStartStopHistogram
 import Utils.constants as constants
 import pyTempico as Tempico
 
-#Create graphic design#
 class StartStopLogic():
     """
     This class handles the functionality for managing buttons, checkboxes, and graphs for histograms related to the Start-Stop measurements. 
@@ -32,15 +31,55 @@ class StartStopLogic():
     :param statusValue, statusPoint: QLabel widgets for displaying status information (e.g., values and points).
     """
     def __init__(self, parent, disconnect,device: Tempico.TempicoDevice,check1,check2,check3,check4,startbutton,stopbutton,savebutton,save_graph_1,clear_channel_A,clear_channel_B,clear_channel_C,clear_channel_D,connect,mainWindow,statusValue,statusPoint,timerStatus, *args, **kwargs):
+        """
+        Initializes the Start-Stop tab logic and wires up its widgets.
+
+        Stores references to the device and every widget used by the
+        Start-Stop tab (channel checkboxes, start/stop/save/clear buttons,
+        status labels, and the shared connection timer), sets the initial
+        enabled/disabled state of each button, and connects each control's
+        clicked signal to its corresponding handler (start/stop measurement,
+        save data, save plots, clear each channel). It also initializes the
+        empty per-channel histogram data and sentinels used to track zoom
+        state, save state, and thread lifecycle, and computes the initial
+        minimum X-axis value via `getMinimumValue`.
+
+        :param parent: The parent QWidget for the logic (used as the grid
+            layout's container).
+        :param disconnect: Main-window Disconnect button.
+        :param device: The Tempico device instance that handles the measurements.
+        :param check1: QCheckBox that enables channel A.
+        :param check2: QCheckBox that enables channel B.
+        :param check3: QCheckBox that enables channel C.
+        :param check4: QCheckBox that enables channel D.
+        :param startbutton: QPushButton that starts the measurement.
+        :param stopbutton: QPushButton that stops the measurement.
+        :param savebutton: QPushButton that saves the histogram data.
+        :param save_graph_1: QPushButton that saves the plot images.
+        :param clear_channel_A: QPushButton that clears channel A's histogram.
+        :param clear_channel_B: QPushButton that clears channel B's histogram.
+        :param clear_channel_C: QPushButton that clears channel C's histogram.
+        :param clear_channel_D: QPushButton that clears channel D's histogram.
+        :param connect: Main-window Connect button.
+        :param mainWindow: Reference to the application's main window.
+        :param statusValue: Label showing the current status text.
+        :param statusPoint: Label used as a coloured status dot.
+        :param timerStatus: Shared connection-polling timer.
+        :param args: Additional positional arguments (unused).
+        :param kwargs: Additional keyword arguments (unused).
+        :return: None
+        """
         super().__init__()
         self.savefile=savefile()
+        #Measurement window (used when saving data)
+        self.initialDate=""
+        self.finalDate=""
         #timer to manage disconnection
         self.timerConnection=timerStatus
         #Disconnect button
         self.disconnectButton= disconnect
         #Connect button
         self.connectButton= connect
-        ##----------------##
         self.startbutton=startbutton
         self.stopbutton=stopbutton
         self.savebutton=savebutton
@@ -78,11 +117,7 @@ class StartStopLogic():
         self.setinelSaveD=False
         self.withoutMeasurement=False
 
-        ##---------------------------------##
-        ##---------------------------------##
-        ##-------Begin graphic layout------##
-        ##---------------------------------##
-        ##---------------------------------##
+        #Graphic layout and device channel setup
         self.parent=parent
         self.mainWindow=mainWindow
         self.gridlayout=QGridLayout(self.parent)
@@ -95,11 +130,7 @@ class StartStopLogic():
         self.channel2=self.device.ch2
         self.channel3=self.device.ch3
         self.channel4=self.device.ch4
-        ##---------------------------------##
-        ##---------------------------------##
-        ##------Begin the historam data----##
-        ##---------------------------------##
-        ##---------------------------------##
+        #Initialize per-channel histogram data containers
         self.dataA=[]
         self.histA, self.binsA=histogram(self.dataA,bins=60)
         #Creating the histogram plot channel B
@@ -144,14 +175,6 @@ class StartStopLogic():
         
 
 
-        
-    #Function to know the state of device   
-    ##---------------------------------##
-    ##---------------------------------##
-    ##------Begin the create graphs----##
-    ##---------------------------------##
-    ##---------------------------------##  
-           
         
     def create_graphs(self):
         """
@@ -368,14 +391,17 @@ class StartStopLogic():
         
     
     
-    ##---------------------------------##
-    ##---------------------------------##
-    ##--Begin with start-stop buttons--##
-    ##---------------------------------##
-    ##---------------------------------##  
-    
-    
     def getMinimumValue(self):
+        """
+        Sets the initial plot X-axis minimum according to the device model.
+
+        "TP12" model devices support negative Start-Stop delays, so the
+        minimum is set slightly below zero (``-250`` ns / ``-0.00025`` ms).
+        Other models only support non-negative delays, so the minimum is
+        set to 0.
+
+        :return: None
+        """
         if "TP12" in constants.VERSION_PARAMETER:
             self.minimumMs=-0.00025
             self.minimumNs=-250
@@ -406,6 +432,8 @@ class StartStopLogic():
             self.mainWindow.saveSettings()
             self.withoutMeasurement=False
             self.stopTimerConnection()
+            self.initialDate=datetime.datetime.now()
+            self.finalDate=""
             self.sentinelZoomChangedA=0
             self.sentinelZoomChangedB=0
             self.sentinelZoomChangedC=0
@@ -413,6 +441,8 @@ class StartStopLogic():
             self.mainWindow.tabs.setTabEnabled(1,False)
             self.mainWindow.tabs.setTabEnabled(2,False)
             self.mainWindow.tabs.setTabEnabled(3,False)
+            self.mainWindow.tabs.setTabEnabled(4,False)
+            self.mainWindow.tabs.setTabEnabled(5,False) 
             self.disconnectButton.setEnabled(False)
             self.mainWindow.activeMeasurement()
             if "TP12" in constants.VERSION_PARAMETER:
@@ -430,8 +460,16 @@ class StartStopLogic():
             
             
     def calibrateDeviceDelay(self):
+        """
+        Runs the device's delay calibration routine.
+
+        Called from `start_graphic` before creating the graphs, only for
+        "TP12" model devices, to compensate for channel-to-channel timing
+        offsets before a new measurement begins.
+
+        :return: None
+        """
         self.device.calibrateDelay()
-        
     
     def stopTimerConnection(self):
         """
@@ -490,6 +528,7 @@ class StartStopLogic():
 
         :return: None
         """
+        self.finalDate=datetime.datetime.now()
         if not self.withoutMeasurement:
             self.startTimerConnection()
         if self.threadCreatedSentinel:
@@ -501,6 +540,8 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.disconnectButton.setEnabled(True)
         self.mainWindow.noMeasurement()
         self.stopbutton.setEnabled(False)
@@ -529,16 +570,13 @@ class StartStopLogic():
         self.mainWindow.tabs.setTabEnabled(1,True)
         self.mainWindow.tabs.setTabEnabled(2,True)
         self.mainWindow.tabs.setTabEnabled(3,True)
+        self.mainWindow.tabs.setTabEnabled(4,True)
+        self.mainWindow.tabs.setTabEnabled(5,True)
         self.threadCreated=False
         self.stop_graphic()
     
     
         
-    ##---------------------------------##
-    ##---------------------------------##
-    ##------Clear graphics buttons-----##
-    ##---------------------------------##
-    ##---------------------------------##  
     
     def clear_a(self):
         """
@@ -623,11 +661,6 @@ class StartStopLogic():
         curve.setData(binsU, hist, fillLevel=0)
         
     
-    ##-------------------------------------------##
-    ##-------------------------------------------##
-    ##--Get the histogram bins according to zoom-##
-    ##-------------------------------------------##
-    ##-------------------------------------------## 
     
     
     def zoom_changedA(self):
@@ -789,11 +822,6 @@ class StartStopLogic():
 
     
     
-    ##--------------##
-    ##--------------##
-    ##--Save files--##
-    ##--------------##
-    ##--------------## 
     def save_graphic(self):
         """
         Saves the current data according to the selected format specified in the dialog box.
@@ -827,6 +855,7 @@ class StartStopLogic():
         data_prefix=dataFolderPrefix["startStopHistogramPrefix"]
         current_date=datetime.datetime.now()
         current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
+        device_model=self.device.getModelIdn()
         #Init filenames and data list
         filenames=[]
         data=[]
@@ -870,29 +899,29 @@ class StartStopLogic():
             total_condition= conditiontxt or conditioncsv or conditiondat
             if not total_condition:
                 if self.setinelSaveA:
-                    filename1=data_prefix+current_date_str+'channelA'
-                    setting_A="Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
+                    filename1 = data_prefix + '_' + current_date_str + '_ChannelA'
+                    setting_A="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel1.getAverageCycles())+ "\nMode:\t"+str(self.channel1.getMode())+"\nNumber of stops:\t"+ str(self.channel1.getNumberOfStops())+"\nStop edge:\t"+str(self.channel1.getStopEdge())+ "\nStop mask:\t"+str(self.channel1.getStopMask())
                     settings.append(setting_A)
                     filenames.append(filename1)
                     data.append(self.datapureA)
                     column_names.append('channelA_data (ps)')
                 if self.setinelSaveB:
-                    filename2=data_prefix+current_date_str+'channelB'
-                    setting_B="Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
+                    filename2 = data_prefix + '_' + current_date_str + '_ChannelB'
+                    setting_B="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel2.getAverageCycles())+ "\nMode:\t"+str(self.channel2.getMode())+"\nNumber of stops:\t"+ str(self.channel2.getNumberOfStops())+"\nStop edge:\t"+str(self.channel2.getStopEdge())+ "\nStop mask:\t"+str(self.channel2.getStopMask())
                     settings.append(setting_B)
                     filenames.append(filename2)
                     data.append(self.datapureB)
                     column_names.append('channelB_data (ps)')
                 if self.setinelSaveC:
-                    filename3=data_prefix+current_date_str+'channelC'
-                    setting_C="Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
+                    filename3 = data_prefix + '_' + current_date_str + '_ChannelC'
+                    setting_C="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles:\t"+str(self.channel3.getAverageCycles())+ "\nMode:\t"+str(self.channel3.getMode())+"\nNumber of stops:\t"+ str(self.channel3.getNumberOfStops())+"\nStop edge:\t"+str(self.channel3.getStopEdge())+ "\nStop mask:\t"+str(self.channel3.getStopMask())
                     settings.append(setting_C)
                     filenames.append(filename3)
                     data.append(self.datapureC)
                     column_names.append('channelC_data (ps)')
                 if self.setinelSaveD:
-                    filename4=data_prefix+current_date_str+'channelD'
-                    setting_D="Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
+                    filename4 = data_prefix + '_' + current_date_str + '_ChannelD'
+                    setting_D="Tab:\tStart-stop histogram\n"+f"Initial date:\t{self.initialDate}\n"+f"Final date:\t{self.finalDate}\n"+f"Device model:\t{device_model}\n"+"Average cycles: "+str(self.channel4.getAverageCycles())+ "\nMode:\t"+str(self.channel4.getMode())+"\nNumber of stops:\t"+ str(self.channel4.getNumberOfStops())+"\nStop edge:\t"+str(self.channel4.getStopEdge())+ "\nStop mask:\t"+str(self.channel4.getStopMask())
                     settings.append(setting_D)
                     filenames.append(filename4)
                     data.append(self.datapureD)
@@ -903,12 +932,12 @@ class StartStopLogic():
                     self.savefile.save_lists_as_columns_txt(data,filenames,column_names,folder_path,settings,selected_format)
                     message_box = QMessageBox(self.parent)
                     message_box.setIcon(QMessageBox.Information)
-                    inital_text="The files have been saved successfully in path folder: "
-                    text_route="\n\n"+ str(folder_path)+"\n\n"+"with the following names:"
+                    inital_text="The files have been saved successfully in path folder:\n\n"
+                    text_route=str(folder_path)+" with the following names:\n\n"
                     index=1
                     for i in filenames:
                         filenumber="File" + str(index)+": "
-                        text_route+="\n\n"+filenumber+i+"."+str(selected_format)
+                        text_route+="\n"+filenumber+i+"."+str(selected_format)
                         index+=1
                     message_box.setText(inital_text+text_route)
                     if selected_format=="txt":
@@ -999,10 +1028,10 @@ class StartStopLogic():
             
             QMetaObject.connectSlotsByName(dialog)
             
-            # Conectar el botón "Accept" al método accept del diálogo
+            # Connect the "Accept" button to the dialog's accept method
             accepButton.clicked.connect(dialog.accept)
             
-            # Mostrar el diálogo y esperar a que se cierre
+            # Show the dialog and wait until it is closed
             if dialog.exec_() == QDialog.Accepted:
                 selected_format = FormatBox.currentText()
                 if self.setinelSaveA:
@@ -1011,7 +1040,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelA'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelA'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1023,7 +1052,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelB'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelB'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1035,7 +1064,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelC'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelC'
                     if os.name == 'posix':  
                         exporter.export(folder_path+'/'+graph_name+'.'+selected_format)
                     else:  
@@ -1047,7 +1076,7 @@ class StartStopLogic():
                     exporter.parameters()['height'] = 600
                     current_date=datetime.datetime.now()
                     current_date_str=current_date.strftime("%Y-%m-%d %H:%M:%S").replace(':','').replace('-','').replace(' ','')
-                    graph_name=data_prefix+'Measure_ChannelD'+current_date_str
+                    graph_name = data_prefix + '_' + current_date_str + '_ChannelD'
                     exporter.export(folder_path+'\\'+graph_name+'.'+selected_format)
                     graph_names.append(graph_name)
                     
@@ -1103,6 +1132,25 @@ class StartStopLogic():
             self.update_histogram(self.dataD,self.curveD,"D")
     
     def updateBashSignal(self,valueListA,valueListB,valueListC,valueListD):
+        """
+        Appends a batch of processed measurement values and refreshes each channel's histogram.
+
+        Used in batched measurement mode, where the worker thread emits
+        lists of values accumulated over several runs instead of one value
+        at a time. Every value in each list is appended to the
+        corresponding channel's data, and the histogram is refreshed once
+        per channel (not per value) if that channel received any new data.
+
+        :param valueListA: List of new processed measurement values for
+            channel A.
+        :param valueListB: List of new processed measurement values for
+            channel B.
+        :param valueListC: List of new processed measurement values for
+            channel C.
+        :param valueListD: List of new processed measurement values for
+            channel D.
+        :return: None
+        """
         for value in valueListA:
             self.dataA.append(value)
         if self.dataA:
@@ -1145,7 +1193,25 @@ class StartStopLogic():
             self.datapureD.append(int(value))
 
     def updateBashDataPure(self,valuesPureA,valuesPureB,valuesPureC,valuesPureD):
-        
+        """
+        Appends a batch of raw measurement values for each channel.
+
+        Used in batched measurement mode, where the worker thread emits
+        lists of raw (picosecond) values accumulated over several runs
+        instead of one value at a time. Every value in each list is
+        appended, as an integer, to the corresponding channel's raw data
+        list.
+
+        :param valuesPureA: List of new raw measurement values, in
+            picoseconds, for channel A.
+        :param valuesPureB: List of new raw measurement values, in
+            picoseconds, for channel B.
+        :param valuesPureC: List of new raw measurement values, in
+            picoseconds, for channel C.
+        :param valuesPureD: List of new raw measurement values, in
+            picoseconds, for channel D.
+        :return: None
+        """
         for value in valuesPureA:
             self.datapureA.append(int(value))
         for value in valuesPureB:
@@ -1243,6 +1309,18 @@ class StartStopLogic():
         self.statusPoint.setPixmap(pixmap)
     
     def changeColorThread(self, color):
+        """
+        Updates the status-indicator dot colour from a worker-thread signal.
+
+        Equivalent to `changeStatusColor`, provided as a separate slot so it
+        can be connected directly to the worker thread's `colorValue`
+        signal. Draws a filled circle on `statusPoint` using the same
+        colour code: 0 = gray, 1 = green, 2 = yellow, 3 = orange.
+
+        :param color: Colour code (int). 0 for gray, 1 for green, 2 for
+            yellow, 3 for orange.
+        :return: None
+        """
         pixmap = QPixmap(self.statusPoint.size())
         pixmap.fill(Qt.transparent)  
         painter = QPainter(pixmap)
@@ -1269,6 +1347,14 @@ class StartStopLogic():
         self.statusPoint.setPixmap(pixmap)
         
     def resetSaveSentinels(self):
+        """
+        Clears the sentinels that track which file formats have already been saved.
+
+        Resets the txt/csv/dat save sentinels to 0, allowing the data to be
+        saved again in any format (e.g. after a new measurement starts).
+
+        :return: None
+        """
         self.sentinelsavetxt=0
         self.sentinelsavecsv=0
         self.sentinelsavedat=0  

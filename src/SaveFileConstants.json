@@ -1,7 +1,8 @@
 {
-    "saveFolder": "C:\\Users\\soyyo\\Documents\\TempicoSoftwareData",
+    "saveFolderName": "TempicoSoftwareData",
     "startStopHistogramPrefix": "StartStopHistogram",
     "lifetimePrefix": "Lifetime",
     "countsEstimationPrefix": "CountsEstimation",
-    "timeStampingPrefix": "TimeStamping"
+    "timeStampingPrefix": "TimeStamping",
+    "fcsPrefix": "Autocorrelation"
 }

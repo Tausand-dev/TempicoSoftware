@@ -1,6 +1,7 @@
 from PySide2.QtWidgets import QDialog, QDoubleSpinBox, QSpinBox, QPushButton, QMessageBox, QWhatsThis, QLabel, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QIcon
-from PySide2.QtCore import QEvent
+from PySide2.QtCore import Qt, QEvent, QObject
+from .constants import ICON_LOCATION
 
 
 
@@ -17,10 +18,10 @@ class GeneralSettingsWindow(QDialog):
     def __init__(self, device, parent):
         super().__init__(parent)
         self.device = device
-
+        self.installEventFilter(self)
         self.setWindowTitle("General settings")
         self.setFixedSize(350, 140)
-        self.setWindowIcon(QIcon('Sources/tausand_small.ico'))
+        self.setWindowIcon(QIcon(ICON_LOCATION))
 
         # Main Layout
         main_layout = QVBoxLayout(self)  # Main vertical layout for the window
@@ -97,23 +98,13 @@ class GeneralSettingsWindow(QDialog):
         self.device.setThresholdVoltage(self.Comboboxthresholdvoltage.value())
         self.accept()
     
-    def event(self, event): 
-        """
-        Handles the event when the "?" (What's This) help button is clicked.
-
-        This function intercepts the event triggered when the user clicks the "?" button (entering What's This mode). 
-        It exits What's This mode immediately, changes the mouse cursor back to the arrow, and displays a help window with relevant information.
-
-        :param event: The event object representing the triggered event.
-        :type event: QEvent
-        :returns: True if the event is handled; otherwise, it passes the event to the parent class for default processing.
-        :rtype: bool
-        """
-        if event.type() == QEvent.EnterWhatsThisMode: #Event called when ? is clicked                
-            QWhatsThis.leaveWhatsThisMode() #To change mouse cursor back to arrow
-            self.showHelp()
-            return True
-        return QDialog.event(self, event)
+    def eventFilter(self, obj, event):
+        if obj == self and event.type() == QEvent.EnterWhatsThisMode:
+            if self.isActiveWindow():
+                QWhatsThis.leaveWhatsThisMode()
+                self.showHelp()
+                return True
+        return QObject.eventFilter(self, obj, event)
     
     def disableSettings(self):
         """
@@ -155,6 +146,3 @@ class GeneralSettingsWindow(QDialog):
         QMessageBox.information(self, "Help", "Here is the information about the general settings:\n\n"
                                       "Threshold voltage: Enter a value between 0.60 V and 1.60 V.\n"
                                       "Number of runs: Number of measurements performed in each channel during one data collection.")
-
-    
-

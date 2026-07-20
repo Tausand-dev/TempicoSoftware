@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Tempico Software 2.0.0 documentation</title>
+  <title>Index &mdash; Tempico Software 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=73cda6fb"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0218eca2"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
@@ -43,14 +43,18 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
 </ul>
 
         </div>
@@ -108,22 +112,28 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="main.html#main.MainWindow.about_settings">about_settings() (main.MainWindow method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.accepted">accepted() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="main.html#main.MainWindow.activeMeasurement">activeMeasurement() (main.MainWindow method)</a>
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.addChannelWarning">addChannelWarning() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.applyAction">applyAction() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.applyCurrentSettings">applyCurrentSettings() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.applyCurrentSettings">applyCurrentSettings() (Threads.ThreadFCS.WorkerThreadFCS method)</a>
 
       <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.applyCurrentSettings">(Threads.ThreadG2.WorkerThreadG2 method)</a>
+</li>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.applyCurrentSettings">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
+</li>
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.applyCurrentSettings">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
       </ul></li>
-      <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.applyInitialDialog">applyInitialDialog() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.applyInitialDialog">applyInitialDialog() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
+</li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.autoRangeA">autoRangeA() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.autoRangeB">autoRangeB() (Logic.StartStopLogic.StartStopLogic method)</a>
@@ -138,13 +148,21 @@
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.autoSaveSettings">autoSaveSettings() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.average_counts">average_counts() (g2Graphics.g2Graphic method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.beging2Measurement">beging2Measurement() (g2Graphics.g2Graphic method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.beginMeasurementTime">beginMeasurementTime() (Logic.TimeStampLogic.TimeStampLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.BinWidthAcceptDialog">BinWidthAcceptDialog() (g2Graphics.g2Graphic method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -152,6 +170,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.calculate_total_time">calculate_total_time() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops">calculateIntervalWithStops() (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.calculateR2">calculateR2() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -176,8 +196,14 @@
         <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.captureMeasurement">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       </ul></li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeColorThread">changeColorThread() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.changeColorThread">changeColorThread() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.changeColorThread">(Logic.G2Logic.G2Logic method)</a>
 </li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeColorThread">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.changeCreatedStatus">changeCreatedStatus() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.changeFunction">changeFunction() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -190,9 +216,13 @@
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.changeMaxValue">changeMaxValue() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.changeNotStartMeasurements">changeNotStartMeasurements() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.changeProgress">changeProgress (Threads.ThreadProccessData.ProcessingDataSaved attribute)</a>
 </li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeReadyToReorder">changeReadyToReorder() (Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.changesentinelParameter">changesentinelParameter() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusColor">changeStatusColor (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
 
@@ -203,6 +233,10 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusColor">changeStatusColor() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.changeStatusColor">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusColor">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.changeStatusColor">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeStatusColor">(Logic.StartStopLogic.StartStopLogic method)</a>
@@ -224,9 +258,21 @@
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.changeStatusText">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping attribute)</a>
 </li>
       </ul></li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeStatusThread">changeStatusThread() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.changeStatusThread">changeStatusThread() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.changeStatusThread">(Logic.G2Logic.G2Logic method)</a>
+</li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeStatusThread">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.changeToNewSettings">changeToNewSettings() (g2Graphics.g2Graphic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.changeTrheadSentinel">changeTrheadSentinel() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.changeZoomMax">changeZoomMax() (Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.check_device_status">check_device_status() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.checkBoxListenerChannels">checkBoxListenerChannels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
@@ -246,16 +292,24 @@
         <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus">(Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
       </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.checkStatus">checkStatus() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear">clear() (Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
+</li>
+      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.clear_a">clear_a() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.clear_a">clear_a() (Logic.StartStopLogic.StartStopLogic method)</a>
-</li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.clear_b">clear_b() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.clear_c">clear_c() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.clear_curve">clear_curve() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.clear_curve">(Logic.G2Logic.G2Logic method)</a>
+</li>
+      </ul></li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.clear_d">clear_d() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelA">clearChannelA() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
@@ -280,19 +334,37 @@
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeTableDialog">closeTableDialog() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.colorValue">colorValue (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.coincidence_normalization">coincidence_normalization() (g2Graphics.WorkerThread method)</a>
+</li>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.colorValue">colorValue (Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
+
+      <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.colorValue">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
+</li>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.colorValue">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.comboBoxInitMeasurement">comboBoxInitMeasurement() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.compareMaxValue">compareMaxValue() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.connectDevice">connectDevice() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.connectedDevice">connectedDevice() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.connectedDevice">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.connectedDevice">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.connectedDevice">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.connectedDevice">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       </ul></li>
       <li><a href="main.html#main.MainWindow.construct_counts_estimated">construct_counts_estimated() (main.MainWindow method)</a>
+</li>
+      <li><a href="main.html#main.MainWindow.construct_fcs">construct_fcs() (main.MainWindow method)</a>
 </li>
       <li><a href="main.html#main.MainWindow.construct_g2">construct_g2() (main.MainWindow method)</a>
 </li>
@@ -312,15 +384,27 @@
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicD">constructGraphicD() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.count_elements_in_range">count_elements_in_range() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic">CountEstimatedLogic (class in Logic.CountsEstimatedLogic)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.countToBegin">countToBegin() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.countToStop">countToStop() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.create_g2_data">create_g2_data() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.create_graphs">create_graphs() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
+      <li><a href="testTempico.html#testTempico.create_measurement_ch2_1">create_measurement_ch2_1() (in module testTempico)</a>
+</li>
+      <li><a href="testTempico.html#testTempico.create_measurement_ch2_2">create_measurement_ch2_2() (in module testTempico)</a>
+</li>
+      <li><a href="testTempico.html#testTempico.create_void_measurement_ch2">create_void_measurement_ch2() (in module testTempico)</a>
+</li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.createCloneTable">createCloneTable() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.CreatedFin">CreatedFin() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.createDialog">createDialog() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
@@ -344,6 +428,12 @@
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureSignal">dataPureSignal (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
 </li>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.dataReady">dataReady (Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
+
+      <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.dataReady">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
+</li>
+      </ul></li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataSignal">dataSignal (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.deatachedTable">deatachedTable() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
@@ -351,6 +441,8 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.detachedLabels">detachedLabels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.detectedErrorSaving">detectedErrorSaving (Threads.ThreadTimeStamping.WorkerThreadTimeStamping attribute)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.determinate_N1_N2">determinate_N1_N2() (g2Graphics.WorkerThread method)</a>
 </li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber">determineStopsNumber() (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
 </li>
@@ -362,23 +454,33 @@
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogInit">dialogInit (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogIsOpen">dialogIsOpen() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 </li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogSignal">dialogSignal (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.dialogSignal">dialogSignal (g2Graphics.WorkerThread attribute)</a>
+
+      <ul>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogSignal">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
 </li>
+      </ul></li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.dialogToShowSave">dialogToShowSave() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal">disconectedSignal (Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
 </li>
       <li><a href="main.html#main.MainWindow.disconnect_button_click">disconnect_button_click() (main.MainWindow method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.disconnectDevice">disconnectDevice() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.disconnectedDevice">disconnectedDevice (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.disconnectedDevice">disconnectedDevice() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.disconnectedDevice">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.disconnectedDevice">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.disconnectedDevice">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.disconnectedDevice">(Logic.StartStopLogic.StartStopLogic method)</a>
@@ -389,6 +491,8 @@
 </li>
       </ul></li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.double_Exponential">double_Exponential() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.drawPoint">drawPoint() (g2Graphics.g2Graphic method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -401,6 +505,8 @@
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.emitOrSaveMeasurement">emitOrSaveMeasurement() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.enableAfterFinisihThread">enableAfterFinisihThread() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.enableAfterStop">enableAfterStop() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.enableButtons">enableButtons() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
@@ -418,6 +524,8 @@
       </ul></li>
       <li><a href="main.html#main.MainWindow.enableSettings">enableSettings() (main.MainWindow method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.evt_worker_finished">evt_worker_finished() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="main.html#main.execProgram">execProgram() (in module main)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.exp_decay">exp_decay() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -431,6 +539,10 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphChannels">factoryGraphChannels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels">factoryGraphsAllChannels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
+</li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogAxis">FCSLogAxis (class in Logic.FCSLogic)</a>
+</li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic">FCSLogic (class in Logic.FCSLogic)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.fileNameAutoSave">fileNameAutoSave() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
@@ -466,6 +578,8 @@
 </li>
       <li><a href="main.html#main.MainWindow.folderPrefixClicked">folderPrefixClicked() (main.MainWindow method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.format_time">format_time() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime">formatWaitingTime() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
   </ul></td>
@@ -474,9 +588,26 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.g2_measurement">g2_measurement() (g2Graphics.WorkerThread method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic">g2Graphic (class in g2Graphics)</a>
+</li>
+      <li>
+    g2Graphics
+
+      <ul>
+        <li><a href="g2Graphics.html#module-g2Graphics">module</a>
+</li>
+      </ul></li>
+      <li><a href="G2Logic.html#Logic.G2Logic.G2Logic">G2Logic (class in Logic.G2Logic)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.g2PrepareMeasurement">g2PrepareMeasurement() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="main.html#main.MainWindow.general_settings_clicked">general_settings_clicked() (main.MainWindow method)</a>
 </li>
       <li><a href="main.html#main.MainWindow.generatorClicked">generatorClicked() (main.MainWindow method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.get_g2_measurement">get_g2_measurement() (g2Graphics.WorkerThread method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData">getAproxTotalData() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
@@ -484,6 +615,8 @@
 </li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber">getBinWidthNumber() (Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure">getChannelsMeasure() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getLimitedMeasurements">getLimitedMeasurements() (Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
@@ -496,24 +629,12 @@
         <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getMeasurements">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getMinimumValue">getMinimumValue() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getRange">getRange() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
 
       <ul>
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.getRange">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
-</li>
-      </ul></li>
-      <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.getSettingsSources">getSettingsSources() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
-
-      <ul>
-        <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getSettingsSources">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
-</li>
-        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.getSettingsSources">(Logic.StartStopLogic.StartStopLogic method)</a>
-</li>
-        <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.getSettingsSources">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       </ul></li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.getTempicoChannel">getTempicoChannel() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -534,12 +655,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog">helpButtonDialog() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
-      <li><a href="main.html#main.MainWindow.Helpg2Button">Helpg2Button() (main.MainWindow method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.hide_graphic2">hide_graphic2() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.hide_graphic2">(Logic.G2Logic.G2Logic method)</a>
 </li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.hide_graphic2">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.hide_graphic2">hide_graphic2() (Logic.StartStopLogic.StartStopLogic method)</a>
-</li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns">hideColumns() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
   </ul></td>
@@ -552,10 +677,12 @@
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.indexChangeStopChannel">indexChangeStopChannel() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
-      <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate">initialDate (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.initial_measurement">initial_measurement() (g2Graphics.WorkerThread method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate">initialDate (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
+</li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.initialParametersDialog">initialParametersDialog() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.insertParameters">insertParameters() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -586,14 +713,28 @@
 </li>
       </ul></li>
       <li>
+    Logic.FCSLogic
+
+      <ul>
+        <li><a href="FCSLogic.html#module-Logic.FCSLogic">module</a>
+</li>
+      </ul></li>
+      <li>
+    Logic.G2Logic
+
+      <ul>
+        <li><a href="G2Logic.html#module-Logic.G2Logic">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     Logic.LifeTimeLogic
 
       <ul>
         <li><a href="LifeTimeLogic.html#module-Logic.LifeTimeLogic">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Logic.StartStopLogic
 
@@ -635,11 +776,19 @@
 </li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode">measurementMode() (Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
+      <li><a href="testTempico.html#testTempico.Menu">Menu() (in module testTempico)</a>
+</li>
       <li>
     module
 
       <ul>
+        <li><a href="g2Graphics.html#module-g2Graphics">g2Graphics</a>
+</li>
         <li><a href="CountsEstimatedLogic.html#module-Logic.CountsEstimatedLogic">Logic.CountsEstimatedLogic</a>
+</li>
+        <li><a href="FCSLogic.html#module-Logic.FCSLogic">Logic.FCSLogic</a>
+</li>
+        <li><a href="G2Logic.html#module-Logic.G2Logic">Logic.G2Logic</a>
 </li>
         <li><a href="LifeTimeLogic.html#module-Logic.LifeTimeLogic">Logic.LifeTimeLogic</a>
 </li>
@@ -649,7 +798,13 @@
 </li>
         <li><a href="main.html#module-main">main</a>
 </li>
+        <li><a href="testTempico.html#module-testTempico">testTempico</a>
+</li>
         <li><a href="ThreadCountEstimated.html#module-Threads.ThreadCountEstimated">Threads.ThreadCountEstimated</a>
+</li>
+        <li><a href="ThreadFCS.html#module-Threads.ThreadFCS">Threads.ThreadFCS</a>
+</li>
+        <li><a href="ThreadG2.html#module-Threads.ThreadG2">Threads.ThreadG2</a>
 </li>
         <li><a href="ThreadLifeTime.html#module-Threads.ThreadLifeTime">Threads.ThreadLifeTime</a>
 </li>
@@ -660,6 +815,10 @@
         <li><a href="ThreadTimeStamping.html#module-Threads.ThreadTimeStamping">Threads.ThreadTimeStamping</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.multiplier">multiplier() (g2Graphics.WorkerThread method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -676,6 +835,8 @@
       </ul></li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newValue">newValue (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.no_measurements_dialog">no_measurements_dialog() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.noChannelsSelected">noChannelsSelected() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="main.html#main.MainWindow.noMeasurement">noMeasurement() (main.MainWindow method)</a>
@@ -683,6 +844,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.noMeasurementsFounded">noMeasurementsFounded() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
+</li>
+      <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage">noMeasurementsMessage() (Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noPartialMeasurements">noPartialMeasurements (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
 </li>
@@ -694,17 +857,27 @@
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop">notSelectedFormatScheduledStop() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.notTotalg2">notTotalg2() (g2Graphics.g2Graphic method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.onAutoSaveIntervalChanged">onAutoSaveIntervalChanged() (Logic.TimeStampLogic.TimeStampLogic method)</a>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.oldSettings">oldSettings() (g2Graphics.g2Graphic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.on_combobox_changed1">on_combobox_changed1() (g2Graphics.g2Graphic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.on_combobox_changed2">on_combobox_changed2() (g2Graphics.g2Graphic method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.onAutoSaveIntervalChanged">onAutoSaveIntervalChanged() (Logic.TimeStampLogic.TimeStampLogic method)</a>
+</li>
       <li><a href="main.html#main.MainWindow.open_dialog">open_dialog() (main.MainWindow method)</a>
+</li>
+      <li><a href="main.html#main.MainWindow.open_help">open_help() (main.MainWindow method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -712,14 +885,20 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.PARAM_LABELS">PARAM_LABELS (Logic.FCSLogic.FCSLogic attribute)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.PARAM_LABELS">(Logic.G2Logic.G2Logic attribute)</a>
+</li>
+      </ul></li>
       <li><a href="main.html#main.MainWindow.parameters_action">parameters_action() (main.MainWindow method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseLimitedMeasurement">pauseLimitedMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
-      <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseNormalMeasurement">pauseNormalMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseNormalMeasurement">pauseNormalMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
+</li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement">pauseScheduledMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal">pointSignal (Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
@@ -732,6 +911,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.rejected">rejected() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetInitialDialog">resetInitialDialog() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetParametersLabels">resetParametersLabels() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
@@ -739,6 +920,10 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSaveSentinels">resetSaveSentinels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.resetSaveSentinels">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.resetSaveSentinels">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.resetSaveSentinels">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.resetSaveSentinels">(Logic.StartStopLogic.StartStopLogic method)</a>
@@ -754,29 +939,25 @@
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels">resetValuesSentinels() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
-      <li><a href="main.html#main.MainWindow.resizeEvent">resizeEvent() (main.MainWindow method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="main.html#main.MainWindow.resizeEvent">resizeEvent() (main.MainWindow method)</a>
+</li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings">returnSettings() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
-      <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettingsSources">returnSettingsSources() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
-
-      <ul>
-        <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.returnSettingsSources">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
-</li>
-        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.returnSettingsSources">(Logic.StartStopLogic.StartStopLogic method)</a>
-</li>
-        <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.returnSettingsSources">(Logic.TimeStampLogic.TimeStampLogic method)</a>
-</li>
-      </ul></li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem">rightAlignedItem() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.roundStringPCov">roundStringPCov() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
-      <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run">run() (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.run">run() (g2Graphics.WorkerThread method)</a>
 
       <ul>
+        <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run">(Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
+</li>
+        <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.run">(Threads.ThreadFCS.WorkerThreadFCS method)</a>
+</li>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.run">(Threads.ThreadG2.WorkerThreadG2 method)</a>
+</li>
         <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.run">(Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
         <li><a href="ThreadProccessData.html#Threads.ThreadProccessData.ProcessingDataSaved.run">(Threads.ThreadProccessData.ProcessingDataSaved method)</a>
@@ -786,29 +967,57 @@
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.run">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
       </ul></li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.run_fit">run_fit() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.run_fit">(Logic.G2Logic.G2Logic method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.save_data">save_data() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.save_data">(Logic.G2Logic.G2Logic method)</a>
+</li>
+      </ul></li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_graphic">save_graphic() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.save_plot">save_plot() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.save_plot">(Logic.G2Logic.G2Logic method)</a>
+</li>
+      </ul></li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.save_plots">save_plots() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.saveCurrentMeasurements">saveCurrentMeasurements() (Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.saveCurrentSettings">saveCurrentSettings() (Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.saveCurrentSettings">saveCurrentSettings() (Threads.ThreadFCS.WorkerThreadFCS method)</a>
+
+      <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.saveCurrentSettings">(Threads.ThreadG2.WorkerThreadG2 method)</a>
 </li>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.saveCurrentSettings">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
+</li>
+      </ul></li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData">saveData() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataAction">saveDataAction() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction">saveDataButtonAction() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.saveg2Data">saveg2Data() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveLifeTimeData">saveLifeTimeData() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.saveMode">saveMode() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.savePlotg2">savePlotg2() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.savePlotLifeTime">savePlotLifeTime() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
@@ -820,6 +1029,16 @@
         <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.saveSettings">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
         <li><a href="main.html#main.MainWindow.saveSettings">(main.MainWindow method)</a>
+</li>
+      </ul></li>
+      <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.set_cursor_widgets">set_cursor_widgets() (Logic.G2Logic.G2Logic method)</a>
+</li>
+      <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.set_fit_widgets">set_fit_widgets() (Logic.G2Logic.G2Logic method)</a>
+</li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.set_parameter_widgets">set_parameter_widgets() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.set_parameter_widgets">(Logic.G2Logic.G2Logic method)</a>
 </li>
       </ul></li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.setErrorAutoSaving">setErrorAutoSaving() (Logic.TimeStampLogic.TimeStampLogic method)</a>
@@ -836,9 +1055,15 @@
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.shifted_decay_function">shifted_decay_function() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.show_graphic">show_graphic() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.show_graphic">show_graphic() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.show_graphic">(Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
+      </ul></li>
       <li><a href="main.html#main.SplashScreen.show_main_window">show_main_window() (main.SplashScreen method)</a>
+</li>
+      <li><a href="testTempico.html#testTempico.show_menu">show_menu() (in module testTempico)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectDates">showDialogIncorrectDates() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
@@ -856,13 +1081,25 @@
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.sortTimeStamps">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
       </ul></li>
+      <li><a href="testTempico.html#testTempico.specs_function">specs_function() (in module testTempico)</a>
+</li>
+      <li><a href="testTempico.html#testTempico.specs_function_ch2">specs_function_ch2() (in module testTempico)</a>
+</li>
       <li><a href="main.html#main.SplashScreen">SplashScreen (class in main)</a>
 </li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.start_graphic">start_graphic() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.start_graphic">start_graphic() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.start_graphic">(Logic.G2Logic.G2Logic method)</a>
 </li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.start_graphic">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.startLimitedMeasurement">startLimitedMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.startMeasure">startMeasure() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.startmeasurement">startmeasurement() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.startMeasurement">startMeasurement() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
@@ -879,6 +1116,10 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.startTimerConnection">startTimerConnection() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.startTimerConnection">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.startTimerConnection">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.startTimerConnection">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.startTimerConnection">(Logic.StartStopLogic.StartStopLogic method)</a>
@@ -886,12 +1127,20 @@
         <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.startTimerConnection">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       </ul></li>
-      <li><a href="main.html#main.MainWindow.staticMetaObject">staticMetaObject (main.MainWindow attribute)</a>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.staticMetaObject">staticMetaObject (g2Graphics.WorkerThread attribute)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogAxis.staticMetaObject">(Logic.FCSLogic.FCSLogAxis attribute)</a>
+</li>
+        <li><a href="main.html#main.MainWindow.staticMetaObject">(main.MainWindow attribute)</a>
+</li>
         <li><a href="main.html#main.SplashScreen.staticMetaObject">(main.SplashScreen attribute)</a>
 </li>
         <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.staticMetaObject">(Threads.ThreadCountEstimated.WorkerThreadCountsEstimated attribute)</a>
+</li>
+        <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.staticMetaObject">(Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
+</li>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.staticMetaObject">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
 </li>
         <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject">(Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
 </li>
@@ -904,9 +1153,21 @@
       </ul></li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal">statusSignal (Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
 </li>
-      <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop">stop() (Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.statusUpdate">statusUpdate (Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
 
       <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.statusUpdate">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.stop">stop() (g2Graphics.WorkerThread method)</a>
+
+      <ul>
+        <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop">(Threads.ThreadCountEstimated.WorkerThreadCountsEstimated method)</a>
+</li>
+        <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.stop">(Threads.ThreadFCS.WorkerThreadFCS method)</a>
+</li>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stop">(Threads.ThreadG2.WorkerThreadG2 method)</a>
+</li>
         <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop">(Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
         <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stop">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram method)</a>
@@ -914,13 +1175,23 @@
         <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.stop">(Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
       </ul></li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.stop_graphic">stop_graphic() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.stop_graphic">stop_graphic() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.stop_graphic">(Logic.G2Logic.G2Logic method)</a>
+</li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.stop_graphic">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.stop_signal">stop_signal (g2Graphics.WorkerThread attribute)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.stopLimitedButtonAction">stopLimitedButtonAction() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.stopLimitedMeasurement">stopLimitedMeasurement() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopMeasure">stopMeasure() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.stopmeasurement">stopmeasurement() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.stopMeasurement">stopMeasurement() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
@@ -937,6 +1208,10 @@
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopTimerConnection">stopTimerConnection() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 
       <ul>
+        <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.stopTimerConnection">(Logic.FCSLogic.FCSLogic method)</a>
+</li>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.stopTimerConnection">(Logic.G2Logic.G2Logic method)</a>
+</li>
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.stopTimerConnection">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
         <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.stopTimerConnection">(Logic.StartStopLogic.StartStopLogic method)</a>
@@ -944,8 +1219,14 @@
         <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.stopTimerConnection">(Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       </ul></li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stringValue">stringValue (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.stringValue">stringValue (Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
+
+      <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stringValue">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
 </li>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stringValue">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+</li>
+      </ul></li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping.syncTime">syncTime() (Threads.ThreadTimeStamping.WorkerThreadTimeStamping method)</a>
 </li>
   </ul></td>
@@ -954,19 +1235,64 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.take_measurement">take_measurement() (g2Graphics.WorkerThread method)</a>
+</li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements">takeMeasurements() (Threads.ThreadLifeTime.WorkerThreadLifeTime method)</a>
 </li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.threadComplete">threadComplete() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li>
+    testTempico
+
+      <ul>
+        <li><a href="testTempico.html#module-testTempico">module</a>
 </li>
-      <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.threadCreated">threadCreated (Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.ThrdFin">ThrdFin (g2Graphics.WorkerThread attribute)</a>
 </li>
-      <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.threadRunning">threadRunning() (Logic.StartStopLogic.StartStopLogic method)</a>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.threadComplete">threadComplete() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.threadComplete">(Logic.G2Logic.G2Logic method)</a>
 </li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.threadComplete">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS.threadCreated">threadCreated (Threads.ThreadFCS.WorkerThreadFCS attribute)</a>
+
+      <ul>
+        <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.threadCreated">(Threads.ThreadG2.WorkerThreadG2 attribute)</a>
+</li>
+        <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.threadCreated">(Threads.ThreadStartStop.WorkerThreadStartStopHistogram attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.threadRunning">threadRunning() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.threadRunning">(Logic.G2Logic.G2Logic method)</a>
+</li>
+        <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.threadRunning">(Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      </ul></li>
       <li>
     Threads.ThreadCountEstimated
 
       <ul>
         <li><a href="ThreadCountEstimated.html#module-Threads.ThreadCountEstimated">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    Threads.ThreadFCS
+
+      <ul>
+        <li><a href="ThreadFCS.html#module-Threads.ThreadFCS">module</a>
+</li>
+      </ul></li>
+      <li>
+    Threads.ThreadG2
+
+      <ul>
+        <li><a href="ThreadG2.html#module-Threads.ThreadG2">module</a>
 </li>
       </ul></li>
       <li>
@@ -976,8 +1302,6 @@
         <li><a href="ThreadLifeTime.html#module-Threads.ThreadLifeTime">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Threads.ThreadProccessData
 
@@ -999,6 +1323,8 @@
         <li><a href="ThreadTimeStamping.html#module-Threads.ThreadTimeStamping">module</a>
 </li>
       </ul></li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogAxis.tickStrings">tickStrings() (Logic.FCSLogic.FCSLogAxis method)</a>
+</li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.timeRangeValue">timeRangeValue() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic">TimeStampLogic (class in Logic.TimeStampLogic)</a>
@@ -1011,6 +1337,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.update_histogram">update_histogram() (Logic.StartStopLogic.StartStopLogic method)</a>
 </li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.update_label">update_label (g2Graphics.WorkerThread attribute)</a>
+</li>
+      <li><a href="FCSLogic.html#Logic.FCSLogic.FCSLogic.update_plot">update_plot() (Logic.FCSLogic.FCSLogic method)</a>
+
+      <ul>
+        <li><a href="G2Logic.html#Logic.G2Logic.G2Logic.update_plot">(Logic.G2Logic.G2Logic method)</a>
+</li>
+      </ul></li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.update_plot_label">update_plot_label() (g2Graphics.g2Graphic method)</a>
+</li>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.update_timer">update_timer() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.updateBashDataPure">updateBashDataPure() (Logic.StartStopLogic.StartStopLogic method)</a>
@@ -1020,6 +1356,10 @@
       <li><a href="TimeStampLogic.html#Logic.TimeStampLogic.TimeStampLogic.updateCheckBoxLabels">updateCheckBoxLabels() (Logic.TimeStampLogic.TimeStampLogic method)</a>
 </li>
       <li><a href="StartStopLogic.html#Logic.StartStopLogic.StartStopLogic.updateDataPure">updateDataPure() (Logic.StartStopLogic.StartStopLogic method)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread.updateg2">updateg2 (g2Graphics.WorkerThread attribute)</a>
+</li>
+      <li><a href="g2Graphics.html#g2Graphics.g2Graphic.updateg2Values">updateg2Values() (g2Graphics.g2Graphic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphic">updateGraphic() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
 </li>
@@ -1031,6 +1371,8 @@
         <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel">(Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.updateLabel">updateLabel() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="CountsEstimatedLogic.html#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateLabels">updateLabels() (Logic.CountsEstimatedLogic.CountEstimatedLogic method)</a>
@@ -1039,8 +1381,6 @@
         <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.updateLabels">(Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="LifeTimeLogic.html#Logic.LifeTimeLogic.LifeTimeLogic.updateMeasurement">updateMeasurement() (Logic.LifeTimeLogic.LifeTimeLogic method)</a>
 </li>
       <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel">updateMeasurementsLabel (Threads.ThreadLifeTime.WorkerThreadLifeTime attribute)</a>
@@ -1069,12 +1409,18 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="g2Graphics.html#g2Graphics.WorkerThread">WorkerThread (class in g2Graphics)</a>
+</li>
       <li><a href="ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated">WorkerThreadCountsEstimated (class in Threads.ThreadCountEstimated)</a>
 </li>
-      <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime">WorkerThreadLifeTime (class in Threads.ThreadLifeTime)</a>
+      <li><a href="ThreadFCS.html#Threads.ThreadFCS.WorkerThreadFCS">WorkerThreadFCS (class in Threads.ThreadFCS)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ThreadG2.html#Threads.ThreadG2.WorkerThreadG2">WorkerThreadG2 (class in Threads.ThreadG2)</a>
+</li>
+      <li><a href="ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime">WorkerThreadLifeTime (class in Threads.ThreadLifeTime)</a>
+</li>
       <li><a href="ThreadStartStop.html#Threads.ThreadStartStop.WorkerThreadStartStopHistogram">WorkerThreadStartStopHistogram (class in Threads.ThreadStartStop)</a>
 </li>
       <li><a href="ThreadTimeStamping.html#Threads.ThreadTimeStamping.WorkerThreadTimeStamping">WorkerThreadTimeStamping (class in Threads.ThreadTimeStamping)</a>
@@ -1107,7 +1453,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025,Tausand Electronics.</p>
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

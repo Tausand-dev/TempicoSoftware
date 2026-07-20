@@ -13,14 +13,18 @@
 # from PySide2.QtWidgets import *
 #from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QDesktopServices, QPixmap
-from PySide2.QtCore import QUrl
-from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton
+from PySide2.QtCore import QUrl, QEvent, QObject
+from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QLabel, QPushButton, QWhatsThis, QMessageBox
 from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
 from .constants import VERSION
 from .constants import PYTEMPICO_VERSION
+from .constants import BANNER
 
 
-class Ui_AboutDialog(object):
+class Ui_AboutDialog(QObject):
+    def __init__(self):
+        super().__init__()
+
     def setupUi(self, AboutDialog):
         if not AboutDialog.objectName():
             AboutDialog.setObjectName(u"AboutDialog")
@@ -89,7 +93,7 @@ class Ui_AboutDialog(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.imageLabel = QLabel(self.pictureFrame)
         self.imageLabel.setObjectName(u"imageLabel")
-        image = QPixmap('Sources/splash.png')
+        image = QPixmap(BANNER)
         image = image.scaled(500, 320, Qt.KeepAspectRatio)
         self.imageLabel.setPixmap(image)
         self.imageLabel.setFixedSize(300,150)
@@ -140,7 +144,7 @@ class Ui_AboutDialog(object):
         
 
         # Cargar la imagen desde el archivo
-        pixmap = QPixmap('Sources/splash.png')
+        pixmap = QPixmap(BANNER)
         self.imageLabel.setPixmap(pixmap.scaled(self.imageLabel.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.linkTausand.setOpenExternalLinks(True)
         self.linkGitHub.setOpenExternalLinks(True)
@@ -156,6 +160,7 @@ class Ui_AboutDialog(object):
         self.tempicoLabel.linkActivated.connect(self.open_link)
         ##EndtranslateFuncion
 
+        AboutDialog.installEventFilter(self)
         QMetaObject.connectSlotsByName(AboutDialog)
     
     def acceptButton(self):
@@ -176,4 +181,26 @@ class Ui_AboutDialog(object):
         """
         
         QDesktopServices.openUrl(QUrl(url))
-    
+    def eventFilter(self, obj, event):
+        if obj is self.dialog and event.type() == QEvent.EnterWhatsThisMode:
+            if self.dialog.isActiveWindow():
+                QWhatsThis.leaveWhatsThisMode()
+                self.showHelp()
+                return True
+        return QObject.eventFilter(self, obj, event)
+
+    def showHelp(self):
+        QMessageBox.information(
+            self.dialog,
+            "About",
+            "Tempico Software is a measurement suite developed by Tausand Electronics "
+            "for use with Tempico Time-to-Digital Converter (TDC) devices.\n\n"
+            "It provides tools for:\n"
+            "  • Start-stop histogram measurements\n"
+            "  • Counts estimation\n"
+            "  • Time stamping\n"
+            "  • Fluorescence lifetime analysis\n"
+            "  • Autocorrelation (FCS)\n"
+            "  • g2 (HBT)\n\n"
+            "For more information visit https://www.tausand.com"
+        )

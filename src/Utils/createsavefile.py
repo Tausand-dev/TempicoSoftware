@@ -1,5 +1,4 @@
 import os
-import pathlib
 from datetime import datetime
 import json
 from pathlib import Path
@@ -23,7 +22,9 @@ class createsavefile:
                 "startStopHistogramPrefix": "StartStopHistogram",
                 "lifetimePrefix": "Lifetime",
                 "countsEstimationPrefix": "CountsEstimation",
-                "timeStampingPrefix": "TimeStamping"
+                "timeStampingPrefix": "TimeStamping",
+                "fcsPrefix": "Autocorrelation",
+                "g2Prefix": "g2"
             }
             with open(save_path, "w", encoding="utf-8") as f:
                 json.dump(default_data, f, indent=4, ensure_ascii=False)
@@ -124,10 +125,12 @@ class createsavefile:
             self.changeFolder(default_save_folder)
         else:
             dataDict['saveFolder']= data['saveFolder']
-        dataDict['startStopHistogramPrefix']= data['startStopHistogramPrefix']
-        dataDict['lifetimePrefix']= data['lifetimePrefix']
-        dataDict['countsEstimationPrefix']= data['countsEstimationPrefix']
-        dataDict['timeStampingPrefix']= data['timeStampingPrefix'] 
+        dataDict['startStopHistogramPrefix'] = data.get('startStopHistogramPrefix', 'StartStop')
+        dataDict['lifetimePrefix']           = data.get('lifetimePrefix', 'Lifetime')
+        dataDict['countsEstimationPrefix']   = data.get('countsEstimationPrefix', 'Counts')
+        dataDict['timeStampingPrefix']       = data.get('timeStampingPrefix', 'TimeStamp')
+        dataDict['fcsPrefix']                = data.get('fcsPrefix', 'FCS')
+        dataDict['g2Prefix']                 = data.get('g2Prefix', 'g2')   
         return dataDict
     
     
@@ -144,6 +147,10 @@ class createsavefile:
             data["countsEstimationPrefix"]= newPrefix
         elif tab=="TimeStamping":
             data["timeStampingPrefix"]= newPrefix
+        elif tab=="Autocorrelation":
+            data["fcsPrefix"]= newPrefix
+        elif tab=="G2":
+            data["g2Prefix"]= newPrefix
         with open(pathConstants, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
     
@@ -178,7 +185,7 @@ class createsavefile:
         :raises OSError: If an error occurs during folder or file creation, or when accessing the filesystem.
         :returns: None
         """
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         folder_path = os.path.join(documents_dir, folder_name)
 
@@ -204,7 +211,7 @@ class createsavefile:
 
         :returns: bool: True if the folder and file exist, False otherwise.
         """
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
         folder_name = "TempicoSoftwareData"
         file_name = "data_constants.txt"
         folder_path = os.path.join(documents_dir, folder_name)
@@ -248,7 +255,7 @@ class createsavefile:
                 an error occurred.
         """
         # Get the path to the "Documents" directory on the current operating system
-        documents_dir = os.path.join(pathlib.Path.home(), "Documents")
+        documents_dir = os.path.join(Path.home(), "Documents")
 
         # Specify the folder name and file name
         folder_name = "TempicoSoftwareData"
@@ -361,7 +368,7 @@ class createsavefile:
             with open(full_path, 'w') as file:
                 file.write(settings + '\n')
                 
-                file.write(textLabel+"\tg2 Values\n")
+                file.write(textLabel+"\tg2(Tau)\n")
                 
                 for tau, g2_value in zip(data[0], data[1]):
                     file.write(f"{tau}\t{g2_value}\n")
@@ -452,7 +459,7 @@ class createsavefile:
         with open(filePath, 'a') as file:
             if archivo_vacio:
                 file.write(settings)
-                file.write("Start Time (YY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
+                file.write("Start Time (YYYY:MM:DD:HH:MM:SS)\tStop Time (ps)\tChannel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}\t{stopTime}\t{channelList[channel]}\n")
         
@@ -481,7 +488,7 @@ class createsavefile:
         with open(full_path, 'a') as file:    
             if not file_exists:
                 file.write(settings)
-                file.write(f"Start Time (YY:MM:DD:HH:MM:SS){separator}Stop Time (ps){separator}Channel\n")
+                file.write(f"Start Time (YYYY:MM:DD:HH:MM:SS){separator}Stop Time (ps){separator}Channel\n")
             for startTime, stopTime, channel in zip(startValues, stopValues, channels):
                 file.write(f"{startTime}{separator}{stopTime}{separator}{channelList[channel]}\n")
     
@@ -618,3 +625,135 @@ class createsavefile:
         return True
                 
     
+    def save_fcs_data(self, stop_times_ps, taus_s, g_vals,
+                      file_name, folder_path, settings, extension):
+        """
+        Save FCS measurement data to a three-column text file.
+
+        The file contains three columns with potentially different lengths:
+
+        - **Column 1** ``stop_time_ps``: raw photon arrival times in
+          picoseconds, one row per detected photon event.
+        - **Column 2** ``tau_s``: lag times of the autocorrelation function
+          in seconds, one row per ACF channel.
+        - **Column 3** ``G(tau)``: normalized autocorrelation values
+          corresponding to each lag time.
+
+        Because the number of photon events is generally much larger than
+        the number of ACF channels, the shorter columns are padded with
+        empty cells so that every row has three fields.
+
+        The separator is ``\\t`` for *txt* and *dat* files and ``;`` for
+        *csv* files, following the convention used by the rest of
+        ``createsavefile``.
+
+        :param stop_times_ps: 1-D array or list of raw stop times (ps).
+        :param taus_s: 1-D array or list of ACF lag times (s).
+        :param g_vals: 1-D array or list of G(τ) values.
+        :param file_name: Output file name without extension (str).
+        :param folder_path: Directory where the file will be saved (str).
+        :param settings: Multi-line header string written at the top of the
+            file (e.g. tau_0, num_levels, m).
+        :param extension: ``'txt'``, ``'dat'``, or ``'csv'`` (str).
+        :raises OSError: If the directory cannot be created or the file
+            cannot be written.
+        :returns: None
+        """
+        if extension == "csv":
+            separator = ";"
+            settings  = settings.replace("\t", ";")
+        else:
+            separator = "\t"
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        n_stops = len(stop_times_ps)
+        n_acf   = len(taus_s)
+        n_rows  = max(n_stops, n_acf)
+
+        # Pad the shorter columns with empty strings
+        col_stop = list(stop_times_ps) + [''] * (n_rows - n_stops)
+        col_tau  = list(taus_s)        + [''] * (n_rows - n_acf)
+        col_g    = list(g_vals)        + [''] * (n_rows - n_acf)
+
+        full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+
+        with open(full_path, 'w', encoding='utf-8') as f:
+            f.write(settings + '\n')
+            f.write(
+                f"stop_time_ps{separator}tau_s{separator}G(tau)\n"
+            )
+            for s, t, g in zip(col_stop, col_tau, col_g):
+                f.write(f"{s}{separator}{t}{separator}{g}\n")
+    def save_g2_start_stop_times(self, stop_times_ps, file_name, folder_path, settings, extension):
+        """
+        Save the raw (unbinned) start-stop data behind a g2 (HBT) measurement.
+
+        This writes every individual stop time recorded during the
+        acquisition, one per row, in the order it was captured. It is the
+        raw data used to build the g2(tau) histogram/curve, as opposed to
+        the analyzed curve itself (see ``save_g2Hbt_data``).
+
+        :param stop_times_ps: 1-D list/array of raw stop times (ps), one
+            value per detected event, in arrival order.
+        :param file_name: Output file name without extension (str).
+        :param folder_path: Directory where the file will be saved (str).
+        :param settings: Multi-line header string written at the top of the
+            file (measurement parameters).
+        :param extension: 'txt', 'dat', or 'csv' (str).
+        :raises OSError: If the directory cannot be created or the file
+            cannot be written.
+        :returns: None
+        """
+        if extension == "csv":
+            settings = settings.replace("\t", ";")
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+
+        with open(full_path, 'w', encoding='utf-8') as f:
+            f.write(settings + '\n')
+            f.write("Stop Time (ps)\n")
+            for stop_ps in stop_times_ps:
+                f.write(f"{stop_ps}\n")
+
+    def save_g2Hbt_data(self,data, file_name, folder_path, settings, extension, textLabel):
+        """
+        Saves LifeTime data (time and LifeTime values) into a text file in a specified folder. The function
+        ensures that the provided time and LifeTime values have the same length and writes them into 
+        a file along with specified settings and a label for the LifeTime values.
+        The file is saved in the specified folder path, with the provided file name and extension.
+        :param data: A tuple where the first element is a list of time values and the second 
+                    element is a list of corresponding LifeTime values (tuple of lists).
+        :param file_name: The name of the output file (str).
+        :param folder_path: The path to the folder where the file will be saved (str).
+        :param settings: A string representing the settings to be written in the first line of the file (str).
+        :param extension: The file extension for the output file (str).
+        :param textLabel: A label to be written before the LifeTime values in the file (str).
+        :raises ValueError: If the lengths of the time and LifeTime value lists do not match.
+        :returns: None
+        """
+        if extension=="txt" or extension=="dat":
+            separator="\t"
+        else:
+            separator=";"
+            settings=settings.replace("\t",";")
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        if len(data[0]) != len(data[1]):
+            raise ValueError("Time and g2 Values must have the same length")
+        else:
+
+            full_path = os.path.join(folder_path, f"{file_name}.{extension}")
+
+            with open(full_path, 'w', encoding='utf-8') as file:
+                file.write(settings + '\n')
+
+                file.write(f"{textLabel}{separator}g2(Tau)\n")
+
+                for tau, g2Value in zip(data[0], data[1]):
+                    file.write(f"{tau}{separator}{g2Value}\n")
