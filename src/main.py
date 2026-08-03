@@ -3,7 +3,7 @@ from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
 from Utils.generalsettings import GeneralSettingsWindow
-from Utils.aboutDialog import Ui_AboutDialog
+from Utils.aboutDialog import Ui_AboutDialog, open_github
 from Views.ui_StarStopHistogram import Ui_HistogramaStartStop
 from Views.ui_g2measurement import Ui_G2
 from Views.ui_devicesDialog import Ui_Devices
@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         the sentinels and cached device-configuration variables (average
         cycles, mode, number of stops, edge type, and stop mask per channel)
         used later when a measurement tab is opened. It also builds the menu
-        bar ("Settings", "About", "Help") and connects each menu action to its
+        bar ("Settings", "Help") and connects each menu action to its
         corresponding slot, and configures the system tray icon on Linux or
         the taskbar app id on Windows.
 
@@ -200,14 +200,21 @@ class MainWindow(QMainWindow):
         menu_bar.setNativeMenuBar(False)
         #file_menu = menu_bar.addMenu("File")
         settings_menu = menu_bar.addMenu("Settings")
-        #help_menu = menu_bar.addMenu("Help")
-        about_menu = menu_bar.addMenu("About")
+        help_menu = menu_bar.addMenu("Help")
         #Parameters_menu
 
+        #-----Actions for the Help dropdown menu (Help / Github / About)--------#
         help_action = QAction("Help", self)
         help_action.triggered.connect(self.open_help)
-        menu_bar.addAction(help_action)
+        help_menu.addAction(help_action)
 
+        github_action = QAction("Github", self)
+        github_action.triggered.connect(open_github)
+        help_menu.addAction(github_action)
+
+        about_github_action = QAction("About", self)
+        about_github_action.triggered.connect(self.about_settings)
+        help_menu.addAction(about_github_action)
 
 
         #parameters_menu=menu_bar.addMenu("Parameters")
@@ -236,9 +243,6 @@ class MainWindow(QMainWindow):
         self.generator_settings_action.setVisible(False)
         
         general_settings_action.triggered.connect(self.general_settings_clicked)
-        about_settings_action=QAction("About Tempico Software",self)
-        about_settings_action.triggered.connect(self.about_settings)
-        about_menu.addAction(about_settings_action)
         #parameters_settings_action=QAction("Get Count Parameters",self)
         #parameters_settings_action.triggered.connect(self.parameters_action)
         #parameters_menu.addAction(parameters_settings_action)
@@ -1278,6 +1282,16 @@ class MainWindow(QMainWindow):
         """
         HelpDialog(self).exec_()
 
+    def open_github(self):
+        """
+        Opens the Tempico Software GitHub repository in the default web browser.
+
+        Triggered from the "Github" entry of the "Help" menu. Delegates to the 'open_github()' helper already defined in 'Utils.aboutDialog', which reuses 
+        the QDesktopServices/QUrl imports already present there.
+
+        :return: None
+        """
+        open_github()
 
 #This function is not use for the Tempico Version 1.1
 #TO DO: Comment the function for a future version

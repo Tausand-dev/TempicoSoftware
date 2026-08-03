@@ -45,3 +45,6 @@ BANNER = os.path.join(BASE_PATH, "Sources", "splash.png")
 APPID = "tempico.tempico.01"
 OVERFLOW_PARAMETER = -1
 VERSION_PARAMETER = ""
+#Links used in the "Help" menu (About / Github)
+WEBSITE_LINK = "https://www.tausand.com/"
+GITHUB_LINK = "https://github.com/Tausand-dev/TempicoSoftware"

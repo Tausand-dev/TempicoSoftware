@@ -19,8 +19,19 @@ from PySide2.QtCore import Qt, QCoreApplication, QMetaObject
 from .constants import VERSION
 from .constants import PYTEMPICO_VERSION
 from .constants import BANNER
+from .constants import GITHUB_LINK
 
+def open_github():
+    """
+    Opens the Tempico Software Github repository in the default web browser.
 
+    Standalone helper (not ied to the About dialog) so it can be reused, e.g. by the "Github" entry of the main window's "Help" menu, 
+    without needing extra Qt import elsewhere.
+
+    :returns: None
+    """
+    QDesktopServices.openUrl(QUrl(GITHUB_LINK))
+    
 class Ui_AboutDialog(QObject):
     def __init__(self):
         super().__init__()
