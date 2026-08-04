@@ -1712,7 +1712,7 @@ class CountEstimatedLogic():
         
     
     #Function to define that no measurements were founded
-    def noMeasurementsFounded(self):
+    def noMeasurementsFounded(self, channelList):
         """
         Displays a warning dialog and disables channel interactions when no measurements are detected.
 
@@ -1723,12 +1723,15 @@ class CountEstimatedLogic():
         - Disables the "Clear" buttons for channels A–D to prevent further user interaction.
         - Resets `measurementChannelX` sentinels (A–D) to `False`, marking all channels as inactive.
 
+        :param channelList: A list of channel identifiers (e.g., ['A', 'B']) that failed to meet the minimum measurement conditions.
         :return: None
         """
+        channelStr = ", ".join(channelList)
         QMessageBox.warning(
             self.mainWindow,  
-            "No Measurements Found",
-            "Unable to obtain a measurement in any of the selected channels: At least 500 pulses per second are required to estimate the counts in each channel. That is, two consecutive stops are needed after a start within a 4 ms window"
+            "Low counts found",
+            f"Unable to estimate counts in the following channels due to low count rate: {channelStr}.\n\n"
+            "At least 500 pulses per second are required to estimate the count in each channel. That is two consecutive stops are needed after a start within a 4 ms window."
         )
         self.clearButtonChannelA.setEnabled(False)
         self.clearButtonChannelB.setEnabled(False)

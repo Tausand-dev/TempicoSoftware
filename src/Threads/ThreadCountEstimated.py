@@ -34,7 +34,7 @@ class WorkerThreadCountsEstimated(QThread):
         - updateLabel(str, float, float): Updates the label values for each channel.
         - newMeasurement(float, datetime, float, float, float, float, float, float, float, float): 
           Emitted with measurement timestamp, and count/uncertainty data for each channel.
-        - noTotalMeasurements(): Emitted when none of the channels provide valid stop data.
+        - noTotalMeasurements(list): Emitted with a list of channels that failed to provide stop data, when none of the selected channels provide valid stop data.
         - noPartialMeasurements(list): Emitted with a list of channels that failed the threshold.
         - changeStatusText(str): Updates the system status label with a custom message.
         - changeStatusColor(int): Updates the system status label color code.
@@ -58,7 +58,7 @@ class WorkerThreadCountsEstimated(QThread):
     #Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty
     newMeasurement=Signal(float,datetime,float,float,float,float,float,float,float,float)
     #Signals to manage the total stops values
-    noTotalMeasurements=Signal()
+    noTotalMeasurements=Signal(list)
     noPartialMeasurements=Signal(list)
     changeStatusText=Signal(str)
     changeStatusColor=Signal(int)
@@ -142,7 +142,7 @@ class WorkerThreadCountsEstimated(QThread):
                 
 
         if len(self.channelsWithoutMeasurements)== len(self.channelsMeasure) and self.running:
-            self.noTotalMeasurements.emit()
+            self.noTotalMeasurements.emit(self.channelsWithoutMeasurements)
             self.running=False
 
         elif self.channelsWithoutMeasurements and self.running:
