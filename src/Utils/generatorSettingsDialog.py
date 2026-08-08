@@ -222,8 +222,6 @@ class Ui_Generator(object):
 
         self.tabChannelsWidget.addTab(self.channelD, "")
 
-        self.verticalLayout.addWidget(self.tabChannelsWidget)
-
         self.GeneratorFrequencyFrame = QFrame(Dialog)
         self.GeneratorFrequencyFrame.setObjectName(u"GeneratorFrequencyFrame")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -259,6 +257,8 @@ class Ui_Generator(object):
 
 
         self.verticalLayout.addWidget(self.GeneratorFrequencyFrame)
+
+        self.verticalLayout.addWidget(self.tabChannelsWidget)
 
         self.applyChangesButton = QPushButton(Dialog)
         self.applyChangesButton.setObjectName(u"applyChangesButton")
@@ -553,6 +553,3 @@ class _DialogEventHelper(QObject):
                 self._helpCallback()
                 return True
         return QObject.eventFilter(self, obj, event)
-        
-    
-        

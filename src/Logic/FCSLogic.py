@@ -842,7 +842,10 @@ class FCSLogic():
         # ── Format selection dialog ───────────────────────────────────────
         dialog = QDialog(self.parent)
         dialog.setWindowTitle("Save")
+        dialog.setMinimumWidth(260)
         vlay = QVBoxLayout(dialog)
+        vlay.setContentsMargins(20, 20, 20, 20)
+        vlay.setSpacing(10)
         vlay.addWidget(QLabel("Select the text format:"))
         fmt_box = QComboBox(dialog)
         fmt_box.addItem("txt")
@@ -946,7 +949,10 @@ class FCSLogic():
 
             dialog = QDialog(self.parent)
             dialog.setWindowTitle("Save plot")
+            dialog.setMinimumWidth(260)
             vlay = QVBoxLayout(dialog)
+            vlay.setContentsMargins(20, 20, 20, 20)
+            vlay.setSpacing(10)
             vlay.addWidget(QLabel("Select the image format:"))
             fmt_box = QComboBox(dialog)
             fmt_box.addItem("png")
