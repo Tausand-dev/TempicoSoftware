@@ -7,6 +7,7 @@ import io
 import numpy as np
 from PySide2.QtCore import QThread, Signal, Slot
 import pyTempico as tempico
+import Utils.constants as constants
 
 
 # Overflow sentinel returned by pyTempico when no valid stop is recorded.
@@ -368,7 +369,12 @@ class WorkerThreadG2(QThread):
         # guard below).
         self._active_ch.setNumberOfStops(self.num_stops)
         # Stop mask = −0.25 µs: allows the TP1204 to capture negative delays natively
-        self._active_ch.setStopMask(-0.25)
+        stop_mask_min, _ = constants.get_stop_mask_range(self.device.getModelIdn())
+        if is_tp12:
+            target_stop_mask = stop_mask_min
+        else:
+            target_stop_mask = 0.0
+        self._active_ch.setStopMask(target_stop_mask)
         self._active_ch.setAverageCycles(1)
         active_stop_edge = _stop_edges[self.stop_channel - 1]
         self._active_ch.setStopEdge(active_stop_edge)

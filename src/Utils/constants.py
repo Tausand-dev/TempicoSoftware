@@ -2,6 +2,26 @@
 import sys
 import os
 
+STOP_MASK_MIN_TP1004 = 0.0  # 12 ns rounds to 0 at us resolution
+STOP_MASK_MAX_TP1004 = 4000  # 4ms
+
+STOP_MASK_MIN_TP1204 = -0.25  # -250ns
+STOP_MASK_MAX_TP1204 = 4000  # 4ms
+
+STOP_MASK_DECIMALS = 2 
+STOP_MASK_STEP = 0.01
+
+
+def get_stop_mask_range(model_idn):
+    """
+    Returns the (minimum, maximum) stopMask values allowed, in us, for the connected Tempico device.
+
+    :param model_idn: string from device.getModelIdn(), e.g. "TP1204"
+    :return: tuple (minimum, maximum) in microseconds
+    """
+    if "TP12" in model_idn:
+        return (STOP_MASK_MIN_TP1204, STOP_MASK_MAX_TP1204)
+    return (STOP_MASK_MIN_TP1004, STOP_MASK_MAX_TP1004)
 
 def _get_base_path():
     """

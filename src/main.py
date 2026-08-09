@@ -1090,6 +1090,11 @@ class MainWindow(QMainWindow):
         """
         constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
         constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
+        """
+        with open("stopmask_debug.log", "a", encoding="utf-8") as f:
+            f.write(f"Modelo: {self.conectedDevice.getModelIdn()} | "
+                    f"getStopMaskMinimum(): {self.conectedDevice.getStopMaskMinimum()}\n")
+        """
         if "TP12" in constants.VERSION_PARAMETER:
             self.generator_settings_action.setVisible(True)
         else:

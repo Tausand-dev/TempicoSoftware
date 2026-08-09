@@ -9,7 +9,8 @@
 ################################################################################
 
 from PySide2.QtCore import QMetaObject, QCoreApplication, QEvent, QObject
-from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QTabWidget, QWidget, QHBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QDialog, QMessageBox, QWhatsThis
+from PySide2.QtWidgets import QVBoxLayout, QFrame, QSizePolicy, QTabWidget, QWidget, QHBoxLayout, QLabel, QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QDialog, QMessageBox, QWhatsThis
+import Utils.constants as constants
 import math
 
 
@@ -18,6 +19,7 @@ class Ui_settings(QObject):
     def setupUi(self, Dialog, device):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
+        self._stop_mask_min, self._stop_mask_max = constants.get_stop_mask_range(device.getModelIdn())
         Dialog.resize(527, 366)
        
         self.dialog_1=Dialog
@@ -146,9 +148,12 @@ class Ui_settings(QObject):
 
         self.horizontalLayout_5.addWidget(self.StopMaskLabelChannelA)
 
-        self.StopMaskValueChannelA = QSpinBox(self.StopMaskChannelA)
+        self.StopMaskValueChannelA = QDoubleSpinBox(self.StopMaskChannelA)
         self.StopMaskValueChannelA.setObjectName(u"StopMaskValueChannelA")
-        self.StopMaskValueChannelA.setMaximum(4000)
+        self.StopMaskValueChannelA.setDecimals(constants.STOP_MASK_DECIMALS)
+        self.StopMaskValueChannelA.setMinimum(self._stop_mask_min)
+        self.StopMaskValueChannelA.setMaximum(self._stop_mask_max)
+        self.StopMaskValueChannelA.setSingleStep(constants.STOP_MASK_STEP)
 
         self.horizontalLayout_5.addWidget(self.StopMaskValueChannelA)
 
@@ -264,9 +269,12 @@ class Ui_settings(QObject):
 
         self.horizontalLayout_10.addWidget(self.StopMaskLabelChannelB)
 
-        self.StopMaskValueChannelB = QSpinBox(self.StopMaskChannelB)
+        self.StopMaskValueChannelB = QDoubleSpinBox(self.StopMaskChannelB)
         self.StopMaskValueChannelB.setObjectName(u"StopMaskValueChannelB")
-        self.StopMaskValueChannelB.setMaximum(4000)
+        self.StopMaskValueChannelB.setDecimals(constants.STOP_MASK_DECIMALS)
+        self.StopMaskValueChannelB.setMinimum(self._stop_mask_min)
+        self.StopMaskValueChannelB.setMaximum(self._stop_mask_max)
+        self.StopMaskValueChannelB.setSingleStep(constants.STOP_MASK_STEP)
 
         self.horizontalLayout_10.addWidget(self.StopMaskValueChannelB)
 
@@ -382,9 +390,12 @@ class Ui_settings(QObject):
 
         self.horizontalLayout_15.addWidget(self.StopMaskLabelChannelC)
 
-        self.StopMaskValueChannelC = QSpinBox(self.StopMaskChannelC)
+        self.StopMaskValueChannelC = QDoubleSpinBox(self.StopMaskChannelC)
         self.StopMaskValueChannelC.setObjectName(u"StopMaskValueChannelC")
-        self.StopMaskValueChannelC.setMaximum(4000)
+        self.StopMaskValueChannelC.setDecimals(constants.STOP_MASK_DECIMALS)
+        self.StopMaskValueChannelC.setMinimum(self._stop_mask_min)
+        self.StopMaskValueChannelC.setMaximum(self._stop_mask_max)
+        self.StopMaskValueChannelC.setSingleStep(constants.STOP_MASK_STEP)
 
         self.horizontalLayout_15.addWidget(self.StopMaskValueChannelC)
 
@@ -500,9 +511,12 @@ class Ui_settings(QObject):
 
         self.horizontalLayout_20.addWidget(self.StopMaskLabelChannelD)
 
-        self.StopMaskValueChannelD = QSpinBox(self.StopMaskChannelD)
+        self.StopMaskValueChannelD = QDoubleSpinBox(self.StopMaskChannelD)
         self.StopMaskValueChannelD.setObjectName(u"StopMaskValueChannelD")
-        self.StopMaskValueChannelD.setMaximum(4000)
+        self.StopMaskValueChannelD.setDecimals(constants.STOP_MASK_DECIMALS)
+        self.StopMaskValueChannelD.setMinimum(self._stop_mask_min)
+        self.StopMaskValueChannelD.setMaximum(self._stop_mask_max)
+        self.StopMaskValueChannelD.setSingleStep(constants.STOP_MASK_STEP)
 
         self.horizontalLayout_20.addWidget(self.StopMaskValueChannelD)
 
@@ -732,10 +746,10 @@ class Ui_settings(QObject):
         self.EdgeTypeValueChannelD.setCurrentIndex(edgeD)
         
         #Get the stop mask
-        stop_maskA=int(self.channel1.getStopMask())
-        stop_maskB=int(self.channel2.getStopMask())
-        stop_maskC=int(self.channel3.getStopMask())
-        stop_maskD=int(self.channel4.getStopMask())
+        stop_maskA=float(self.channel1.getStopMask())
+        stop_maskB=float(self.channel2.getStopMask())
+        stop_maskC=float(self.channel3.getStopMask())
+        stop_maskD=float(self.channel4.getStopMask())
         #Set the stop mask value
         self.StopMaskValueChannelA.setValue(stop_maskA)
         self.StopMaskValueChannelB.setValue(stop_maskB)
@@ -817,10 +831,10 @@ class Ui_settings(QObject):
         value_stopsC=int(self.NumberStopsValueChannelC.currentText())
         value_stopsD=int(self.NumberStopsValueChannelD.currentText())
         #Get the stop mask
-        value_maskA=int(self.StopMaskValueChannelA.value())
-        value_maskB=int(self.StopMaskValueChannelB.value())
-        value_maskC=int(self.StopMaskValueChannelC.value())
-        value_maskD=int(self.StopMaskValueChannelD.value())
+        value_maskA=self.StopMaskValueChannelA.value()
+        value_maskB=self.StopMaskValueChannelB.value()
+        value_maskC=self.StopMaskValueChannelC.value()
+        value_maskD=self.StopMaskValueChannelD.value()
         #Get the stop edge
         value_stopsEdgeA=self.EdgeTypeValueChannelA.currentText()
         value_stopsEdgeB=self.EdgeTypeValueChannelB.currentText()
@@ -916,14 +930,3 @@ class Ui_settings(QObject):
         # disable apply changes button
         self.AplicarCambios.setEnabled(True)
     
-        
-        
-        
-        
-                
-        
-        
-        
-        
-    # retranslateUi
-
