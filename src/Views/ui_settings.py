@@ -19,7 +19,7 @@ class Ui_settings(QObject):
     def setupUi(self, Dialog, device):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        self._stop_mask_min, self._stop_mask_max = constants.get_stop_mask_range(device.getModelIdn())
+        self._stop_mask_min, self._stop_mask_max = constants.get_stop_mask_range(device)
         Dialog.resize(527, 366)
        
         self.dialog_1=Dialog
