@@ -863,6 +863,7 @@ class StartStopLogic():
         column_names=[]
         #Open select the format
         dialog = QDialog(self.parent)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")
@@ -992,7 +993,7 @@ class StartStopLogic():
             graph_names=[]
             #Open select the format
             dialog = QDialog(self.parent)
-    
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dialog.setObjectName("ImageFormat")
             dialog.resize(282, 105)
             dialog.setWindowTitle("Save plots")

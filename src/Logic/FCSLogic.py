@@ -841,6 +841,7 @@ class FCSLogic():
 
         # ── Format selection dialog ───────────────────────────────────────
         dialog = QDialog(self.parent)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle("Save")
         dialog.setMinimumWidth(260)
         vlay = QVBoxLayout(dialog)
@@ -948,6 +949,7 @@ class FCSLogic():
             folder_path      = dataFolderPrefix["saveFolder"]
 
             dialog = QDialog(self.parent)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dialog.setWindowTitle("Save plot")
             dialog.setMinimumWidth(260)
             vlay = QVBoxLayout(dialog)

@@ -1456,6 +1456,7 @@ class G2Logic:
 
         # Format selection dialog (same structure as FCSLogic)
         dialog = QDialog(self.parent)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle("Save")
         dialog.setMinimumWidth(260)
         vlay = QVBoxLayout(dialog)
@@ -1553,6 +1554,7 @@ class G2Logic:
             folder_path      = dataFolderPrefix["saveFolder"]
 
             dialog = QDialog(self.parent)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dialog.setWindowTitle("Save plot")
             dialog.setMinimumWidth(260)
             vlay = QVBoxLayout(dialog)

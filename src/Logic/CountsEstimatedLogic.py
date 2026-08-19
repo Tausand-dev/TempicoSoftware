@@ -2089,7 +2089,7 @@ class CountEstimatedLogic():
             graph_names=[]
             #Open select the format
             dialog = QDialog(self.mainWindow)
-    
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint) 
             dialog.setObjectName("ImageFormat")
             dialog.resize(282, 105)
             dialog.setWindowTitle("Save plots")
@@ -2325,6 +2325,7 @@ class CountEstimatedLogic():
         
         #Open select the format
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")

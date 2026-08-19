@@ -458,6 +458,7 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         self.dialog=QDialog(self)
+        self.dialog.setWindowFlags(self.dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.uidialog = Ui_Devices()
         self.uidialog.setupUi(self.dialog)
         self.dialog.exec_()

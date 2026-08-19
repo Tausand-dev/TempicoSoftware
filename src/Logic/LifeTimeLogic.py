@@ -1963,7 +1963,8 @@ class LifeTimeLogic():
             data_prefix=dataFolderPrefix["lifetimePrefix"]
             graph_names=[]
             #Open select the format
-            dialog =QDialog(self.mainWindow)    
+            dialog =QDialog(self.mainWindow)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)    
             dialog.setObjectName("ImageFormat")
             dialog.resize(285,105)
             dialog.setWindowTitle("Save Plots")
@@ -2060,6 +2061,7 @@ class LifeTimeLogic():
         folder_path=dataFolderPrefix["saveFolder"]
         data_prefix=dataFolderPrefix["lifetimePrefix"]
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")
