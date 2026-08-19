@@ -752,6 +752,31 @@ class Ui_G2(object):
         # Draw the initial grey dot
         self.drawColorPoint()
 
+        # ── Explicit Tab order ───────────────────────────────────────────
+        # Qt's default focus chain follows widget *creation* order, not the
+        # order panels were later added to ``verticalLayout``. Here
+        # ParametersFrame (stopChannel/binWidth/window/duration/indefinite)
+        # is constructed *after* MeasurementControlsFrame and InfoFrame,
+        # even though it's placed visually on top — so Tab used to jump
+        # controls -> stats -> parameters instead of following the panels
+        # top-to-bottom. Chain the widgets explicitly, matching the actual
+        # on-screen order (Parameters -> Controls -> Info -> Fit area).
+        QWidget.setTabOrder(self.stopChannelComboBox, self.binWidthSpinBox)
+        QWidget.setTabOrder(self.binWidthSpinBox, self.windowSpinBox)
+        QWidget.setTabOrder(self.windowSpinBox, self.durationSpinBox)
+        QWidget.setTabOrder(self.durationSpinBox, self.indefiniteCheckBox)
+        QWidget.setTabOrder(self.indefiniteCheckBox, self.startButton)
+        QWidget.setTabOrder(self.startButton, self.stopButton)
+        QWidget.setTabOrder(self.stopButton, self.clearButton)
+        QWidget.setTabOrder(self.clearButton, self.saveDataButton)
+        QWidget.setTabOrder(self.saveDataButton, self.savePlotButton)
+        QWidget.setTabOrder(self.savePlotButton, self.countEstimationEnableCheckBox)
+        QWidget.setTabOrder(self.countEstimationEnableCheckBox, self.tauQuerySpinBox)
+        QWidget.setTabOrder(self.tauQuerySpinBox, self.fitModelCombo)
+        QWidget.setTabOrder(self.fitModelCombo, self.fitButton)
+        QWidget.setTabOrder(self.fitButton, self.fitResetParamsButton)
+        QWidget.setTabOrder(self.fitResetParamsButton, self.fitTable)
+
     # setupUi
 
     def retranslateUi(self, G2Measurement):

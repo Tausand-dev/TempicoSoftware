@@ -278,6 +278,21 @@ class Ui_Generator(object):
         self._eventHelper = _DialogEventHelper(Dialog, self.showHelp)
         Dialog.installEventFilter(self._eventHelper)
         QMetaObject.connectSlotsByName(Dialog)
+
+        # ---- Tab order ----
+        QWidget.setTabOrder(self.generatorFrequencySpinBox, self.tabChannelsWidget)
+        QWidget.setTabOrder(self.tabChannelsWidget, self.channelAStartSourceComboBox)
+        QWidget.setTabOrder(self.channelAStartSourceComboBox, self.channelAStopSourceComboBox)
+        QWidget.setTabOrder(self.channelAStopSourceComboBox, self.channelBStartSourceComboBox)
+        QWidget.setTabOrder(self.channelBStartSourceComboBox, self.channelBStopSourceComboBox)
+        QWidget.setTabOrder(self.channelBStopSourceComboBox, self.channelCStartSourceComboBox)
+        QWidget.setTabOrder(self.channelCStartSourceComboBox, self.channelCStopSourceComboBox)
+        QWidget.setTabOrder(self.channelCStopSourceComboBox, self.channelDStartSourceComboBox)
+        QWidget.setTabOrder(self.channelDStartSourceComboBox, self.channelDStopSourceComboBox)
+        QWidget.setTabOrder(self.channelDStopSourceComboBox, self.applyChangesButton)
+        QWidget.setTabOrder(self.applyChangesButton, self.generatorFrequencySpinBox)
+        self.generatorFrequencySpinBox.setFocus()
+    
     # setupUi
 
     def retranslateUi(self, Dialog):

@@ -102,15 +102,22 @@ class Ui_CountsEstimated(object):
 
         self.horizontalLayout_3.addWidget(self.channelACheckBox)
 
-        self.channelCCheckBox = QCheckBox(self.frame_7)
-        self.channelCCheckBox.setObjectName(u"channelCCheckBox")
-
-        self.horizontalLayout_3.addWidget(self.channelCCheckBox)
-
+        # NOTE: previously created/added as C-then-B (with their setText()
+        # calls swapped to compensate), so the checkbox object named
+        # channelBCheckBox displayed "C" and channelCCheckBox displayed
+        # "B" — any code reading self.channelBCheckBox.isChecked() to mean
+        # "channel B" was actually reading the checkbox the user sees
+        # labelled "C". Creating/adding them in true A-B-C-D order fixes
+        # that mismatch; see the corresponding setText() calls below.
         self.channelBCheckBox = QCheckBox(self.frame_7)
         self.channelBCheckBox.setObjectName(u"channelBCheckBox")
 
         self.horizontalLayout_3.addWidget(self.channelBCheckBox)
+
+        self.channelCCheckBox = QCheckBox(self.frame_7)
+        self.channelCCheckBox.setObjectName(u"channelCCheckBox")
+
+        self.horizontalLayout_3.addWidget(self.channelCCheckBox)
 
         self.channelDCheckBox = QCheckBox(self.frame_7)
         self.channelDCheckBox.setObjectName(u"channelDCheckBox")
@@ -625,6 +632,38 @@ class Ui_CountsEstimated(object):
 
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
+
+        # ── Explicit Tab order ───────────────────────────────────────────
+        # Same class of bug as in the other measurement tabs: Start/Stop
+        # (startMeasurementButton/stopMeasurementButton) are *created*
+        # right after the channel checkboxes, but only *added* to
+        # verticalLayout_2 at the very end — after Graph mode, Detached
+        # options, Time range, and the per-channel Clear buttons — so
+        # they render near the bottom, just above Save Data/Save Plots.
+        # Left to Qt's default (creation-order) focus chain, Tab from the
+        # last channel checkbox jumped straight down to Start/Stop before
+        # ever reaching the Graph/Detached/Time range/Clear controls in
+        # between. Chain everything explicitly to match the real
+        # on-screen order.
+        QWidget.setTabOrder(self.channelACheckBox, self.channelBCheckBox)
+        QWidget.setTabOrder(self.channelBCheckBox, self.channelCCheckBox)
+        QWidget.setTabOrder(self.channelCCheckBox, self.channelDCheckBox)
+        QWidget.setTabOrder(self.channelDCheckBox, self.mergeGraphicButton)
+        QWidget.setTabOrder(self.mergeGraphicButton, self.separateGraphicButton)
+        QWidget.setTabOrder(self.separateGraphicButton, self.apartDialogGraphicButton)
+        QWidget.setTabOrder(self.apartDialogGraphicButton, self.tableCheckBox)
+        QWidget.setTabOrder(self.tableCheckBox, self.labelCheckBox)
+        QWidget.setTabOrder(self.labelCheckBox, self.comboBoxTimeRange)
+        QWidget.setTabOrder(self.comboBoxTimeRange, self.channelAClearButton)
+        QWidget.setTabOrder(self.channelAClearButton, self.channelBClearButton)
+        QWidget.setTabOrder(self.channelBClearButton, self.channelCClearButton)
+        QWidget.setTabOrder(self.channelCClearButton, self.channelDClearButton)
+        QWidget.setTabOrder(self.channelDClearButton, self.startMeasurementButton)
+        QWidget.setTabOrder(self.startMeasurementButton, self.stopMeasurementButton)
+        QWidget.setTabOrder(self.stopMeasurementButton, self.saveDataButton)
+        QWidget.setTabOrder(self.saveDataButton, self.savePlotsButton)
+        QWidget.setTabOrder(self.savePlotsButton, self.countValuesTable)
+        QWidget.setTabOrder(self.countValuesTable, self.helpButton)
     # setupUi
 
     def retranslateUi(self, Form):
@@ -642,8 +681,8 @@ class Ui_CountsEstimated(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.channelLabel.setText(QCoreApplication.translate("Form", u"Channels:", None))
         self.channelACheckBox.setText(QCoreApplication.translate("Form", u"A", None))
-        self.channelCCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
-        self.channelBCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
+        self.channelBCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
+        self.channelCCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
         self.channelDCheckBox.setText(QCoreApplication.translate("Form", u"D", None))
         self.startMeasurementButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.stopMeasurementButton.setText(QCoreApplication.translate("Form", u"Stop", None))

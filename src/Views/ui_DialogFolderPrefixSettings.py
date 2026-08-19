@@ -5,7 +5,7 @@ from PySide2.QtGui import QPixmap
 from PySide2.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QFrame, QLabel, QLineEdit,
     QPushButton, QSizePolicy, QFileDialog, QMessageBox,
-    QStyle
+    QStyle, QWidget
 )
 from Utils.createsavefile import createsavefile
 import json
@@ -240,7 +240,37 @@ class Ui_DialogFolderPrefix(object):
         self._eventHelper = _DialogEventHelper(Dialog, self.showHelp)
         Dialog.installEventFilter(self._eventHelper)
         QMetaObject.connectSlotsByName(Dialog)
-        
+
+        # ── Initial focus ────────────────────────────────────────────────
+        # folderPathLineEdit is set read-only in getSettings() (it's meant
+        # to be filled via the folder-picker action, not typed into
+        # directly). Qt does NOT automatically hand a read-only field the
+        # dialog's initial focus, so without this it fell through to
+        # whatever widget Qt picks as default (the "Apply changes"
+        # button). Force it explicitly so the dialog always opens with
+        # focus on Save folder path.
+        self.folderPathLineEdit.setFocus()
+
+        # ── Explicit Tab order ───────────────────────────────────────────
+        # The rows themselves (Save folder path -> Start-stop histogram ->
+        # Counts estimation -> Time stamping -> Lifetime -> Autocorrelation
+        # -> g2 -> buttons) are already created and added in the same
+        # order they're shown, so Tab already follows them correctly. The
+        # one mismatch is the button row: applyChangesButton, cancelButton,
+        # and defaultValuesButton are *created* in that order, but *shown*
+        # as Apply / Default values / Cancel — so Tab used to visit Cancel
+        # before Default values. Chain the whole dialog explicitly so it's
+        # correct end to end and won't silently drift if a row is
+        # reordered later.
+        QWidget.setTabOrder(self.folderPathLineEdit, self.startStopHistogramLineEdit)
+        QWidget.setTabOrder(self.startStopHistogramLineEdit, self.countsEstimationLineEdit)
+        QWidget.setTabOrder(self.countsEstimationLineEdit, self.lineEdit)
+        QWidget.setTabOrder(self.lineEdit, self.lifetimeLineEdit)
+        QWidget.setTabOrder(self.lifetimeLineEdit, self.autocorrelationLineEdit)
+        QWidget.setTabOrder(self.autocorrelationLineEdit, self.g2LineEdit)
+        QWidget.setTabOrder(self.g2LineEdit, self.applyChangesButton)
+        QWidget.setTabOrder(self.applyChangesButton, self.defaultValuesButton)
+        QWidget.setTabOrder(self.defaultValuesButton, self.cancelButton)
     # setupUi
 
     def retranslateUi(self, Dialog):
