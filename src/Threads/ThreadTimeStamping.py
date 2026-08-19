@@ -104,7 +104,6 @@ class WorkerThreadTimeStamping(QThread):
         self.saveCurrentMeasurements()
         #Maximum value
         self.maximumValueMeasurement=5000000000
-        self.savefile=createsavefile()
         self.folderData=self.savefile.getAutoSaveFolderPath()
         
         
@@ -931,7 +930,15 @@ class WorkerThreadTimeStamping(QThread):
         self.changeStatusText.emit(f"Processing data 0%")
         currentAdvance=0
         with open(tempDataPath, 'r', encoding='utf-8') as file:
-            header = list(islice(file, 8))
+            # El encabezado no siempre son 8 líneas (depende de cuántos
+            # canales están configurados). Leemos línea por línea hasta
+            # encontrar la fila de columnas real ("Start Time...") e
+            # incluimos esa fila como parte del encabezado, no de los datos.
+            header = []
+            for linea in file:
+                header.append(linea)
+                if linea.startswith("Start Time"):
+                    break
             with open(tempDataOrder, 'w', encoding='utf-8') as out:
                 for headLine in header:
                     newheadLine=headLine.replace("\t",newSeparator)
