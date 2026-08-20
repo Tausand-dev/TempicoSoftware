@@ -571,6 +571,214 @@ be applied once the user presses apply changes again.
 \label{fig:24}
 \end{figure}
 
+\hypertarget{status-bar}{%
+\subsection{Status bar}\label{status-bar}}
+
+Across every measurement tab in Tempico Software, a status bar keeps the
+user informed about the state of the acquisition without requiring the
+user to interrupt or inspect the ongoing measurement in detail. Internally,
+the Start-stop histogram, Lifetime histograms, Time stamping, Counts
+estimation, Autocorrelation (FCS), and g\(^{(2)}\) (HBT) tabs all drive
+this bar from a pair of signals emitted by their respective acquisition
+threads, one carrying the status text and the other carrying an integer
+code that selects the color of the small dot shown next to that text;
+the dot itself is drawn directly by each tab's interface and starts out
+grey (\includegraphics[width=0.14in,height=0.14in]{images/Grey-dot.png}) before any code-driven update arrives.
+
+\hypertarget{status-bar-idle}{%
+\subsubsection{Idle state}\label{status-bar-idle}}
+
+In all six measurement tabs, the status dot is initialized as a grey
+circle (\includegraphics[width=0.14in,height=0.14in]{images/Grey-dot.png}) as soon as the tab is built, before any measurement has been
+started and before the acquisition thread has emitted its first status
+update; this grey dot (\includegraphics[width=0.14in,height=0.14in]{images/Grey-dot.png}) therefore represents the absence of a running
+measurement rather than a state actively reported during acquisition.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.17045in,height=0.69064in]{images/perform-a-measurement-07.png}
+\label{fig:30}
+\end{figure}
+
+\hypertarget{status-bar-active}{%
+\subsubsection{Active measurement}\label{status-bar-active}}
+
+Once a channel is producing valid data, the status bar switches to its
+green code (\includegraphics[width=0.14in,height=0.14in]{images/Green-dot.png}), and the accompanying text differs from tab to tab according
+to what each technique tracks. The Start-stop histogram tab reports
+simply that the measurement is running, without a numeric indicator of
+progress.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=0.6125in]{images/perform-a-measurement-3-10.png}
+\label{fig:87}
+\end{figure}
+
+The Lifetime histograms tab reports the same green state (\includegraphics[width=0.14in,height=0.14in]{images/Green-dot.png}) together with
+the completion percentage toward the configured number of measurements.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=2.69722in]{images/perform-a-measurement-1-02.png}
+\label{fig:41}
+\end{figure}
+
+The Time stamping tab behaves differently depending on the acquisition
+mode selected: in manual mode it reports only that the measurement is
+running, while in sample-size mode it additionally appends the
+completion percentage relative to the configured number of records, and
+any warning message issued while a target sample count is active is
+likewise annotated with that same percentage. In scheduled mode, before
+the configured start time is reached, the status bar instead displays a
+countdown showing the remaining time until the measurement begins; while
+this countdown is running the software behaves as though the
+measurement were already underway, and the tab and device configuration
+cannot be changed until either the countdown finishes or the user cancels
+it with the stop button. When autosave is writing accumulated data to
+disk during a running measurement, the status bar switches to the
+message ``Saving data'', and once the user stops the measurement, the
+same processing state (covered in the Paused and processing states
+subsection below) reports the percentage of records already sorted and
+written to their final path.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=0.63958in]{images/perform-a-measurement-3-05.png}
+\label{fig:83}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=0.63611in]{images/perform-a-measurement-3-13.png}
+\label{fig:90}
+\end{figure}
+
+The Autocorrelation (FCS) and g\(^{(2)}\) (HBT) tabs report the green
+state (\includegraphics[width=0.14in,height=0.14in]{images/Green-dot.png}) together with their respective acquisition counters and the
+elapsed time: the Autocorrelation tab shows the number of calls and
+events, while the g\(^{(2)}\) tab shows only the number of events,
+reflecting the different quantities each technique tracks; both tabs
+also switch back to this same green state (\includegraphics[width=0.14in,height=0.14in]{images/Green-dot.png}), with a finishing message
+instead of a counter update, once the configured acquisition duration
+has elapsed and the thread has restored the device settings.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.13750in,height=0.60764in]{images/perform-a-measurement-4-03.png}
+\label{fig:105}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.13750in,height=0.55764in]{images/perform-a-measurement-5-03.png}
+\label{fig:117}
+\end{figure}
+
+\hypertarget{status-bar-missing-pulses}{%
+\subsubsection{Missing channel pulses}\label{status-bar-missing-pulses}}
+
+When a required channel stops receiving valid pulses, the Start-stop histogram, Lifetime histograms, Time stamping, Autocorrelation (FCS), and g\(^{(2)}\) (HBT) tabs all switch the status dot to its orange (\includegraphics[width=0.14in,height=0.14in]{images/Orange-dot.png}), or warning, code and display a status message. If the start channel itself is not producing pulses, the tabs display "No measurements in Start Channel". If the start channel is fine but one or more configured stop channels are silent, they display "No measurements in Stop Channel" (specifying the affected channel when applicable, such as "No measurements in Stop Channel A").
+
+A possible solution when the start channel shows this warning is to adjust the Threshold Voltage in General settings, for example setting it to $1.6\text{ V}$ and checking whether the measurement then proceeds correctly; if the warning persists after trying different values and the setup and input signal have been ruled out as the cause, Tausand support should be contacted.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.13750in,height=0.57500in]{images/perform-a-measurement-5-04.png}
+\label{fig:118}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.08140in,height=0.52226in]{images/perform-a-measurement-4-04.png}
+\label{fig:106}
+\end{figure}
+
+
+
+In the Counts estimation tab specifically, a channel that stops
+producing enough pulses is instead flagged directly in the results
+table with the message Low Counts, rather than through the shared
+colored-dot warning layout described above; this reflects that Counts
+estimation reasons about insufficient pulse density on an otherwise
+active channel rather than a fully silent start or stop line. Once
+measurements are registered again on the channel, the process resumes
+normally.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=1.43333in]{images/perform-a-measurement-2-16.png}
+\label{fig:67}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=2.25903in]{images/perform-a-measurement-2-17.png}
+\label{fig:68}
+\end{figure}
+
+\hypertarget{status-bar-paused-processing}{%
+\subsubsection{Paused and processing states}\label{status-bar-paused-processing}}
+
+Beyond the green running state (\includegraphics[width=0.14in,height=0.14in]{images/Green-dot.png}) and the orange warning state (\includegraphics[width=0.14in,height=0.14in]{images/Orange-dot.png}), the Time
+stamping and Lifetime histograms tabs share a third, distinct status
+color reserved for transitional states in which the device is not
+actively acquiring new pulses but the measurement has not finished
+either. This third code does not appear in the Start-stop histogram,
+Counts estimation, Autocorrelation (FCS), or g\(^{(2)}\) (HBT) tabs. In
+the Time stamping tab, this state covers three situations: while the
+measurement is paused by the user, the status bar shows ``Paused
+measurement'', with the completion percentage appended when the tab is
+running in sample-size mode; while autosave is writing accumulated data
+to disk, it shows ``Processing data''; and once the user stops the
+measurement, it shows the same ``Processing data'' message, followed by
+an explicit percentage, while the recorded entries are sorted and
+written to their final path.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.08418in,height=0.63551in]{images/perform-a-measurement-3-16.png}
+\label{fig:91}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=0.65208in]{images/perform-a-measurement-3-17.png}
+\label{fig:92}
+\end{figure}
+
+In the Lifetime histograms tab, this same third color is used only once,
+at the very end of the acquisition loop, when the status bar displays
+``Ending measurement'' while the thread finalizes the run before the
+measurement is marked as complete.
+
+\hypertarget{status-bar-module-specific-warnings}{%
+\subsubsection{Module-specific configuration
+warnings}\label{status-bar-module-specific-warnings}}
+
+Two of the tabs raise an additional warning, shown with the same orange
+code (\includegraphics[width=0.14in,height=0.14in]{images/Orange-dot.png}) used for missing pulses, that is tied to a configuration check
+particular to that functionality rather than to a silent channel. In the
+Start-stop histogram tab, when a channel repeatedly produces
+out-of-range values and the user has been prompted to change that
+channel's mode without doing so, the status bar replaces the running
+message with ``Consider changing mode of the channels: '', followed by
+the letter of every affected channel; this message is exclusive to the
+Start-stop histogram tab and does not appear in any other module. In the
+Counts estimation tab, before the actual measurement begins, the status
+bar displays ``Estimating number stops in channel'', followed by the
+channel letter and a completion percentage, while the software
+automatically determines how many stops each channel can reliably
+register; this calibration message is likewise exclusive to Counts
+estimation and precedes, rather than replaces, the Low Counts reporting
+described above.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6.1375in,height=0.65417in]{images/settings-before-measurement-02.png}
+\label{fig:54-status}
+\end{figure}
+
 \hypertarget{start-stop-histogram-measurements}{%
 \subsection{Start-stop histogram
 measurements}\label{start-stop-histogram-measurements}}
@@ -639,31 +847,9 @@ free to use them if desired.
 \label{fig:29}
 \end{figure}
 
-The status bar indicates whether the measurement is being carried out
-correctly. If any channel is not receiving data, the status bar will
-display a message to indicate this.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=5.17045in,height=0.69064in]{images/perform-a-measurement-07.png}
-\label{fig:30}
-\end{figure}
-
-If the start channel is not receiving data, the following message will
-be displayed:
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=4.93412in,height=0.75978in]{images/perform-a-measurement-08.png}
-\label{fig:31}
-\end{figure}
-
-A possible solution to this issue is configuring the threshold voltage.
-It is recommended to set it to 1.6 V and check if the measurement is
-performed correctly. If the error persists, try different values for
-this parameter. If the issue continues and it is determined that it is
-not a fault in the setup or the input signal, Tausand support should be
-contacted.
+The progress of the measurement is reported by the status bar described
+in Section~\ref{status-bar}; if any channel is not receiving data, that
+same bar will display a message indicating so.
 
 Start-stop histograms are designed to take measurements indefinitely.
 Once the experiment is considered complete, click the "End Measurement"
@@ -817,23 +1003,10 @@ ns, the measurement operates in mode 2; otherwise, it operates in mode
 
 Once the desired configuration is selected, click the start button (
 \includegraphics[width=0.46116in,height=0.13835in]{images/perform-a-measurement-1-01.png})
-to begin the measurement. Like start-stop histograms, the program
-displays a status bar indicating the measurement\textquotesingle s
-progress. If any channel is not recording, it will be shown. In this
-case, the percentage of the measurement is also displayed, as the number
-of desired measurements can be specified.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=2.69722in]{images/perform-a-measurement-1-02.png}
-\label{fig:41}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.54722in]{images/perform-a-measurement-1-03.png}
-\label{fig:42}
-\end{figure}
+to begin the measurement. As with all measurement tabs, progress and any
+channel warnings are reported through the status bar described in
+Section~\ref{status-bar}, including the completion percentage toward the
+configured number of measurements.
 
 The program also provides additional information about the measurement
 status, including the total number of starts, the total number of
@@ -849,11 +1022,7 @@ in HH:MM:SS format.
 \hypertarget{fitting}{%
 \subsubsection{Fitting}\label{fitting}}
 
-Con el fin de obtener más información acerca de una medición, el usuario
-puede realizar un fit sobre la gráfica. Al realizar el fit obtiene en la
-tabla de la esquina superior derecha información más detallada acerca de
-los parametros de la ecuación a ajustar. Obtiene sus valores, su
-desviación estándar y sus respectivas unidades.
+To obtain more information about a measurement, the user can perform a fit on the graph. By performing the fit, they obtain more detailed information about the parameters of the equation to be fitted in the table at the top right corner. This provides their values, standard deviation, and respective units.
 
 \begin{figure}[H]
 \centering
@@ -1071,13 +1240,8 @@ greater than the actual number of pulses received after a start pulse
 would result in no valid measurements being detected. To prevent this
 issue, the software analyzes the incoming signal behavior and
 automatically adjusts the appropriate number of stops before starting
-the counting process.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.65417in]{images/settings-before-measurement-02.png}
-\label{fig:54}
-\end{figure}
+the counting process, reporting the calibration progress through the
+status bar as described in Section~\ref{status-bar}.
 
 If the software detects that a channel is unable to register more than 2
 stops, it will notify the user and prompt whether to stop the
@@ -1206,8 +1370,12 @@ reported measurement.
 
 As before, the user can choose to view the current values in detached
 mode by clicking the corresponding
-checkbox.\includegraphics[width=5.71955in,height=1.06265in]{images/perform-a-measurement-2-14.png}
-
+checkbox.
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.71955in,height=1.06265in]{images/perform-a-measurement-2-14.png}
+\label{fig:65-Detached}
+\end{figure}
 After that, a separate dialog will open displaying the current
 measurement values.
 
@@ -1218,25 +1386,8 @@ measurement values.
 \end{figure}
 
 If a channel stops emitting values during the measurement process, the
-software will notify the user through the status bar. Additionally, the
-results table will display the message Low Counts, indicating that the
-device is unable to perform the measurement because the number of
-received counts is insufficient.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=1.43333in]{images/perform-a-measurement-2-16.png}
-\label{fig:67}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=2.25903in]{images/perform-a-measurement-2-17.png}
-\label{fig:68}
-\end{figure}
-
-Once measurements are registered again on the channel, the process will
-resume normally.
+results table will display the Low Counts message described in
+Section~\ref{status-bar}.
 
 \hypertarget{save-data}{%
 \subsubsection{Save data}\label{save-data}}
@@ -1470,13 +1621,7 @@ After confirming the format
 in case autosave is enabled, or simply by pressing start if it is not,
 the measurement will begin. The only exception is the scheduled
 measurement, where a countdown will appear indicating the remaining time
-before the measurement starts.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.63958in]{images/perform-a-measurement-3-05.png}
-\label{fig:83}
-\end{figure}
+before the measurement starts, as described in Section~\ref{status-bar}.
 
 When this countdown is active, it is as if the software were already
 running the measurement, since it is not possible to change the tab or
@@ -1514,67 +1659,14 @@ measurements recorded per channel, as well as the overall total.
 \label{fig:86}
 \end{figure}
 
-The status bar will indicate whether the measurement is running
-correctly or if there is an issue with the selected channels.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.6125in]{images/perform-a-measurement-3-10.png}
-\label{fig:87}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.63958in]{images/perform-a-measurement-3-11.png}
-\label{fig:88}
-\end{figure}
-
-It will also show progress depending on the measurement type. For
-scheduled measurements, the status bar will display the remaining time
-until completion.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.65278in]{images/perform-a-measurement-3-12.png}
-\label{fig:89}
-\end{figure}
-
-For sample-size-based measurements, it will show the progress percentage
-according to the number of acquired records compared to the expected
-amount.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.63611in]{images/perform-a-measurement-3-13.png}
-\label{fig:90}
-\end{figure}
-
-When autosave is in process, the status bar will display the message
-saving data. The duration of this message corresponds to the time during
-which the software pauses acquisition to save the accumulated data.
-
 The measurement can also be paused by clicking the Pause
 (\includegraphics[width=2.0in,height=0.1in]{images/perform-a-measurement-3-14.png}, \includegraphics[width=0.76in,height=0.14in]{images/perform-a-measurement-3-15.png})
 button. This option allows the user to temporarily stop the measurement
 without starting a new one or losing the data already recorded. It is
 particularly useful when a connection needs to be adjusted in the timer
-without restarting the entire process.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.08418in,height=0.63551in]{images/perform-a-measurement-3-16.png}
-\label{fig:91}
-\end{figure}
-
-At the end of the measurement, the status bar will indicate that the
-data is being processed. During this step, the information is saved in
-the path selected by the user and the records are organized.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.1375in,height=0.65208in]{images/perform-a-measurement-3-17.png}
-\label{fig:92}
-\end{figure}
+without restarting the entire process. While paused, or while data is
+being processed at the end of the run, the status bar reflects this in
+the transitional state described in Section~\ref{status-bar}.
 
 In any type of measurement, it is possible to manually stop the process
 at any time by pressing the stop button
@@ -1714,7 +1806,7 @@ correlation running until the user presses Stop.
 Once the desired configuration is selected, click the Start button to
 begin the acquisition. While the measurement is running, the Stop
 Channel, the Base bin width $\tau$\textsubscript{0}, the Duration, and the
-Continuous measurement option are locked and cannot changed. The
+Continuous measurement option are locked and cannot be changed. The
 autocorrelation curve G($\tau$) is plotted live against $\tau$ on a logarithmic
 time axis as new data arrives. At any point the user can press Clear to
 reset the curve, or Stop to end the measurement before the configured
@@ -1727,42 +1819,19 @@ duration elapses.
 \end{figure}
 
 The panel below settings reports the acquisition progress through three
-values: Calls, which indicates the number of calls made to the device
-since the measurement started; Events, which indicates the number of
+values: Calls, which tracks the total requests sent to the device since the measurement started; Events, which indicates the number of
 valid stop events detected on the selected channel since the measurement
 started; and Elapsed, which indicates the elapsed time since the
 measurement started, shown in seconds and, if applicable, against the
-total configuration duration.
+total configured duration. Alongside this panel, the status bar reports
+the acquisition state as described in Section~\ref{status-bar}; if a
+warning persists, the user should check the corresponding cable
+connections and the signal levels before continuing the measurement.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=2.93056in,height=0.82569in]{images/perform-a-measurement-4-02.png}
 \label{fig:104}
-\end{figure}
-
-Next to this panel, the Status bar shows a colored dot together with a
-short descriptive message, which the user should monitor throughout the
-measurement. A grey dot indicates that no measurement is currently
-running. A green dot indicates that the measurement is running normally,
-with the message reporting the current number of calls, events and
-elapsed time. An orange dot indicates that a warning condition was
-detected; the message ``No measurements in Start Channel'' means that
-the device is not receiving any start pulses, while the message ``No
-measurements in Stop Channel {[}A/B/C/D{]}'' means that no valid pulses
-are being detected on the selected stop channel. If either warning
-persists, the user should check the corresponding cable connections and
-the signal levels before continuing the measurement.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.13750in,height=0.60764in]{images/perform-a-measurement-4-03.png}
-\label{fig:105}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.08140in,height=0.52226in]{images/perform-a-measurement-4-04.png}
-\label{fig:106}
 \end{figure}
 
 \hypertarget{post-measurement}{%
@@ -1800,29 +1869,29 @@ software's suggested values with the Auto button.
 \[G(\infty) + \frac{1}{N} \cdot \left( 1 + \frac{\tau}{\tau_{0}} \right)^{- 1} \cdot \left( 1 + a^{- 2}\frac{\tau}{\tau_{0}} \right)^{- \frac{1}{2}}\]
 
 Describes a singles species diffusing freely in three dimensions through
-a Gaussian observation volume, The fitted parameters are N, the average
-number of particles in the observation volume.
+a Gaussian observation volume. The fitted parameters are N, the average
+number of particles in the observation volume; $\tau_D$, the diffusion time, in ms; and $a$, the structure parameter, defined as the ratio between the axial and lateral radii of the observation volume.
 
 \hypertarget{anomalous-diffusion}{%
 \subparagraph{Anomalous diffusion}\label{anomalous-diffusion}}
 
-\[G(\infty) + \frac{1}{N} \cdot \left( 1 + \left( \frac{\tau}{\tau_{D}} \right)^{a} \right)^{- 1} \cdot \left( 1 + a^{- 2}\left( \frac{\tau}{\tau_{D}} \right)^{a} \right)^{- \frac{1}{2}}\]
+\[G(\infty) + \frac{1}{N} \cdot \left( 1 + \left( \frac{\tau}{\tau_{D}} \right)^{\alpha} \right)^{- 1} \cdot \left( 1 + a^{- 2}\left( \frac{\tau}{\tau_{D}} \right)^{\alpha} \right)^{- \frac{1}{2}}\]
 
 Extends the 3D Gaussian diffusion model to account for non-Brownian,
-anomalous transport. In addition to N, $\tau$\textsubscript{D} (ms), and $\kappa$,
+anomalous transport. In addition to N, $\tau$\textsubscript{D} (ms), and $a$,
 it includes the anomaly exponent $\alpha$ which equals 1 for normal diffusion
 and deviates from 1 when the diffusion is sub- or super-diffusive.
 
 \hypertarget{chemical-relaxation}{%
 \subparagraph{Chemical relaxation}\label{chemical-relaxation}}
 
-\[\ \ \ \ G(\infty) + \frac{1}{N} \cdot K \cdot \exp\left\lbrack - \frac{\tau}{\tau_{B}} \right\rbrack\ \ \ \ \ \ \ \ \left\lbrack G(0) = \frac{K}{N},\ \ K = \frac{k_{on}}{k_{off}} \right\rbrack\]
+\[\ \ \ \ G(\infty) + \frac{1}{N} \cdot K \cdot \exp\left\lbrack - \frac{\tau}{\tau_{B}} \right\rbrack\ \ \ \ \ \ \ \ \]
 
 Describes a two-state chemical equilibrium, such as binding/unbinding or
 blinking, rather than diffusion. The fitted parameters are N, the
 relaxation time $\tau$\textsubscript{B}, in ms, and K, the ratio between the
-on- and off-rate constants of the reaction (K =
-k\textsubscript{on}/k\textsubscript{off}).
+on- and off-rate constants of the reaction, K =
+k\textsubscript{on}/k\textsubscript{off}, and relates to the value of the curve at $\tau=0$ through $G(0) = \frac{K}{N}$.
 
 \hypertarget{diffusion-with-flow}{%
 \subparagraph{Diffusion with flow}\label{diffusion-with-flow}}
@@ -1852,7 +1921,7 @@ time $\tau$\textsubscript{F}, in $\mu$s.
 \hypertarget{two-component-diffusion}{%
 \subparagraph{Two-component diffusion}\label{two-component-diffusion}}
 
-\(G(\infty) + \frac{1}{N} \cdot \left( {a_{1} \cdot \left( 1 + \frac{\tau}{\tau_{D1}} \right)}^{- 1} \cdot \left( 1 + a^{- 2}\frac{\tau}{\tau_{D1}} \right)^{- \frac{1}{2}} + {a_{2} \cdot \left( 1 + \frac{\tau}{\tau_{D2}} \right)}^{- 1} \cdot \left( 1 + a^{- 2}\frac{\tau}{\tau_{D2}} \right)^{- \frac{1}{2}} \right)\)
+\[G(\infty) + \frac{1}{N} \cdot \left( {a_{1} \cdot \left( 1 + \frac{\tau}{\tau_{D1}} \right)}^{- 1} \cdot \left( 1 + a^{- 2}\frac{\tau}{\tau_{D1}} \right)^{- \frac{1}{2}} + {a_{2} \cdot \left( 1 + \frac{\tau}{\tau_{D2}} \right)}^{- 1} \cdot \left( 1 + a^{- 2}\frac{\tau}{\tau_{D2}} \right)^{- \frac{1}{2}} \right)\]
 
 Models two diffusing species with different mobilities, such as free dye
 and dye bound to a larger complex. The fitted parameters are N, the
@@ -1961,13 +2030,13 @@ relative to the start signal will be histogrammed. The Bin width field
 sets, in nanoseconds, the width of each histogram bin, and can be
 configured from 0.1 ns up to 10,000 ns. The Window ($\pm$) field sets, in
 nanoseconds, the half-width of the histogram around $\tau$=0, and can be
-configured from 10 ns up to 100,00 ns; together with the bin width, this
+configured from 10 ns up to 100,000 ns; together with the bin width, this
 defines the total range and resolution of the g\textsuperscript{(2)}($\tau$)
 curve. The user can either set a fixed Duration, from 1 second up to 24
 hours, or enable the Continuous measurement checkbox, which ignores the
 duration value and keeps the histogram running until the user presses
 Stop. Finally, the Count Estimation checkbox can optionally be enabled
-before starting the measurement, so a coincidence rate, expressed in
+before starting the measurement, so a rate, expressed in
 counts per second, is estimated and displayed while measuring.
 
 \begin{figure}[H]
@@ -2000,37 +2069,16 @@ detected on the selected channel since the measurement started, and
 Elapsed, which indicates the elapsed time since the measurement started,
 shown in seconds and, if applicable, against the total configured
 duration. If Count Estimation was enabled before starting, this panel
-also shows the estimated coincidence rate, in counts per second.
+also shows the estimated rate, in counts per second. Alongside this
+panel, the status bar reports the acquisition state as described in
+Section~\ref{status-bar}; if a warning persists, the user should check
+the corresponding cable connections and the signal levels before
+continuing the measurement.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=2.97431in,height=0.92222in]{images/perform-a-measurement-5-02.png}
 \label{fig:116}
-\end{figure}
-
-Next to this panel, the Status bar shows a colored dot together with a
-short descriptive message, which the user should monitor throughout the
-measurement. A grey dot indicates that no measurement is currently
-running. A green dot indicates that the measurement is running normally,
-with the message reporting the current number of events and elapsed
-time. An orange dot indicates that a warning condition was detected: the
-message ``No measurements in Start Channel'' means that the device is
-not receiving any start pulses, while the message ``No measurements in
-Stop Channel {[}A/B/C/D{]}'' means that no valid stop pulses are being
-detected on the selected stop channel. If either warning persists, the
-user should heck the corresponding cable connections and the signal
-levels before continuing the measurement.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.13750in,height=0.55764in]{images/perform-a-measurement-5-03.png}
-\label{fig:117}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=6.13750in,height=0.57500in]{images/perform-a-measurement-5-04.png}
-\label{fig:118}
 \end{figure}
 
 \hypertarget{post-measurement-1}{%
@@ -2085,7 +2133,7 @@ dip depth; $\tau$\textsubscript{0}, the position of the dip, in ns; and
 \hypertarget{bunched-gaussian}{%
 \subparagraph{Bunched Gaussian}\label{bunched-gaussian}}
 
-\[y_{0} - a \cdot \exp\left\lbrack - \frac{\pi\left| \tau - \tau_{0} \right|}{\tau_{c}}^{2}\  \right\rbrack\]
+\[y_{0} + a \cdot \exp\left\lbrack - \frac{\pi\left| \tau - \tau_{0} \right|}{\tau_{c}}^{2}\  \right\rbrack\]
 
 Describes a peak in g \textsuperscript{(2)} with an exponential profile,
 also typical of bunched or thermal light. The fitted parameters are
@@ -2097,7 +2145,7 @@ Gaussian peak, in ns.
 \hypertarget{bunched-lorentzian}{%
 \subparagraph{Bunched Lorentzian}\label{bunched-lorentzian}}
 
-\[y_{0} - a \cdot \exp\left\lbrack - \frac{\left| \tau - \tau_{0} \right|}{\tau_{c}}\  \right\rbrack\]
+\[y_{0} + a \cdot \exp\left\lbrack - \frac{\left| \tau - \tau_{0} \right|}{\tau_{c}}\  \right\rbrack\]
 
 Describes a peak in g\textsuperscript{(2)}($\tau$) with an exponential
 profile, also typical of bunched or thermal light but with a different
@@ -2114,7 +2162,7 @@ in ns.
 
 Describes the g\textsuperscript{(2)}($\tau$) response of an emitter with an
 additional metastable (shelving) state, combining an antibunching dip
-with a bunching shoulder. The fitted parameter are a, the relative
+with a bunching shoulder. The fitted parameters are $a$, the relative
 amplitude of the bunching shoulder; $\tau$\textsubscript{0}, the position of
 the feature, in ns; $\tau$\textsubscript{1}, the fast time constant
 associated with the antibunching dip, in ns; and $\tau$\textsubscript{2}, the
