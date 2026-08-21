@@ -355,9 +355,7 @@ it is possible that the user does not belong to the dialout group. To
 resolve this, we will execute the command above. This will allow us to
 access the system\textquotesingle s serial ports.
 
-Si el comando no es suficiente y el software sigue lanzando errores debe
-verificarse cual es el puerto tty que se esta usando y debe ejecutarse
-lo siguiente:
+If the previous command does not solve the issue, after identifying the serial tty port in use by the Tempico device, run the following command:
 
 \begin{center}
     \textbf{sudo chmod 666 /dev/tty"port"}
@@ -1022,7 +1020,7 @@ in HH:MM:SS format.
 \hypertarget{fitting}{%
 \subsubsection{Fitting}\label{fitting}}
 
-To obtain more information about a measurement, the user can perform a fit on the graph. By performing the fit, they obtain more detailed information about the parameters of the equation to be fitted in the table at the top right corner. This provides their values, standard deviation, and respective units.
+To obtain more information about a measurement, the user can make a fit on the graph. When performing a fit, you get more detailed information about the parameters of the equation to be adjusted in the table in the upper right corner. It obtains their values, their standard deviation and their respective units.
 
 \begin{figure}[H]
 \centering
@@ -1485,7 +1483,7 @@ tab---whether through global settings or channel-specific
 configurations---directly affects the measurement.
 
 Before starting a measurement, users can select the channels on which
-data will be recorded---options include channels A, B, C, or D.
+data will be recorded, Options include channels A, B, C, or D.
 
 \begin{figure}[H]
 \centering
