@@ -429,6 +429,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(5, True)
         self.tau0SpinBox.setEnabled(True) 
         self.durationSpinBox.setEnabled(True)
+        self.indefiniteCheckBox.setEnabled(True)
         self.fitOffsetCheckBox.setEnabled(True)
         self.disconnectButton.setEnabled(True)
         self.startButton.setEnabled(True)
@@ -485,6 +486,7 @@ class FCSLogic():
         self.clearButton.setEnabled(False)
         self.tau0SpinBox.setEnabled(False) 
         self.durationSpinBox.setEnabled(False)
+        self.indefiniteCheckBox.setEnabled(False)
         self.fitOffsetCheckBox.setEnabled(False)
         self.stopChannelComboBox.setEnabled(False)
         
@@ -630,6 +632,7 @@ class FCSLogic():
         self.stopChannelComboBox.setEnabled(True)
         self.tau0SpinBox.setEnabled(True)
         self.durationSpinBox.setEnabled(True)
+        self.indefiniteCheckBox.setEnabled(True)
         self.fitOffsetCheckBox.setEnabled(True)
         
         if not self.withoutMeasurement:
