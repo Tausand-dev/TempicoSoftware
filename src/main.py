@@ -247,6 +247,15 @@ class MainWindow(QMainWindow):
         #parameters_settings_action.triggered.connect(self.parameters_action)
         #parameters_menu.addAction(parameters_settings_action)
 
+        #-----Top button bar (built first so it leads the keyboard focus/tab order)--------#
+        self.connectButton = QPushButton("Connect", self)
+        self.disconnectButton = QPushButton("Disconnect", self)
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(self.connectButton)
+        buttonLayout.addWidget(self.disconnectButton)
+        mainWidget = QWidget(self)
+        self.setCentralWidget(mainWidget)
+
         #-----Qtabs for every type of measure--------#
         self.tabs=QTabWidget(self)
         self.tab1=QWidget()
@@ -262,26 +271,8 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
         self.tabs.addTab(self.tab6,"g2 (HBT)")
         self.tabs.setGeometry(0,20,1000,700)
-        # Crear un QVBoxLayout para agregar el QTabWidget
-        layout = QVBoxLayout()
-        layout.addWidget(self.tabs)
-        #layout.setContentsMargins(0, 30, 0, 0)
-        # Establecer el layout en la ventana principal
         self.sentinel1=0
-        main_widget = QWidget()
-        main_widget.setLayout(layout)
-        self.setCentralWidget(main_widget)
         self.construct_start_stop_histogram(self.tab1)
-        self.connectButton = QPushButton("Connect", self)
-        self.disconnectButton = QPushButton("Disconnect", self)
-
-        buttonLayout = QHBoxLayout()
-        buttonLayout.addWidget(self.connectButton)
-        buttonLayout.addWidget(self.disconnectButton)
-
-        # Crear un QWidget para contener los QTabWidget y los botones
-        mainWidget = QWidget(self)
-        self.setCentralWidget(mainWidget)
 
         #------g2 Graphic class---------#
         self.g2Graphic=None
@@ -313,6 +304,8 @@ class MainWindow(QMainWindow):
         mainLayout.addLayout(buttonLayout)
         mainLayout.setContentsMargins(10, 10, 10, 10)
         mainLayout.addWidget(self.tabs)
+        self.setTabOrder(self.connectButton, self.disconnectButton)
+        self.setTabOrder(self.disconnectButton, self.tabs)
         self.connectsentinel=0
         self.connectButton.clicked.connect(self.open_dialog)
         self.disconnectButton.clicked.connect(self.disconnect_button_click)

@@ -79,13 +79,166 @@ class Ui_G2(object):
 
         self.verticalLayout = QVBoxLayout(self.ConfigurationArea)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        # ── Panel: Correlator parameters ──────────────────────────────────
+        self.ParametersFrame = QFrame(self.ConfigurationArea)
+        self.ParametersFrame.setObjectName(u"ParametersFrame")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(3)
+        sizePolicy3.setHeightForWidth(
+            self.ParametersFrame.sizePolicy().hasHeightForWidth()
+        )
+        self.ParametersFrame.setSizePolicy(sizePolicy3)
+        self.ParametersFrame.setFrameShape(QFrame.StyledPanel)
+        self.ParametersFrame.setFrameShadow(QFrame.Plain)
+
+        self.verticalLayout_params = QVBoxLayout(self.ParametersFrame)
+        self.verticalLayout_params.setObjectName(u"verticalLayout_params")
+        # Slightly tighter spacing between Stop Channel / Bin width / Window /
+        # Duration / Continuous-measurement rows (default was 6px).
+        self.verticalLayout_params.setSpacing(2)
+
+        # Parameters title label
+        self.LabelParametersFrame = QFrame(self.ParametersFrame)
+        self.LabelParametersFrame.setObjectName(u"LabelParametersFrame")
+        self.LabelParametersFrame.setFrameShape(QFrame.StyledPanel)
+        self.LabelParametersFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_plabel = QHBoxLayout(self.LabelParametersFrame)
+        self.horizontalLayout_plabel.setObjectName(u"horizontalLayout_plabel")
+        self.horizontalLayout_plabel.setContentsMargins(4, 4, 4, 4)
+
+        self.parametersLabel = QLabel(self.LabelParametersFrame)
+        self.parametersLabel.setObjectName(u"parametersLabel")
+        self.horizontalLayout_plabel.addWidget(self.parametersLabel)
+        self.horizontalLayout_plabel.addStretch(1)
+
+        self.verticalLayout_params.addWidget(self.LabelParametersFrame)
+
+        # Stop channel row
+        self.StopChannelFrame = QFrame(self.ParametersFrame)
+        self.StopChannelFrame.setObjectName(u"StopChannelFrame")
+        self.StopChannelFrame.setFrameShape(QFrame.StyledPanel)
+        self.StopChannelFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_stopchannel = QHBoxLayout(self.StopChannelFrame)
+        self.horizontalLayout_stopchannel.setContentsMargins(6, 0.75, 6, 0.75)
+
+        self.stopChannelLabel = QLabel(self.StopChannelFrame)
+        self.stopChannelLabel.setObjectName(u"stopChannelLabel")
+        self.horizontalLayout_stopchannel.addWidget(self.stopChannelLabel)
+
+        self.stopChannelComboBox = QComboBox(self.StopChannelFrame)
+        self.stopChannelComboBox.setObjectName(u"stopChannelComboBox")
+        self.stopChannelComboBox.addItem(u"Channel A")
+        self.stopChannelComboBox.addItem(u"Channel B")
+        self.stopChannelComboBox.addItem(u"Channel C")
+        self.stopChannelComboBox.addItem(u"Channel D")
+        # Force a comfortable minimum width based on content (not just the
+        # currently-selected item) so neither the closed box nor the dropdown
+        # popup ever clip/truncate "Channel X" text.
+        self.stopChannelComboBox.setSizeAdjustPolicy(
+            QComboBox.AdjustToMinimumContentsLengthWithIcon
+        )
+        self.stopChannelComboBox.setMinimumContentsLength(11)
+        self.stopChannelComboBox.setMinimumWidth(110)
+        self.horizontalLayout_stopchannel.addWidget(self.stopChannelComboBox)
+
+        self.verticalLayout_params.addWidget(self.StopChannelFrame)
+
+        # Bin width row (unit: ns)
+        self.BinWidthFrame = QFrame(self.ParametersFrame)
+        self.BinWidthFrame.setObjectName(u"BinWidthFrame")
+        self.BinWidthFrame.setFrameShape(QFrame.StyledPanel)
+        self.BinWidthFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_binwidth = QHBoxLayout(self.BinWidthFrame)
+        self.horizontalLayout_binwidth.setContentsMargins(6, 0.75, 6, 0.75)
+        self.horizontalLayout_binwidth.setObjectName(u"horizontalLayout_binwidth")
+
+        self.binWidthLabel = QLabel(self.BinWidthFrame)
+        self.binWidthLabel.setObjectName(u"binWidthLabel")
+        self.horizontalLayout_binwidth.addWidget(self.binWidthLabel)
+
+        self.binWidthSpinBox = QDoubleSpinBox(self.BinWidthFrame)
+        self.binWidthSpinBox.setObjectName(u"binWidthSpinBox")
+        self.binWidthSpinBox.setMinimum(0.1)        # 0.1 ns minimum
+        self.binWidthSpinBox.setMaximum(10_000.0)   # 10 µs maximum
+        self.binWidthSpinBox.setSingleStep(0.5)
+        self.binWidthSpinBox.setDecimals(1)
+        self.binWidthSpinBox.setValue(2.0)           # default: 2 ns
+        self.binWidthSpinBox.setSuffix(" ns")
+        self.horizontalLayout_binwidth.addWidget(self.binWidthSpinBox)
+
+        self.verticalLayout_params.addWidget(self.BinWidthFrame)
+
+        # Window row (unit: ns)
+        self.WindowFrame = QFrame(self.ParametersFrame)
+        self.WindowFrame.setObjectName(u"WindowFrame")
+        self.WindowFrame.setFrameShape(QFrame.StyledPanel)
+        self.WindowFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_window = QHBoxLayout(self.WindowFrame)
+        self.horizontalLayout_window.setContentsMargins(6, 0.75, 6, 0.75)
+        self.horizontalLayout_window.setObjectName(u"horizontalLayout_window")
+
+        self.windowLabel = QLabel(self.WindowFrame)
+        self.windowLabel.setObjectName(u"windowLabel")
+        self.horizontalLayout_window.addWidget(self.windowLabel)
+
+        self.windowSpinBox = QSpinBox(self.WindowFrame)
+        self.windowSpinBox.setObjectName(u"windowSpinBox")
+        self.windowSpinBox.setMinimum(10)         # minimum: 10 ns
+        self.windowSpinBox.setMaximum(100_000)    # maximum: 100 µs
+        self.windowSpinBox.setValue(200)           # default: 200 ns (±200 ns window)
+        self.windowSpinBox.setSuffix(" ns")
+        self.horizontalLayout_window.addWidget(self.windowSpinBox)
+
+        self.verticalLayout_params.addWidget(self.WindowFrame)
+
+        
+
+        # Duration row (unit: seconds)
+        self.DurationFrame = QFrame(self.ParametersFrame)
+        self.DurationFrame.setObjectName(u"DurationFrame")
+        self.DurationFrame.setFrameShape(QFrame.StyledPanel)
+        self.DurationFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_duration = QHBoxLayout(self.DurationFrame)
+        self.horizontalLayout_duration.setContentsMargins(6, 0.75, 6, 0.75)
+        self.horizontalLayout_duration.setObjectName(u"horizontalLayout_duration")
+
+        self.durationLabel = QLabel(self.DurationFrame)
+        self.durationLabel.setObjectName(u"durationLabel")
+        self.horizontalLayout_duration.addWidget(self.durationLabel)
+
+        self.durationSpinBox = QSpinBox(self.DurationFrame)
+        self.durationSpinBox.setObjectName(u"durationSpinBox")
+        self.durationSpinBox.setMinimum(1)      # minimum: 1 second
+        self.durationSpinBox.setMaximum(86400)  # maximum: 24 hours
+        self.durationSpinBox.setValue(60)        # default: 60 seconds
+        self.horizontalLayout_duration.addWidget(self.durationSpinBox)
+
+        self.verticalLayout_params.addWidget(self.DurationFrame)
+
+        # Indefinite measurement checkbox row
+        self.IndefiniteFrame = QFrame(self.ParametersFrame)
+        self.IndefiniteFrame.setObjectName(u"IndefiniteFrame")
+        self.IndefiniteFrame.setFrameShape(QFrame.StyledPanel)
+        self.IndefiniteFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_indefinite = QHBoxLayout(self.IndefiniteFrame)
+        self.horizontalLayout_indefinite.setContentsMargins(6, 4, 6, 4)
+        self.horizontalLayout_indefinite.setObjectName(u"horizontalLayout_indefinite")
+
+        self.indefiniteCheckBox = QCheckBox(self.IndefiniteFrame)
+        self.indefiniteCheckBox.setObjectName(u"indefiniteCheckBox")
+        self.horizontalLayout_indefinite.addWidget(self.indefiniteCheckBox)
+
+        self.verticalLayout_params.addWidget(self.IndefiniteFrame)
+
+        # When indefinite is checked, disable the duration spinbox
+        self.indefiniteCheckBox.toggled.connect(
+            lambda checked: self.durationSpinBox.setEnabled(not checked)
+        )
 
         # ── Panel: Measurement controls ───────────────────────────────────
         self.MeasurementControlsFrame = QFrame(self.ConfigurationArea)
         self.MeasurementControlsFrame.setObjectName(u"MeasurementControlsFrame")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(3)
         sizePolicy3.setHeightForWidth(
             self.MeasurementControlsFrame.sizePolicy().hasHeightForWidth()
         )
@@ -327,116 +480,6 @@ class Ui_G2(object):
         self.g2CursorRowLayout.addWidget(self.g2CursorLabel)
         self.verticalLayout_info.addWidget(self.g2CursorRowFrame)
 
-        # ── Panel: Correlator parameters ──────────────────────────────────
-        self.ParametersFrame = QFrame(self.ConfigurationArea)
-        self.ParametersFrame.setObjectName(u"ParametersFrame")
-        sizePolicy3.setHeightForWidth(
-            self.ParametersFrame.sizePolicy().hasHeightForWidth()
-        )
-        self.ParametersFrame.setSizePolicy(sizePolicy3)
-        self.ParametersFrame.setFrameShape(QFrame.StyledPanel)
-        self.ParametersFrame.setFrameShadow(QFrame.Plain)
-
-        self.verticalLayout_params = QVBoxLayout(self.ParametersFrame)
-        self.verticalLayout_params.setObjectName(u"verticalLayout_params")
-        # Slightly tighter spacing between Stop Channel / Bin width / Window /
-        # Duration / Continuous-measurement rows (default was 6px).
-        self.verticalLayout_params.setSpacing(2)
-
-        # Parameters title label
-        self.LabelParametersFrame = QFrame(self.ParametersFrame)
-        self.LabelParametersFrame.setObjectName(u"LabelParametersFrame")
-        self.LabelParametersFrame.setFrameShape(QFrame.StyledPanel)
-        self.LabelParametersFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_plabel = QHBoxLayout(self.LabelParametersFrame)
-        self.horizontalLayout_plabel.setObjectName(u"horizontalLayout_plabel")
-        self.horizontalLayout_plabel.setContentsMargins(4, 4, 4, 4)
-
-        self.parametersLabel = QLabel(self.LabelParametersFrame)
-        self.parametersLabel.setObjectName(u"parametersLabel")
-        self.horizontalLayout_plabel.addWidget(self.parametersLabel)
-        self.horizontalLayout_plabel.addStretch(1)
-
-        self.verticalLayout_params.addWidget(self.LabelParametersFrame)
-
-        # Stop channel row
-        self.StopChannelFrame = QFrame(self.ParametersFrame)
-        self.StopChannelFrame.setObjectName(u"StopChannelFrame")
-        self.StopChannelFrame.setFrameShape(QFrame.StyledPanel)
-        self.StopChannelFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_stopchannel = QHBoxLayout(self.StopChannelFrame)
-        self.horizontalLayout_stopchannel.setContentsMargins(6, 0.75, 6, 0.75)
-
-        self.stopChannelLabel = QLabel(self.StopChannelFrame)
-        self.stopChannelLabel.setObjectName(u"stopChannelLabel")
-        self.horizontalLayout_stopchannel.addWidget(self.stopChannelLabel)
-
-        self.stopChannelComboBox = QComboBox(self.StopChannelFrame)
-        self.stopChannelComboBox.setObjectName(u"stopChannelComboBox")
-        self.stopChannelComboBox.addItem(u"Channel A")
-        self.stopChannelComboBox.addItem(u"Channel B")
-        self.stopChannelComboBox.addItem(u"Channel C")
-        self.stopChannelComboBox.addItem(u"Channel D")
-        # Force a comfortable minimum width based on content (not just the
-        # currently-selected item) so neither the closed box nor the dropdown
-        # popup ever clip/truncate "Channel X" text.
-        self.stopChannelComboBox.setSizeAdjustPolicy(
-            QComboBox.AdjustToMinimumContentsLengthWithIcon
-        )
-        self.stopChannelComboBox.setMinimumContentsLength(11)
-        self.stopChannelComboBox.setMinimumWidth(110)
-        self.horizontalLayout_stopchannel.addWidget(self.stopChannelComboBox)
-
-        self.verticalLayout_params.addWidget(self.StopChannelFrame)
-
-        # Bin width row (unit: ns)
-        self.BinWidthFrame = QFrame(self.ParametersFrame)
-        self.BinWidthFrame.setObjectName(u"BinWidthFrame")
-        self.BinWidthFrame.setFrameShape(QFrame.StyledPanel)
-        self.BinWidthFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_binwidth = QHBoxLayout(self.BinWidthFrame)
-        self.horizontalLayout_binwidth.setContentsMargins(6, 0.75, 6, 0.75)
-        self.horizontalLayout_binwidth.setObjectName(u"horizontalLayout_binwidth")
-
-        self.binWidthLabel = QLabel(self.BinWidthFrame)
-        self.binWidthLabel.setObjectName(u"binWidthLabel")
-        self.horizontalLayout_binwidth.addWidget(self.binWidthLabel)
-
-        self.binWidthSpinBox = QDoubleSpinBox(self.BinWidthFrame)
-        self.binWidthSpinBox.setObjectName(u"binWidthSpinBox")
-        self.binWidthSpinBox.setMinimum(0.1)        # 0.1 ns minimum
-        self.binWidthSpinBox.setMaximum(10_000.0)   # 10 µs maximum
-        self.binWidthSpinBox.setSingleStep(0.5)
-        self.binWidthSpinBox.setDecimals(1)
-        self.binWidthSpinBox.setValue(2.0)           # default: 2 ns
-        self.binWidthSpinBox.setSuffix(" ns")
-        self.horizontalLayout_binwidth.addWidget(self.binWidthSpinBox)
-
-        self.verticalLayout_params.addWidget(self.BinWidthFrame)
-
-        # Window row (unit: ns)
-        self.WindowFrame = QFrame(self.ParametersFrame)
-        self.WindowFrame.setObjectName(u"WindowFrame")
-        self.WindowFrame.setFrameShape(QFrame.StyledPanel)
-        self.WindowFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_window = QHBoxLayout(self.WindowFrame)
-        self.horizontalLayout_window.setContentsMargins(6, 0.75, 6, 0.75)
-        self.horizontalLayout_window.setObjectName(u"horizontalLayout_window")
-
-        self.windowLabel = QLabel(self.WindowFrame)
-        self.windowLabel.setObjectName(u"windowLabel")
-        self.horizontalLayout_window.addWidget(self.windowLabel)
-
-        self.windowSpinBox = QSpinBox(self.WindowFrame)
-        self.windowSpinBox.setObjectName(u"windowSpinBox")
-        self.windowSpinBox.setMinimum(10)         # minimum: 10 ns
-        self.windowSpinBox.setMaximum(100_000)    # maximum: 100 µs
-        self.windowSpinBox.setValue(200)           # default: 200 ns (±200 ns window)
-        self.windowSpinBox.setSuffix(" ns")
-        self.horizontalLayout_window.addWidget(self.windowSpinBox)
-
-        self.verticalLayout_params.addWidget(self.WindowFrame)
-
         # ── Tie the cursor-τ spinbox range to ±Window ───────────────────
         self._on_tau_cursor_reset = None
 
@@ -472,49 +515,6 @@ class Ui_G2(object):
         # Window value (200 ns) instead of the old ±1,000,000 ns default.
         self.syncTauCursorRange(self.windowSpinBox.value())
         self.windowSpinBox.valueChanged.connect(self.syncTauCursorRange)
-
-        # Duration row (unit: seconds)
-        self.DurationFrame = QFrame(self.ParametersFrame)
-        self.DurationFrame.setObjectName(u"DurationFrame")
-        self.DurationFrame.setFrameShape(QFrame.StyledPanel)
-        self.DurationFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_duration = QHBoxLayout(self.DurationFrame)
-        self.horizontalLayout_duration.setContentsMargins(6, 0.75, 6, 0.75)
-        self.horizontalLayout_duration.setObjectName(u"horizontalLayout_duration")
-
-        self.durationLabel = QLabel(self.DurationFrame)
-        self.durationLabel.setObjectName(u"durationLabel")
-        self.horizontalLayout_duration.addWidget(self.durationLabel)
-
-        self.durationSpinBox = QSpinBox(self.DurationFrame)
-        self.durationSpinBox.setObjectName(u"durationSpinBox")
-        self.durationSpinBox.setMinimum(1)      # minimum: 1 second
-        self.durationSpinBox.setMaximum(86400)  # maximum: 24 hours
-        self.durationSpinBox.setValue(60)        # default: 60 seconds
-        self.horizontalLayout_duration.addWidget(self.durationSpinBox)
-
-        self.verticalLayout_params.addWidget(self.DurationFrame)
-
-        # Indefinite measurement checkbox row
-        self.IndefiniteFrame = QFrame(self.ParametersFrame)
-        self.IndefiniteFrame.setObjectName(u"IndefiniteFrame")
-        self.IndefiniteFrame.setFrameShape(QFrame.StyledPanel)
-        self.IndefiniteFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_indefinite = QHBoxLayout(self.IndefiniteFrame)
-        self.horizontalLayout_indefinite.setContentsMargins(6, 4, 6, 4)
-        self.horizontalLayout_indefinite.setObjectName(u"horizontalLayout_indefinite")
-
-        self.indefiniteCheckBox = QCheckBox(self.IndefiniteFrame)
-        self.indefiniteCheckBox.setObjectName(u"indefiniteCheckBox")
-        self.horizontalLayout_indefinite.addWidget(self.indefiniteCheckBox)
-
-        self.verticalLayout_params.addWidget(self.IndefiniteFrame)
-
-        # When indefinite is checked, disable the duration spinbox
-        self.indefiniteCheckBox.toggled.connect(
-            lambda checked: self.durationSpinBox.setEnabled(not checked)
-        )
-
         # ── Assemble panels in the requested order ──────────────────────
         # 1) Measurement parameters (top)
         # 2) Measurement controls (middle)
@@ -751,31 +751,6 @@ class Ui_G2(object):
 
         # Draw the initial grey dot
         self.drawColorPoint()
-
-        # ── Explicit Tab order ───────────────────────────────────────────
-        # Qt's default focus chain follows widget *creation* order, not the
-        # order panels were later added to ``verticalLayout``. Here
-        # ParametersFrame (stopChannel/binWidth/window/duration/indefinite)
-        # is constructed *after* MeasurementControlsFrame and InfoFrame,
-        # even though it's placed visually on top — so Tab used to jump
-        # controls -> stats -> parameters instead of following the panels
-        # top-to-bottom. Chain the widgets explicitly, matching the actual
-        # on-screen order (Parameters -> Controls -> Info -> Fit area).
-        QWidget.setTabOrder(self.stopChannelComboBox, self.binWidthSpinBox)
-        QWidget.setTabOrder(self.binWidthSpinBox, self.windowSpinBox)
-        QWidget.setTabOrder(self.windowSpinBox, self.durationSpinBox)
-        QWidget.setTabOrder(self.durationSpinBox, self.indefiniteCheckBox)
-        QWidget.setTabOrder(self.indefiniteCheckBox, self.startButton)
-        QWidget.setTabOrder(self.startButton, self.stopButton)
-        QWidget.setTabOrder(self.stopButton, self.clearButton)
-        QWidget.setTabOrder(self.clearButton, self.saveDataButton)
-        QWidget.setTabOrder(self.saveDataButton, self.savePlotButton)
-        QWidget.setTabOrder(self.savePlotButton, self.countEstimationEnableCheckBox)
-        QWidget.setTabOrder(self.countEstimationEnableCheckBox, self.tauQuerySpinBox)
-        QWidget.setTabOrder(self.tauQuerySpinBox, self.fitModelCombo)
-        QWidget.setTabOrder(self.fitModelCombo, self.fitButton)
-        QWidget.setTabOrder(self.fitButton, self.fitResetParamsButton)
-        QWidget.setTabOrder(self.fitResetParamsButton, self.fitTable)
 
     # setupUi
 

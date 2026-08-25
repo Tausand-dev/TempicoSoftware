@@ -930,10 +930,6 @@ class WorkerThreadTimeStamping(QThread):
         self.changeStatusText.emit(f"Processing data 0%")
         currentAdvance=0
         with open(tempDataPath, 'r', encoding='utf-8') as file:
-            # El encabezado no siempre son 8 líneas (depende de cuántos
-            # canales están configurados). Leemos línea por línea hasta
-            # encontrar la fila de columnas real ("Start Time...") e
-            # incluimos esa fila como parte del encabezado, no de los datos.
             header = []
             for linea in file:
                 header.append(linea)
