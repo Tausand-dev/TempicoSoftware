@@ -1,3 +1,6 @@
+import sys as _sys_early, os as _os_early
+if _sys_early.platform == "darwin":
+    _os_early.environ.setdefault("QT_MAC_WANTS_LAYER", "1")
 from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction,QDesktopWidget
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
