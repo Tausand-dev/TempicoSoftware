@@ -28,9 +28,7 @@ class CountEstimatedLogic():
     :param channelDCheckBox: Checkbox for enabling/disabling measurements on channel D (QCheckBox).
     :param startButton: Button to start the count measurement (QPushButton).
     :param stopButton: Button to stop the count measurement (QPushButton).
-    :param mergeRadio: Radio button to merge all channel plots into one graph (QRadioButton).
-    :param separateGraphics: Radio button to display plots separately per channel (QRadioButton).
-    :param deatachedGraphics: Radio button to display detached external graphics (QRadioButton).
+    :param graphModeComboBox: Combo box for selecting the graphical visualization mode - index 0 "Merge", index 1 "Separate", index 2 "Detached" (QComboBox).
     :param timeRangeComboBox: Combo box for selecting the time range for plot visualization (QComboBox).
     :param clearButtonChannelA: Button to clear the graph and data of channel A (QPushButton).
     :param clearButtonChannelB: Button to clear the graph and data of channel B (QPushButton).
@@ -63,7 +61,7 @@ class CountEstimatedLogic():
     :return: None
     """
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
-                 mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
+                 graphModeComboBox: QComboBox, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
                  tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, detachedLabelCheckBox: QCheckBox, helpButton: QPushButton, device: tempico.TempicoDevice, parent, timerConnection):
@@ -75,9 +73,10 @@ class CountEstimatedLogic():
         self.channelDCheckBox = channelDCheckBox
         self.startButton = startButton
         self.stopButton = stopButton
-        self.mergeGraphics = mergeRadio
-        self.deatachedGraphics = deatachedGraphics
-        self.separateGraphics = separateGraphics
+        self.graphModeComboBox = graphModeComboBox
+        self.GRAPH_MODE_MERGE = 0
+        self.GRAPH_MODE_SEPARATE = 1
+        self.GRAPH_MODE_DETACHED = 2
         self.timeRangeComboBox = timeRangeComboBox
         self.clearButtonChannelA = clearButtonChannelA
         self.clearButtonChannelB = clearButtonChannelB
@@ -127,9 +126,8 @@ class CountEstimatedLogic():
         self.channelDCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.deatachedCheckBox.stateChanged.connect(self.deatachedTable)
         self.detachedLabelCheckBox.stateChanged.connect(self.detachedLabels)
-        #Connection for the radio button
-        self.separateGraphics.toggled.connect(self.updateGraphicsLayout)
-        self.mergeGraphics.toggled.connect(self.updateGraphicsLayout)
+        #Connection for the combo box
+        self.graphModeComboBox.currentIndexChanged.connect(self.updateGraphicsLayout)
         #Activate sentinels
         self.selectChannelA=False
         self.selectChannelB=False
@@ -547,7 +545,7 @@ class CountEstimatedLogic():
 
         :return: None
         """
-        if self.separateGraphics.isChecked():
+        if self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE:
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
@@ -646,7 +644,7 @@ class CountEstimatedLogic():
                 bottom_row.addWidget(selected_graphs[3])
                 layout.addLayout(top_row)
                 layout.addLayout(bottom_row)
-        elif self.mergeGraphics.isChecked():
+        elif self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_MERGE:
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
@@ -711,7 +709,7 @@ class CountEstimatedLogic():
                 self.curveCountsC.hide()
             if not self.channelDCheckBox.isChecked():
                 self.curveCountsD.hide()
-        elif self.deatachedGraphics.isChecked():  
+        elif self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED:
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
             #Delete layout
             layout = self.graphicsFrame.layout()
@@ -2139,7 +2137,7 @@ class CountEstimatedLogic():
             if dialog.exec_() == QDialog.Accepted:
                 selected_format = FormatBox.currentText()
                 
-                if self.channelACheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelACheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("A")
                     curveCopy.setData(self.timestampsChannelA, self.channelAValues)
@@ -2159,7 +2157,7 @@ class CountEstimatedLogic():
                     exporter.export(output_path)
                     graph_names.append(graph_name)
                     
-                if self.channelBCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelBCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("B")
                     curveCopy.setData(self.timestampsChannelB, self.channelBValues)
                     x_range, y_range = self.plotCountsB.viewRange()
@@ -2177,7 +2175,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.channelCCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelCCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("C")
                     curveCopy.setData(self.timestampsChannelC, self.channelCValues)
                     x_range, y_range = self.plotCountsC.viewRange()
@@ -2195,7 +2193,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.channelDCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelDCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("D")
                     curveCopy.setData(self.timestampsChannelD, self.channelDValues)
                     x_range, y_range = self.plotCountsD.viewRange()
@@ -2213,7 +2211,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.mergeGraphics.isChecked():
+                if self.graphModeComboBox.currentIndex == self.GRAPH_MODE_MERGE:
                     winCopy, plotCopy, curveACopy,curveBCopy,curveCCopy, curveDCopy = self.factoryGraphsAllChannels()
                     curveACopy.setData(self.timestampsChannelA, self.channelAValues)
                     curveBCopy.setData(self.timestampsChannelB, self.channelBValues)

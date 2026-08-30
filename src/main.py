@@ -648,9 +648,7 @@ class MainWindow(QMainWindow):
                 channelDCheckBox=self.uiCountsEstimated.channelDCheckBox
                 startButon=self.uiCountsEstimated.startMeasurementButton
                 stopButon=self.uiCountsEstimated.stopMeasurementButton
-                mergeRadioButton=self.uiCountsEstimated.mergeGraphicButton
-                separateRadioButton=self.uiCountsEstimated.separateGraphicButton
-                deatachedRadioButton=self.uiCountsEstimated.apartDialogGraphicButton
+                graphModeComboBox=self.uiCountsEstimated.graphModeComboBox
                 timeRangeComboBox=self.uiCountsEstimated.comboBoxTimeRange
                 clearButtonChannelA=self.uiCountsEstimated.channelAClearButton
                 clearButtonChannelB=self.uiCountsEstimated.channelBClearButton
@@ -679,7 +677,7 @@ class MainWindow(QMainWindow):
                 deatachedCheckBox=self.uiCountsEstimated.tableCheckBox
                 detachedLabelCheckBox=self.uiCountsEstimated.labelCheckBox
                 helpButton=self.uiCountsEstimated.helpButton
-                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
+                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,graphModeComboBox,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.connectedTimer)
           elif valor_padre==2:
             padre=self.tab3
