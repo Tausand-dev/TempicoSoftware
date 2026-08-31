@@ -1,6 +1,6 @@
 from PySide2.QtCore import QTimer, QMetaObject, Qt
 from PySide2.QtGui import QPixmap, QPainter, QColor
-from PySide2.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QLabel, QComboBox, QPushButton, QGridLayout
+from PySide2.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QSizePolicy
 from numpy import histogram, linspace
 import time
 import pyqtgraph as pg
@@ -120,7 +120,7 @@ class StartStopLogic():
         #Graphic layout and device channel setup
         self.parent=parent
         self.mainWindow=mainWindow
-        self.gridlayout=QGridLayout(self.parent)
+        self.gridlayout=QVBoxLayout(self.parent)
         self.startbutton.clicked.connect(self.start_graphic)
         self.stopbutton.clicked.connect(self.stop_graphic)
         
@@ -219,9 +219,9 @@ class StartStopLogic():
             self.winA.setBackground('w')
             self.plotA = self.winA.addPlot()
             self.plotA.showGrid(x=True, y=True)
-            self.plotA.setLabel('left','Frequency')
+            self.plotA.setLabel('left','Frequency channel A')
             #Check the channel A
-            self.plotA.setTitle('Start-Stop Channel A')
+            #self.plotA.setTitle('Start-Stop Channel A')
             if self.channel1.getMode()==1:
                 self.plotA.setLabel('bottom', 'Start-stop time (ns)')
                 self.channel1Mode=1
@@ -253,9 +253,9 @@ class StartStopLogic():
             self.winB.setBackground('w')
             self.plotB = self.winB.addPlot()
             self.plotB.showGrid(x=True, y=True)
-            self.plotB.setLabel('left','Frequency')
+            self.plotB.setLabel('left','Frequency channel B')
             #Check the channel B
-            self.plotB.setTitle('Start-Stop Channel B')
+            #self.plotB.setTitle('Start-Stop Channel B')
             if self.channel2.getMode()==1:
                 self.plotB.setLabel('bottom', 'Start-stop time (ns)')
                 self.channel2Mode=1
@@ -288,9 +288,9 @@ class StartStopLogic():
             self.winC.setBackground('w')
             self.plotC = self.winC.addPlot()
             self.plotC.showGrid(x=True, y=True)
-            self.plotC.setLabel('left','Frequency')
+            self.plotC.setLabel('left','Frequency channel C')
             #Check the channel C
-            self.plotC.setTitle('Start-Stop Channel C')
+            #self.plotC.setTitle('Start-Stop Channel C')
             if self.channel3.getMode()==1:
                 self.plotC.setLabel('bottom', 'Start-stop time (ns)')
                 self.channel3Mode=1
@@ -323,9 +323,9 @@ class StartStopLogic():
             self.winD.setBackground('w')
             self.plotD = self.winD.addPlot()
             self.plotD.showGrid(x=True, y=True)
-            self.plotD.setLabel('left','Frequency')
+            self.plotD.setLabel('left','Frequency channel D')
             #Check the channel D
-            self.plotD.setTitle('Start-Stop Channel D')
+            #self.plotD.setTitle('Start-Stop Channel D')
             if self.channel4.getMode()==1:
                 self.plotD.setLabel('bottom', 'Start-stop time (ns)')
                 self.channel4Mode=1
@@ -350,29 +350,49 @@ class StartStopLogic():
             self.autoRangeButtonD.clicked.disconnect()
             self.autoRangeButtonD.clicked.connect(self.autoRangeD)
             
-
+  
         # Clear the widget
-        for i in reversed(range(self.gridlayout.count())):
-            widget_to_remove = self.gridlayout.itemAt(i).widget()
-            self.gridlayout.removeWidget(widget_to_remove)
-            widget_to_remove.setParent(None)
+        while self.gridlayout.count():
+            item = self.gridlayout.takeAt(0)
+            if item.layout():
+                sublayout = item.layout()
+                while sublayout.count():
+                    subitem = sublayout.takeAt(0)
+                    if subitem.widget():
+                        subitem.widget().setParent(None)
+                self.gridlayout.removeItem(item)
+            elif item.widget():
+                item.widget().setParent(None)
 
         # Put the widgets 
+
+        for widget in widgets:
+            widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
         num_widgets = len(widgets)
+        top_row = QHBoxLayout()
+        bottom_row = QHBoxLayout()
         if num_widgets == 1:
-            self.gridlayout.addWidget(widgets[0], 0, 0, 2, 2)
+            top_row.addWidget(widgets[0])
+            self.gridlayout.addLayout(top_row)
         elif num_widgets == 2:
-            self.gridlayout.addWidget(widgets[0], 0, 0, 1, 2)
-            self.gridlayout.addWidget(widgets[1], 1, 0, 1, 2)
+            top_row.addWidget(widgets[0])
+            bottom_row.addWidget(widgets[1])
+            self.gridlayout.addLayout(top_row)
+            self.gridlayout.addLayout(bottom_row)
         elif num_widgets == 3:
-            self.gridlayout.addWidget(widgets[0], 0, 0)
-            self.gridlayout.addWidget(widgets[1], 0, 1)
-            self.gridlayout.addWidget(widgets[2], 1, 0, 1, 2)
+            top_row.addWidget(widgets[0])
+            top_row.addWidget(widgets[1])
+            bottom_row.addWidget(widgets[2])
+            self.gridlayout.addLayout(top_row)
+            self.gridlayout.addLayout(bottom_row)
         elif num_widgets == 4:
-            self.gridlayout.addWidget(widgets[0], 0, 0)
-            self.gridlayout.addWidget(widgets[1], 0, 1)
-            self.gridlayout.addWidget(widgets[2], 1, 0)
-            self.gridlayout.addWidget(widgets[3], 1, 1)
+            top_row.addWidget(widgets[0])
+            top_row.addWidget(widgets[1])
+            bottom_row.addWidget(widgets[2])
+            bottom_row.addWidget(widgets[3])
+            self.gridlayout.addLayout(top_row)
+            self.gridlayout.addLayout(bottom_row)
             
         #Crete the worker Thread
         self.worker=WorkerThreadStartStopHistogram(self.parent,self.device,self.setinelSaveA,self.setinelSaveB,self.setinelSaveC,self.setinelSaveD,self.checkA.isChecked(),self.checkB.isChecked(),self.checkC.isChecked(),self.checkD.isChecked())
