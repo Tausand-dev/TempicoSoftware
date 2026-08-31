@@ -189,3 +189,6 @@ cython_debug/
 
 ## Microsoft Office Word temporal files
 ~$*.docx
+
+#macOS Finder configuration files
+.DS_STORE
