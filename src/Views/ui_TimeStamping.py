@@ -98,8 +98,8 @@ class Ui_TimeStamping(object):
         self.EnableChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.EnableChannelsFrame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(10, 7, 10, 0)
-        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setContentsMargins(10, 7, 10, 6)
+        self.verticalLayout_3.setSpacing(4)
         self.enableChannelsLabel = QLabel(self.EnableChannelsFrame)
         self.enableChannelsLabel.setObjectName(u"enableChannelsLabel")
         sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -110,26 +110,37 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_3.addWidget(self.enableChannelsLabel)
 
+        self.horizontalLayoutChannels = QHBoxLayout()
+        self.horizontalLayoutChannels.setObjectName(u"horizontalLayoutChannels")
+        self.horizontalLayoutChannels.setContentsMargins(0, 2, 0, 2)
+        defaultChannelCheckBoxSpacing = self.horizontalLayoutChannels.spacing()
+        if defaultChannelCheckBoxSpacing <= 0:
+            defaultChannelCheckBoxSpacing = 6
+        self.horizontalLayoutChannels.setSpacing(60)
+
         self.enableChannelACheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelACheckBox.setObjectName(u"enableChannelACheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelACheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelACheckBox)
 
         self.enableChannelBCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelBCheckBox.setObjectName(u"enableChannelBCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelBCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelBCheckBox)
 
         self.enableChannelCCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelCCheckBox.setObjectName(u"enableChannelCCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelCCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelCCheckBox)
 
         self.enableChannelDCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelDCheckBox.setObjectName(u"enableChannelDCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelDCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelDCheckBox)
 
+        self.horizontalLayoutChannels.addStretch(1)
+
+        self.verticalLayout_3.addLayout(self.horizontalLayoutChannels)
 
         self.verticalLayout_2.addWidget(self.EnableChannelsFrame)
 
@@ -191,20 +202,20 @@ class Ui_TimeStamping(object):
         self.verticalLayout_10.addWidget(self.stopNormalButton)
 
         self.tabStartStopTypes.addTab(self.tabNormalMeasurement, "")
+        ####################################
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        
-        self.scrollScheduled=QScrollArea()
-        self.scrollScheduled.setWidgetResizable(True)
-        self.scrollContent=QWidget()
-        self.verticalLayout_11 = QVBoxLayout(self.scrollContent)
+        self.verticalLayout_11 = QVBoxLayout(self.tab_2)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.labelStartSchedule = QLabel(self.scrollContent)
+        self.tab_2.setAutoFillBackground(True)
+
+        self.verticalLayout_11.addStretch(1)
+        self.labelStartSchedule = QLabel(self.tab_2)
         self.labelStartSchedule.setObjectName(u"labelStartSchedule")
 
         self.verticalLayout_11.addWidget(self.labelStartSchedule)
 
-        self.frameStartDateTime = QFrame(self.scrollContent)
+        self.frameStartDateTime = QFrame(self.tab_2)
         self.frameStartDateTime.setObjectName(u"frameStartDateTime")
         self.frameStartDateTime.setFrameShape(QFrame.StyledPanel)
         self.frameStartDateTime.setFrameShadow(QFrame.Raised)
@@ -213,7 +224,6 @@ class Ui_TimeStamping(object):
         self.startDate = QDateEdit(self.frameStartDateTime)
         self.startDate.setObjectName(u"startDate")
         self.startDate.setCalendarPopup(True)
-        self.scrollContent.setAutoFillBackground(True)
 
         self.horizontalLayout_5.addWidget(self.startDate)
 
@@ -226,12 +236,12 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_11.addWidget(self.frameStartDateTime)
 
-        self.labelStopSchedule = QLabel(self.scrollContent)
+        self.labelStopSchedule = QLabel(self.tab_2)
         self.labelStopSchedule.setObjectName(u"labelStopSchedule")
 
         self.verticalLayout_11.addWidget(self.labelStopSchedule)
 
-        self.frameStopDateTime = QFrame(self.scrollContent)
+        self.frameStopDateTime = QFrame(self.tab_2)
         self.frameStopDateTime.setObjectName(u"frameStopDateTime")
         self.frameStopDateTime.setFrameShape(QFrame.StyledPanel)
         self.frameStopDateTime.setFrameShadow(QFrame.Raised)
@@ -251,7 +261,9 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_11.addWidget(self.frameStopDateTime)
 
-        self.frameStartStopPauseButtons = QFrame(self.scrollContent)
+        self.verticalLayout_11.addStretch(1)
+
+        self.frameStartStopPauseButtons = QFrame(self.tab_2)
         self.frameStartStopPauseButtons.setObjectName(u"frameStartStopPauseButtons")
         self.frameStartStopPauseButtons.setFrameShape(QFrame.StyledPanel)
         self.frameStartStopPauseButtons.setFrameShadow(QFrame.Raised)
@@ -274,12 +286,9 @@ class Ui_TimeStamping(object):
 
 
         self.verticalLayout_11.addWidget(self.frameStartStopPauseButtons)
-        self.scrollScheduled.setWidget(self.scrollContent)
-        self.verticalLayoutScroll=QVBoxLayout(self.tab_2)
-        self.verticalLayoutScroll.addWidget(self.scrollScheduled)
-        self.verticalLayoutScroll.setContentsMargins(0, 0, 0, 0)
-        self.scrollScheduled.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_11.addStretch(1)
         self.tabStartStopTypes.addTab(self.tab_2, "")
+        ###############################################
         self.limitedMeasurementsFrame = QWidget()
         self.limitedMeasurementsFrame.setObjectName(u"limitedMeasurementsFrame")
         self.verticalLayout_12 = QVBoxLayout(self.limitedMeasurementsFrame)
@@ -618,10 +627,10 @@ class Ui_TimeStamping(object):
         """
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.enableChannelsLabel.setText(QCoreApplication.translate("Form", u"Enable Channels:", None))
-        self.enableChannelACheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel A", None))
-        self.enableChannelBCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel B", None))
-        self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel C", None))
-        self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel D", None))
+        self.enableChannelACheckBox.setText(QCoreApplication.translate("Form", u"A", None))
+        self.enableChannelBCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
+        self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
+        self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"D", None))
         self.showTableCheckBox.setText(QCoreApplication.translate("Form", u"Show table", None))
         self.saveDataAfterCompleteCheckBox.setText(QCoreApplication.translate("Form", u"Auto save data", None))
         self.startNormalButton.setText(QCoreApplication.translate("Form", u"Start", None))
