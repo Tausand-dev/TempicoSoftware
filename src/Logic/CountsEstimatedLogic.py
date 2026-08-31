@@ -1032,6 +1032,7 @@ class CountEstimatedLogic():
         :return: A configured, ready-to-display `QDialog` for the given channel.
         """
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle(f"Detached Graphics {channel}")
         dialog.resize(400, 300)
         dialog.setModal(False)
@@ -1838,6 +1839,7 @@ class CountEstimatedLogic():
         """
         if self.deatachedCheckBox.isChecked():
             self.dialogTableOpen = QDialog(self.mainWindow)
+            self.dialogTableOpen.setWindowFlags(self.dialogTableOpen.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             self.dialogTableOpen.setWindowTitle(f"Estimated counts Table")
             self.dialogTableOpen.resize(530, 400)
             self.dialogTableOpen.setModal(False)
@@ -1871,6 +1873,7 @@ class CountEstimatedLogic():
         """
         if self.detachedLabelCheckBox.isChecked():
             self.dialogLabelOpen = QDialog(self.mainWindow)
+            self.dialogLabelOpen.setWindowFlags(self.dialogLabelOpen.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             self.dialogLabelOpen.setWindowTitle("Current measurements values")
             self.dialogLabelOpen.setModal(False)
 
