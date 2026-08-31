@@ -1343,6 +1343,7 @@ class LifeTimeLogic():
         :return: None
         """
         self.initialDialog = QDialog(self.mainWindow)
+        self.initialDialog.setWindowFlags(self.initialDialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.initialDialog.setWindowTitle("Select Function Parameters")
         layout = QVBoxLayout(self.initialDialog)
         # ComboBox for selecting the function type
