@@ -442,13 +442,13 @@ class TimeStampLogic():
 
         :return: None
         """
-        if self.pauseNormalButton.text()=="Pause acquisition":
+        if self.pauseNormalButton.text()=="Pause":
             self.worker.changeIsPauseTrue()
-            self.pauseNormalButton.setText("Continue acquisition")
-        elif self.pauseNormalButton.text()=="Continue acquisition":
+            self.pauseNormalButton.setText("Continue")
+        elif self.pauseNormalButton.text()=="Continue":
             self.pauseNormalButton.setEnabled(False)
             self.worker.changeIsPauseFalse()
-            self.pauseNormalButton.setText("Pause acquisition")
+            self.pauseNormalButton.setText("Pause")
             self.pauseNormalButton.setEnabled(True)
             
             
