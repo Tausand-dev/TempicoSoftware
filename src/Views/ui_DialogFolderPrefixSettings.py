@@ -271,6 +271,16 @@ class Ui_DialogFolderPrefix(object):
         QWidget.setTabOrder(self.g2LineEdit, self.applyChangesButton)
         QWidget.setTabOrder(self.applyChangesButton, self.defaultValuesButton)
         QWidget.setTabOrder(self.defaultValuesButton, self.cancelButton)
+
+        rowLabels = [self.startStopHistogramPrefix, self.countsEstimationPrefix,
+                     self.timeStampingLineEdit, self.lifetimePrefix, self.autocorrelationPrefix,
+                     self.g2Prefix]
+        widestLabel = max(l.sizeHint().width() for l in rowLabels)
+        for l in rowLabels:
+            l.setMinimumWidth(widestLabel)
+
+        pathTextWidth = self.folderPathLineEdit.fontMetrics().horizontalAdvance(self.folderPathLineEdit.text())  # Example path to estimate width
+        self.folderPathLineEdit.setMinimumWidth(pathTextWidth + 40)  # Add a little padding so the text isn't cramped
     # setupUi
 
     def retranslateUi(self, Dialog):

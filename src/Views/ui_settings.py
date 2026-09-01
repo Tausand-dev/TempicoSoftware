@@ -552,8 +552,19 @@ class Ui_settings(QObject):
 
 
         QMetaObject.connectSlotsByName(Dialog)
+
         
-        
+
+        channelInputs = [
+            self.AverageCyclesValueA, self.ModeValueChannelA, self.NumberStopsValueChannelA, self.EdgeTypeValueChannelA, self.StopMaskValueChannelA,
+            self.AverageCyclesValueB, self.ModeValueChannelB, self.NumberStopsValueChannelB, self.EdgeTypeValueChannelB, self.StopMaskValueChannelB,
+            self.AverageCyclesValueC, self.ModeValueChannelC, self.NumberStopsValueChannelC, self.EdgeTypeValueChannelC, self.StopMaskValueChannelC,
+            self.AverageCyclesValueD, self.ModeValueChannelD, self.NumberStopsValueChannelD, self.EdgeTypeValueChannelD, self.StopMaskValueChannelD
+        ]
+        widestInput = max(i.sizeHint().width() for i in channelInputs)
+        for i in channelInputs:
+            i.setMinimumWidth(widestInput)
+
     
     # setupUi
 
