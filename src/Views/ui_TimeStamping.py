@@ -612,6 +612,10 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
         self.tableTimeStamp.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        self.styleScheduleCalendar(self.startDate)
+        self.styleScheduleCalendar(self.stopDate)
+        
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
@@ -739,3 +743,114 @@ class Ui_TimeStamping(object):
         self.numberMeasurementsSpinBox.setMinimum(1)
         self.numberMeasurementsSpinBox.setMaximum(2**28)
         self.numberMeasurementsSpinBox.setValue(1000)
+
+    def styleScheduleCalendar(self, dateEdit):
+        """
+        Applies grayscale tones to the QCalendarWidget popup of a
+        QDateEdit (startDate / stopDate), and swaps the default green
+        prev/next-month icons for chevrons. The weekday format is set
+        before the stylesheet since Qt hardcodes weekend colors at
+        render time, and the icon/text swap runs after it since
+        applying it can repolish and overwrite icons.
+
+        :param dateEdit: QDateEdit whose calendar popup should be restyled.
+        :return: None
+        """
+        calendar = dateEdit.calendarWidget()
+        if calendar is None:
+            return
+
+        calendar.setVerticalHeaderFormat(QCalendarWidget.NoVerticalHeader)
+        calendar.setGridVisible(False)
+
+        neutralFormat = QTextCharFormat()
+        neutralFormat.setForeground(QColor("#3c3c3c"))
+        calendar.setWeekdayTextFormat(Qt.Saturday, neutralFormat)
+        calendar.setWeekdayTextFormat(Qt.Sunday, neutralFormat)
+
+        calendar.setStyleSheet(u"""
+            QCalendarWidget {
+                background-color: #ffffff;
+                border: 1px solid #c9c9c9;
+                border-radius: 4px;
+            }
+            QCalendarWidget QWidget#qt_calendar_navigationbar {
+                background-color: #f2f2f2;
+                border-bottom: 1px solid #d9d9d9;
+            }
+            QCalendarWidget QToolButton {
+                background-color: transparent;
+                color: #3c3c3c;
+                font-weight: bold;
+                font-size: 14px;
+                border: none;
+                border-radius: 3px;
+                margin: 4px 2px;
+                padding: 4px 10px;
+            }
+            QCalendarWidget QToolButton:hover {
+                background-color: #e2e2e2;
+            }
+            QCalendarWidget QToolButton:pressed {
+                background-color: #d0d0d0;
+            }
+            QCalendarWidget QToolButton::menu-indicator {
+                image: none;
+                width: 0px;
+            }
+            QCalendarWidget QToolButton#qt_calendar_prevmonth,
+            QCalendarWidget QToolButton#qt_calendar_nextmonth {
+                min-width: 22px;
+                min-height: 22px;
+            }
+            QCalendarWidget QToolButton#qt_calendar_monthbutton,
+            QCalendarWidget QToolButton#qt_calendar_yearbutton {
+                color: #2b2b2b;
+                font-family: "Segoe UI", Arial, sans-serif;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            QCalendarWidget QMenu {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                border: 1px solid #c9c9c9;
+            }
+            QCalendarWidget QMenu::item:selected {
+                background-color: #e2e2e2;
+            }
+            QCalendarWidget QSpinBox {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                border: 1px solid #c9c9c9;
+                border-radius: 3px;
+                padding: 2px 4px;
+                selection-background-color: #d0d0d0;
+            }
+            QCalendarWidget QAbstractItemView {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                selection-background-color: #595959;
+                selection-color: #ffffff;
+                outline: 0px;
+                gridline-color: #ececec;
+            }
+            QCalendarWidget QAbstractItemView:disabled {
+                color: #bfbfbf;
+            }
+            QCalendarWidget QTableView {
+                border: none;
+            }
+            QCalendarWidget QWidget {
+                alternate-background-color: #f7f7f7;
+            }
+        """)
+
+        prevButton = calendar.findChild(QToolButton, "qt_calendar_prevmonth")
+        if prevButton is not None:
+            prevButton.setIcon(QIcon())
+            prevButton.setText(u"\u2039")
+
+        nextButton = calendar.findChild(QToolButton, "qt_calendar_nextmonth")
+        if nextButton is not None:
+            nextButton.setIcon(QIcon())
+            nextButton.setText(u"\u203A")
