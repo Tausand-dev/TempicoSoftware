@@ -68,7 +68,7 @@ def _get_base_path():
 BASE_PATH = _get_base_path()
 
 ICON_LOCATION = os.path.join(BASE_PATH, "Sources", "tausand_small.ico")
-VERSION = "2.1.0"
+VERSION = "2.1.1"
 PYTEMPICO_VERSION = "2.0.4"
 BANNER = os.path.join(BASE_PATH, "Sources", "splash.png")
 #Create the taskbarIcon for windows with ctypes

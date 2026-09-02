@@ -193,7 +193,7 @@ Modify the version number in the following files:
 
 - installer/installer_builder.iss
 
-- src/constants.py
+- src/Utils/constants.py
 
 ### Creating a virtual environment
 
