@@ -109,9 +109,6 @@ class CountParameters():
         self.statusLabel.setText(labelText)
     
     def dialogClosed(self):
-        if self.g2Graphic!=None:
-            self.g2Graphic.timerStatus.start(500)
-            print("Se reinicia el timer de g2 measurements")
         if self.currentMeasurement:
             reply = QMessageBox.question(self.mainWindow, 'Measurement Running',
                                          "There is a measurement running. Do you really want to close?",
