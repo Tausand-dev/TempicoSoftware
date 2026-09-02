@@ -727,7 +727,7 @@ STAGING="dist/dist_package"
 rm -rf "$STAGING" && mkdir -p "$STAGING"
 cp -R "$APP" "$STAGING/"
 cp "installer/macos/Install TempicoSoftware.command" "$STAGING/"
-cp "installer/macos/READ ME Installation Guide.pdf" "$STAGING/"
+cp "installer/macos/README Installation Guide.pdf" "$STAGING/"
 ```
 
 The staging folder should now contain exactly three items: `TempicoSoftware.app`, `Install TempicoSoftware.command`, and `READ ME Installation Guide.pdf`.
