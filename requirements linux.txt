@@ -5,6 +5,8 @@ kiwisolver==1.4.7
 numpy==1.22.0
 packaging==24.1
 pillow==12.3.0
+pyinstaller==5.12
+pyinstaller-hooks-contrib==2024.8
 pyparsing==3.1.4
 pyqtgraph==0.13.3
 pyserial==3.5
