@@ -138,8 +138,6 @@ class Ui_TimeStamping(object):
 
         self.horizontalLayoutChannels.addWidget(self.enableChannelDCheckBox)
 
-        self.horizontalLayoutChannels.addStretch(1)
-
         self.verticalLayout_3.addLayout(self.horizontalLayoutChannels)
 
         self.verticalLayout_2.addWidget(self.EnableChannelsFrame)
@@ -155,7 +153,7 @@ class Ui_TimeStamping(object):
         self.frameStartStop.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.verticalLayout_8.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_8.setContentsMargins(6, 0, 6, 0)
         self.verticalLayout_8.setSpacing(0)
         self.showTableCheckBox = QCheckBox(self.frameStartStop)
         self.showTableCheckBox.setObjectName(u"showTableCheckBox")
@@ -205,22 +203,33 @@ class Ui_TimeStamping(object):
         ####################################
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.verticalLayout_11 = QVBoxLayout(self.tab_2)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.gridLayout_schedule = QGridLayout(self.tab_2)
+        self.gridLayout_schedule.setObjectName(u"gridLayout_schedule")
+        self.gridLayout_schedule.setContentsMargins(6, 4, 6, 4)
+        self.gridLayout_schedule.setSpacing(6)
+        self.gridLayout_schedule.setVerticalSpacing(3)
         self.tab_2.setAutoFillBackground(True)
 
-        self.verticalLayout_11.addStretch(1)
+        sizePolicyScheduleLabel = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicyScheduleLabel.setHorizontalStretch(0)
+        sizePolicyScheduleLabel.setVerticalStretch(0)
+
         self.labelStartSchedule = QLabel(self.tab_2)
         self.labelStartSchedule.setObjectName(u"labelStartSchedule")
 
-        self.verticalLayout_11.addWidget(self.labelStartSchedule)
-
+        self.labelStartSchedule.setSizePolicy(sizePolicyScheduleLabel)
+        self.labelStartSchedule.setMinimumWidth(40)
+        self.labelStartSchedule.setWordWrap(False)
+        self.gridLayout_schedule.addWidget(self.labelStartSchedule, 1, 0, 1, 1)
         self.frameStartDateTime = QFrame(self.tab_2)
         self.frameStartDateTime.setObjectName(u"frameStartDateTime")
-        self.frameStartDateTime.setFrameShape(QFrame.StyledPanel)
-        self.frameStartDateTime.setFrameShadow(QFrame.Raised)
+        self.frameStartDateTime.setFrameShape(QFrame.NoFrame)
+        self.frameStartDateTime.setMinimumHeight(26)
+        self.frameStartDateTime.setMaximumHeight(28)
         self.horizontalLayout_5 = QHBoxLayout(self.frameStartDateTime)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(4)
         self.startDate = QDateEdit(self.frameStartDateTime)
         self.startDate.setObjectName(u"startDate")
         self.startDate.setCalendarPopup(True)
@@ -234,19 +243,25 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_5.addWidget(self.startTime)
 
 
-        self.verticalLayout_11.addWidget(self.frameStartDateTime)
+        self.gridLayout_schedule.addWidget(self.frameStartDateTime, 1, 1, 1, 1)
 
         self.labelStopSchedule = QLabel(self.tab_2)
         self.labelStopSchedule.setObjectName(u"labelStopSchedule")
 
-        self.verticalLayout_11.addWidget(self.labelStopSchedule)
+        self.labelStopSchedule.setSizePolicy(sizePolicyScheduleLabel)
+        self.labelStopSchedule.setMinimumWidth(40)
+        self.labelStopSchedule.setWordWrap(False)
+        self.gridLayout_schedule.addWidget(self.labelStopSchedule, 3, 0, 1, 1)
 
         self.frameStopDateTime = QFrame(self.tab_2)
         self.frameStopDateTime.setObjectName(u"frameStopDateTime")
-        self.frameStopDateTime.setFrameShape(QFrame.StyledPanel)
-        self.frameStopDateTime.setFrameShadow(QFrame.Raised)
+        self.frameStopDateTime.setFrameShape(QFrame.NoFrame)
+        self.frameStopDateTime.setMinimumHeight(26)
+        self.frameStopDateTime.setMaximumHeight(28)
         self.horizontalLayout_6 = QHBoxLayout(self.frameStopDateTime)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_6.setSpacing(4)
         self.stopDate = QDateEdit(self.frameStopDateTime)
         self.stopDate.setObjectName(u"stopDate")
         self.stopDate.setCalendarPopup(True)
@@ -259,16 +274,17 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_6.addWidget(self.stopTime)
 
 
-        self.verticalLayout_11.addWidget(self.frameStopDateTime)
-
-        self.verticalLayout_11.addStretch(1)
+        self.gridLayout_schedule.addWidget(self.frameStopDateTime, 3, 1, 1, 1)
 
         self.frameStartStopPauseButtons = QFrame(self.tab_2)
         self.frameStartStopPauseButtons.setObjectName(u"frameStartStopPauseButtons")
-        self.frameStartStopPauseButtons.setFrameShape(QFrame.StyledPanel)
-        self.frameStartStopPauseButtons.setFrameShadow(QFrame.Raised)
+        self.frameStartStopPauseButtons.setFrameShape(QFrame.NoFrame)
+        self.frameStartStopPauseButtons.setMinimumHeight(26)
+        self.frameStartStopPauseButtons.setMaximumHeight(30)
         self.horizontalLayout_3 = QHBoxLayout(self.frameStartStopPauseButtons)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setSpacing(4)
         self.startScheduleButton = QPushButton(self.frameStartStopPauseButtons)
         self.startScheduleButton.setObjectName(u"startScheduleButton")
 
@@ -285,8 +301,12 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_3.addWidget(self.stopScheduleButton)
 
 
-        self.verticalLayout_11.addWidget(self.frameStartStopPauseButtons)
-        self.verticalLayout_11.addStretch(1)
+        self.gridLayout_schedule.addWidget(self.frameStartStopPauseButtons, 5, 0, 1, 2)
+        self.gridLayout_schedule.setColumnStretch(1, 1)
+        self.gridLayout_schedule.setRowStretch(0, 2)
+        self.gridLayout_schedule.setRowStretch(2, 1)
+        self.gridLayout_schedule.setRowStretch(4, 1)
+        self.gridLayout_schedule.setRowStretch(6, 2)
         self.tabStartStopTypes.addTab(self.tab_2, "")
         ###############################################
         self.limitedMeasurementsFrame = QWidget()
@@ -641,8 +661,10 @@ class Ui_TimeStamping(object):
         self.pauseNormalButton.setText(QCoreApplication.translate("Form", u"Pause", None))
         self.stopNormalButton.setText(QCoreApplication.translate("Form", u"Stop", None))
         self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.tabNormalMeasurement), QCoreApplication.translate("Form", u"Manual", None))
-        self.labelStartSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time start measurement", None))
-        self.labelStopSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time finish measurement", None))
+        self.labelStartSchedule.setText(QCoreApplication.translate("Form", u"Start:", None))
+        self.labelStartSchedule.setToolTip(QCoreApplication.translate("Form", u"Schedule date time start measurement", None))
+        self.labelStopSchedule.setText(QCoreApplication.translate("Form", u"Finish:", None))
+        self.labelStopSchedule.setToolTip(QCoreApplication.translate("Form", u"Schedule date time finish measurement", None))
         self.startScheduleButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.pauseScheduleButton.setText(QCoreApplication.translate("Form", u"Pause", None))
         self.stopScheduleButton.setText(QCoreApplication.translate("Form", u"Stop", None))
