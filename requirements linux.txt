@@ -4,6 +4,7 @@ importlib-metadata==8.4.0
 numpy==1.22.0
 packaging==24.1
 pillow==12.3.0
+platformdirs==4.3.6
 pyinstaller==5.12
 pyinstaller-hooks-contrib==2024.8
 pyqtgraph==0.13.3
