@@ -222,8 +222,6 @@ class Ui_Generator(object):
 
         self.tabChannelsWidget.addTab(self.channelD, "")
 
-        self.verticalLayout.addWidget(self.tabChannelsWidget)
-
         self.GeneratorFrequencyFrame = QFrame(Dialog)
         self.GeneratorFrequencyFrame.setObjectName(u"GeneratorFrequencyFrame")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -260,6 +258,8 @@ class Ui_Generator(object):
 
         self.verticalLayout.addWidget(self.GeneratorFrequencyFrame)
 
+        self.verticalLayout.addWidget(self.tabChannelsWidget)
+
         self.applyChangesButton = QPushButton(Dialog)
         self.applyChangesButton.setObjectName(u"applyChangesButton")
         sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
@@ -278,6 +278,21 @@ class Ui_Generator(object):
         self._eventHelper = _DialogEventHelper(Dialog, self.showHelp)
         Dialog.installEventFilter(self._eventHelper)
         QMetaObject.connectSlotsByName(Dialog)
+
+        # ---- Tab order ----
+        QWidget.setTabOrder(self.generatorFrequencySpinBox, self.tabChannelsWidget)
+        QWidget.setTabOrder(self.tabChannelsWidget, self.channelAStartSourceComboBox)
+        QWidget.setTabOrder(self.channelAStartSourceComboBox, self.channelAStopSourceComboBox)
+        QWidget.setTabOrder(self.channelAStopSourceComboBox, self.channelBStartSourceComboBox)
+        QWidget.setTabOrder(self.channelBStartSourceComboBox, self.channelBStopSourceComboBox)
+        QWidget.setTabOrder(self.channelBStopSourceComboBox, self.channelCStartSourceComboBox)
+        QWidget.setTabOrder(self.channelCStartSourceComboBox, self.channelCStopSourceComboBox)
+        QWidget.setTabOrder(self.channelCStopSourceComboBox, self.channelDStartSourceComboBox)
+        QWidget.setTabOrder(self.channelDStartSourceComboBox, self.channelDStopSourceComboBox)
+        QWidget.setTabOrder(self.channelDStopSourceComboBox, self.applyChangesButton)
+        QWidget.setTabOrder(self.applyChangesButton, self.generatorFrequencySpinBox)
+        self.generatorFrequencySpinBox.setFocus()
+    
     # setupUi
 
     def retranslateUi(self, Dialog):
@@ -553,6 +568,3 @@ class _DialogEventHelper(QObject):
                 self._helpCallback()
                 return True
         return QObject.eventFilter(self, obj, event)
-        
-    
-        

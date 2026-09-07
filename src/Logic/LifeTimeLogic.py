@@ -117,6 +117,7 @@ class LifeTimeLogic():
         #Add Labels
         self.plotLifeTime.setLabel('left','Counts')
         self.plotLifeTime.setLabel('bottom','Time')
+        self.plotLifeTime.addLegend(offset=(0, 10))
         self.plotLifeTime.addLegend()
         self.graphicLayout.addWidget(self.winLifeTime)
         self.curve = self.plotLifeTime.plot(pen='b',  name='Data')
@@ -1343,14 +1344,22 @@ class LifeTimeLogic():
         :return: None
         """
         self.initialDialog = QDialog(self.mainWindow)
+        self.initialDialog.setWindowFlags(self.initialDialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.initialDialog.setWindowTitle("Select Function Parameters")
+        self.initialDialog.setMinimumSize(260, 160)
+        self.initialDialog.resize(260, 160)
         layout = QVBoxLayout(self.initialDialog)
+        layout.setSpacing(12)
+        layout.setContentsMargins(15, 15, 15, 15)
         # ComboBox for selecting the function type
         self.combo_box = QComboBox()
         self.combo_box.addItems(["Exponential fit", "Kohlrausch fit", "Shifted Exponential fit","Double Exponential fit"])
         layout.addWidget(self.combo_box)
         # Form layout for input fields
         form_layout = QFormLayout()
+        form_layout.setVerticalSpacing(10)
+        form_layout.setHorizontalSpacing(15)
+        form_layout.setContentsMargins(5, 5, 5, 5)
         layout.addLayout(form_layout)
         # Input fields for Exponential
         self.I_0_field = QDoubleSpinBox()
@@ -1417,6 +1426,8 @@ class LifeTimeLogic():
         button_layout = QHBoxLayout()
         apply_button = QPushButton("Apply")
         reset_button = QPushButton("Default Values")
+        apply_button.setMinimumHeight(17)
+        reset_button.setMinimumHeight(17)
         button_layout.addWidget(apply_button)
         button_layout.addWidget(reset_button)
         apply_button.clicked.connect(self.applyInitialDialog)
@@ -1963,7 +1974,8 @@ class LifeTimeLogic():
             data_prefix=dataFolderPrefix["lifetimePrefix"]
             graph_names=[]
             #Open select the format
-            dialog =QDialog(self.mainWindow)    
+            dialog =QDialog(self.mainWindow)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)    
             dialog.setObjectName("ImageFormat")
             dialog.resize(285,105)
             dialog.setWindowTitle("Save Plots")
@@ -2060,6 +2072,7 @@ class LifeTimeLogic():
         folder_path=dataFolderPrefix["saveFolder"]
         data_prefix=dataFolderPrefix["lifetimePrefix"]
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")

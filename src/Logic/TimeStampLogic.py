@@ -442,13 +442,13 @@ class TimeStampLogic():
 
         :return: None
         """
-        if self.pauseNormalButton.text()=="Pause acquisition":
+        if self.pauseNormalButton.text()=="Pause":
             self.worker.changeIsPauseTrue()
-            self.pauseNormalButton.setText("Continue acquisition")
-        elif self.pauseNormalButton.text()=="Continue acquisition":
+            self.pauseNormalButton.setText("Continue")
+        elif self.pauseNormalButton.text()=="Continue":
             self.pauseNormalButton.setEnabled(False)
             self.worker.changeIsPauseFalse()
-            self.pauseNormalButton.setText("Pause acquisition")
+            self.pauseNormalButton.setText("Pause")
             self.pauseNormalButton.setEnabled(True)
             
             
@@ -1725,6 +1725,7 @@ class TimeStampLogic():
         #Open select the format
         self.isSelectedFormat=False
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")
@@ -1782,6 +1783,7 @@ class TimeStampLogic():
         """
         #Open select the format
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")

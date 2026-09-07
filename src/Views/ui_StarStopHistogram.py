@@ -34,7 +34,8 @@ class Ui_HistogramaStartStop(object):
     StopGraph1        QPushButton  End measurement
     SaveDoc           QPushButton  Save histogram data file
     SaveImage1        QPushButton  Save plot images
-    ClearchannelA/B/C/D QPushButton Clear the histogram of the given channel
+    clearLabel        QLabel       "Clear data channels:" caption
+    ClearchannelA/B/C/D QPushButton Clear the histogram of the given channel (labelled A/B/C/D)
     Channel1Graph1    QCheckBox    Enable channel A
     Channel4Graph1    QCheckBox    Enable channel B
     Channel2Graph1    QCheckBox    Enable channel C
@@ -185,15 +186,53 @@ class Ui_HistogramaStartStop(object):
 
         self.verticalLayout_3.addWidget(self.ComboBoxGraph1)
 
+        #Clear data channels label (matches Counts estimation tab layout)
+        self.clearLabel = QLabel(self.Graph1Configuration)
+        self.clearLabel.setObjectName(u"clearLabel")
+
+        self.verticalLayout_3.addWidget(self.clearLabel)
+
+        #Clear qframe
+        self.HistGraphclear = QFrame(self.Graph1Configuration)
+        self.HistGraphclear.setObjectName(u"HistGraphclear")
+        self.HistGraphclear.setFrameShape(QFrame.StyledPanel)
+        self.HistGraphclear.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_13 = QHBoxLayout(self.HistGraphclear)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+
+        #clear graphic 1
+
+        self.ClearchannelA = QPushButton(self.HistGraphclear)
+        self.ClearchannelA.setObjectName(u"ClearchannelA")
+        self.horizontalLayout_13.addWidget(self.ClearchannelA)
+
+        #clear graphic 2
+
+        self.ClearchannelB = QPushButton(self.HistGraphclear)
+        self.ClearchannelB.setObjectName(u"ClearchannelB")
+        self.horizontalLayout_13.addWidget(self.ClearchannelB)
+
+        #clear graphic 3
+
+        self.ClearchannelC = QPushButton(self.HistGraphclear)
+        self.ClearchannelC.setObjectName(u"ClearchannelC")
+        self.horizontalLayout_13.addWidget(self.ClearchannelC)
+
+        #clear graphic 4
+
+        self.ClearchannelD = QPushButton(self.HistGraphclear)
+        self.ClearchannelD.setObjectName(u"ClearchannelD")
+        self.horizontalLayout_13.addWidget(self.ClearchannelD)
+
+        self.verticalLayout_3.addWidget(self.HistGraphclear)
+
+        #Start/Stop measurement buttons
         self.HistGraph1 = QFrame(self.Graph1Configuration)
         self.HistGraph1.setObjectName(u"HistGraph1")
         self.HistGraph1.setFrameShape(QFrame.StyledPanel)
         self.HistGraph1.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_11 = QHBoxLayout(self.HistGraph1)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-
-
-
 
         #Boton de start measurements
 
@@ -207,22 +246,10 @@ class Ui_HistogramaStartStop(object):
         #self.SaveGraph1.clicked.connect(self.stoptbutton)
 
         self.horizontalLayout_11.addWidget(self.StopGraph1)
-        self.SaveDoc = QPushButton(self.HistGraph1)
-        self.SaveDoc.setObjectName(u"SaveDoc")
-        #self.SaveGraph1.clicked.connect(self.stoptbutton)
-
-        self.horizontalLayout_11.addWidget(self.SaveDoc)
-
 
         self.verticalLayout_3.addWidget(self.HistGraph1)
 
-
-        self.verticalLayout.addWidget(self.Graph1Configuration)
-        
-        
-        
-        #Buttons to create the save image and clear graphics
-        
+        #Save data file / Save plots buttons
         self.HistGraphsave = QFrame(self.Graph1Configuration)
         self.HistGraphsave.setObjectName(u"HistGraphsave")
         self.HistGraphsave.setFrameShape(QFrame.StyledPanel)
@@ -230,54 +257,16 @@ class Ui_HistogramaStartStop(object):
         self.horizontalLayout_12 = QHBoxLayout(self.HistGraphsave)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
 
+        self.SaveDoc = QPushButton(self.HistGraphsave)
+        self.SaveDoc.setObjectName(u"SaveDoc")
 
-
-
-        #Save first graphic (ms)
+        self.horizontalLayout_12.addWidget(self.SaveDoc)
 
         self.SaveImage1 = QPushButton(self.HistGraphsave)
         self.SaveImage1.setObjectName(u"SaveImage1")
         self.horizontalLayout_12.addWidget(self.SaveImage1)
-        
-        
-        
-        #Clear qframe
-        self.HistGraphclear = QFrame(self.Graph1Configuration)
-        self.HistGraphclear.setObjectName(u"HistGraphclear")
-        self.HistGraphclear.setFrameShape(QFrame.StyledPanel)
-        self.HistGraphclear.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_13 = QHBoxLayout(self.HistGraphclear)
-        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
-        
-        #clear graphic 1
-
-        self.ClearchannelA = QPushButton(self.HistGraphclear)
-        self.ClearchannelA.setObjectName(u"ClearchannelA")
-        self.horizontalLayout_13.addWidget(self.ClearchannelA)
-        
-        #clear graphic 2
-
-        self.ClearchannelB = QPushButton(self.HistGraphclear)
-        self.ClearchannelB.setObjectName(u"ClearchannelB")
-        self.horizontalLayout_13.addWidget(self.ClearchannelB)
-        
-        #clear graphic 3
-
-        self.ClearchannelC = QPushButton(self.HistGraphclear)
-        self.ClearchannelC.setObjectName(u"ClearchannelC")
-        self.horizontalLayout_13.addWidget(self.ClearchannelC)
-        
-        #clear graphic 4
-
-        self.ClearchannelD = QPushButton(self.HistGraphclear)
-        self.ClearchannelD.setObjectName(u"ClearchannelD")
-        self.horizontalLayout_13.addWidget(self.ClearchannelD)
-
-
-
 
         self.verticalLayout_3.addWidget(self.HistGraphsave)
-        self.verticalLayout_3.addWidget(self.HistGraphclear)
 
 
         self.verticalLayout.addWidget(self.Graph1Configuration)
@@ -298,7 +287,7 @@ class Ui_HistogramaStartStop(object):
 
         #Add size policy
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy4.setHorizontalStretch(7)
+        sizePolicy4.setHorizontalStretch(8)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.TotalGraphicArea.sizePolicy().hasHeightForWidth())
         self.TotalGraphicArea.setSizePolicy(sizePolicy4)
@@ -421,7 +410,7 @@ class Ui_HistogramaStartStop(object):
         # self.GraphicsComboBox.setItemText(2, QCoreApplication.translate("HistogramaStartStop", u"3", None))
         # self.GraphicsComboBox.setItemText(3, QCoreApplication.translate("HistogramaStartStop", u"4", None))
 
-        self.LabelGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Select the stop channels on which you will measure:", None))
+        self.LabelGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Select stop channels:", None))
         self.Channel1Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel A", None))
         self.Channel4Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel B", None))
         self.Channel2Graph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Channel C", None))
@@ -430,10 +419,11 @@ class Ui_HistogramaStartStop(object):
         self.StopGraph1.setText(QCoreApplication.translate("HistogramaStartStop", u"Stop", None))
         self.SaveDoc.setText(QCoreApplication.translate("HistogramaStartStop", u"Save Data File", None))
         self.SaveImage1.setText(QCoreApplication.translate("HistogramaStartStop", u"Save Plots", None))
-        self.ClearchannelA.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear A", None))
-        self.ClearchannelB.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear B", None))
-        self.ClearchannelC.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear C", None))
-        self.ClearchannelD.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear D", None))
+        self.clearLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"Clear data channels:", None))
+        self.ClearchannelA.setText(QCoreApplication.translate("HistogramaStartStop", u"A", None))
+        self.ClearchannelB.setText(QCoreApplication.translate("HistogramaStartStop", u"B", None))
+        self.ClearchannelC.setText(QCoreApplication.translate("HistogramaStartStop", u"C", None))
+        self.ClearchannelD.setText(QCoreApplication.translate("HistogramaStartStop", u"D", None))
         self.statusLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"Status:", None))
         self.valueStatusLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"No measurement running", None))
         self.pointLabel.setText(QCoreApplication.translate("HistogramaStartStop", u"", None))

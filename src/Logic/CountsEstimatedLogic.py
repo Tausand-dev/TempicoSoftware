@@ -28,9 +28,7 @@ class CountEstimatedLogic():
     :param channelDCheckBox: Checkbox for enabling/disabling measurements on channel D (QCheckBox).
     :param startButton: Button to start the count measurement (QPushButton).
     :param stopButton: Button to stop the count measurement (QPushButton).
-    :param mergeRadio: Radio button to merge all channel plots into one graph (QRadioButton).
-    :param separateGraphics: Radio button to display plots separately per channel (QRadioButton).
-    :param deatachedGraphics: Radio button to display detached external graphics (QRadioButton).
+    :param graphModeComboBox: Combo box for selecting the graphical visualization mode - index 0 "Merge", index 1 "Separate", index 2 "Detached" (QComboBox).
     :param timeRangeComboBox: Combo box for selecting the time range for plot visualization (QComboBox).
     :param clearButtonChannelA: Button to clear the graph and data of channel A (QPushButton).
     :param clearButtonChannelB: Button to clear the graph and data of channel B (QPushButton).
@@ -63,7 +61,7 @@ class CountEstimatedLogic():
     :return: None
     """
     def __init__(self,channelACheckBox: QCheckBox, channelBCheckBox: QCheckBox, channelCCheckBox: QCheckBox, channelDCheckBox: QCheckBox,startButton: QPushButton, stopButton: QPushButton,
-                 mergeRadio: QRadioButton, separateGraphics: QRadioButton, deatachedGraphics:QRadioButton, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
+                 graphModeComboBox: QComboBox, timeRangeComboBox: QComboBox, clearButtonChannelA:QPushButton, clearButtonChannelB:QPushButton, clearButtonChannelC:QPushButton, 
                  clearButtonChannelD:QPushButton, saveDataButton: QPushButton, savePlotButton: QPushButton, countChannelAValue: QLabel,countChannelBValue: QLabel,countChannelCValue: QLabel,
                  countChannelDValue: QLabel, countChannelAUncertainty: QLabel, countChannelBUncertainty: QLabel, countChannelCUncertainty: QLabel, countChannelDUncertainty: QLabel,
                  tableCounts:QTableWidget, graphicsFrame: QFrame,channelAFrameLabel: QFrame,channelBFrameLabel: QFrame,channelCFrameLabel: QFrame,channelDFrameLabel: QFrame, statusLabel: QLabel, pointStatusLabel: QLabel, deatachedCheckBox: QCheckBox, detachedLabelCheckBox: QCheckBox, helpButton: QPushButton, device: tempico.TempicoDevice, parent, timerConnection):
@@ -75,9 +73,10 @@ class CountEstimatedLogic():
         self.channelDCheckBox = channelDCheckBox
         self.startButton = startButton
         self.stopButton = stopButton
-        self.mergeGraphics = mergeRadio
-        self.deatachedGraphics = deatachedGraphics
-        self.separateGraphics = separateGraphics
+        self.graphModeComboBox = graphModeComboBox
+        self.GRAPH_MODE_MERGE = 0
+        self.GRAPH_MODE_SEPARATE = 1
+        self.GRAPH_MODE_DETACHED = 2
         self.timeRangeComboBox = timeRangeComboBox
         self.clearButtonChannelA = clearButtonChannelA
         self.clearButtonChannelB = clearButtonChannelB
@@ -127,9 +126,8 @@ class CountEstimatedLogic():
         self.channelDCheckBox.stateChanged.connect(self.checkBoxListenerChannels)
         self.deatachedCheckBox.stateChanged.connect(self.deatachedTable)
         self.detachedLabelCheckBox.stateChanged.connect(self.detachedLabels)
-        #Connection for the radio button
-        self.separateGraphics.toggled.connect(self.updateGraphicsLayout)
-        self.mergeGraphics.toggled.connect(self.updateGraphicsLayout)
+        #Connection for the combo box
+        self.graphModeComboBox.currentIndexChanged.connect(self.updateGraphicsLayout)
         #Activate sentinels
         self.selectChannelA=False
         self.selectChannelB=False
@@ -547,7 +545,7 @@ class CountEstimatedLogic():
 
         :return: None
         """
-        if self.separateGraphics.isChecked():
+        if self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE:
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
@@ -646,7 +644,7 @@ class CountEstimatedLogic():
                 bottom_row.addWidget(selected_graphs[3])
                 layout.addLayout(top_row)
                 layout.addLayout(bottom_row)
-        elif self.mergeGraphics.isChecked():
+        elif self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_MERGE:
             if self.dialogACreated:
                 self.dialogACreated.close()
                 self.dialogACreated=None
@@ -711,7 +709,7 @@ class CountEstimatedLogic():
                 self.curveCountsC.hide()
             if not self.channelDCheckBox.isChecked():
                 self.curveCountsD.hide()
-        elif self.deatachedGraphics.isChecked():  
+        elif self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED:
             from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QSizePolicy
             #Delete layout
             layout = self.graphicsFrame.layout()
@@ -1034,6 +1032,7 @@ class CountEstimatedLogic():
         :return: A configured, ready-to-display `QDialog` for the given channel.
         """
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle(f"Detached Graphics {channel}")
         dialog.resize(400, 300)
         dialog.setModal(False)
@@ -1712,7 +1711,7 @@ class CountEstimatedLogic():
         
     
     #Function to define that no measurements were founded
-    def noMeasurementsFounded(self):
+    def noMeasurementsFounded(self, channelList):
         """
         Displays a warning dialog and disables channel interactions when no measurements are detected.
 
@@ -1723,12 +1722,15 @@ class CountEstimatedLogic():
         - Disables the "Clear" buttons for channels A–D to prevent further user interaction.
         - Resets `measurementChannelX` sentinels (A–D) to `False`, marking all channels as inactive.
 
+        :param channelList: A list of channel identifiers (e.g., ['A', 'B']) that failed to meet the minimum measurement conditions.
         :return: None
         """
+        channelStr = ", ".join(channelList)
         QMessageBox.warning(
             self.mainWindow,  
-            "No Measurements Found",
-            "Unable to obtain a measurement in any of the selected channels: At least 500 pulses per second are required to estimate the counts in each channel. That is, two consecutive stops are needed after a start within a 4 ms window"
+            "Low counts found",
+            f"Unable to estimate counts in the following channels due to low count rate: {channelStr}.\n\n"
+            "At least 500 pulses per second are required to estimate the count in each channel. That is two consecutive stops are needed after a start within a 4 ms window."
         )
         self.clearButtonChannelA.setEnabled(False)
         self.clearButtonChannelB.setEnabled(False)
@@ -1837,6 +1839,7 @@ class CountEstimatedLogic():
         """
         if self.deatachedCheckBox.isChecked():
             self.dialogTableOpen = QDialog(self.mainWindow)
+            self.dialogTableOpen.setWindowFlags(self.dialogTableOpen.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             self.dialogTableOpen.setWindowTitle(f"Estimated counts Table")
             self.dialogTableOpen.resize(530, 400)
             self.dialogTableOpen.setModal(False)
@@ -1870,6 +1873,7 @@ class CountEstimatedLogic():
         """
         if self.detachedLabelCheckBox.isChecked():
             self.dialogLabelOpen = QDialog(self.mainWindow)
+            self.dialogLabelOpen.setWindowFlags(self.dialogLabelOpen.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             self.dialogLabelOpen.setWindowTitle("Current measurements values")
             self.dialogLabelOpen.setModal(False)
 
@@ -2086,7 +2090,7 @@ class CountEstimatedLogic():
             graph_names=[]
             #Open select the format
             dialog = QDialog(self.mainWindow)
-    
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint) 
             dialog.setObjectName("ImageFormat")
             dialog.resize(282, 105)
             dialog.setWindowTitle("Save plots")
@@ -2136,7 +2140,7 @@ class CountEstimatedLogic():
             if dialog.exec_() == QDialog.Accepted:
                 selected_format = FormatBox.currentText()
                 
-                if self.channelACheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelACheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("A")
                     curveCopy.setData(self.timestampsChannelA, self.channelAValues)
@@ -2156,7 +2160,7 @@ class CountEstimatedLogic():
                     exporter.export(output_path)
                     graph_names.append(graph_name)
                     
-                if self.channelBCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelBCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("B")
                     curveCopy.setData(self.timestampsChannelB, self.channelBValues)
                     x_range, y_range = self.plotCountsB.viewRange()
@@ -2174,7 +2178,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.channelCCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelCCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("C")
                     curveCopy.setData(self.timestampsChannelC, self.channelCValues)
                     x_range, y_range = self.plotCountsC.viewRange()
@@ -2192,7 +2196,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.channelDCheckBox.isChecked() and (self.separateGraphics.isChecked() or self.deatachedGraphics.isChecked()):
+                if self.channelDCheckBox.isChecked() and (self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_SEPARATE or self.graphModeComboBox.currentIndex() == self.GRAPH_MODE_DETACHED):
                     winCopy, plotCopy, curveCopy = self.factoryGraphChannels("D")
                     curveCopy.setData(self.timestampsChannelD, self.channelDValues)
                     x_range, y_range = self.plotCountsD.viewRange()
@@ -2210,7 +2214,7 @@ class CountEstimatedLogic():
                     output_path = os.path.join(folder_path, f'{graph_name}.{selected_format}')
                     exporter.export(output_path)
                     graph_names.append(graph_name)
-                if self.mergeGraphics.isChecked():
+                if self.graphModeComboBox.currentIndex == self.GRAPH_MODE_MERGE:
                     winCopy, plotCopy, curveACopy,curveBCopy,curveCCopy, curveDCopy = self.factoryGraphsAllChannels()
                     curveACopy.setData(self.timestampsChannelA, self.channelAValues)
                     curveBCopy.setData(self.timestampsChannelB, self.channelBValues)
@@ -2322,6 +2326,7 @@ class CountEstimatedLogic():
         
         #Open select the format
         dialog = QDialog(self.mainWindow)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setObjectName("TextFormat")
         dialog.resize(282, 105)
         dialog.setWindowTitle("Save")

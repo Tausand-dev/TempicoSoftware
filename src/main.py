@@ -1,9 +1,12 @@
+import sys as _sys_early, os as _os_early
+if _sys_early.platform == "darwin":
+    _os_early.environ.setdefault("QT_MAC_WANTS_LAYER", "1")
 from PySide2.QtWidgets import QLabel, QTabWidget, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMessageBox, QSplashScreen, QApplication, QMainWindow, QAction,QDesktopWidget
 from PySide2.QtGui import QPixmap, QIcon
 from PySide2.QtCore import QTimer, QSize, Qt
 from PySide2.QtWidgets import QWidget, QTabWidget, QSystemTrayIcon
 from Utils.generalsettings import GeneralSettingsWindow
-from Utils.aboutDialog import Ui_AboutDialog
+from Utils.aboutDialog import Ui_AboutDialog, open_github
 from Views.ui_StarStopHistogram import Ui_HistogramaStartStop
 from Views.ui_g2measurement import Ui_G2
 from Views.ui_devicesDialog import Ui_Devices
@@ -119,7 +122,7 @@ class MainWindow(QMainWindow):
         the sentinels and cached device-configuration variables (average
         cycles, mode, number of stops, edge type, and stop mask per channel)
         used later when a measurement tab is opened. It also builds the menu
-        bar ("Settings", "About", "Help") and connects each menu action to its
+        bar ("Settings", "Help") and connects each menu action to its
         corresponding slot, and configures the system tray icon on Linux or
         the taskbar app id on Windows.
 
@@ -200,14 +203,21 @@ class MainWindow(QMainWindow):
         menu_bar.setNativeMenuBar(False)
         #file_menu = menu_bar.addMenu("File")
         settings_menu = menu_bar.addMenu("Settings")
-        #help_menu = menu_bar.addMenu("Help")
-        about_menu = menu_bar.addMenu("About")
+        help_menu = menu_bar.addMenu("Help")
         #Parameters_menu
 
+        #-----Actions for the Help dropdown menu (Help / Github / About)--------#
         help_action = QAction("Help", self)
         help_action.triggered.connect(self.open_help)
-        menu_bar.addAction(help_action)
+        help_menu.addAction(help_action)
 
+        github_action = QAction("Github", self)
+        github_action.triggered.connect(open_github)
+        help_menu.addAction(github_action)
+
+        about_github_action = QAction("About", self)
+        about_github_action.triggered.connect(self.about_settings)
+        help_menu.addAction(about_github_action)
 
 
         #parameters_menu=menu_bar.addMenu("Parameters")
@@ -236,12 +246,18 @@ class MainWindow(QMainWindow):
         self.generator_settings_action.setVisible(False)
         
         general_settings_action.triggered.connect(self.general_settings_clicked)
-        about_settings_action=QAction("About Tempico Software",self)
-        about_settings_action.triggered.connect(self.about_settings)
-        about_menu.addAction(about_settings_action)
         #parameters_settings_action=QAction("Get Count Parameters",self)
         #parameters_settings_action.triggered.connect(self.parameters_action)
         #parameters_menu.addAction(parameters_settings_action)
+
+        #-----Top button bar (built first so it leads the keyboard focus/tab order)--------#
+        self.connectButton = QPushButton("Connect", self)
+        self.disconnectButton = QPushButton("Disconnect", self)
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(self.connectButton)
+        buttonLayout.addWidget(self.disconnectButton)
+        mainWidget = QWidget(self)
+        self.setCentralWidget(mainWidget)
 
         #-----Qtabs for every type of measure--------#
         self.tabs=QTabWidget(self)
@@ -258,26 +274,8 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.tab5,"Autocorrelation (FCS)")
         self.tabs.addTab(self.tab6,"g2 (HBT)")
         self.tabs.setGeometry(0,20,1000,700)
-        # Crear un QVBoxLayout para agregar el QTabWidget
-        layout = QVBoxLayout()
-        layout.addWidget(self.tabs)
-        #layout.setContentsMargins(0, 30, 0, 0)
-        # Establecer el layout en la ventana principal
         self.sentinel1=0
-        main_widget = QWidget()
-        main_widget.setLayout(layout)
-        self.setCentralWidget(main_widget)
         self.construct_start_stop_histogram(self.tab1)
-        self.connectButton = QPushButton("Connect", self)
-        self.disconnectButton = QPushButton("Disconnect", self)
-
-        buttonLayout = QHBoxLayout()
-        buttonLayout.addWidget(self.connectButton)
-        buttonLayout.addWidget(self.disconnectButton)
-
-        # Crear un QWidget para contener los QTabWidget y los botones
-        mainWidget = QWidget(self)
-        self.setCentralWidget(mainWidget)
 
         #------g2 Graphic class---------#
         self.g2Graphic=None
@@ -309,6 +307,8 @@ class MainWindow(QMainWindow):
         mainLayout.addLayout(buttonLayout)
         mainLayout.setContentsMargins(10, 10, 10, 10)
         mainLayout.addWidget(self.tabs)
+        self.setTabOrder(self.connectButton, self.disconnectButton)
+        self.setTabOrder(self.disconnectButton, self.tabs)
         self.connectsentinel=0
         self.connectButton.clicked.connect(self.open_dialog)
         self.disconnectButton.clicked.connect(self.disconnect_button_click)
@@ -454,6 +454,7 @@ class MainWindow(QMainWindow):
         :returns: None
         """
         self.dialog=QDialog(self)
+        self.dialog.setWindowFlags(self.dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.uidialog = Ui_Devices()
         self.uidialog.setupUi(self.dialog)
         self.dialog.exec_()
@@ -647,9 +648,7 @@ class MainWindow(QMainWindow):
                 channelDCheckBox=self.uiCountsEstimated.channelDCheckBox
                 startButon=self.uiCountsEstimated.startMeasurementButton
                 stopButon=self.uiCountsEstimated.stopMeasurementButton
-                mergeRadioButton=self.uiCountsEstimated.mergeGraphicButton
-                separateRadioButton=self.uiCountsEstimated.separateGraphicButton
-                deatachedRadioButton=self.uiCountsEstimated.apartDialogGraphicButton
+                graphModeComboBox=self.uiCountsEstimated.graphModeComboBox
                 timeRangeComboBox=self.uiCountsEstimated.comboBoxTimeRange
                 clearButtonChannelA=self.uiCountsEstimated.channelAClearButton
                 clearButtonChannelB=self.uiCountsEstimated.channelBClearButton
@@ -678,7 +677,7 @@ class MainWindow(QMainWindow):
                 deatachedCheckBox=self.uiCountsEstimated.tableCheckBox
                 detachedLabelCheckBox=self.uiCountsEstimated.labelCheckBox
                 helpButton=self.uiCountsEstimated.helpButton
-                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,mergeRadioButton,separateRadioButton, deatachedRadioButton,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
+                self.countsEstimatedGraphic=CountEstimatedLogic(channelACheckBox,channelBCheckBox,channelCCheckBox,channelDCheckBox,startButon,stopButon,graphModeComboBox,timeRangeComboBox,clearButtonChannelA,clearButtonChannelB,clearButtonChannelC,clearButtonChannelD
                                                                 ,saveDataButtonCounts,savePlotButtonCounts,channelACountValue,channelBCountValue,channelCCountValue,channelDCountValue, channelACountUncertainty,channelBCountUncertainty,channelCCountUncertainty,channelDCountUncertainty,tableCounts,graphicsFrame,channelAFrameLabel,channelBFrameLabel,channelCFrameLabel,channelDFrameLabel,statusLabel,pointLabel,deatachedCheckBox,detachedLabelCheckBox,helpButton,self.conectedDevice,self, self.connectedTimer)
           elif valor_padre==2:
             padre=self.tab3
@@ -1086,6 +1085,11 @@ class MainWindow(QMainWindow):
         """
         constants.VERSION_PARAMETER=self.conectedDevice.getModelIdn()
         constants.OVERFLOW_PARAMETER=self.conectedDevice.getOverflowParameter()
+        """
+        with open("stopmask_debug.log", "a", encoding="utf-8") as f:
+            f.write(f"Modelo: {self.conectedDevice.getModelIdn()} | "
+                    f"getStopMaskMinimum(): {self.conectedDevice.getStopMaskMinimum()}\n")
+        """
         if "TP12" in constants.VERSION_PARAMETER:
             self.generator_settings_action.setVisible(True)
         else:
@@ -1278,6 +1282,16 @@ class MainWindow(QMainWindow):
         """
         HelpDialog(self).exec_()
 
+    def open_github(self):
+        """
+        Opens the Tempico Software GitHub repository in the default web browser.
+
+        Triggered from the "Github" entry of the "Help" menu. Delegates to the 'open_github()' helper already defined in 'Utils.aboutDialog', which reuses 
+        the QDesktopServices/QUrl imports already present there.
+
+        :return: None
+        """
+        open_github()
 
 #This function is not use for the Tempico Version 1.1
 #TO DO: Comment the function for a future version

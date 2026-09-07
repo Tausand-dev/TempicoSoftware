@@ -74,8 +74,6 @@ class UiLifeTime(object):
         self.startChannelLabel = QLabel(self.configurationParameters)
         self.startChannelLabel.setObjectName(u"startChannelLabel")
 
-        self.verticalLayout_3.addWidget(self.startChannelLabel)
-
         self.startChannelComboBox = QComboBox(self.configurationParameters)
         self.startChannelComboBox.addItem("")
         self.startChannelComboBox.addItem("")
@@ -85,12 +83,14 @@ class UiLifeTime(object):
         self.startChannelComboBox.setObjectName(u"startChannelComboBox")
         #self.startChannelComboBox.currentIndexChanged.connect(self.startChange)
 
-        self.verticalLayout_3.addWidget(self.startChannelComboBox)
+        self.horizontalLayoutStartChannel=QHBoxLayout()
+        self.horizontalLayoutStartChannel.setObjectName(u"horizontalLayoutStartChannel")
+        self.horizontalLayoutStartChannel.addWidget(self.startChannelLabel)
+        self.horizontalLayoutStartChannel.addWidget(self.startChannelComboBox)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutStartChannel)
 
         self.stopChannelLabel = QLabel(self.configurationParameters)
         self.stopChannelLabel.setObjectName(u"stopChannelLabel")
-
-        self.verticalLayout_3.addWidget(self.stopChannelLabel)
 
         self.stopChannelComboBox = QComboBox(self.configurationParameters)
         self.stopChannelComboBox.addItem("")
@@ -98,15 +98,18 @@ class UiLifeTime(object):
         self.stopChannelComboBox.addItem("")
         self.stopChannelComboBox.addItem("")
         self.stopChannelComboBox.setObjectName(u"stopChannelComboBox")
-        
 
-        self.verticalLayout_3.addWidget(self.stopChannelComboBox)
+        self.horizontalLayoutStopChannel=QHBoxLayout()
+        self.horizontalLayoutStopChannel.setObjectName(u"horizontalLayoutStopChannel")
+        self.horizontalLayoutStopChannel.addWidget(self.stopChannelLabel)
+        self.horizontalLayoutStopChannel.addWidget(self.stopChannelComboBox)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutStopChannel)
+
+
+        
         self.horizontalLayoutBinWidth=QHBoxLayout()
-        self.horizontalLayoutBinWidthComboBox=QHBoxLayout()
         self.horizontalLayoutNumberBins=QHBoxLayout()
-        self.horizontalLayoutNumberBinsComboBox=QHBoxLayout()
         self.horizontalLayoutMaximumTime=QHBoxLayout()
-        self.horizontalLayoutMaximumTimeLabel=QHBoxLayout()
 
         self.binWidthLabel = QLabel(self.configurationParameters)
         self.binWidthLabel.setObjectName(u"binWidthLabel")
@@ -114,34 +117,24 @@ class UiLifeTime(object):
         self.numberBinsLabel.setObjectName(u"numberBinsLabel")
         self.timeRangeLabel = QLabel(self.configurationParameters)
         self.timeRangeLabel.setObjectName(u"timeRangeLabel")
-        
-        self.horizontalLayoutBinWidth.addWidget(self.binWidthLabel)
-        self.horizontalLayoutNumberBins.addWidget(self.numberBinsLabel)
-        self.horizontalLayoutMaximumTime.addWidget(self.timeRangeLabel)
+
         self.binWidthLabel.setAlignment(Qt.AlignVCenter)
         self.numberBinsLabel.setAlignment(Qt.AlignVCenter)
         self.timeRangeLabel.setAlignment(Qt.AlignVCenter)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutBinWidth)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutBinWidthComboBox)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutNumberBins)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutNumberBinsComboBox)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutMaximumTime)
-        self.verticalLayout_3.addLayout(self.horizontalLayoutMaximumTimeLabel)
 
         self.binWidthComboBox = QComboBox(self.configurationParameters)
         self.binWidthComboBox.setObjectName(u"binWidthComboBox")
         self.sentinelChangeBins=True
         #Available bin widths, matching the Tempico device's supported resolutions
         self.powers_of_two = [ "480 ps", "960 ps", "2 ns", "4 ns", "8 ns", 
-                              "16 ns", "32 ns", "64 ns", "128 ns", "256 ns",
-                              "512 ns", "1 µs", "2 µs", "4 µs", "8 µs", "16 µs",
-                              "32 µs", "64 µs", "100 µs"]
-        self.horizontalLayoutBoxes=QHBoxLayout()
+                            "16 ns", "32 ns", "64 ns", "128 ns", "256 ns",
+                            "512 ns", "1 µs", "2 µs", "4 µs", "8 µs", "16 µs",
+                            "32 µs", "64 µs", "100 µs"]
         self.binWidthComboBox.addItems(self.powers_of_two)
         #Selectable numbers of bins for the histogram; filtered later by maxNumberBins()
         self.numberOfBinsValues = [ "10","20","30","40","50","60","70","80","90","100"
-                                   ,"200","300","400","500","600","700","800","900","1000",
-                                   "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
+                                ,"200","300","400","500","600","700","800","900","1000",
+                                "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
         initialValues=["50","60","70","80","90","100"
                         ,"200","300","400","500","600","700","800","900","1000",
                         "2000","3000","4000","5000","6000","7000","8000","9000","10000"]
@@ -150,14 +143,20 @@ class UiLifeTime(object):
         self.numberBinsComboBox.currentIndexChanged.connect(self.setTimeRange)
         self.binWidthComboBox.currentIndexChanged.connect(self.maxNumberBins)
         self.timeRangeValue = QLabel("4 ms",self.configurationParameters)
-        self.horizontalLayoutBinWidthComboBox.addWidget(self.binWidthComboBox)
-        self.horizontalLayoutNumberBinsComboBox.addWidget(self.numberBinsComboBox)
-        self.horizontalLayoutMaximumTimeLabel.addWidget(self.timeRangeValue)
+
+        self.horizontalLayoutBinWidth.addWidget(self.binWidthLabel)
+        self.horizontalLayoutBinWidth.addWidget(self.binWidthComboBox)
+        self.horizontalLayoutNumberBins.addWidget(self.numberBinsLabel)
+        self.horizontalLayoutNumberBins.addWidget(self.numberBinsComboBox)
+        self.horizontalLayoutMaximumTime.addWidget(self.timeRangeLabel)
+        self.horizontalLayoutMaximumTime.addWidget(self.timeRangeValue)
+
+        self.verticalLayout_3.addLayout(self.horizontalLayoutBinWidth)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutNumberBins)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutMaximumTime)
 
         self.numberMeasurementsLabel = QLabel(self.configurationParameters)
         self.numberMeasurementsLabel.setObjectName(u"numberMeasurementsLabel")
-
-        self.verticalLayout_3.addWidget(self.numberMeasurementsLabel)
 
         self.numberMeasurementsSpinBox = QSpinBox(self.configurationParameters)
         self.numberMeasurementsSpinBox.setObjectName(u"numberMeasurementsSpinBox")
@@ -165,7 +164,11 @@ class UiLifeTime(object):
         self.numberMeasurementsSpinBox.setMaximum(2**28)
         self.numberMeasurementsSpinBox.setMinimumHeight(18)
 
-        self.verticalLayout_3.addWidget(self.numberMeasurementsSpinBox)
+        self.horizontalLayoutNumberMeasurements = QHBoxLayout()
+        self.horizontalLayoutNumberMeasurements.setObjectName(u"horizontalLayoutNumberMeasurements")
+        self.horizontalLayoutNumberMeasurements.addWidget(self.numberMeasurementsLabel)
+        self.horizontalLayoutNumberMeasurements.addWidget(self.numberMeasurementsSpinBox)
+        self.verticalLayout_3.addLayout(self.horizontalLayoutNumberMeasurements)
 
         self.startStopClearFrame = QFrame(self.configurationParameters)
         self.startStopClearFrame.setObjectName(u"startStopClearFrame")
@@ -176,16 +179,19 @@ class UiLifeTime(object):
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.startButton = QPushButton(self.startStopClearFrame)
         self.startButton.setObjectName(u"startButton")
+        self.startButton.setMinimumHeight(30)
 
         self.horizontalLayout_2.addWidget(self.startButton)
 
         self.stopButton = QPushButton(self.startStopClearFrame)
         self.stopButton.setObjectName(u"stopButton")
+        self.stopButton.setMinimumHeight(30)
 
         self.horizontalLayout_2.addWidget(self.stopButton)
 
         self.clearButton = QPushButton(self.startStopClearFrame)
         self.clearButton.setObjectName(u"clearButton")
+        self.clearButton.setMinimumHeight(30)
 
         self.horizontalLayout_2.addWidget(self.clearButton)
 
@@ -201,11 +207,13 @@ class UiLifeTime(object):
         self.horizontalLayout_3.setContentsMargins(0,0,0,0)
         self.saveDataFileButton = QPushButton(self.saveDataPlotFrame)
         self.saveDataFileButton.setObjectName(u"saveDataFileButton")
+        self.saveDataFileButton.setMinimumHeight(30)
 
         self.horizontalLayout_3.addWidget(self.saveDataFileButton)
 
         self.savePlotButton = QPushButton(self.saveDataPlotFrame)
         self.savePlotButton.setObjectName(u"savePlotButton")
+        self.savePlotButton.setMinimumHeight(30)
 
         self.horizontalLayout_3.addWidget(self.savePlotButton)
 

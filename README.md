@@ -193,7 +193,7 @@ Modify the version number in the following files:
 
 - installer/installer_builder.iss
 
-- src/constants.py
+- src/Utils/constants.py
 
 ### Creating a virtual environment
 
@@ -621,58 +621,162 @@ After this step, the app should run by doing `./TempicoSoftware.AppDir/AppRun` f
 - Verify the final size with `ls -lh TempicoSoftware-x86_64.AppImage`. Following the Optimized Installer steps above, this should land around 95-100 MB.
 
 
-#### MacOS
+#### macOS
 
-##### Standard Build
+##### Prerequisites
 
-Run the following commands:
+Install the dependencies pinned for the macOS 10.12 build:
 
 ```bash
-cd <path-to-your-folder>/TempicoSoftware
+python3 -m venv .venv
 source .venv/bin/activate
-
-# 1. Clean previous builds
-rm -rf build dist
-
-# 2. Build in --onedir mode
-pyinstaller \
-  --additional-hooks-dir installers/pyinstaller_hooks/ \
-  --name TempicoSoftware --onedir --noconsole \
-  -i Sources/tausand_small.png \
-  --exclude-module matplotlib \
-  --exclude-module PySide2.QtQml --exclude-module PySide2.QtQuick --exclude-module PySide2.QtQuickWidgets \
-  --exclude-module PySide2.QtWebEngineCore --exclude-module PySide2.QtWebEngineWidgets \
-  --exclude-module PySide2.QtWebChannel --exclude-module PySide2.QtWebSockets \
-  --exclude-module PySide2.QtMultimedia --exclude-module PySide2.QtMultimediaWidgets \
-  --exclude-module PySide2.QtNetwork --exclude-module PySide2.QtSql \
-  --exclude-module PySide2.QtTest --exclude-module PySide2.QtXml \
-  --exclude-module PySide2.QtBluetooth --exclude-module PySide2.QtDBus \
-  --exclude-module PySide2.Qt3DCore --exclude-module PySide2.Qt3DRender \
-  --exclude-module PySide2.QtCharts --exclude-module PySide2.QtDataVisualization \
-  --exclude-module PySide2.QtHelp --exclude-module PySide2.QtDesigner --exclude-module PySide2.QtUiTools \
-  --exclude-module PySide2.QtLocation --exclude-module PySide2.QtPositioning \
-  --exclude-module PySide2.QtSensors --exclude-module PySide2.QtNfc --exclude-module PySide2.QtSerialPort \
-  --exclude-module PySide2.QtPrintSupport --exclude-module PySide2.QtVirtualKeyboard \
-  --exclude-module pyqtgraph.opengl \
-  --exclude-module scipy.cluster --exclude-module scipy.fft --exclude-module scipy.integrate \
-  --exclude-module scipy.interpolate --exclude-module scipy.io --exclude-module scipy.ndimage \
-  --exclude-module scipy.odr --exclude-module scipy.signal --exclude-module scipy.stats \
-  --exclude-module scipy._lib._uarray \
-  src/main.py
-
-# 3. Copy Sources INSIDE the .app bundle (this is the fix for the splash screen)
-cp -r Sources dist/TempicoSoftware.app/Contents/MacOS/
-
-# 4. Verify it was copied correctly
-ls dist/TempicoSoftware.app/Contents/MacOS/Sources/
-
-# 5. Open the app the way a user would
-open dist/TempicoSoftware.app
+pip install -r requirements_macos10.12.txt
 ```
 
-Two folders will be created: `build` and `dist`. Inside `dist` you'll find the `.app` bundle.
+##### Step 1: Build with PyInstaller
 
-**Why the `Sources` folder must go inside `Contents/MacOS/`:** on macOS, the actual executable inside a `.app` bundle lives at `TempicoSoftware.app/Contents/MacOS/TempicoSoftware`. Since the app looks for the `Sources` folder next to its own executable (`sys.executable`), it must be copied into that exact `Contents/MacOS/` directory — not next to the `.app` bundle itself, and not anywhere else inside `Contents/`. This is the same underlying requirement as on Windows and Linux; only the bundle layout differs.
+```bash
+export MACOSX_DEPLOYMENT_TARGET=10.12
+
+rm -rf build dist
+
+pyinstaller --additional-hooks-dir installers/pyinstaller_hooks/ \
+  --name TempicoSoftware --onedir --noconsole \
+  -i Sources/tausand_small.png \
+  src/main.py
+
+APP="dist/TempicoSoftware.app"
+```
+
+##### Step 2: Place the `Sources` folder correctly
+
+Non-code resources must live in `Contents/Resources`, not `Contents/MacOS` — otherwise code signing fails on files like images inside `Sources` (see Step 3). A symlink keeps the existing runtime lookups working without any source changes:
+
+```bash
+mkdir -p "$APP/Contents/Resources"
+cp -r Sources "$APP/Contents/Resources/"
+ln -sf ../Resources/Sources "$APP/Contents/MacOS/Sources"
+```
+
+##### Step 3: Sign the bundle (ad-hoc)
+
+Signing must happen from the inside out (nested libraries and frameworks first, main executable and full bundle last), otherwise Qt frameworks commonly end up with a broken/partial signature:
+
+```bash
+find "$APP" -type f \( -name "*.so" -o -name "*.dylib" \) -exec codesign --force -s - {} \;
+
+find "$APP/Contents/Frameworks" -maxdepth 1 -name "*.framework" 2>/dev/null | while read fw; do
+  codesign --force -s - "$fw"
+done
+
+codesign --force -s - "$APP/Contents/MacOS/TempicoSoftware"
+codesign --force -s - "$APP"
+```
+
+##### Step 4: Verify the signature
+
+```bash
+codesign --verify --deep --strict --verbose=4 "$APP"
+```
+
+This should complete with no errors. Note: `spctl -a -t exec` will always report `rejected` for an ad-hoc signature (it checks for Apple notarization, not signature validity) — this is expected and can be ignored.
+
+##### Step 5: Editing the installer script (`Install TempicoSoftware.command`)
+
+The installer script and the PDF guide are kept in `installer/macos/` in the repository — not regenerated on every build. Edit the script directly with `cat` and a heredoc (`EOF`) whenever a change is needed:
+
+```bash
+cat > "installer/macos/Install TempicoSoftware.command" << 'EOF'
+#!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+DEST="/Applications/TempicoSoftware.app"
+
+echo "Installing TempicoSoftware..."
+rm -rf "$DEST"
+ditto "TempicoSoftware.app" "$DEST"
+
+for i in $(seq 1 20); do
+  if [ -x "$DEST/Contents/MacOS/TempicoSoftware" ]; then
+    break
+  fi
+  sleep 0.5
+done
+
+xattr -cr "$DEST"
+
+echo "Done. Opening TempicoSoftware..."
+open "$DEST"
+
+# Clean up only the copied app and this script — keep the PDF instructions in place
+rm -rf "$SCRIPT_DIR/TempicoSoftware.app"
+sleep 1
+rm -f "$0"
+EOF
+
+chmod +x "installer/macos/Install TempicoSoftware.command"
+```
+
+##### Step 6: Build the installer package
+
+Copy the app together with the installer script and the PDF guide from `installer/macos/`:
+
+```bash
+STAGING="dist/dist_package"
+rm -rf "$STAGING" && mkdir -p "$STAGING"
+cp -R "$APP" "$STAGING/"
+cp "installer/macos/Install TempicoSoftware.command" "$STAGING/"
+cp "installer/macos/README Installation Guide.pdf" "$STAGING/"
+```
+
+The staging folder should now contain exactly three items: `TempicoSoftware.app`, `Install TempicoSoftware.command`, and `READ ME Installation Guide.pdf`.
+
+##### Step 7: Package the final `.zip`
+
+```bash
+ditto -c -k --sequesterRsrc --keepParent "$STAGING" "dist/TempicoSoftware-10.12+.zip"
+```
+
+`ditto` must be used instead of Finder's "Compress" option or the `zip` command — both can break the app's code signature by not preserving symlinks and extended attributes correctly.
+
+This `.zip` is the distributable file, compatible from macOS 10.12 through the latest release.
+
+##### Installation instructions for the end user
+
+**Step 1. Unzip the installer**
+
+Double-click the downloaded file to extract its contents into a new folder. You should see three files inside:
+
+- `TempicoSoftware.app`
+- `Install TempicoSoftware.command`
+- `READ ME Installation Guide.pdf`
+
+**Step 2. Open Terminal**
+
+Press Command (⌘) + Space, type "Terminal", and press Enter.
+
+**Step 3. Clear the security flag**
+
+macOS marks downloaded files with a security flag that blocks them from opening until it's cleared. Type the following in Terminal, including the trailing space, but don't press Enter yet:
+
+```bash
+xattr -d com.apple.quarantine 
+```
+
+Drag `Install TempicoSoftware.command` from the unzipped folder into the Terminal window, right after the command — this fills in the file path automatically. Then press Enter.
+
+**Note:** on some machines, Terminal may respond with `No such xattr: com.apple.quarantine`. This is not an error — it just means that particular Mac's security settings didn't flag the file with the quarantine attribute in the first place, so there was nothing to remove. It's safe to continue to the next step regardless.
+
+**Step 4. Run the installer**
+
+Double-click `Install TempicoSoftware.command`. If macOS shows a security warning, go to **System Settings → Privacy & Security**, scroll to the Security section, and click **Open Anyway**.
+
+**Step 5. Done**
+
+TempicoSoftware installs into Applications and opens automatically. The installer script removes itself once done, leaving only the PDF guide in the unzipped folder — that folder can be deleted at any time.
+
+For detailed screenshots of each step, see `READ ME Installation Guide.pdf`.
 
 ##### Changing the icon
 
@@ -700,9 +804,9 @@ Next, we need to install the theme used for the documentation; to do this, run t
 pip install sphinx-rtd-theme
 ```
 
-Next, within the repository folder where the project is located, we will create a new folder called `docs`. To create the base folder for our project, run the `sphinx-quickstart` command on the `docs` folder. The project will be named "Tempico Software", and the version will correspond to the one on which the software documentation is being created. We will leave the language set to English.
+Next, within the repository folder where the project is located, we will create a new folder called `docs/developer`. To create the base folder for our project, run the `sphinx-quickstart` command on the `docs/developer` folder. The project will be named "Tempico Software", and the version will correspond to the one on which the software documentation is being created. We will leave the language set to English.
 
-Inside the `docs` folder, several files will have been generated, one of which is called `conf.py`. This file contains a list called `extensions`; within it, we will add the following extensions:
+Inside the `docs/developer` folder, several files will have been generated, one of which is called `conf.py`. This file contains a list called `extensions`; within it, we will add the following extensions:
 
 ```
 "sphinx.ext.todo", "sphinx.ext.autodoc", "sphinx.ext.viewcode"
@@ -711,7 +815,7 @@ Inside the `docs` folder, several files will have been generated, one of which i
 We will also change the script's path so that when it runs, it can recognize the scripts inside the `src` folder. To do this, we add the following line of code at the beginning, even before the imports:
 
 ```
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('../../src'))
 ```
 
 Now there should be a text variable called `html_theme`; here, we will change the default theme and set it to `sphinx_rtd_theme`.
@@ -719,12 +823,12 @@ Now there should be a text variable called `html_theme`; here, we will change th
 After that, we must execute the following command:
 
 ```
-sphinx-apidoc -o docs ./src
+sphinx-apidoc -o docs/developer ./src
 ```
 
-This will create a `.rst` file in the `docs` folder for each of the Python scripts we have for the application. Many of these scripts contain information about graphical interfaces or may even be auxiliary; it is not necessary to document them, so we can delete their `.rst` files. Only the names of the files that have not been deleted should remain in the `modules.rst` file.
+This will create a `.rst` file in the `docs/developer` folder for each of the Python scripts we have for the application. Many of these scripts contain information about graphical interfaces or may even be auxiliary; it is not necessary to document them, so we can delete their `.rst` files. Only the names of the files that have not been deleted should remain in the `modules.rst` file.
 
-Inside `docs`, we will create a folder called `sources` and place the Tempico Software logo there. Then, we will edit the file called `index.rst` and place the logo at the beginning as follows:
+Inside `docs/developer`, we will create a folder called `sources` and place the Tempico Software logo there. Then, we will edit the file called `index.rst` and place the logo at the beginning as follows:
 
 ```
 .. figure:: sources/image.png
@@ -745,7 +849,7 @@ Below this block, leaving a blank line, we need to add all the modules with `.rs
 
 Finally, what we will do is change the value of `_build` to `build` in the `exclude_patterns` variable in the `conf.py` file. We will also make this change in the `make.bat` file on the line `set BUILDDIR`, and in the `Makefile` under the `BUILDDIR` setting.
 
-Once we are sure that all the modules to be documented have a `.rst` file and are included in the `modules.rst` file, we will generate the documentation by running the following command in the `docs` folder:
+Once we are sure that all the modules to be documented have a `.rst` file and are included in the `modules.rst` file, we will generate the documentation by running the following command in the `docs/developer` folder:
 
 ```
 .\make.bat html
@@ -759,7 +863,7 @@ To generate a PDF file, we first need to download and install MikTeX and Strawbe
 latexmk --version
 ```
 
-Then, inside the `docs` folder, we execute the following command:
+Then, inside the `docs/developer` folder, we execute the following command:
 
 ```
 .\make.bat latexpdf
@@ -772,7 +876,7 @@ This will generate our documentation in PDF format.
 If we create a new script for a new version that has not been documented yet is not necessary to run all steps executed before. However we need to run the following command again:
 
 ```
-sphinx-apidoc -o docs ./src
+sphinx-apidoc -o docs/developer ./src
 ```
 
 This will regenerate all `.rst` files for all Python scripts inside the `.src` folder. We must again remove the `.rst` files for the modules that were not documented and delete them from `modules.rst`. It is necessary to reconfigure the `index.rst` file as specified in previous steps.

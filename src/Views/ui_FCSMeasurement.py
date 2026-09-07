@@ -567,6 +567,30 @@ class Ui_FCSMeasurement(object):
         # Draw the initial grey dot
         self.drawColorPoint()
 
+        # ── Explicit Tab order ───────────────────────────────────────────
+        # Same issue as in Ui_G2.setupUi: Qt's default focus chain follows
+        # widget *creation* order, not the order panels were added to
+        # ``verticalLayout``. ParametersFrame (stopChannel/tau0/duration/
+        # indefinite) is constructed *after* MeasurementControlsFrame, even
+        # though it sits visually on top — so Tab used to jump straight to
+        # the Start/Stop/Save buttons before reaching the parameters above
+        # them. Chain the widgets explicitly to match the actual on-screen
+        # order (Parameters -> Controls -> Fit area). InfoFrame has no
+        # focusable widgets, so it's skipped.
+        QWidget.setTabOrder(self.stopChannelComboBox, self.tau0SpinBox)
+        QWidget.setTabOrder(self.tau0SpinBox, self.durationSpinBox)
+        QWidget.setTabOrder(self.durationSpinBox, self.indefiniteCheckBox)
+        QWidget.setTabOrder(self.indefiniteCheckBox, self.startButton)
+        QWidget.setTabOrder(self.startButton, self.stopButton)
+        QWidget.setTabOrder(self.stopButton, self.clearButton)
+        QWidget.setTabOrder(self.clearButton, self.saveDataButton)
+        QWidget.setTabOrder(self.saveDataButton, self.savePlotButton)
+        QWidget.setTabOrder(self.savePlotButton, self.fitModelCombo)
+        QWidget.setTabOrder(self.fitModelCombo, self.fitButton)
+        QWidget.setTabOrder(self.fitButton, self.fitOffsetCheckBox)
+        QWidget.setTabOrder(self.fitOffsetCheckBox, self.fitResetParamsButton)
+        QWidget.setTabOrder(self.fitResetParamsButton, self.fitTable)
+
     # setupUi
 
     def retranslateUi(self, FCSMeasurement):

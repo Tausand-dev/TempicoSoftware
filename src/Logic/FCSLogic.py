@@ -429,6 +429,7 @@ class FCSLogic():
         self.mainWindow.tabs.setTabEnabled(5, True)
         self.tau0SpinBox.setEnabled(True) 
         self.durationSpinBox.setEnabled(True)
+        self.indefiniteCheckBox.setEnabled(True)
         self.fitOffsetCheckBox.setEnabled(True)
         self.disconnectButton.setEnabled(True)
         self.startButton.setEnabled(True)
@@ -485,6 +486,7 @@ class FCSLogic():
         self.clearButton.setEnabled(False)
         self.tau0SpinBox.setEnabled(False) 
         self.durationSpinBox.setEnabled(False)
+        self.indefiniteCheckBox.setEnabled(False)
         self.fitOffsetCheckBox.setEnabled(False)
         self.stopChannelComboBox.setEnabled(False)
         
@@ -630,6 +632,7 @@ class FCSLogic():
         self.stopChannelComboBox.setEnabled(True)
         self.tau0SpinBox.setEnabled(True)
         self.durationSpinBox.setEnabled(True)
+        self.indefiniteCheckBox.setEnabled(True)
         self.fitOffsetCheckBox.setEnabled(True)
         
         if not self.withoutMeasurement:
@@ -841,8 +844,12 @@ class FCSLogic():
 
         # ── Format selection dialog ───────────────────────────────────────
         dialog = QDialog(self.parent)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle("Save")
+        dialog.setMinimumWidth(260)
         vlay = QVBoxLayout(dialog)
+        vlay.setContentsMargins(20, 20, 20, 20)
+        vlay.setSpacing(10)
         vlay.addWidget(QLabel("Select the text format:"))
         fmt_box = QComboBox(dialog)
         fmt_box.addItem("txt")
@@ -945,8 +952,12 @@ class FCSLogic():
             folder_path      = dataFolderPrefix["saveFolder"]
 
             dialog = QDialog(self.parent)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dialog.setWindowTitle("Save plot")
+            dialog.setMinimumWidth(260)
             vlay = QVBoxLayout(dialog)
+            vlay.setContentsMargins(20, 20, 20, 20)
+            vlay.setSpacing(10)
             vlay.addWidget(QLabel("Select the image format:"))
             fmt_box = QComboBox(dialog)
             fmt_box.addItem("png")

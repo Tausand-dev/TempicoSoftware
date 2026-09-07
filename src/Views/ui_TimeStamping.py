@@ -98,8 +98,8 @@ class Ui_TimeStamping(object):
         self.EnableChannelsFrame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.EnableChannelsFrame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(10, 7, 10, 0)
-        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setContentsMargins(10, 7, 10, 6)
+        self.verticalLayout_3.setSpacing(4)
         self.enableChannelsLabel = QLabel(self.EnableChannelsFrame)
         self.enableChannelsLabel.setObjectName(u"enableChannelsLabel")
         sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -110,26 +110,35 @@ class Ui_TimeStamping(object):
 
         self.verticalLayout_3.addWidget(self.enableChannelsLabel)
 
+        self.horizontalLayoutChannels = QHBoxLayout()
+        self.horizontalLayoutChannels.setObjectName(u"horizontalLayoutChannels")
+        self.horizontalLayoutChannels.setContentsMargins(0, 2, 0, 2)
+        defaultChannelCheckBoxSpacing = self.horizontalLayoutChannels.spacing()
+        if defaultChannelCheckBoxSpacing <= 0:
+            defaultChannelCheckBoxSpacing = 6
+        self.horizontalLayoutChannels.setSpacing(60)
+
         self.enableChannelACheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelACheckBox.setObjectName(u"enableChannelACheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelACheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelACheckBox)
 
         self.enableChannelBCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelBCheckBox.setObjectName(u"enableChannelBCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelBCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelBCheckBox)
 
         self.enableChannelCCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelCCheckBox.setObjectName(u"enableChannelCCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelCCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelCCheckBox)
 
         self.enableChannelDCheckBox = QCheckBox(self.EnableChannelsFrame)
         self.enableChannelDCheckBox.setObjectName(u"enableChannelDCheckBox")
 
-        self.verticalLayout_3.addWidget(self.enableChannelDCheckBox)
+        self.horizontalLayoutChannels.addWidget(self.enableChannelDCheckBox)
 
+        self.verticalLayout_3.addLayout(self.horizontalLayoutChannels)
 
         self.verticalLayout_2.addWidget(self.EnableChannelsFrame)
 
@@ -144,7 +153,7 @@ class Ui_TimeStamping(object):
         self.frameStartStop.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frameStartStop)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.verticalLayout_8.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_8.setContentsMargins(6, 0, 6, 0)
         self.verticalLayout_8.setSpacing(0)
         self.showTableCheckBox = QCheckBox(self.frameStartStop)
         self.showTableCheckBox.setObjectName(u"showTableCheckBox")
@@ -191,29 +200,39 @@ class Ui_TimeStamping(object):
         self.verticalLayout_10.addWidget(self.stopNormalButton)
 
         self.tabStartStopTypes.addTab(self.tabNormalMeasurement, "")
+        ####################################
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        
-        self.scrollScheduled=QScrollArea()
-        self.scrollScheduled.setWidgetResizable(True)
-        self.scrollContent=QWidget()
-        self.verticalLayout_11 = QVBoxLayout(self.scrollContent)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.labelStartSchedule = QLabel(self.scrollContent)
+        self.gridLayout_schedule = QGridLayout(self.tab_2)
+        self.gridLayout_schedule.setObjectName(u"gridLayout_schedule")
+        self.gridLayout_schedule.setContentsMargins(6, 4, 6, 4)
+        self.gridLayout_schedule.setSpacing(6)
+        self.gridLayout_schedule.setVerticalSpacing(3)
+        self.tab_2.setAutoFillBackground(True)
+
+        sizePolicyScheduleLabel = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicyScheduleLabel.setHorizontalStretch(0)
+        sizePolicyScheduleLabel.setVerticalStretch(0)
+
+        self.labelStartSchedule = QLabel(self.tab_2)
         self.labelStartSchedule.setObjectName(u"labelStartSchedule")
 
-        self.verticalLayout_11.addWidget(self.labelStartSchedule)
-
-        self.frameStartDateTime = QFrame(self.scrollContent)
+        self.labelStartSchedule.setSizePolicy(sizePolicyScheduleLabel)
+        self.labelStartSchedule.setMinimumWidth(40)
+        self.labelStartSchedule.setWordWrap(False)
+        self.gridLayout_schedule.addWidget(self.labelStartSchedule, 1, 0, 1, 1)
+        self.frameStartDateTime = QFrame(self.tab_2)
         self.frameStartDateTime.setObjectName(u"frameStartDateTime")
-        self.frameStartDateTime.setFrameShape(QFrame.StyledPanel)
-        self.frameStartDateTime.setFrameShadow(QFrame.Raised)
+        self.frameStartDateTime.setFrameShape(QFrame.NoFrame)
+        self.frameStartDateTime.setMinimumHeight(26)
+        self.frameStartDateTime.setMaximumHeight(28)
         self.horizontalLayout_5 = QHBoxLayout(self.frameStartDateTime)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(4)
         self.startDate = QDateEdit(self.frameStartDateTime)
         self.startDate.setObjectName(u"startDate")
         self.startDate.setCalendarPopup(True)
-        self.scrollContent.setAutoFillBackground(True)
 
         self.horizontalLayout_5.addWidget(self.startDate)
 
@@ -224,19 +243,25 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_5.addWidget(self.startTime)
 
 
-        self.verticalLayout_11.addWidget(self.frameStartDateTime)
+        self.gridLayout_schedule.addWidget(self.frameStartDateTime, 1, 1, 1, 1)
 
-        self.labelStopSchedule = QLabel(self.scrollContent)
+        self.labelStopSchedule = QLabel(self.tab_2)
         self.labelStopSchedule.setObjectName(u"labelStopSchedule")
 
-        self.verticalLayout_11.addWidget(self.labelStopSchedule)
+        self.labelStopSchedule.setSizePolicy(sizePolicyScheduleLabel)
+        self.labelStopSchedule.setMinimumWidth(40)
+        self.labelStopSchedule.setWordWrap(False)
+        self.gridLayout_schedule.addWidget(self.labelStopSchedule, 3, 0, 1, 1)
 
-        self.frameStopDateTime = QFrame(self.scrollContent)
+        self.frameStopDateTime = QFrame(self.tab_2)
         self.frameStopDateTime.setObjectName(u"frameStopDateTime")
-        self.frameStopDateTime.setFrameShape(QFrame.StyledPanel)
-        self.frameStopDateTime.setFrameShadow(QFrame.Raised)
+        self.frameStopDateTime.setFrameShape(QFrame.NoFrame)
+        self.frameStopDateTime.setMinimumHeight(26)
+        self.frameStopDateTime.setMaximumHeight(28)
         self.horizontalLayout_6 = QHBoxLayout(self.frameStopDateTime)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_6.setSpacing(4)
         self.stopDate = QDateEdit(self.frameStopDateTime)
         self.stopDate.setObjectName(u"stopDate")
         self.stopDate.setCalendarPopup(True)
@@ -249,14 +274,17 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_6.addWidget(self.stopTime)
 
 
-        self.verticalLayout_11.addWidget(self.frameStopDateTime)
+        self.gridLayout_schedule.addWidget(self.frameStopDateTime, 3, 1, 1, 1)
 
-        self.frameStartStopPauseButtons = QFrame(self.scrollContent)
+        self.frameStartStopPauseButtons = QFrame(self.tab_2)
         self.frameStartStopPauseButtons.setObjectName(u"frameStartStopPauseButtons")
-        self.frameStartStopPauseButtons.setFrameShape(QFrame.StyledPanel)
-        self.frameStartStopPauseButtons.setFrameShadow(QFrame.Raised)
+        self.frameStartStopPauseButtons.setFrameShape(QFrame.NoFrame)
+        self.frameStartStopPauseButtons.setMinimumHeight(26)
+        self.frameStartStopPauseButtons.setMaximumHeight(30)
         self.horizontalLayout_3 = QHBoxLayout(self.frameStartStopPauseButtons)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setSpacing(4)
         self.startScheduleButton = QPushButton(self.frameStartStopPauseButtons)
         self.startScheduleButton.setObjectName(u"startScheduleButton")
 
@@ -273,13 +301,14 @@ class Ui_TimeStamping(object):
         self.horizontalLayout_3.addWidget(self.stopScheduleButton)
 
 
-        self.verticalLayout_11.addWidget(self.frameStartStopPauseButtons)
-        self.scrollScheduled.setWidget(self.scrollContent)
-        self.verticalLayoutScroll=QVBoxLayout(self.tab_2)
-        self.verticalLayoutScroll.addWidget(self.scrollScheduled)
-        self.verticalLayoutScroll.setContentsMargins(0, 0, 0, 0)
-        self.scrollScheduled.setFrameShape(QFrame.NoFrame)
+        self.gridLayout_schedule.addWidget(self.frameStartStopPauseButtons, 5, 0, 1, 2)
+        self.gridLayout_schedule.setColumnStretch(1, 1)
+        self.gridLayout_schedule.setRowStretch(0, 2)
+        self.gridLayout_schedule.setRowStretch(2, 1)
+        self.gridLayout_schedule.setRowStretch(4, 1)
+        self.gridLayout_schedule.setRowStretch(6, 2)
         self.tabStartStopTypes.addTab(self.tab_2, "")
+        ###############################################
         self.limitedMeasurementsFrame = QWidget()
         self.limitedMeasurementsFrame.setObjectName(u"limitedMeasurementsFrame")
         self.verticalLayout_12 = QVBoxLayout(self.limitedMeasurementsFrame)
@@ -603,6 +632,10 @@ class Ui_TimeStamping(object):
         self.tabStartStopTypes.setCurrentIndex(0)
         self.settingsForSpinBox()
         self.tableTimeStamp.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        self.styleScheduleCalendar(self.startDate)
+        self.styleScheduleCalendar(self.stopDate)
+        
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
@@ -618,18 +651,20 @@ class Ui_TimeStamping(object):
         """
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.enableChannelsLabel.setText(QCoreApplication.translate("Form", u"Enable Channels:", None))
-        self.enableChannelACheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel A", None))
-        self.enableChannelBCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel B", None))
-        self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel C", None))
-        self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"Enable Channel D", None))
+        self.enableChannelACheckBox.setText(QCoreApplication.translate("Form", u"A", None))
+        self.enableChannelBCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
+        self.enableChannelCCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
+        self.enableChannelDCheckBox.setText(QCoreApplication.translate("Form", u"D", None))
         self.showTableCheckBox.setText(QCoreApplication.translate("Form", u"Show table", None))
         self.saveDataAfterCompleteCheckBox.setText(QCoreApplication.translate("Form", u"Auto save data", None))
         self.startNormalButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.pauseNormalButton.setText(QCoreApplication.translate("Form", u"Pause", None))
         self.stopNormalButton.setText(QCoreApplication.translate("Form", u"Stop", None))
         self.tabStartStopTypes.setTabText(self.tabStartStopTypes.indexOf(self.tabNormalMeasurement), QCoreApplication.translate("Form", u"Manual", None))
-        self.labelStartSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time start measurement", None))
-        self.labelStopSchedule.setText(QCoreApplication.translate("Form", u"Schedule date time finish measurement", None))
+        self.labelStartSchedule.setText(QCoreApplication.translate("Form", u"Start:", None))
+        self.labelStartSchedule.setToolTip(QCoreApplication.translate("Form", u"Schedule date time start measurement", None))
+        self.labelStopSchedule.setText(QCoreApplication.translate("Form", u"Finish:", None))
+        self.labelStopSchedule.setToolTip(QCoreApplication.translate("Form", u"Schedule date time finish measurement", None))
         self.startScheduleButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.pauseScheduleButton.setText(QCoreApplication.translate("Form", u"Pause", None))
         self.stopScheduleButton.setText(QCoreApplication.translate("Form", u"Stop", None))
@@ -730,3 +765,114 @@ class Ui_TimeStamping(object):
         self.numberMeasurementsSpinBox.setMinimum(1)
         self.numberMeasurementsSpinBox.setMaximum(2**28)
         self.numberMeasurementsSpinBox.setValue(1000)
+
+    def styleScheduleCalendar(self, dateEdit):
+        """
+        Applies grayscale tones to the QCalendarWidget popup of a
+        QDateEdit (startDate / stopDate), and swaps the default green
+        prev/next-month icons for chevrons. The weekday format is set
+        before the stylesheet since Qt hardcodes weekend colors at
+        render time, and the icon/text swap runs after it since
+        applying it can repolish and overwrite icons.
+
+        :param dateEdit: QDateEdit whose calendar popup should be restyled.
+        :return: None
+        """
+        calendar = dateEdit.calendarWidget()
+        if calendar is None:
+            return
+
+        calendar.setVerticalHeaderFormat(QCalendarWidget.NoVerticalHeader)
+        calendar.setGridVisible(False)
+
+        neutralFormat = QTextCharFormat()
+        neutralFormat.setForeground(QColor("#3c3c3c"))
+        calendar.setWeekdayTextFormat(Qt.Saturday, neutralFormat)
+        calendar.setWeekdayTextFormat(Qt.Sunday, neutralFormat)
+
+        calendar.setStyleSheet(u"""
+            QCalendarWidget {
+                background-color: #ffffff;
+                border: 1px solid #c9c9c9;
+                border-radius: 4px;
+            }
+            QCalendarWidget QWidget#qt_calendar_navigationbar {
+                background-color: #f2f2f2;
+                border-bottom: 1px solid #d9d9d9;
+            }
+            QCalendarWidget QToolButton {
+                background-color: transparent;
+                color: #3c3c3c;
+                font-weight: bold;
+                font-size: 14px;
+                border: none;
+                border-radius: 3px;
+                margin: 4px 2px;
+                padding: 4px 10px;
+            }
+            QCalendarWidget QToolButton:hover {
+                background-color: #e2e2e2;
+            }
+            QCalendarWidget QToolButton:pressed {
+                background-color: #d0d0d0;
+            }
+            QCalendarWidget QToolButton::menu-indicator {
+                image: none;
+                width: 0px;
+            }
+            QCalendarWidget QToolButton#qt_calendar_prevmonth,
+            QCalendarWidget QToolButton#qt_calendar_nextmonth {
+                min-width: 22px;
+                min-height: 22px;
+            }
+            QCalendarWidget QToolButton#qt_calendar_monthbutton,
+            QCalendarWidget QToolButton#qt_calendar_yearbutton {
+                color: #2b2b2b;
+                font-family: "Segoe UI", Arial, sans-serif;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            QCalendarWidget QMenu {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                border: 1px solid #c9c9c9;
+            }
+            QCalendarWidget QMenu::item:selected {
+                background-color: #e2e2e2;
+            }
+            QCalendarWidget QSpinBox {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                border: 1px solid #c9c9c9;
+                border-radius: 3px;
+                padding: 2px 4px;
+                selection-background-color: #d0d0d0;
+            }
+            QCalendarWidget QAbstractItemView {
+                background-color: #ffffff;
+                color: #3c3c3c;
+                selection-background-color: #595959;
+                selection-color: #ffffff;
+                outline: 0px;
+                gridline-color: #ececec;
+            }
+            QCalendarWidget QAbstractItemView:disabled {
+                color: #bfbfbf;
+            }
+            QCalendarWidget QTableView {
+                border: none;
+            }
+            QCalendarWidget QWidget {
+                alternate-background-color: #f7f7f7;
+            }
+        """)
+
+        prevButton = calendar.findChild(QToolButton, "qt_calendar_prevmonth")
+        if prevButton is not None:
+            prevButton.setIcon(QIcon())
+            prevButton.setText(u"\u2039")
+
+        nextButton = calendar.findChild(QToolButton, "qt_calendar_nextmonth")
+        if nextButton is not None:
+            nextButton.setIcon(QIcon())
+            nextButton.setText(u"\u203A")

@@ -57,20 +57,14 @@ class Ui_CountsEstimated(object):
         self.GraphicSettingFrame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout = QHBoxLayout(self.GraphicSettingFrame)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.scrollSettings=QScrollArea(self.GraphicSettingFrame)
-        self.scrollSettings.setFrameShape(QFrame.NoFrame)
-        self.SettingsFrame = QFrame()
+        
+        self.SettingsFrame = QFrame(self.GraphicSettingFrame)
         self.SettingsFrame.setObjectName(u"SettingsFrame")
-        self.scrollSettings.setWidgetResizable(True)  
-        self.scrollSettings.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollSettings.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(4)
-        sizePolicy1.setVerticalStretch(0)
-        self.scrollSettings.setSizePolicy(sizePolicy1)
+        
         sizePolicySettings= QSizePolicy(QSizePolicy.Preferred,QSizePolicy.Preferred)
+        sizePolicySettings.setHorizontalStretch(4)
+        sizePolicySettings.setVerticalStretch(0)
         sizePolicySettings.setHeightForWidth(self.SettingsFrame.sizePolicy().hasHeightForWidth())
-        self.SettingsFrame.setMinimumWidth(0)
         self.SettingsFrame.setFrameShape(QFrame.StyledPanel)
         self.SettingsFrame.setFrameShadow(QFrame.Plain)
         self.SettingsFrame.setSizePolicy(sizePolicySettings)
@@ -97,20 +91,31 @@ class Ui_CountsEstimated(object):
             self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         else:
             self.horizontalLayout_3.setContentsMargins(8,4,8,4)
+
+        defaultChannelCheckBoxSpacing = self.horizontalLayout_3.spacing()
+        if defaultChannelCheckBoxSpacing <= 0:
+            defaultChannelCheckBoxSpacing = 6
+        self.horizontalLayout_3.setSpacing(max(1, defaultChannelCheckBoxSpacing // 2))
         self.channelACheckBox = QCheckBox(self.frame_7)
-        self.channelACheckBox.setObjectName(u"channelACheckBox")
 
         self.horizontalLayout_3.addWidget(self.channelACheckBox)
+
+        # NOTE: previously created/added as C-then-B (with their setText()
+        # calls swapped to compensate), so the checkbox object named
+        # channelBCheckBox displayed "C" and channelCCheckBox displayed
+        # "B" — any code reading self.channelBCheckBox.isChecked() to mean
+        # "channel B" was actually reading the checkbox the user sees
+        # labelled "C". Creating/adding them in true A-B-C-D order fixes
+        # that mismatch; see the corresponding setText() calls below.
+        self.channelBCheckBox = QCheckBox(self.frame_7)
+        self.channelBCheckBox.setObjectName(u"channelBCheckBox")
+
+        self.horizontalLayout_3.addWidget(self.channelBCheckBox)
 
         self.channelCCheckBox = QCheckBox(self.frame_7)
         self.channelCCheckBox.setObjectName(u"channelCCheckBox")
 
         self.horizontalLayout_3.addWidget(self.channelCCheckBox)
-
-        self.channelBCheckBox = QCheckBox(self.frame_7)
-        self.channelBCheckBox.setObjectName(u"channelBCheckBox")
-
-        self.horizontalLayout_3.addWidget(self.channelBCheckBox)
 
         self.channelDCheckBox = QCheckBox(self.frame_7)
         self.channelDCheckBox.setObjectName(u"channelDCheckBox")
@@ -148,88 +153,36 @@ class Ui_CountsEstimated(object):
         self.stopMeasurementButton.setObjectName(u"stopMeasurementButton")
 
         self.horizontalLayout_4.addWidget(self.stopMeasurementButton)
+        self.TimeAndGraphFrame = QFrame(self.SettingsFrame)
+        self.TimeAndGraphFrame.setObjectName(u"TimeAndGraphFrame")
 
+        timeAndGraphSizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
+        timeAndGraphSizePolicy.setHeightForWidth(self.TimeAndGraphFrame.sizePolicy().hasHeightForWidth())
+        self.TimeAndGraphFrame.setSizePolicy(timeAndGraphSizePolicy)
 
-        self.grapLabel = QLabel(self.SettingsFrame)
-        self.grapLabel.setObjectName(u"grapLabel")
-
-        self.verticalLayout_2.addWidget(self.grapLabel)
-
-        self.SelectGraphFrame = QFrame(self.SettingsFrame)
-        self.SelectGraphFrame.setObjectName(u"SelectGraphFrame")
         if os.name=="posix":
-            self.SelectGraphFrame.setFrameShape(QFrame.NoFrame)
-            self.SelectGraphFrame.setFrameShadow(QFrame.Plain)
-            self.SelectGraphFrame.setLineWidth(0)
-            self.SelectGraphFrame.setMidLineWidth(0)
+            self.TimeAndGraphFrame.setFrameShape(QFrame.NoFrame)
+            self.TimeAndGraphFrame.setFrameShadow(QFrame.Plain)
+            self.TimeAndGraphFrame.setLineWidth(0)
+            self.TimeAndGraphFrame.setMidLineWidth(0)
         else:
-            self.SelectGraphFrame.setFrameShape(QFrame.StyledPanel)
-            self.SelectGraphFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_5 = QHBoxLayout(self.SelectGraphFrame)
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+            self.TimeAndGraphFrame.setFrameShape(QFrame.StyledPanel)
+            self.TimeAndGraphFrame.setFrameShadow(QFrame.Raised)
+        self.gridLayoutTimeGraph = QGridLayout(self.TimeAndGraphFrame)
+        self.gridLayoutTimeGraph.setObjectName(u"gridLayoutTimeGraph")
+
         if os.name=="posix":
-            self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+            self.gridLayoutTimeGraph.setContentsMargins(0, 1, 0, 4)
         else:
-            self.horizontalLayout_5.setContentsMargins(8,4,8,4)
-        self.mergeGraphicButton = QRadioButton(self.SelectGraphFrame)
-        self.mergeGraphicButton.setObjectName(u"mergeGraphicButton")
+            self.gridLayoutTimeGraph.setContentsMargins(8, 1, 8, 4)
 
-        self.horizontalLayout_5.addWidget(self.mergeGraphicButton)
+        self.gridLayoutTimeGraph.setVerticalSpacing(12)
 
-        self.separateGraphicButton = QRadioButton(self.SelectGraphFrame)
-        self.separateGraphicButton.setObjectName(u"separateGraphicButton")
-
-        self.horizontalLayout_5.addWidget(self.separateGraphicButton)
-        
-        self.apartDialogGraphicButton = QRadioButton(self.SelectGraphFrame)
-        self.apartDialogGraphicButton.setObjectName(u"apartDialogGraphicButton")
-        self.horizontalLayout_5.addWidget(self.apartDialogGraphicButton)
-
-
-        self.verticalLayout_2.addWidget(self.SelectGraphFrame)
-        self.tableLabel= QLabel(self.SettingsFrame)
-        self.tableLabel.setText("Detached:")
-        self.verticalLayout_2.addWidget(self.tableLabel)
-
-        #FrameDeatached
-        self.tableDeatachedFrame= QFrame(self.SettingsFrame)
-        self.verticalLayout_2.addWidget(self.tableDeatachedFrame)
-        #Horizontallayout
-        self.horizontalLayoutDeatached= QHBoxLayout(self.tableDeatachedFrame)
-        if os.name=="posix":
-            self.horizontalLayoutDeatached.setContentsMargins(0, 0, 0, 0)
-        else:
-            self.horizontalLayoutDeatached.setContentsMargins(8,4,8,4)
-        #CheckBoxDeatached Table 
-        self.tableCheckBox= QCheckBox()
-        self.tableCheckBox.setText("Detached table")
-        self.horizontalLayoutDeatached.addWidget(self.tableCheckBox)
-        #CheckBoxDeatached Labels
-        self.labelCheckBox= QCheckBox()
-        self.labelCheckBox.setText("Detached current mearument")
-        self.horizontalLayoutDeatached.addWidget(self.labelCheckBox)
-        self.timeRangeLabel = QLabel(self.SettingsFrame)
+        self.timeRangeLabel = QLabel(self.TimeAndGraphFrame)
         self.timeRangeLabel.setObjectName(u"timeRangeLabel")
+        self.gridLayoutTimeGraph.addWidget(self.timeRangeLabel, 0, 0)
 
-        self.verticalLayout_2.addWidget(self.timeRangeLabel)
-
-        self.ComboBoxTimeRangeFrame = QFrame(self.SettingsFrame)
-        self.ComboBoxTimeRangeFrame.setObjectName(u"ComboBoxTimeRangeFrame")
-        if os.name=="posix":
-            self.ComboBoxTimeRangeFrame.setFrameShape(QFrame.NoFrame)
-            self.ComboBoxTimeRangeFrame.setFrameShadow(QFrame.Plain)
-            self.ComboBoxTimeRangeFrame.setLineWidth(0)
-            self.ComboBoxTimeRangeFrame.setMidLineWidth(0)
-        else:
-            self.ComboBoxTimeRangeFrame.setFrameShape(QFrame.StyledPanel)
-            self.ComboBoxTimeRangeFrame.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_6 = QHBoxLayout(self.ComboBoxTimeRangeFrame)
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        if os.name=="posix":
-            self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
-        else:
-            self.horizontalLayout_6.setContentsMargins(8,4,8,4)
-        self.comboBoxTimeRange = QComboBox(self.ComboBoxTimeRangeFrame)
+        self.comboBoxTimeRange = QComboBox(self.TimeAndGraphFrame)
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
@@ -240,16 +193,52 @@ class Ui_CountsEstimated(object):
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.addItem("")
         self.comboBoxTimeRange.setObjectName(u"comboBoxTimeRange")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy2.setHorizontalStretch(5)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.comboBoxTimeRange.sizePolicy().hasHeightForWidth())
-        self.comboBoxTimeRange.setSizePolicy(sizePolicy2)
 
-        self.horizontalLayout_6.addWidget(self.comboBoxTimeRange)
+        comboBoxSizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        comboBoxSizePolicy.setHorizontalStretch(5)
+        comboBoxSizePolicy.setVerticalStretch(0)
+        comboBoxSizePolicy.setHeightForWidth(self.comboBoxTimeRange.sizePolicy().hasHeightForWidth())
+        self.comboBoxTimeRange.setSizePolicy(comboBoxSizePolicy)
+        self.gridLayoutTimeGraph.addWidget(self.comboBoxTimeRange, 0, 1)
+
+        self.graphLabel = QLabel(self.TimeAndGraphFrame)
+        self.graphLabel.setObjectName(u"graphLabel")
+        self.gridLayoutTimeGraph.addWidget(self.graphLabel, 1, 0)
 
 
-        self.verticalLayout_2.addWidget(self.ComboBoxTimeRangeFrame)
+        self.graphModeComboBox = QComboBox(self.TimeAndGraphFrame)
+        self.graphModeComboBox.setObjectName(u"graphModeComboBox")
+        self.graphModeComboBox.addItem("")
+        self.graphModeComboBox.addItem("")
+        self.graphModeComboBox.addItem("")
+        self.graphModeComboBox.setSizePolicy(comboBoxSizePolicy)
+        self.gridLayoutTimeGraph.addWidget(self.graphModeComboBox, 1, 1)
+
+        self.gridLayoutTimeGraph.setColumnStretch(1, 1)
+
+        self.verticalLayout_2.addWidget(self.TimeAndGraphFrame)
+
+        self.tableLabel= QLabel(self.SettingsFrame)
+        self.tableLabel.setText("Detached:")
+        self.verticalLayout_2.addWidget(self.tableLabel)
+
+
+        self.tableDeatachedFrame = QFrame(self.SettingsFrame)
+        self.verticalLayout_2.addWidget(self.tableDeatachedFrame)
+
+        self.horizontalLayoutDeatached = QHBoxLayout(self.tableDeatachedFrame)
+        if os.name=="posix":
+            self.horizontalLayoutDeatached.setContentsMargins(0, 0, 0, 0) 
+        else:
+            self.horizontalLayoutDeatached.setContentsMargins(8,1,8,1)
+
+        self.tableCheckBox = QCheckBox(self.tableDeatachedFrame)
+        self.tableCheckBox.setText("Table")
+        self.horizontalLayoutDeatached.addWidget(self.tableCheckBox)
+
+        self.labelCheckBox = QCheckBox()
+        self.labelCheckBox.setText("Current measurement")
+        self.horizontalLayoutDeatached.addWidget(self.labelCheckBox)
 
         self.clearLabel = QLabel(self.SettingsFrame)
         self.clearLabel.setObjectName(u"clearLabel")
@@ -326,8 +315,7 @@ class Ui_CountsEstimated(object):
 
         self.verticalLayout_2.addWidget(self.SaveDataPlotsFrame)
 
-        self.scrollSettings.setWidget(self.SettingsFrame)
-        self.horizontalLayout.addWidget(self.scrollSettings)
+        self.horizontalLayout.addWidget(self.SettingsFrame)
 
         self.GraphicsFrame = QFrame(self.GraphicSettingFrame)
         self.GraphicsFrame.setObjectName(u"GraphicsFrame")
@@ -572,6 +560,7 @@ class Ui_CountsEstimated(object):
             boton.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.retranslateUi(Form)
         self.comboBoxTimeRange.setMinimumHeight(21)
+        self.graphModeComboBox.setMinimumHeight(21)
         self.ChannelACountValues.setVisible(False)
         self.ChannelBCountValues.setVisible(False)
         self.ChannelCCountValues.setVisible(False)
@@ -625,6 +614,36 @@ class Ui_CountsEstimated(object):
 
         QMetaObject.connectSlotsByName(Form)
         self.drawColorPoint()
+
+        # ── Explicit Tab order ───────────────────────────────────────────
+        # Same class of bug as in the other measurement tabs: Start/Stop
+        # (startMeasurementButton/stopMeasurementButton) are *created*
+        # right after the channel checkboxes, but only *added* to
+        # verticalLayout_2 at the very end — after Graph mode, Detached
+        # options, Time range, and the per-channel Clear buttons — so
+        # they render near the bottom, just above Save Data/Save Plots.
+        # Left to Qt's default (creation-order) focus chain, Tab from the
+        # last channel checkbox jumped straight down to Start/Stop before
+        # ever reaching the Graph/Detached/Time range/Clear controls in
+        # between. Chain everything explicitly to match the real
+        # on-screen order.
+        QWidget.setTabOrder(self.channelACheckBox, self.channelBCheckBox)
+        QWidget.setTabOrder(self.channelBCheckBox, self.channelCCheckBox)
+        QWidget.setTabOrder(self.channelCCheckBox, self.channelDCheckBox)
+        QWidget.setTabOrder(self.channelDCheckBox, self.comboBoxTimeRange)
+        QWidget.setTabOrder(self.comboBoxTimeRange, self.graphModeComboBox)
+        QWidget.setTabOrder(self.graphModeComboBox, self.tableCheckBox)
+        QWidget.setTabOrder(self.tableCheckBox, self.labelCheckBox)
+        QWidget.setTabOrder(self.labelCheckBox, self.channelAClearButton)
+        QWidget.setTabOrder(self.channelAClearButton, self.channelBClearButton)
+        QWidget.setTabOrder(self.channelBClearButton, self.channelCClearButton)
+        QWidget.setTabOrder(self.channelCClearButton, self.channelDClearButton)
+        QWidget.setTabOrder(self.channelDClearButton, self.startMeasurementButton)
+        QWidget.setTabOrder(self.startMeasurementButton, self.stopMeasurementButton)
+        QWidget.setTabOrder(self.stopMeasurementButton, self.saveDataButton)
+        QWidget.setTabOrder(self.saveDataButton, self.savePlotsButton)
+        QWidget.setTabOrder(self.savePlotsButton, self.countValuesTable)
+        QWidget.setTabOrder(self.countValuesTable, self.helpButton)
     # setupUi
 
     def retranslateUi(self, Form):
@@ -642,15 +661,15 @@ class Ui_CountsEstimated(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.channelLabel.setText(QCoreApplication.translate("Form", u"Channels:", None))
         self.channelACheckBox.setText(QCoreApplication.translate("Form", u"A", None))
-        self.channelCCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
-        self.channelBCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
+        self.channelBCheckBox.setText(QCoreApplication.translate("Form", u"B", None))
+        self.channelCCheckBox.setText(QCoreApplication.translate("Form", u"C", None))
         self.channelDCheckBox.setText(QCoreApplication.translate("Form", u"D", None))
         self.startMeasurementButton.setText(QCoreApplication.translate("Form", u"Start", None))
         self.stopMeasurementButton.setText(QCoreApplication.translate("Form", u"Stop", None))
-        self.grapLabel.setText(QCoreApplication.translate("Form", u"Graph:", None))
-        self.mergeGraphicButton.setText(QCoreApplication.translate("Form", u"Merge graphics", None))
-        self.separateGraphicButton.setText(QCoreApplication.translate("Form", u"Separate graphics", None))
-        self.apartDialogGraphicButton.setText(QCoreApplication.translate("Form", u"Detached Graphics", None))
+        self.graphLabel.setText(QCoreApplication.translate("Form", u"Graph:", None))
+        self.graphModeComboBox.setItemText(0, QCoreApplication.translate("Form", u"Merge", None))
+        self.graphModeComboBox.setItemText(1, QCoreApplication.translate("Form", u"Separate", None))
+        self.graphModeComboBox.setItemText(2, QCoreApplication.translate("Form", u"Detached", None))
         self.timeRangeLabel.setText(QCoreApplication.translate("Form", u"Time range:", None))
         self.comboBoxTimeRange.setItemText(0, QCoreApplication.translate("Form", u"10 seconds", None))
         self.comboBoxTimeRange.setItemText(1, QCoreApplication.translate("Form", u"20 seconds", None))
@@ -706,8 +725,7 @@ class Ui_CountsEstimated(object):
         ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"D", None))
         ___qtablewidgetitem4.setFont(font_bold)
         self.countValuesTable.setHorizontalHeaderItem(4, ___qtablewidgetitem4)
-        self.separateGraphicButton.setChecked(True)
-        self.mergeGraphicButton.setChecked(False)
+        self.graphModeComboBox.setCurrentIndex(1)  # Default to "Separate" graphics mode
     # retranslateUi
     def drawColorPoint(self):
         """

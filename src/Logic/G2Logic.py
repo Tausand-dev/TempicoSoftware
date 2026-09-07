@@ -1456,8 +1456,12 @@ class G2Logic:
 
         # Format selection dialog (same structure as FCSLogic)
         dialog = QDialog(self.parent)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         dialog.setWindowTitle("Save")
+        dialog.setMinimumWidth(260)
         vlay = QVBoxLayout(dialog)
+        vlay.setContentsMargins(20, 20, 20, 20)
+        vlay.setSpacing(10)
         vlay.addWidget(QLabel("Select the text format:"))
         fmt_box = QComboBox(dialog)
         fmt_box.addItem("txt")
@@ -1550,8 +1554,12 @@ class G2Logic:
             folder_path      = dataFolderPrefix["saveFolder"]
 
             dialog = QDialog(self.parent)
+            dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
             dialog.setWindowTitle("Save plot")
+            dialog.setMinimumWidth(260)
             vlay = QVBoxLayout(dialog)
+            vlay.setContentsMargins(20, 20, 20, 20)
+            vlay.setSpacing(10)
             vlay.addWidget(QLabel("Select the image format:"))
             fmt_box = QComboBox(dialog)
             fmt_box.addItem("png")
