@@ -117,6 +117,7 @@ class LifeTimeLogic():
         #Add Labels
         self.plotLifeTime.setLabel('left','Counts')
         self.plotLifeTime.setLabel('bottom','Time')
+        self.plotLifeTime.addLegend(offset=(0, 10))
         self.plotLifeTime.addLegend()
         self.graphicLayout.addWidget(self.winLifeTime)
         self.curve = self.plotLifeTime.plot(pen='b',  name='Data')
