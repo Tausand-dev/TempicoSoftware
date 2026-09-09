@@ -346,7 +346,7 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.scrollArea= QScrollArea(self.CountTableFrame)
         sizePolicyScrollArea= QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicyScrollArea.setHorizontalStretch(4)
+        sizePolicyScrollArea.setHorizontalStretch(3)
         sizePolicyScrollArea.setVerticalStretch(3)
         sizePolicyScrollArea.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
         self.scrollArea.setWidgetResizable(True)
@@ -356,7 +356,7 @@ class Ui_CountsEstimated(object):
         self.CountsFrame = QFrame(self.scrollArea)
         self.CountsFrame.setObjectName(u"CountsFrame")
         sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy5.setHorizontalStretch(4)
+        sizePolicy5.setHorizontalStretch(2)
         sizePolicy5.setVerticalStretch(3)
         sizePolicy5.setHeightForWidth(self.CountsFrame.sizePolicy().hasHeightForWidth())
         self.CountsFrame.setSizePolicy(sizePolicy5)
@@ -477,7 +477,7 @@ class Ui_CountsEstimated(object):
         self.TableFrame = QFrame(self.CountTableFrame)
         self.TableFrame.setObjectName(u"TableFrame")
         sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy6.setHorizontalStretch(6)
+        sizePolicy6.setHorizontalStretch(5)
         sizePolicy6.setVerticalStretch(9)
         sizePolicy6.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
         self.TableFrame.setSizePolicy(sizePolicy6)
@@ -527,7 +527,8 @@ class Ui_CountsEstimated(object):
         self.labelStatus = QLabel("Status:", self.statusFrame)
         self.labelState = QLabel("No running", self.statusFrame)
         self.labelColor = QLabel("N", self.statusFrame)
-        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("Estimating number stops in channel A 100%").width())  # Add some padding
+        self.setFontSizeToLabels(8, self.labelStatus, self.labelState)
+        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("Estimating number stops in  channel A 100%").width())  # Add some padding
         self.helpButton= QPushButton("Help",self.statusFrame)
         #Create Help button
 
@@ -574,7 +575,7 @@ class Ui_CountsEstimated(object):
         self.ChannelBCountValues.setVisible(False)
         self.ChannelCCountValues.setVisible(False)
         self.ChannelDCountValues.setVisible(False)
-        self.setFontSizeToLabels(12,
+        self.setFontSizeToLabels(10,
         self.titleCounts,
         self.channelAValuesCount,
         self.channelBValuesCount,
@@ -586,6 +587,18 @@ class Ui_CountsEstimated(object):
         self.channelDUncertaintyCount,
         self.titleUncertainty
         )
+
+        for label in (self.channelAValuesCount,
+                       self.channelBValuesCount,
+                       self.channelCValuesCount,
+                       self.channelDValuesCount,
+                       self.channelAUncertaintyCount,
+                       self.channelBUncertaintyCount,
+                       self.channelCUncertaintyCount,
+                       self.channelDUncertaintyCount,
+
+        ):
+            label.setMinimumWidth(label.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding        
         self.titleCounts.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.titleUncertainty.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self.channelAValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
