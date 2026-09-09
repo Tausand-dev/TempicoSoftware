@@ -392,7 +392,6 @@ class Ui_CountsEstimated(object):
         self.channelAValuesCount = QLabel(self.ChannelACountValues)
         self.channelAValuesCount.setObjectName(u"channelAValuesCount")
         self.channelAValuesCount.setMinimumWidth(self.channelAValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
-        
 
         self.horizontalLayout_11.addWidget(self.channelAValuesCount)
 
@@ -423,7 +422,7 @@ class Ui_CountsEstimated(object):
 
         self.channelBUncertaintyCount = QLabel(self.ChannelBCountValues)
         self.channelBUncertaintyCount.setObjectName(u"channelBUncertaintyCount")
-        self.channelBUncertaintyCount.setMinimumWidth(self.channelBUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width()) 
+        self.channelBUncertaintyCount.setMinimumWidth(self.channelBUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
         self.horizontalLayout_12.addWidget(self.channelBUncertaintyCount)
 
 
@@ -438,7 +437,7 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.channelCValuesCount = QLabel(self.ChannelCCountValues)
         self.channelCValuesCount.setObjectName(u"channelCValuesCount")
-        self.channelCValuesCount.setMinimumWidth(self.channelCValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
+
         self.horizontalLayout_13.addWidget(self.channelCValuesCount)
 
         self.channelCUncertaintyCount = QLabel(self.ChannelCCountValues)
@@ -459,7 +458,7 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.channelDValuesCount = QLabel(self.ChannelDCountValues)
         self.channelDValuesCount.setObjectName(u"channelDValuesCount")
-        self.channelDValuesCount.setMinimumWidth(self.channelDValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
+
         self.horizontalLayout_14.addWidget(self.channelDValuesCount)
 
         self.channelDUncertaintyCount = QLabel(self.ChannelDCountValues)
@@ -528,7 +527,7 @@ class Ui_CountsEstimated(object):
         self.labelStatus = QLabel("Status:", self.statusFrame)
         self.labelState = QLabel("No running", self.statusFrame)
         self.labelColor = QLabel("N", self.statusFrame)
-        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("The channels A, B, C, D are not taking measurements").width())  # Add some padding
+        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("Estimating number stops in channel A 100%").width())  # Add some padding
         self.helpButton= QPushButton("Help",self.statusFrame)
         #Create Help button
 
