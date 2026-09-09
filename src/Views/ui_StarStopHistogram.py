@@ -77,10 +77,11 @@ class Ui_HistogramaStartStop(object):
         self.GraphConfigurationArea = QWidget(HistogramaStartStop)
         self.GraphConfigurationArea.setObjectName(u"GraphConfigurationArea")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(3)
+        sizePolicy1.setHorizontalStretch(9)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.GraphConfigurationArea.sizePolicy().hasHeightForWidth())
         self.GraphConfigurationArea.setSizePolicy(sizePolicy1)
+        self.GraphConfigurationArea.setMinimumWidth(260)
         self.GraphConfigurationArea.setAutoFillBackground(True)
         self.verticalLayout = QVBoxLayout(self.GraphConfigurationArea)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -287,7 +288,7 @@ class Ui_HistogramaStartStop(object):
 
         #Add size policy
         sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy4.setHorizontalStretch(8)
+        sizePolicy4.setHorizontalStretch(18)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.TotalGraphicArea.sizePolicy().hasHeightForWidth())
         self.TotalGraphicArea.setSizePolicy(sizePolicy4)
@@ -372,7 +373,8 @@ class Ui_HistogramaStartStop(object):
         
         #End Status Label      
         self.horizontalLayout.addWidget(self.TotalGraphicArea)
-        
+        self.horizontalLayout.setStretch(0, 9)
+        self.horizontalLayout.setStretch(1, 18)
         self.retranslateUi(HistogramaStartStop)
         QMetaObject.connectSlotsByName(HistogramaStartStop)
         self.ClearchannelA.setEnabled(False)
