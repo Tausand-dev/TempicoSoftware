@@ -9,7 +9,7 @@
 ################################################################################
 
 from PySide2.QtCore import Qt, QMetaObject, QCoreApplication
-from PySide2.QtWidgets import QHBoxLayout, QFrame, QSizePolicy, QVBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QTableWidget, QTableWidgetItem
+from PySide2.QtWidgets import QHBoxLayout, QFrame, QSizePolicy, QVBoxLayout, QLabel, QComboBox, QSpinBox, QPushButton, QTableWidget, QTableWidgetItem, QSplitter
 from PySide2.QtGui import QPixmap, QPainter, QColor
 import io
 import sys
@@ -48,6 +48,10 @@ class UiLifeTime(object):
         #self.chargePixMaps()
         self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.mainSplitter = QSplitter(Qt.Horizontal, Form)
+        self.mainSplitter.setObjectName(u"mainSplitter")
+        self.mainSplitter.setChildrenCollapsible(False)
+        self.horizontalLayout.addWidget(self.mainSplitter)
         self.ConfigurationRunParameters = QFrame(Form)
         self.ConfigurationRunParameters.setObjectName(u"ConfigurationRunParameters")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -258,6 +262,8 @@ class UiLifeTime(object):
         self.totalMeasurementsValue = QLabel(self.totalMeasurementsFrame)
         self.totalMeasurementsValue.setObjectName(u"totalMeasurementsValue")
 
+        self.totalMeasurementsValue.setMinimumWidth(self.totalMeasurementsValue.fontMetrics().boundingRect("No measurement running").width())
+
         self.horizontalLayout_5.addWidget(self.totalMeasurementsValue)
 
 
@@ -276,7 +282,7 @@ class UiLifeTime(object):
 
         self.totalStartsValue = QLabel(self.totalStartsFrame)
         self.totalStartsValue.setObjectName(u"totalStartsValue")
-
+        self.totalStartsValue.setMinimumWidth(self.totalStartsValue.fontMetrics().boundingRect("No measurement running").width())
         self.horizontalLayout_6.addWidget(self.totalStartsValue)
 
 
@@ -295,7 +301,7 @@ class UiLifeTime(object):
 
         self.totalStopsValue = QLabel(self.totalStopsFrame)
         self.totalStopsValue.setObjectName(u"totalStopsValue")
-
+        self.totalStopsValue.setMinimumWidth(self.totalStopsValue.fontMetrics().boundingRect("No measurement running").width())
         self.horizontalLayout_7.addWidget(self.totalStopsValue)
 
 
@@ -305,7 +311,7 @@ class UiLifeTime(object):
         self.verticalLayout.addWidget(self.runParameters)
 
 
-        self.horizontalLayout.addWidget(self.ConfigurationRunParameters)
+        self.mainSplitter.addWidget(self.ConfigurationRunParameters)
 
         self.fitGraphicStatusFrame = QFrame(Form)
         self.fitGraphicStatusFrame.setObjectName(u"fitGraphicStatusFrame")
@@ -517,6 +523,7 @@ class UiLifeTime(object):
         sizePolicy13.setVerticalStretch(0)
         sizePolicy13.setHeightForWidth(self.statusValue.sizePolicy().hasHeightForWidth())
         self.statusValue.setSizePolicy(sizePolicy13)
+        self.statusValue.setMinimumWidth(self.statusValue.fontMetrics().boundingRect("Measurement running: 100.0").width())
 
         self.horizontalLayout_11.addWidget(self.statusValue)
 
@@ -534,7 +541,10 @@ class UiLifeTime(object):
         self.verticalLayout_2.addWidget(self.statusFrame)
 
 
-        self.horizontalLayout.addWidget(self.fitGraphicStatusFrame)
+        self.mainSplitter.addWidget(self.fitGraphicStatusFrame)
+        self.mainSplitter.setStretchFactor(0, 3)
+        self.mainSplitter.setStretchFactor(1, 7)
+        self.mainSplitter.setSizes([300, 700])
 
 
         self.retranslateUi(Form)
