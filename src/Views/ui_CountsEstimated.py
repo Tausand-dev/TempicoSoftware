@@ -391,8 +391,14 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.channelAValuesCount = QLabel(self.ChannelACountValues)
         self.channelAValuesCount.setObjectName(u"channelAValuesCount")
+        self.channelAValuesCount.setMinimumWidth(self.channelAValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
+        
 
         self.horizontalLayout_11.addWidget(self.channelAValuesCount)
+
+        self.channelAUncertaintyCount = QLabel(self.ChannelACountValues)
+        self.channelAUncertaintyCount.setObjectName(u"channelAUncertaintyCount")
+        self.channelAUncertaintyCount.setMinimumWidth(self.channelAUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.channelAUncertaintyCount = QLabel(self.ChannelACountValues)
         self.channelAUncertaintyCount.setObjectName(u"channelAUncertaintyCount")
@@ -411,12 +417,13 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.channelBValuesCount = QLabel(self.ChannelBCountValues)
         self.channelBValuesCount.setObjectName(u"channelBValuesCount")
+        self.channelBValuesCount.setMinimumWidth(self.channelBValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.horizontalLayout_12.addWidget(self.channelBValuesCount)
 
         self.channelBUncertaintyCount = QLabel(self.ChannelBCountValues)
         self.channelBUncertaintyCount.setObjectName(u"channelBUncertaintyCount")
-
+        self.channelBUncertaintyCount.setMinimumWidth(self.channelBUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width()) 
         self.horizontalLayout_12.addWidget(self.channelBUncertaintyCount)
 
 
@@ -431,11 +438,12 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.channelCValuesCount = QLabel(self.ChannelCCountValues)
         self.channelCValuesCount.setObjectName(u"channelCValuesCount")
-
+        self.channelCValuesCount.setMinimumWidth(self.channelCValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
         self.horizontalLayout_13.addWidget(self.channelCValuesCount)
 
         self.channelCUncertaintyCount = QLabel(self.ChannelCCountValues)
         self.channelCUncertaintyCount.setObjectName(u"channelCUncertaintyCount")
+        self.channelCUncertaintyCount.setMinimumWidth(self.channelCUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding   
 
         self.horizontalLayout_13.addWidget(self.channelCUncertaintyCount)
 
@@ -451,11 +459,12 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.channelDValuesCount = QLabel(self.ChannelDCountValues)
         self.channelDValuesCount.setObjectName(u"channelDValuesCount")
-
+        self.channelDValuesCount.setMinimumWidth(self.channelDValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
         self.horizontalLayout_14.addWidget(self.channelDValuesCount)
 
         self.channelDUncertaintyCount = QLabel(self.ChannelDCountValues)
         self.channelDUncertaintyCount.setObjectName(u"channelDUncertaintyCount")
+        self.channelDUncertaintyCount.setMinimumWidth(self.channelDUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.horizontalLayout_14.addWidget(self.channelDUncertaintyCount)
 
@@ -519,6 +528,7 @@ class Ui_CountsEstimated(object):
         self.labelStatus = QLabel("Status:", self.statusFrame)
         self.labelState = QLabel("No running", self.statusFrame)
         self.labelColor = QLabel("N", self.statusFrame)
+        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("The channels A, B, C, D are not taking measurements").width())  # Add some padding
         self.helpButton= QPushButton("Help",self.statusFrame)
         #Create Help button
 
