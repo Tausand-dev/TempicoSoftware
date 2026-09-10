@@ -351,6 +351,7 @@ class Ui_CountsEstimated(object):
         sizePolicyScrollArea.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setSizePolicy(sizePolicyScrollArea)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scrollArea.setFrameShape(QFrame.StyledPanel)
         self.scrollArea.setFrameShadow(QFrame.Plain)
         self.CountsFrame = QFrame(self.scrollArea)
@@ -599,15 +600,25 @@ class Ui_CountsEstimated(object):
 
         ):
             label.setMinimumWidth(label.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding        
-        self.titleCounts.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        valuesColumnWidth = max(
+            self.channelAValuesCount.fontMetrics().boundingRect(text).width()
+            for text in ("A: No running", "B: No running", "C: No running", "D: No running")
+        )
+        uncertaintyColumnWidth = self.channelAUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width()
+        panelPadding = 40 
+        panelMinWidth = valuesColumnWidth + uncertaintyColumnWidth + panelPadding
+        self.CountsFrame.setMinimumWidth(panelMinWidth)
+        self.scrollArea.setMinimumWidth(panelMinWidth)
+
+        self.titleCounts.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.titleUncertainty.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelAValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelAValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelAUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelBValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelBValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelBUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelCValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelCValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelCUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelDValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelDValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelDUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
         self.verticalLayout_3.setSpacing(2)  # Espacio vertical entre filas
