@@ -78,8 +78,8 @@ class WorkerThreadLifeTime(QThread):
         """
         label=self.startChannelLabel if channelType=="Start" else self.stopChannelLabel
         if label:
-            return "Measurement running: No measurements in "+channelType+" Channel "+label
-        return "Measurement running: No measurements in "+channelType+" Channel"
+            return "No measurements in "+channelType+" Channel "+label
+        return "No measurements in "+channelType+" Channel"
         
     #Main Function
     def run(self):
