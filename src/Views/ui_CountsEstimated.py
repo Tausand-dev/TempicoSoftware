@@ -346,17 +346,18 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.scrollArea= QScrollArea(self.CountTableFrame)
         sizePolicyScrollArea= QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicyScrollArea.setHorizontalStretch(4)
+        sizePolicyScrollArea.setHorizontalStretch(3)
         sizePolicyScrollArea.setVerticalStretch(3)
         sizePolicyScrollArea.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setSizePolicy(sizePolicyScrollArea)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scrollArea.setFrameShape(QFrame.StyledPanel)
         self.scrollArea.setFrameShadow(QFrame.Plain)
         self.CountsFrame = QFrame(self.scrollArea)
         self.CountsFrame.setObjectName(u"CountsFrame")
         sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy5.setHorizontalStretch(4)
+        sizePolicy5.setHorizontalStretch(2)
         sizePolicy5.setVerticalStretch(3)
         sizePolicy5.setHeightForWidth(self.CountsFrame.sizePolicy().hasHeightForWidth())
         self.CountsFrame.setSizePolicy(sizePolicy5)
@@ -391,8 +392,13 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.channelAValuesCount = QLabel(self.ChannelACountValues)
         self.channelAValuesCount.setObjectName(u"channelAValuesCount")
+        self.channelAValuesCount.setMinimumWidth(self.channelAValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.horizontalLayout_11.addWidget(self.channelAValuesCount)
+
+        self.channelAUncertaintyCount = QLabel(self.ChannelACountValues)
+        self.channelAUncertaintyCount.setObjectName(u"channelAUncertaintyCount")
+        self.channelAUncertaintyCount.setMinimumWidth(self.channelAUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.channelAUncertaintyCount = QLabel(self.ChannelACountValues)
         self.channelAUncertaintyCount.setObjectName(u"channelAUncertaintyCount")
@@ -411,12 +417,13 @@ class Ui_CountsEstimated(object):
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.channelBValuesCount = QLabel(self.ChannelBCountValues)
         self.channelBValuesCount.setObjectName(u"channelBValuesCount")
+        self.channelBValuesCount.setMinimumWidth(self.channelBValuesCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.horizontalLayout_12.addWidget(self.channelBValuesCount)
 
         self.channelBUncertaintyCount = QLabel(self.ChannelBCountValues)
         self.channelBUncertaintyCount.setObjectName(u"channelBUncertaintyCount")
-
+        self.channelBUncertaintyCount.setMinimumWidth(self.channelBUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
         self.horizontalLayout_12.addWidget(self.channelBUncertaintyCount)
 
 
@@ -436,6 +443,7 @@ class Ui_CountsEstimated(object):
 
         self.channelCUncertaintyCount = QLabel(self.ChannelCCountValues)
         self.channelCUncertaintyCount.setObjectName(u"channelCUncertaintyCount")
+        self.channelCUncertaintyCount.setMinimumWidth(self.channelCUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding   
 
         self.horizontalLayout_13.addWidget(self.channelCUncertaintyCount)
 
@@ -456,6 +464,7 @@ class Ui_CountsEstimated(object):
 
         self.channelDUncertaintyCount = QLabel(self.ChannelDCountValues)
         self.channelDUncertaintyCount.setObjectName(u"channelDUncertaintyCount")
+        self.channelDUncertaintyCount.setMinimumWidth(self.channelDUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding
 
         self.horizontalLayout_14.addWidget(self.channelDUncertaintyCount)
 
@@ -469,7 +478,7 @@ class Ui_CountsEstimated(object):
         self.TableFrame = QFrame(self.CountTableFrame)
         self.TableFrame.setObjectName(u"TableFrame")
         sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy6.setHorizontalStretch(6)
+        sizePolicy6.setHorizontalStretch(5)
         sizePolicy6.setVerticalStretch(9)
         sizePolicy6.setHeightForWidth(self.TableFrame.sizePolicy().hasHeightForWidth())
         self.TableFrame.setSizePolicy(sizePolicy6)
@@ -519,6 +528,8 @@ class Ui_CountsEstimated(object):
         self.labelStatus = QLabel("Status:", self.statusFrame)
         self.labelState = QLabel("No running", self.statusFrame)
         self.labelColor = QLabel("N", self.statusFrame)
+        self.setFontSizeToLabels(8, self.labelStatus, self.labelState)
+        self.labelState.setMinimumWidth(self.labelState.fontMetrics().boundingRect("Estimating number stops in  channel A 100%").width())  # Add some padding
         self.helpButton= QPushButton("Help",self.statusFrame)
         #Create Help button
 
@@ -565,7 +576,7 @@ class Ui_CountsEstimated(object):
         self.ChannelBCountValues.setVisible(False)
         self.ChannelCCountValues.setVisible(False)
         self.ChannelDCountValues.setVisible(False)
-        self.setFontSizeToLabels(12,
+        self.setFontSizeToLabels(10,
         self.titleCounts,
         self.channelAValuesCount,
         self.channelBValuesCount,
@@ -577,15 +588,37 @@ class Ui_CountsEstimated(object):
         self.channelDUncertaintyCount,
         self.titleUncertainty
         )
-        self.titleCounts.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+
+        for label in (self.channelAValuesCount,
+                       self.channelBValuesCount,
+                       self.channelCValuesCount,
+                       self.channelDValuesCount,
+                       self.channelAUncertaintyCount,
+                       self.channelBUncertaintyCount,
+                       self.channelCUncertaintyCount,
+                       self.channelDUncertaintyCount,
+
+        ):
+            label.setMinimumWidth(label.fontMetrics().boundingRect("Not estimated yet").width())  # Add some padding        
+        valuesColumnWidth = max(
+            self.channelAValuesCount.fontMetrics().boundingRect(text).width()
+            for text in ("A: No running", "B: No running", "C: No running", "D: No running")
+        )
+        uncertaintyColumnWidth = self.channelAUncertaintyCount.fontMetrics().boundingRect("Not estimated yet").width()
+        panelPadding = 40 
+        panelMinWidth = valuesColumnWidth + uncertaintyColumnWidth + panelPadding
+        self.CountsFrame.setMinimumWidth(panelMinWidth)
+        self.scrollArea.setMinimumWidth(panelMinWidth)
+
+        self.titleCounts.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.titleUncertainty.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelAValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelAValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelAUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelBValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelBValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelBUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelCValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelCValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelCUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self.channelDValuesCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.channelDValuesCount.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.channelDUncertaintyCount.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
         self.verticalLayout_3.setSpacing(2)  # Espacio vertical entre filas

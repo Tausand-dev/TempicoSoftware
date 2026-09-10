@@ -1458,9 +1458,9 @@ class CountEstimatedLogic():
             channelString=', '.join(channelsWithoutMeasurements)
             self.changeStatusColor(3)
             if len(channelsWithoutMeasurements)==1:
-                self.changeStatusLabel(f"The channnel {channelString} is not taking measurements")
+                self.changeStatusLabel(f"Channel {channelString} idle")
             else:
-                self.changeStatusLabel(f"The channnels {channelString} are not taking measurements")
+                self.changeStatusLabel(f"Channels {channelString} idle")
                 
             
             
