@@ -1,3 +1,13 @@
+# Release Notes 2.1.1 – September 2026
+
+## Bug Fixes
+
+- Fixed and improved several GUI issues, specially under Linux and MacOS.
+- Fixed stopMask bug, now accepting negative and floating values for compatibility with TP12xx devices.
+- Added specific requirements files for Linux and MacOS.
+
+---
+
 # Release Notes 2.1.0 – June 2026
 
 ## New Features
@@ -69,4 +79,3 @@
 - Users can choose to:
   - Save only the **raw data**, or
   - Also **save the generated histogram image**.
-
