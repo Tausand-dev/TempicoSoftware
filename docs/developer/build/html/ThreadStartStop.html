@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadStartStop module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadCountEstimated module" href="ThreadCountEstimated.html" />
+    <link rel="prev" title="ThreadProccessData module" href="ThreadProccessData.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadStartStop module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.addChannelWarning"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.addChannelWarning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.applyCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.changeMaxValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.changeMaxValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.checkCorruptData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.checkCorruptData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.colorValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.colorValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.compareMaxValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.compareMaxValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataBashSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dataBashSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureBashSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dataPureBashSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dataPureSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dataSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogInit"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dialogInit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogIsOpen"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dialogIsOpen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.dialogSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.emitOrSaveMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.emitOrSaveMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.enableDisableChannels"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.enableDisableChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.getMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getRange"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.getRange()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.isBashedMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.isBashedMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.newMaxValueSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.newMaxValueSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.saveCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.saveCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stringValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.stringValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.threadCreated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadStartStopHistogram.threadCreated</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ThreadStartStop module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ThreadStartStop.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Threads.ThreadStartStop">
+<span id="threadstartstop-module"></span><h1>ThreadStartStop module<a class="headerlink" href="#module-Threads.ThreadStartStop" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Threads.ThreadStartStop.</span></span><span class="sig-name descname"><span class="pre">WorkerThreadStartStopHistogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinelSaveA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinelSaveB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinelSaveC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinelSaveD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkD</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Worker thread for processing Start-Stop measurements without blocking the main UI.</p>
+<p>This class extends <cite>QThread</cite> to handle the acquisition and processing of 
+Start-Stop measurement data from a <cite>TempicoDevice</cite> in the background. It 
+collects data from up to four channels (A–D), applies range validation, 
+detects out-of-range measurements, and emits signals to update the GUI 
+with processed results, status messages, and visual indicators.</p>
+<p>Main responsibilities:
+- Acquire Start-Stop measurements for each enabled channel.
+- Track total and out-of-range counts per channel.
+- Manage sentinels for detecting missing measurements or channels requiring mode changes.
+- Maintain and emit maximum measurement values for updating histogram ranges.
+- Save device configuration before measurement and determine if batch mode should be used.
+- Handle dialog prompts when channels exceed acceptable out-of-range limits.</p>
+<dl class="simple">
+<dt>Signals:</dt><dd><dl class="simple">
+<dt>dataSignal (float, str):</dt><dd><p>Emitted with the processed measurement value and its channel ID.</p>
+</dd>
+<dt>dataPureSignal (float, str):</dt><dd><p>Emitted with the raw measurement value and its channel ID.</p>
+</dd>
+<dt>threadCreated (int):</dt><dd><p>Emitted when the thread is initialized and ready.</p>
+</dd>
+<dt>dialogInit ():</dt><dd><p>Emitted to initialize a measurement-related dialog in the UI.</p>
+</dd>
+<dt>colorValue (int):</dt><dd><p>Emitted to update the UI status color (e.g., normal, warning, error).</p>
+</dd>
+<dt>stringValue (str):</dt><dd><p>Emitted to update the UI status text.</p>
+</dd>
+<dt>dialogSignal (str):</dt><dd><p>Emitted to request opening a dialog for a specific channel.</p>
+</dd>
+<dt>newMaxValueSignal (float, str):</dt><dd><p>Emitted when a new maximum value is detected for a channel.</p>
+</dd>
+<dt>dataBashSignal (list, list, list, list):</dt><dd><p>Emitted with batched processed measurements for all channels.</p>
+</dd>
+<dt>dataPureBashSignal (list, list, list, list):</dt><dd><p>Emitted with batched raw measurements for all channels.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> – The parent widget or window managing this thread.</p></li>
+<li><p><strong>device</strong> – Instance of <cite>tempico.TempicoDevice</cite> used to acquire measurements.</p></li>
+<li><p><strong>sentinelSaveA</strong> – Boolean indicating if channel A measurements should be saved.</p></li>
+<li><p><strong>sentinelSaveB</strong> – Boolean indicating if channel B measurements should be saved.</p></li>
+<li><p><strong>sentinelSaveC</strong> – Boolean indicating if channel C measurements should be saved.</p></li>
+<li><p><strong>sentinelSaveD</strong> – Boolean indicating if channel D measurements should be saved.</p></li>
+<li><p><strong>checkA</strong> – Boolean indicating if channel A should be checked for measurement validity.</p></li>
+<li><p><strong>checkB</strong> – Boolean indicating if channel B should be checked for measurement validity.</p></li>
+<li><p><strong>checkC</strong> – Boolean indicating if channel C should be checked for measurement validity.</p></li>
+<li><p><strong>checkD</strong> – Boolean indicating if channel D should be checked for measurement validity.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.addChannelWarning">
+<span class="sig-name descname"><span class="pre">addChannelWarning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.addChannelWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.addChannelWarning" title="Permalink to this definition"></a></dt>
+<dd><p>Adds the specified channel to the list of channels that need to change mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> – The channel to be added to the warning list (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.applyCurrentSettings">
+<span class="sig-name descname"><span class="pre">applyCurrentSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.applyCurrentSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.applyCurrentSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Applies the stored configuration settings to the device.</p>
+<p>This function sends the previously saved general and per-channel 
+configuration parameters back to the connected device. These include 
+run counts, thresholds, average cycles, modes, number of stops, 
+stop edge types, and stop masks for each channel. After applying the 
+settings, it enables or disables the channels according to the stored 
+configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.changeMaxValue">
+<span class="sig-name descname"><span class="pre">changeMaxValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueMax</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.changeMaxValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.changeMaxValue" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the maximum value for the specified channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – The channel for which the maximum value is to be changed (str).</p></li>
+<li><p><strong>valueMax</strong> – The new maximum value to be set (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.checkCorruptData">
+<span class="sig-name descname"><span class="pre">checkCorruptData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentMeasurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nextMeasurement</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.checkCorruptData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.checkCorruptData" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if a measurement is corrupt by comparing it to the next measurement.</p>
+<p>The function verifies whether the sequence number of the next measurement 
+is either the same or exactly one greater than the current one. If it is 
+neither, the current measurement is considered corrupt and should be skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currentMeasurement</strong> – Current measurement data.</p></li>
+<li><p><strong>nextMeasurement</strong> – Next measurement data to compare against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1 if the current measurement is corrupt, 0 otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.colorValue">
+<span class="sig-name descname"><span class="pre">colorValue</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.colorValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.compareMaxValue">
+<span class="sig-name descname"><span class="pre">compareMaxValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.compareMaxValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.compareMaxValue" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if a new measurement value exceeds the current maximum for the given channel.</p>
+<p>If the new value is greater than the stored maximum for that channel, the 
+maximum is updated and a signal is emitted to notify that the histogram’s 
+X-axis range should be adjusted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>newValue</strong> – The new measurement value to compare.</p></li>
+<li><p><strong>channel</strong> – The channel identifier (“A”, “B”, “C”, or “D”).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataBashSignal">
+<span class="sig-name descname"><span class="pre">dataBashSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataBashSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureBashSignal">
+<span class="sig-name descname"><span class="pre">dataPureBashSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureBashSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureSignal">
+<span class="sig-name descname"><span class="pre">dataPureSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataPureSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataSignal">
+<span class="sig-name descname"><span class="pre">dataSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dataSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogInit">
+<span class="sig-name descname"><span class="pre">dialogInit</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogInit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogIsOpen">
+<span class="sig-name descname"><span class="pre">dialogIsOpen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.dialogIsOpen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogIsOpen" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the ‘openDialog’ sentinel to False, indicating that no dialog is open.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogSignal">
+<span class="sig-name descname"><span class="pre">dialogSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.dialogSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.emitOrSaveMeasurement">
+<span class="sig-name descname"><span class="pre">emitOrSaveMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pureMeasurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pureList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.emitOrSaveMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.emitOrSaveMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Determines whether a measurement should be saved or emitted, filtering out values
+that exceed the device’s maximum limit.</p>
+<p>If the measurement is below the predefined limit, it is either stored for batch 
+processing or emitted immediately depending on the operating mode. In batched mode, 
+the measurement and its raw value are appended to the provided lists. In normal mode, 
+the measurement is compared against the current maximum value and emitted through 
+the corresponding signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>listValues</strong> – List to store processed measurement values in batched mode.</p></li>
+<li><p><strong>measurement</strong> – Processed measurement value.</p></li>
+<li><p><strong>pureMeasurement</strong> – Raw measurement value from the device.</p></li>
+<li><p><strong>pureList</strong> – List to store raw measurement values in batched mode.</p></li>
+<li><p><strong>channel</strong> – Channel identifier for the measurement.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.enableDisableChannels">
+<span class="sig-name descname"><span class="pre">enableDisableChannels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.enableDisableChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.enableDisableChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Enables or disables each device channel according to the check sentinels.</p>
+<p>Disables all four channels first, then re-enables only the ones
+whose corresponding sentinel (<cite>checkA</cite>, <cite>checkB</cite>, <cite>checkC</cite>,
+<cite>checkD</cite>) is <cite>True</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getMeasurements">
+<span class="sig-name descname"><span class="pre">getMeasurements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.getMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getMeasurements" title="Permalink to this definition"></a></dt>
+<dd><p>Acquires and processes timestamp measurements from each active channel.</p>
+<p>This function retrieves measurement data from the connected device, 
+validates it, and processes it channel by channel (A–D). It checks the 
+number of stops for each channel, determines whether to emit the 
+measurement immediately or wait based on the configured number of runs, 
+and detects potential corruption in the measurement sequence.</p>
+<p>Additional checks are performed to:
+- Identify channels that are not recording measurements correctly.
+- Detect if the problem is due to missing Start signals.
+- Prompt the user to change the mode of channels if a high proportion of</p>
+<blockquote>
+<div><p>out-of-range values is detected.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Capture potential disconnection errors and stop the measurement if they </dt><dd><p>persist.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>This method also emits status messages, channel problem notifications, and 
+measurement values for both normal and batched data modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getRange">
+<span class="sig-name descname"><span class="pre">getRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentMeasurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.getRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.getRange" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the valid range of stops to process for a measurement.</p>
+<p>This function calculates the maximum valid index range based on the expected 
+number of stops and the actual length of the measurement data. It ensures that 
+the processing does not exceed available data, which helps prevent errors in 
+cases where measurements are incomplete or corrupted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currentMeasurement</strong> – Current measurement data as a list.</p></li>
+<li><p><strong>stopNumber</strong> – Expected number of stops for the measurement.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The validated number of stops to process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.isBashedMeasurement">
+<span class="sig-name descname"><span class="pre">isBashedMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.isBashedMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.isBashedMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Determines whether measurements should be processed in batches.</p>
+<p>If the configured number of runs is greater than 50, the measurement mode 
+is set to batched; otherwise, it is set to normal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.newMaxValueSignal">
+<span class="sig-name descname"><span class="pre">newMaxValueSignal</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.newMaxValueSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.run" title="Permalink to this definition"></a></dt>
+<dd><p>Executes the thread’s main loop to update the graph based on measurements.</p>
+<p>The function emits a signal indicating that the thread has been created. It then enters a 
+loop that continues as long as the thread is running. Inside the loop, it calls the update 
+method to refresh the graph and pauses for 0.5 seconds before the next iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.saveCurrentSettings">
+<span class="sig-name descname"><span class="pre">saveCurrentSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.saveCurrentSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.saveCurrentSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current configuration settings of the device.</p>
+<p>This function retrieves the general and per-channel configuration parameters 
+from the connected device and stores them in the corresponding instance variables. 
+These values include run counts, thresholds, modes, number of stops, stop edge 
+types, and stop masks for each channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadStartStop.html#WorkerThreadStartStopHistogram.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the measurement process and closes the thread.</p>
+<p>This method emits a signal to indicate that the thread has been stopped
+and sets the running flag to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stringValue">
+<span class="sig-name descname"><span class="pre">stringValue</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.stringValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadStartStop.WorkerThreadStartStopHistogram.threadCreated">
+<span class="sig-name descname"><span class="pre">threadCreated</span></span><a class="headerlink" href="#Threads.ThreadStartStop.WorkerThreadStartStopHistogram.threadCreated" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ThreadProccessData.html" class="btn btn-neutral float-left" title="ThreadProccessData module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadCountEstimated.html" class="btn btn-neutral float-right" title="ThreadCountEstimated module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

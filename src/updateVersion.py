@@ -9,7 +9,7 @@ def updateVersion(fileName,versionNumber):
     file.close()
     
     for i, linea in enumerate(lineas):
-        if 'VERSION' in linea:
+        if linea.startswith('VERSION='):
             lineas[i] = f"VERSION="+'"'+versionNumber+'"'+"\n"
     
     with open(fileName, 'w') as file:
@@ -29,7 +29,7 @@ def updateRelease(fileReleaseStory,fileRelease):
         originalRelease.write(allcontent) 
 
 
-absolutePathConstants= os.path.abspath("constants.py")
+absolutePathConstants= os.path.abspath("Utils/constants.py")
 
 updateVersion(absolutePathConstants,version)
 

@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadProccessData module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadStartStop module" href="ThreadStartStop.html" />
+    <link rel="prev" title="G2Logic module" href="G2Logic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadProccessData module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Threads.ThreadProccessData.ProcessingDataSaved"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadProccessData.ProcessingDataSaved.changeProgress"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.changeProgress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadProccessData.ProcessingDataSaved.run"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadProccessData.ProcessingDataSaved.sortTimeStamps"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.sortTimeStamps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadProccessData.ProcessingDataSaved.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">ProcessingDataSaved.staticMetaObject</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ThreadProccessData module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ThreadProccessData.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Threads.ThreadProccessData">
+<span id="threadproccessdata-module"></span><h1>ThreadProccessData module<a class="headerlink" href="#module-Threads.ThreadProccessData" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Threads.ThreadProccessData.ProcessingDataSaved">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Threads.ThreadProccessData.</span></span><span class="sig-name descname"><span class="pre">ProcessingDataSaved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadProccessData.html#ProcessingDataSaved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadProccessData.ProcessingDataSaved" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Thread class responsible for processing saved measurement files when autosave is not enabled.</p>
+<p>This class runs in a separate thread to avoid blocking the main UI while
+processing data from a previously saved file. It emits progress updates so
+the user interface can reflect the current status of the processing task.</p>
+<p>Main responsibilities:
+- Read and process the specified saved data file.
+- Emit progress updates during the processing.
+- Operate independently from the main thread to keep the UI responsive.</p>
+<dl class="simple">
+<dt>Signals:</dt><dd><dl class="simple">
+<dt>changeProgress (float):</dt><dd><p>Emitted to update the processing progress in the UI as a percentage.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – Path to the saved measurement file to be processed.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadProccessData.ProcessingDataSaved.changeProgress">
+<span class="sig-name descname"><span class="pre">changeProgress</span></span><a class="headerlink" href="#Threads.ThreadProccessData.ProcessingDataSaved.changeProgress" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadProccessData.ProcessingDataSaved.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/Threads/ThreadProccessData.html#ProcessingDataSaved.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadProccessData.ProcessingDataSaved.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadProccessData.ProcessingDataSaved.sortTimeStamps">
+<span class="sig-name descname"><span class="pre">sortTimeStamps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadProccessData.html#ProcessingDataSaved.sortTimeStamps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadProccessData.ProcessingDataSaved.sortTimeStamps" title="Permalink to this definition"></a></dt>
+<dd><p>Sorts a saved timestamp file by start times and emits progress updates during processing.</p>
+<p>This function reads the specified measurement file, parses its data entries,
+sorts them chronologically by start time, and writes the sorted content back
+to the same file. Progress updates are emitted throughout the process to
+inform the UI of the current completion percentage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – Path to the saved measurement file to be sorted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadProccessData.ProcessingDataSaved.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Threads.ThreadProccessData.ProcessingDataSaved.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="G2Logic.html" class="btn btn-neutral float-left" title="G2Logic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadStartStop.html" class="btn btn-neutral float-right" title="ThreadStartStop module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

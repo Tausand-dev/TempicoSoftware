@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G2Logic module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadProccessData module" href="ThreadProccessData.html" />
+    <link rel="prev" title="FCSLogic module" href="FCSLogic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">G2Logic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.G2Logic.G2Logic"><code class="docutils literal notranslate"><span class="pre">G2Logic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.PARAM_LABELS"><code class="docutils literal notranslate"><span class="pre">G2Logic.PARAM_LABELS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.changeColorThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeColorThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.changeStatusThread"><code class="docutils literal notranslate"><span class="pre">G2Logic.changeStatusThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.clear_curve"><code class="docutils literal notranslate"><span class="pre">G2Logic.clear_curve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">G2Logic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">G2Logic.hide_graphic2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">G2Logic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.run_fit"><code class="docutils literal notranslate"><span class="pre">G2Logic.run_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.save_data"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.save_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.save_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.set_cursor_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_cursor_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.set_fit_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_fit_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.set_parameter_widgets"><code class="docutils literal notranslate"><span class="pre">G2Logic.set_parameter_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.start_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.start_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">G2Logic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">G2Logic.stop_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.threadComplete"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadComplete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.threadRunning"><code class="docutils literal notranslate"><span class="pre">G2Logic.threadRunning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.G2Logic.G2Logic.update_plot"><code class="docutils literal notranslate"><span class="pre">G2Logic.update_plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">G2Logic module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/G2Logic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Logic.G2Logic">
+<span id="g2logic-module"></span><h1>G2Logic module<a class="headerlink" href="#module-Logic.G2Logic" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.G2Logic.</span></span><span class="sig-name descname"><span class="pre">G2Logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnectButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusPoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventsLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsedLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2ZeroLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countEstimationLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopChannelComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countEstimationCheckBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tauQuerySpinBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2CursorLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitButton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitModelCombo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitEquationLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultsFrame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitTable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResetParamsButton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Orchestration layer for the g²(τ) HBT measurement tab.</p>
+<p>Creates and manages a single pyqtgraph <code class="docutils literal notranslate"><span class="pre">PlotWidget</span></code> that displays the
+normalized second-order correlation function g²(τ) in real time.
+Instantiates and controls a <code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code> during acquisition, and
+provides save (data + plot) functionality after the measurement finishes.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>parent<span class="classifier">QWidget</span></dt><dd><p>The <code class="docutils literal notranslate"><span class="pre">QFrame</span></code> inside the G2 tab where the plot is injected
+(equivalent to <code class="docutils literal notranslate"><span class="pre">graphicFrame</span></code> in <code class="docutils literal notranslate"><span class="pre">Ui_G2Measurement</span></code>).</p>
+</dd>
+<dt>disconnectButton<span class="classifier">QPushButton</span></dt><dd><p>Main-window Disconnect button — disabled while measuring.</p>
+</dd>
+<dt>device<span class="classifier">Tempico.TempicoDevice</span></dt><dd><p>Open Tempico device instance.</p>
+</dd>
+<dt>startButton<span class="classifier">QPushButton</span></dt><dd><p>Starts the acquisition.</p>
+</dd>
+<dt>stopButton<span class="classifier">QPushButton</span></dt><dd><p>Stops the acquisition.</p>
+</dd>
+<dt>saveDataButton<span class="classifier">QPushButton</span></dt><dd><p>Saves the raw g²(τ) curve to a text/csv/dat file.</p>
+</dd>
+<dt>savePlotButton<span class="classifier">QPushButton</span></dt><dd><p>Saves the plot as an image file.</p>
+</dd>
+<dt>clearButton<span class="classifier">QPushButton</span></dt><dd><p>Clears the accumulated curve without restarting the device.</p>
+</dd>
+<dt>connectButton<span class="classifier">QPushButton</span></dt><dd><p>Main-window Connect button — re-enabled when disconnected.</p>
+</dd>
+<dt>mainWindow<span class="classifier">QMainWindow</span></dt><dd><p>Reference to the application’s main window.</p>
+</dd>
+<dt>statusValue<span class="classifier">QLabel</span></dt><dd><p>Label that shows the current acquisition status text.</p>
+</dd>
+<dt>statusPoint<span class="classifier">QLabel</span></dt><dd><p>Small label used as a coloured status indicator (traffic-light dot).</p>
+</dd>
+<dt>timerStatus<span class="classifier">QTimer</span></dt><dd><p>Shared timer that polls the device connection; stopped during
+measurement and restarted when idle.</p>
+</dd>
+<dt>eventsLabel<span class="classifier">QLabel</span></dt><dd><p>Label that displays the total number of photon events.</p>
+</dd>
+<dt>elapsedLabel<span class="classifier">QLabel</span></dt><dd><p>Label that displays the elapsed measurement time.</p>
+</dd>
+<dt>g2ZeroLabel<span class="classifier">QLabel</span></dt><dd><p>Label that displays the g²(τ=0) value.</p>
+</dd>
+<dt>countEstimationLabel<span class="classifier">QLabel</span></dt><dd><p>Label that displays the Count Estimation (formerly “Rate
+(stop-stop)”), i.e. 1 / mean(delta_stop) computed from the time
+between one stop and the next (cps).</p>
+</dd>
+<dt>stopChannelComboBox<span class="classifier">QComboBox</span></dt><dd><p>Combo box to select which TDC channel carries the stop signal (A–D).</p>
+</dd>
+<dt>countEstimationCheckBox<span class="classifier">QCheckBox</span></dt><dd><p>“Enable” checkbox for the Count Estimation feature. When checked
+and the selected channel is configured for a single stop, the
+measurement requests 2 stops per run instead of 1 so a rate can be
+estimated; if 2 or more stops are already configured, checking it
+has no effect. Disabled while a measurement is running.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.PARAM_LABELS">
+<span class="sig-name descname"><span class="pre">PARAM_LABELS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">[('y₀',</span> <span class="pre">''),</span> <span class="pre">('V',</span> <span class="pre">''),</span> <span class="pre">('τ₀',</span> <span class="pre">'ns'),</span> <span class="pre">('σ',</span> <span class="pre">'ns')],</span> <span class="pre">1:</span> <span class="pre">[('y₀',</span> <span class="pre">''),</span> <span class="pre">('V',</span> <span class="pre">''),</span> <span class="pre">('τ₀',</span> <span class="pre">'ns'),</span> <span class="pre">('Γ',</span> <span class="pre">'ns')],</span> <span class="pre">2:</span> <span class="pre">[('y₀',</span> <span class="pre">''),</span> <span class="pre">('α',</span> <span class="pre">''),</span> <span class="pre">('τ₀',</span> <span class="pre">'ns'),</span> <span class="pre">('τ_c',</span> <span class="pre">'ns')],</span> <span class="pre">3:</span> <span class="pre">[('y₀',</span> <span class="pre">''),</span> <span class="pre">('α',</span> <span class="pre">''),</span> <span class="pre">('τ₀',</span> <span class="pre">'ns'),</span> <span class="pre">('τ_c',</span> <span class="pre">'ns')],</span> <span class="pre">4:</span> <span class="pre">[('a',</span> <span class="pre">''),</span> <span class="pre">('τ₀',</span> <span class="pre">'ns'),</span> <span class="pre">('τ₁',</span> <span class="pre">'ns'),</span> <span class="pre">('τ₂',</span> <span class="pre">'ns')]}</span></em><a class="headerlink" href="#Logic.G2Logic.G2Logic.PARAM_LABELS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.changeColorThread">
+<span class="sig-name descname"><span class="pre">changeColorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.changeColorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.changeColorThread" title="Permalink to this definition"></a></dt>
+<dd><p>Update the status-indicator dot colour from a thread signal.</p>
+<p>Colour codes: 0 = grey, 1 = green, 2 = yellow, 3 = orange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – Colour code (int).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Set the status-indicator dot colour from Logic-layer code.</p>
+<p>Colour codes: 0 = grey, 1 = green, 2 = yellow, 3 = orange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – Colour code (int).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.changeStatusThread">
+<span class="sig-name descname"><span class="pre">changeStatusThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.changeStatusThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.changeStatusThread" title="Permalink to this definition"></a></dt>
+<dd><p>Update the status label and elapsed/events counters from a thread signal.</p>
+<p>Parses strings of the form <code class="docutils literal notranslate"><span class="pre">&quot;events:</span> <span class="pre">N</span> <span class="pre">|</span> <span class="pre">elapsed:</span> <span class="pre">T</span> <span class="pre">s&quot;</span></code>
+or <code class="docutils literal notranslate"><span class="pre">&quot;events:</span> <span class="pre">N</span> <span class="pre">|</span> <span class="pre">elapsed:</span> <span class="pre">T</span> <span class="pre">s</span> <span class="pre">/</span> <span class="pre">D</span> <span class="pre">s&quot;</span></code> emitted by <code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_text</strong> – Text to parse (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.clear_curve">
+<span class="sig-name descname"><span class="pre">clear_curve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.clear_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.clear_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Clear the g²(τ) curve and cached data without stopping the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.connectedDevice">
+<span class="sig-name descname"><span class="pre">connectedDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.connectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.connectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Re-enable the Start button after a reconnection.</p>
+<p>Mirrors <code class="docutils literal notranslate"><span class="pre">FCSLogic.show_graphic</span></code> in purpose; named <code class="docutils literal notranslate"><span class="pre">connectedDevice</span></code>
+to match the calling convention already in use in main.py for all
+other Logic classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_new</strong> – New open <code class="docutils literal notranslate"><span class="pre">TempicoDevice</span></code> instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handle a device disconnection event.</p>
+<p>Stops any running measurement, disables the Start button, and resets
+the status indicator to grey.  Mirrors <code class="docutils literal notranslate"><span class="pre">FCSLogic.disconnectedDevice</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.hide_graphic2">
+<span class="sig-name descname"><span class="pre">hide_graphic2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.hide_graphic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.hide_graphic2" title="Permalink to this definition"></a></dt>
+<dd><p>Disable Start and Stop buttons (called on disconnect from main.py).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.resetSaveSentinels">
+<span class="sig-name descname"><span class="pre">resetSaveSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.resetSaveSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.resetSaveSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the per-format save sentinels.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows</span></code> so the user can
+re-save data in the same format after a new measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.run_fit">
+<span class="sig-name descname"><span class="pre">run_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.run_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.run_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the current g²(τ) histogram with the selected model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.save_data">
+<span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.save_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.save_data" title="Permalink to this definition"></a></dt>
+<dd><p>Save the current g²(τ) measurement to two text files.</p>
+<p>Opens a format-selection dialog (txt / csv / dat) and writes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">..._StartStopTimes</span></code>: the raw (unbinned) stop times recorded
+during the acquisition, one row per detected event — the raw
+start-stop data behind the measurement.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">..._G2Curve</span></code>: the analyzed data, i.e. the g²(τ) curve itself
+(τ in ns and the corresponding normalized g²(τ) value).</p></li>
+</ul>
+<p>Both files share the same header with the measurement parameters
+(bin width, window, TDC mode, stop channel).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.save_plot">
+<span class="sig-name descname"><span class="pre">save_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.save_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.save_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Save the g²(τ) plot as an image file (png / tiff / jpg).</p>
+<p>Opens a format-selection dialog and exports the current pyqtgraph plot
+using <code class="docutils literal notranslate"><span class="pre">pg.exporters.ImageExporter</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.set_cursor_widgets">
+<span class="sig-name descname"><span class="pre">set_cursor_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tauQuerySpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2CursorLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.set_cursor_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.set_cursor_widgets" title="Permalink to this definition"></a></dt>
+<dd><p>Provide references to the τ-cursor widgets.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">main.py</span></code> immediately after constructing <code class="docutils literal notranslate"><span class="pre">G2Logic</span></code>.
+Connects the spinbox signal and enables click interaction on the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tauQuerySpinBox</strong> – QDoubleSpinBox for manual τ entry (ns).</p></li>
+<li><p><strong>g2CursorLabel</strong> – QLabel that shows g²(τ) at the cursor position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.set_fit_widgets">
+<span class="sig-name descname"><span class="pre">set_fit_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fitButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitModelCombo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitEquationLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultsFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResetParamsButton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.set_fit_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.set_fit_widgets" title="Permalink to this definition"></a></dt>
+<dd><p>Provide references to the fit widgets from <code class="docutils literal notranslate"><span class="pre">Ui_G2</span></code>.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">main.py</span></code> after constructing <code class="docutils literal notranslate"><span class="pre">G2Logic</span></code>.
+Connects the fit button and model-combo signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.set_parameter_widgets">
+<span class="sig-name descname"><span class="pre">set_parameter_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binWidthSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">windowSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">durationSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indefiniteCheckBox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.set_parameter_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.set_parameter_widgets" title="Permalink to this definition"></a></dt>
+<dd><p>Provide references to the parameter widgets.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">main.py</span></code> immediately after constructing <code class="docutils literal notranslate"><span class="pre">G2Logic</span></code> so
+that <code class="docutils literal notranslate"><span class="pre">start_graphic</span></code> can read the user-configured values at the
+moment the measurement starts — not at construction time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binWidthSpinBox</strong> – QDoubleSpinBox with bin width in ns.</p></li>
+<li><p><strong>windowSpinBox</strong> – QSpinBox with half-window in ns.</p></li>
+<li><p><strong>durationSpinBox</strong> – QSpinBox with duration in seconds.</p></li>
+<li><p><strong>indefiniteCheckBox</strong> – QCheckBox; when checked the measurement runs
+until the user presses Stop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Start the device-connection polling timer with a 500 ms interval.</p>
+<p>Called when the measurement finishes or is stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.start_graphic">
+<span class="sig-name descname"><span class="pre">start_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.start_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.start_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Start the g²(τ) acquisition.</p>
+<p>Resets the curve, disables controls that must not be used during
+measurement, stops the connection-polling timer, notifies the main
+window, and launches the <code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code>. The number of stops
+requested per run is read directly from the selected stop
+channel’s current device configuration (<code class="docutils literal notranslate"><span class="pre">getNumberOfStops()</span></code>),
+so the measurement always matches what the Channels settings
+dialog shows — no internal default is silently substituted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the device-connection polling timer.</p>
+<p>Called at the start of a measurement so the timer does not interfere
+with the worker thread’s device access.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.stop_graphic">
+<span class="sig-name descname"><span class="pre">stop_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.stop_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.stop_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the acquisition and restore the UI to idle state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.threadComplete">
+<span class="sig-name descname"><span class="pre">threadComplete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.threadComplete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.threadComplete" title="Permalink to this definition"></a></dt>
+<dd><p>Called when the worker thread finishes naturally (<code class="docutils literal notranslate"><span class="pre">finished</span></code> signal).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.threadRunning">
+<span class="sig-name descname"><span class="pre">threadRunning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.threadRunning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.threadRunning" title="Permalink to this definition"></a></dt>
+<dd><p>Update <code class="docutils literal notranslate"><span class="pre">threadCreatedSentinel</span></code> from the <code class="docutils literal notranslate"><span class="pre">threadCreated</span></code> signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>status</strong> – 0 → thread just started; 1 → thread just stopped.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.G2Logic.G2Logic.update_plot">
+<span class="sig-name descname"><span class="pre">update_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centres_ns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_stop_stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/G2Logic.html#G2Logic.update_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.G2Logic.G2Logic.update_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Update the g²(τ) step-histogram with the latest correlation data.</p>
+<p>Also refreshes the g²(0), rate, and event-count stat labels.
+Does NOT apply any color-coding or light-type classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centres_ns</strong> – Bin-centre positions in nanoseconds (ndarray).</p></li>
+<li><p><strong>g2</strong> – Normalized g²(τ) values (ndarray).</p></li>
+<li><p><strong>total_events</strong> – Total photon events accumulated so far.</p></li>
+<li><p><strong>rate_stop_stop</strong> – Rate (stop-stop) in counts per second, i.e.
+1 / mean(delta_stop) computed from the time between one stop
+and the next (dead-time-safe; see <code class="docutils literal notranslate"><span class="pre">WorkerThreadG2</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="FCSLogic.html" class="btn btn-neutral float-left" title="FCSLogic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadProccessData.html" class="btn btn-neutral float-right" title="ThreadProccessData module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

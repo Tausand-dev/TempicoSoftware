@@ -85,16 +85,20 @@ After the measurement, the options to save the data and save the plots become av
 ![After measurement Counts estimated window](./Sources/postMeasurementCountsEstimated.png)
 
 ## Time Stamping Window
+
 ### Before the measurement
+
 Before starting the measurement process, the user can select the channels from which data will be collected. The type of measurement can also be defined, choosing between manual, scheduled, or sample-size–based modes, each with its corresponding configuration parameters. By default, automatic data saving is enabled to prevent memory overflow. Additionally, the user can configure how frequently the data is written to storage, allowing the system to periodically release memory from the main buffer in a controlled manner.
 ![Before measurement Time Stamping window](./Sources/beforeTimeStamping.png)
 
 ### During the measurement
+
 During the measurement process, the collected data can be displayed in a table if desired, although it is also possible to hide this view. A status bar is available to indicate the current state of the measurement, showing whether it is running or saving, as well as the remaining time of the measurement or the percentage of progress completed.
 
 ![During measurement Time Stamping window](./Sources/duringTimeStamping.png)
 
 ### After measurement
+
 After the measurement is completed, the data can be saved again in a different format if desired by disabling the automatic data saving option. Additionally, the data count from the most recent measurement can be reviewed in the table.
 
 ![After measurement Time Stamping window](./Sources/afterTimeStamping.png)
@@ -206,13 +210,13 @@ python -m venv .venv
 #### Activate
 
 - On Unix systems:
-
+  
   ```
   source .venv/bin/activate
   ```
 
 - On Windows:
-
+  
   ```
   .venv\Scripts\activate
   ```
@@ -349,7 +353,6 @@ SourcesWrapper/
     └── tausand_small.ico
 ```
 
-
 Then, in the wizard, click **Add Folder** and select `SourcesWrapper` — **not** `Sources` directly. Inno Setup preserves the names of folders nested *inside* the one you select, so the resulting installer correctly places everything under `{app}\Sources\`.
 
 **Fix (`.iss` file method, preferred if editing the script directly):** if you're using Step 2a instead of the wizard, skip the workaround above entirely by setting an explicit destination in the `[Files]` section of `installer_builder.iss`:
@@ -371,58 +374,63 @@ Windows 7 needs a few prerequisites that aren't present out of the box, both on 
 1. **Windows 7 Service Pack 1** — required baseline for everything below. If you need a full Windows 7 (32-bit) install that already includes SP1 slipstreamed in, this ISO can be used: [https://archive.org/details/en_windows_7_ultimate_with_sp1_x86_dvd_u_677460_202006](https://archive.org/details/en_windows_7_ultimate_with_sp1_x86_dvd_u_677460_202006). If you already have Windows 7 installed without SP1, install it via Windows Update instead.
 
 2. **Universal C Runtime update (UCRT)** — Python 3.8 (and the C extensions in numpy/scipy) depend on the UCRT, which Windows 7 does not ship by default. Without it, the app fails to start with a missing `api-ms-win-crt-*.dll` error. Download one of the following (either works; KB3118401 supersedes KB2999226):
+   
    - KB2999226 (x86): [https://www.microsoft.com/en-us/download/details.aspx?id=51537](https://www.microsoft.com/en-us/download/details.aspx?id=51537)
    - KB3118401 (x86): [https://www.microsoft.com/en-us/download/details.aspx?id=51137](https://www.microsoft.com/en-us/download/details.aspx?id=51137)
-
+   
    Install it silently from an elevated Command Prompt (adjust the filename to whichever you downloaded):
-
+   
    ```
    wusa.exe Windows6.1-KB2999226-x86.msu /quiet /norestart
    ```
-
+   
    Restart when prompted.
 
 3. **KB2533623** — required to avoid DLL search-order compatibility issues with PyInstaller-generated executables.
+   
    - Download: [https://archive.org/details/kb-2533623-windows-7](https://archive.org/details/kb-2533623-windows-7) (`Windows6.1-KB2533623-x86.msu`)
+   
    - Install it silently:
-
+     
      ```
      wusa.exe Windows6.1-KB2533623-x86.msu /quiet /norestart
      ```
-
+   
    - Restart the system when prompted.
 
 4. **Microsoft Visual C++ Redistributable 2015-2022 (x86)** — provides `vcruntime140.dll` and related libraries needed by numpy, scipy, and Qt.
+   
    - Download: [https://aka.ms/vs/17/release/vc_redist.x86.exe](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+   
    - Install it silently:
-
+     
      ```
      vc_redist.x86.exe /quiet /norestart
      ```
-
+   
    - **To bundle it inside your own installer** (so users don't need to install it manually), add it to `installer/installer_builder.iss`:
-
+     
      ```ini
      [Files]
      Source: "vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
-
+     
      [Run]
      Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; StatusMsg: "Installing Visual C++ Redistributable..."
      ```
 
 5. **Python 3.8.10 (32-bit)** — download the installer explicitly marked **"Windows x86 executable installer"** (not "x86-64") from [https://www.python.org/downloads/release/python-3810/](https://www.python.org/downloads/release/python-3810/). Create your `.venv` with it:
-
+   
    ```
    C:\Python38-32\python.exe -m venv .venv
    .venv\Scripts\activate
    ```
-
+   
    Confirm you're in a true 32-bit interpreter:
-
+   
    ```
    python -c "import struct; print(struct.calcsize('P') * 8)"
    ```
-
+   
    This should print `32`.
 
 Once all five items above are installed, proceed with PyInstaller and Inno Setup exactly as described earlier in this section.
@@ -604,14 +612,14 @@ Note the `cd` before the `exec` in `AppRun`: the `Sources` folder is located rel
 After this step, the app should run by doing `./TempicoSoftware.AppDir/AppRun` from a terminal.
 
 - For 64-bit architecture, download `appimagetool-x86_64.AppImage` from [https://github.com/AppImage/AppImageKit/releases/](https://github.com/AppImage/AppImageKit/releases/) and give execution permissions to it:
-
+  
   ```bash
   wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
   chmod +x appimagetool-x86_64.AppImage
   ```
 
 - Place `appimagetool` outside `TempicoSoftware.AppDir` and run:
-
+  
   ```bash
   ARCH=x86_64 ./appimagetool-x86_64.AppImage TempicoSoftware.AppDir
   ```
@@ -619,7 +627,6 @@ After this step, the app should run by doing `./TempicoSoftware.AppDir/AppRun` f
 - The file `TempicoSoftware-x86_64.AppImage` will be created. This file can be opened by double clicking it.
 
 - Verify the final size with `ls -lh TempicoSoftware-x86_64.AppImage`. Following the Optimized Installer steps above, this should land around 95-100 MB.
-
 
 #### macOS
 
@@ -883,7 +890,7 @@ This will regenerate all `.rst` files for all Python scripts inside the `.src` f
 
 Make sure that in the `make.bat` file, the `BUILDDIR` variable is set to `build` and not `_build`, and do the same in the `Makefile`. If that's the case, simply change them.
 
-After this , we can run the commands again to generate the documentation according to the required format:
+After this, within the `docs/developer` folder, run the commands again to generate the documentation according to the required format:
 
 ```
 .\make.bat html

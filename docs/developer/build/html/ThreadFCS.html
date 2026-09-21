@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadFCS module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadG2 module" href="ThreadG2.html" />
+    <link rel="prev" title="ThreadLifeTime module" href="ThreadLifeTime.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadFCS module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.applyCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.applyCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.colorValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.colorValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.dataReady"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.dataReady</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.saveCurrentSettings"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.saveCurrentSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.statusUpdate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.statusUpdate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.stringValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.stringValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadFCS.WorkerThreadFCS.threadCreated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS.threadCreated</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ThreadFCS module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ThreadFCS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Threads.ThreadFCS">
+<span id="threadfcs-module"></span><h1>ThreadFCS module<a class="headerlink" href="#module-Threads.ThreadFCS" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Threads.ThreadFCS.</span></span><span class="sig-name descname"><span class="pre">WorkerThreadFCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_runs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadFCS.html#WorkerThreadFCS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Worker thread for FCS acquisition and real-time multi-tau correlation.</p>
+<p>Runs entirely in the background so the GUI thread stays responsive during
+the measurement. Communicates with the GUI exclusively through Qt signals.</p>
+<p>The thread calls <code class="docutils literal notranslate"><span class="pre">device.measure()</span></code> in a continuous loop, reconstructs a
+relative photon-arrival timeline (Option B: cursor advances by the last
+stop of each run, inter-run gaps are ignored), bins the arrivals into
+intensity bins of width <code class="docutils literal notranslate"><span class="pre">tau_0</span></code>, and feeds each bin into a
+<code class="docutils literal notranslate"><span class="pre">_MultiTauCorrelator</span></code> instance. The updated G(tau) curve is emitted after
+every <code class="docutils literal notranslate"><span class="pre">measure()</span></code> call.</p>
+<section id="signals">
+<h2>Signals<a class="headerlink" href="#signals" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataReady<span class="classifier">Signal(object, object, object)</span></dt><dd><p>Emitted after every <code class="docutils literal notranslate"><span class="pre">measure()</span></code> call with <code class="docutils literal notranslate"><span class="pre">(taus_ps,</span> <span class="pre">g,</span> <span class="pre">stop_times_ps)</span></code>
+arrays. Lag times and stop times are in picoseconds.</p>
+</dd>
+<dt>statusUpdate<span class="classifier">Signal(str)</span></dt><dd><p>Emitted after every <code class="docutils literal notranslate"><span class="pre">measure()</span></code> call with a human-readable status
+string (call count, event count, elapsed time).</p>
+</dd>
+<dt>colorValue<span class="classifier">Signal(int)</span></dt><dd><p>Emitted to set the status-indicator colour in the GUI.
+1 = running OK, 3 = warning / no measurement.</p>
+</dd>
+<dt>stringValue<span class="classifier">Signal(str)</span></dt><dd><p>Emitted with short status messages for the status bar.</p>
+</dd>
+<dt>threadCreated<span class="classifier">Signal(int)</span></dt><dd><p>Emitted with 0 when the loop starts, 1 when it stops.</p>
+</dd>
+</dl>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>parent<span class="classifier">QWidget</span></dt><dd><p>Parent widget that owns this thread.</p>
+</dd>
+<dt>device<span class="classifier">tempico.TempicoDevice</span></dt><dd><p>Open Tempico device instance.</p>
+</dd>
+<dt>tau_0<span class="classifier">int</span></dt><dd><p>Base bin size in picoseconds. Default: 1 000 000 ps (1 µs).</p>
+</dd>
+<dt>num_levels<span class="classifier">int</span></dt><dd><p>Number of levels in the multi-tau hierarchy. Default: 16.</p>
+</dd>
+<dt>m<span class="classifier">int</span></dt><dd><p>Channels per level. Default: 16.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.applyCurrentSettings">
+<span class="sig-name descname"><span class="pre">applyCurrentSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadFCS.html#WorkerThreadFCS.applyCurrentSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.applyCurrentSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Re-apply the snapshotted device configuration.</p>
+<p>Called after the acquisition loop exits to restore the device to the
+state it was in before the FCS measurement started.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.colorValue">
+<span class="sig-name descname"><span class="pre">colorValue</span></span><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.colorValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.dataReady">
+<span class="sig-name descname"><span class="pre">dataReady</span></span><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.dataReady" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadFCS.html#WorkerThreadFCS.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.run" title="Permalink to this definition"></a></dt>
+<dd><p>Acquisition and correlation loop. Runs in a separate QThread.</p>
+<p>Configures Channel 1 for FCS (mode 2, 1 stop), then enters a loop
+that calls <code class="docutils literal notranslate"><span class="pre">device.measure()</span></code> until <code class="docutils literal notranslate"><span class="pre">stop()</span></code> is called. Each batch
+of rows is processed into intensity bins and fed into the correlator.
+The updated G(tau) curve is emitted after every batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.saveCurrentSettings">
+<span class="sig-name descname"><span class="pre">saveCurrentSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadFCS.html#WorkerThreadFCS.saveCurrentSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.saveCurrentSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Snapshot the current device configuration.</p>
+<p>Stores all relevant channel and global parameters so they can be
+re-applied with <code class="docutils literal notranslate"><span class="pre">applyCurrentSettings()</span></code> after the thread finishes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.statusUpdate">
+<span class="sig-name descname"><span class="pre">statusUpdate</span></span><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.statusUpdate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadFCS.html#WorkerThreadFCS.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Request the acquisition loop to exit on the next iteration.</p>
+<p>Sets <code class="docutils literal notranslate"><span class="pre">itsRunning</span></code> to False and emits <code class="docutils literal notranslate"><span class="pre">threadCreated(1)</span></code> to notify
+the GUI that the thread is stopping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.stringValue">
+<span class="sig-name descname"><span class="pre">stringValue</span></span><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.stringValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadFCS.WorkerThreadFCS.threadCreated">
+<span class="sig-name descname"><span class="pre">threadCreated</span></span><a class="headerlink" href="#Threads.ThreadFCS.WorkerThreadFCS.threadCreated" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ThreadLifeTime.html" class="btn btn-neutral float-left" title="ThreadLifeTime module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadG2.html" class="btn btn-neutral float-right" title="ThreadG2 module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

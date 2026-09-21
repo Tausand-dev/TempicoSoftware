@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadLifeTime module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadFCS module" href="ThreadFCS.html" />
+    <link rel="prev" title="ThreadTimeStamping module" href="ThreadTimeStamping.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadLifeTime module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.checkDeviceStatus()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createLifeTimeData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.createdSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.createdSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.disconectedSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getBinWidthNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.getUnits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.measurementMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.noMeasurementsMessage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.pointSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.statusSignal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.takeMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateMeasurementsLabel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateValues"><code class="docutils literal notranslate"><span class="pre">WorkerThreadLifeTime.updateValues</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ThreadLifeTime module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ThreadLifeTime.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Threads.ThreadLifeTime">
+<span id="threadlifetime-module"></span><h1>ThreadLifeTime module<a class="headerlink" href="#module-Threads.ThreadLifeTime" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Threads.ThreadLifeTime.</span></span><span class="sig-name descname"><span class="pre">WorkerThreadLifeTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviceStartChannel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviceStopChannel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binwidthText</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TimeRange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startChannelLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopChannelLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Worker thread for handling LifeTime (Fluorescence Lifetime Measurement) processing in a separate thread 
+to ensure that the GUI remains responsive during measurements.</p>
+<p>This class performs the measurement tasks in the background, processes the data, and communicates with 
+the main thread to update the GUI with the measurement status, results, and other relevant information.</p>
+<dl class="simple">
+<dt>Signals:</dt><dd><ul class="simple">
+<li><p>createdSignal: Signal emitted when the worker thread is created.</p></li>
+<li><p>statusSignal: Signal emitted to update the status message in the GUI.</p></li>
+<li><p>pointSignal: Signal emitted to update the current measurement point.</p></li>
+<li><p>updateValues: Signal emitted to update measurement values and corresponding times.</p></li>
+<li><p>updateLabel: Signal emitted to update a specific label in the GUI.</p></li>
+<li><p>updateMeasurementsLabel: Signal emitted to update the label showing the number of measurements taken.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deviceStartChannel</strong> – The start channel of the Tempico device used for measurement (TempicoChannel).</p></li>
+<li><p><strong>deviceStopChannel</strong> – The stop channel of the Tempico device used for measurement (TempicoChannel).</p></li>
+<li><p><strong>binwidthText</strong> – The selected bin width for the measurement (str).</p></li>
+<li><p><strong>numberMeasurements</strong> – The number of measurements to be taken (int).</p></li>
+<li><p><strong>device</strong> – The Tempico device used for performing measurements (Tempico).</p></li>
+<li><p><strong>TimeRange</strong> – The time range for the measurements (int).</p></li>
+<li><p><strong>startChannelLabel</strong> – Letter (A-D) identifying deviceStartChannel, used only to
+build status messages. None if no start channel is being used (str or None).</p></li>
+<li><p><strong>stopChannelLabel</strong> – Letter (A-D) identifying deviceStopChannel, used only to
+build status messages (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus">
+<span class="sig-name descname"><span class="pre">checkDeviceStatus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.checkDeviceStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus" title="Permalink to this definition"></a></dt>
+<dd><p>Checks the status of the device by attempting to read a parameter.</p>
+<p>If an error occurs during the read operation, the measurement process is stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the recorded start-stop differences and resets the total measurement count.</p>
+<p>This function empties the list that stores the differences between start and stop measurements,
+and sets the total number of measurements back to zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData">
+<span class="sig-name descname"><span class="pre">createLifeTimeData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.createLifeTimeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData" title="Permalink to this definition"></a></dt>
+<dd><p>Generates LifeTime data from the start-stop differences and emits the calculated results to the main thread.</p>
+<p>Processes the collected data to determine the number of counts within a given time based on the maximum value of start-stop differences.
+Normalizes the data according to the determined units and calculates the histogram counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.createdSignal">
+<span class="sig-name descname"><span class="pre">createdSignal</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.createdSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal">
+<span class="sig-name descname"><span class="pre">disconectedSignal</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.disconectedSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber">
+<span class="sig-name descname"><span class="pre">getBinWidthNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.getBinWidthNumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the bin width in picoseconds based on user input in different units.</p>
+<p>Extracts the numerical value and its corresponding unit from the user-provided text,
+and converts it into picoseconds for further calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits">
+<span class="sig-name descname"><span class="pre">getUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">picosecondsValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.getUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the appropriate units for a given value in picoseconds.</p>
+<p>Converts a given value in picoseconds to the most suitable time unit (picoseconds, nanoseconds, microseconds, or milliseconds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>picosecondsValue</strong> – The value in picoseconds (float).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing the unit as a string and the factor by which to divide the value (list).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode">
+<span class="sig-name descname"><span class="pre">measurementMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.measurementMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the measurement mode for the device channels based on the specified time range.</p>
+<p>If the time range is less than or equal to 500000 ps , sets all channels to mode 1.
+Otherwise, sets all channels to mode 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> – The instance of the class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage">
+<span class="sig-name descname"><span class="pre">noMeasurementsMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelType</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.noMeasurementsMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage" title="Permalink to this definition"></a></dt>
+<dd><p>Builds the “No measurements” status text for the given channel type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channelType</strong> – Either “Start” or “Stop” (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The formatted status message (str).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal">
+<span class="sig-name descname"><span class="pre">pointSignal</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.pointSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.run" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the measurement thread, continuously taking measurements based on user-selected values
+and passing them to the graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal">
+<span class="sig-name descname"><span class="pre">statusSignal</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.statusSignal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the measurement process by setting the running flag to False.</p>
+<p>Emits a status message indicating that the measurement is ending and updates the status bar color to yellow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements">
+<span class="sig-name descname"><span class="pre">takeMeasurements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percentage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadLifeTime.html#WorkerThreadLifeTime.takeMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements" title="Permalink to this definition"></a></dt>
+<dd><p>Takes measurements from the device and updates the start-stop differences list.</p>
+<p>Configures the device for measurement runs and checks the input and stop channels for data.
+If no measurements are detected, emits a status signal to update the main thread about the current measurement state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>percentage</strong> – The percentage of measurement completion (float).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel">
+<span class="sig-name descname"><span class="pre">updateLabel</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateLabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel">
+<span class="sig-name descname"><span class="pre">updateMeasurementsLabel</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateMeasurementsLabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadLifeTime.WorkerThreadLifeTime.updateValues">
+<span class="sig-name descname"><span class="pre">updateValues</span></span><a class="headerlink" href="#Threads.ThreadLifeTime.WorkerThreadLifeTime.updateValues" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ThreadTimeStamping.html" class="btn btn-neutral float-left" title="ThreadTimeStamping module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadFCS.html" class="btn btn-neutral float-right" title="ThreadFCS module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
