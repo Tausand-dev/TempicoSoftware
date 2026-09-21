@@ -371,6 +371,7 @@ class TimeStampLogic():
             #Disable enable buttons
             self.isSelectedFormat=True
             self.startNormalButton.setEnabled(False)
+            self.pauseNormalButton.setText("Pause")
             self.pauseNormalButton.setEnabled(True)
             self.stopNormalButton.setEnabled(True)
             self.tabs.setTabEnabled(1,False)
@@ -474,8 +475,8 @@ class TimeStampLogic():
         self.currenSaving=False
         self.changeStatusColor(0)
         self.changeStatusLabel("No measurement running")
-        if self.pauseNormalButton.text()=="Continue acquisition":
-            self.pauseNormalButton.setText("Pause acquisition")
+        if self.pauseNormalButton.text()=="Continue":
+            self.pauseNormalButton.setText("Pause")
         self.startNormalButton.setEnabled(True)
         self.pauseNormalButton.setEnabled(False)
         self.stopNormalButton.setEnabled(False)
@@ -651,6 +652,7 @@ class TimeStampLogic():
         """
         self.isReordering=False
         self.isWaiting=False
+        self.pauseScheduleButton.setText("Pause")
         self.pauseScheduleButton.setEnabled(True)
         self.changeStatusColor(1)
         self.changeStatusLabel("Running measurement")
@@ -887,6 +889,7 @@ class TimeStampLogic():
             self.mainWindow.tabs.setTabEnabled(4,False)
             self.mainWindow.tabs.setTabEnabled(5,False)
             self.startLimitedButton.setEnabled(False)
+            self.pauseLimitedButton.setText("Pause")
             self.pauseLimitedButton.setEnabled(True)
             self.stopLimitedButton.setEnabled(True)
             self.tabs.setTabEnabled(0,False)

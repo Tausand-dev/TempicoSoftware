@@ -68,8 +68,8 @@ class CountEstimatedLogic():
         #Get the parameters
         self.savefile=savefile()
         self.channelACheckBox = channelACheckBox
-        self.channelCCheckBox = channelBCheckBox
-        self.channelBCheckBox = channelCCheckBox
+        self.channelBCheckBox = channelBCheckBox
+        self.channelCCheckBox = channelCCheckBox
         self.channelDCheckBox = channelDCheckBox
         self.startButton = startButton
         self.stopButton = stopButton
