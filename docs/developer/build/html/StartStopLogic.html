@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StartStopLogic module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CountsEstimatedLogic module" href="CountsEstimatedLogic.html" />
+    <link rel="prev" title="main module" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">StartStopLogic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.autoRangeA"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.autoRangeA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.autoRangeB"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.autoRangeB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.autoRangeC"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.autoRangeC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.autoRangeD"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.autoRangeD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.calibrateDeviceDelay"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.calibrateDeviceDelay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.changeColorThread"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.changeColorThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.changeStatusThread"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.changeStatusThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.changeZoomMax"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.changeZoomMax()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.clear_a"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.clear_a()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.clear_b"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.clear_b()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.clear_c"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.clear_c()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.clear_d"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.clear_d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.createDialog"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.createDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.create_graphs"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.create_graphs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.dialogChangeMode"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.dialogChangeMode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.getMinimumValue"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.getMinimumValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.hide_graphic2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.save_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.save_plots"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.save_plots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.show_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.show_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.start_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.start_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.stop_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.threadComplete"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.threadComplete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.threadRunning"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.threadRunning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.updateBashDataPure"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.updateBashDataPure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.updateBashSignal"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.updateBashSignal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.updateDataPure"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.updateDataPure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.updateSignal"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.updateSignal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.update_histogram"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.update_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedA"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.zoom_changedA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedB"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.zoom_changedB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedC"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.zoom_changedC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedD"><code class="docutils literal notranslate"><span class="pre">StartStopLogic.zoom_changedD()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">StartStopLogic module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/StartStopLogic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Logic.StartStopLogic">
+<span id="startstoplogic-module"></span><h1>StartStopLogic module<a class="headerlink" href="#module-Logic.StartStopLogic" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.StartStopLogic.</span></span><span class="sig-name descname"><span class="pre">StartStopLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopbutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savebutton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_graph_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_channel_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusPoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class handles the functionality for managing buttons, checkboxes, and graphs for histograms related to the Start-Stop measurements. 
+It controls which channels are active, manages the display of histograms, and records the data from the Tempico device based on the user’s interactions. 
+It also handles the zooming feature for creating bars according to the time range received from the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> – The parent QWindow for the logic.</p></li>
+<li><p><strong>disconnect</strong> – The QPushButton used to disconnect.</p></li>
+<li><p><strong>device</strong> – The Tempico device class that handles the measurements.</p></li>
+<li><p><strong>check4</strong> (<em>check1</em><em>, </em><em>check2</em><em>, </em><em>check3</em><em>,</em>) – QCheckBoxes that control the visibility of each histogram.</p></li>
+<li><p><strong>stopbutton</strong> (<em>startbutton</em><em>,</em>) – QPushButtons to start and stop the measurement process.</p></li>
+<li><p><strong>save_graph_1</strong> (<em>savebutton</em><em>,</em>) – QPushButtons to save data and save the graph.</p></li>
+<li><p><strong>clear_channel_D</strong> (<em>clear_channel_A</em><em>, </em><em>clear_channel_B</em><em>, </em><em>clear_channel_C</em><em>,</em>) – QPushButtons to clear data for each respective channel.</p></li>
+<li><p><strong>connect</strong> – QPushButton to connect to the Tempico device.</p></li>
+<li><p><strong>mainWindow</strong> – The main window (QWindow) for the GUI.</p></li>
+<li><p><strong>statusPoint</strong> (<em>statusValue</em><em>,</em>) – QLabel widgets for displaying status information (e.g., values and points).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.autoRangeA">
+<span class="sig-name descname"><span class="pre">autoRangeA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.autoRangeA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.autoRangeA" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically adjusts the zoom level of channel A to the maximum value in the data.</p>
+<p>The function sets a sentinel for zoom changes, checks if there are any data points in 
+channel A, and if so, finds the maximum value. It then calls the changeZoomMax function
+to adjust the zoom accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.autoRangeB">
+<span class="sig-name descname"><span class="pre">autoRangeB</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.autoRangeB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.autoRangeB" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically adjusts the zoom level of channel B to the maximum value in the data.</p>
+<p>The function sets a sentinel for zoom changes, checks if there are any data points in 
+channel B, and if so, finds the maximum value. It then calls the changeZoomMax function
+to adjust the zoom accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.autoRangeC">
+<span class="sig-name descname"><span class="pre">autoRangeC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.autoRangeC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.autoRangeC" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically adjusts the zoom level of channel C to the maximum value in the data.</p>
+<p>The function sets a sentinel for zoom changes, checks if there are any data points in 
+channel C, and if so, finds the maximum value. It then calls the changeZoomMax function
+to adjust the zoom accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.autoRangeD">
+<span class="sig-name descname"><span class="pre">autoRangeD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.autoRangeD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.autoRangeD" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically adjusts the zoom level of channel D to the maximum value in the data.</p>
+<p>The function sets a sentinel for zoom changes, checks if there are any data points in 
+channel D, and if so, finds the maximum value. It then calls the changeZoomMax function
+to adjust the zoom accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.calibrateDeviceDelay">
+<span class="sig-name descname"><span class="pre">calibrateDeviceDelay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.calibrateDeviceDelay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.calibrateDeviceDelay" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the device’s delay calibration routine.</p>
+<p>Called from <cite>start_graphic</cite> before creating the graphs, only for
+“TP12” model devices, to compensate for channel-to-channel timing
+offsets before a new measurement begins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.changeColorThread">
+<span class="sig-name descname"><span class="pre">changeColorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.changeColorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.changeColorThread" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the status-indicator dot colour from a worker-thread signal.</p>
+<p>Equivalent to <cite>changeStatusColor</cite>, provided as a separate slot so it
+can be connected directly to the worker thread’s <cite>colorValue</cite>
+signal. Draws a filled circle on <cite>statusPoint</cite> using the same
+colour code: 0 = gray, 1 = green, 2 = yellow, 3 = orange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – Colour code (int). 0 for gray, 1 for green, 2 for
+yellow, 3 for orange.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the color of the status point in the status bar based on the input value.</p>
+<p>This method updates the status point’s color by drawing a filled circle with the specified color.
+The mapping of numerical values to colors is as follows:
+- 0: Gray
+- 1: Green
+- 2: Yellow
+- 3: Orange</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – A numerical value representing the desired color (int).
+0 for gray, 1 for green, 2 for yellow, 3 for orange.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.changeStatusThread">
+<span class="sig-name descname"><span class="pre">changeStatusThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newText</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.changeStatusThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.changeStatusThread" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the text displayed in the status bar.</p>
+<p>This method sets the status value text to the specified new text, 
+reflecting the current status or information relevant to the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newText</strong> – The text to display in the status bar (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.changeZoomMax">
+<span class="sig-name descname"><span class="pre">changeZoomMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newMaxValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.changeZoomMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.changeZoomMax" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically adjusts the zoom level of the plot to the maximum value found.</p>
+<p>The function sets the x-axis range of the specified channel’s plot to [0, newMaxValue].
+It considers whether measurements have been taken and limits the zoom change based on 
+the sentinel zoom change counters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>newMaxValue</strong> – The new maximum value for the zoom range (float).</p></li>
+<li><p><strong>channel</strong> – The channel to which the zoom change applies (str).
+Expected values are ‘A’, ‘B’, ‘C’, or ‘D’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.clear_a">
+<span class="sig-name descname"><span class="pre">clear_a</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.clear_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.clear_a" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the lists containing measured data for channel A by resetting them to empty lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.clear_b">
+<span class="sig-name descname"><span class="pre">clear_b</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.clear_b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.clear_b" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the lists containing measured data for channel B by resetting them to empty lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.clear_c">
+<span class="sig-name descname"><span class="pre">clear_c</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.clear_c"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.clear_c" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the lists containing measured data for channel C by resetting them to empty lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.clear_d">
+<span class="sig-name descname"><span class="pre">clear_d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.clear_d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.clear_d" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the lists containing measured data for channel D by resetting them to empty lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.createDialog">
+<span class="sig-name descname"><span class="pre">createDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.createDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.createDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a dialog box to notify the user when the connection with the device has been lost.</p>
+<p>This method displays a critical error message box indicating that the connection with the device
+has been lost. It also stops any ongoing graphic updates, hides relevant graphics, 
+and disables the disconnect button while enabling the connect button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.create_graphs">
+<span class="sig-name descname"><span class="pre">create_graphs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.create_graphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.create_graphs" title="Permalink to this definition"></a></dt>
+<dd><p>Creates histograms and plots for the selected channels (A, B, C, D) and arranges them on the GUI.</p>
+<p>This function initializes the graphical components and assigns the appropriate properties to the plots based on the selected channels.
+It also manages the layout of the graphs, resizing them according to the number of selected channels (1, 2, 3, or 4). 
+After setting up the graphical components, the function starts a worker thread that handles the measurement process in parallel with the GUI thread, ensuring the UI remains responsive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.dialogChangeMode">
+<span class="sig-name descname"><span class="pre">dialogChangeMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.dialogChangeMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.dialogChangeMode" title="Permalink to this definition"></a></dt>
+<dd><p>Opens a dialog box to ask the user if they want to change the mode for the selected channel.</p>
+<p>The dialog informs the user that the collected data for the specified channel falls 
+mostly outside the reliable range of mode 1 and prompts them to switch to mode 2. 
+If the user confirms, the function updates the mode and processes the data accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> – The channel for which to change the mode (str). 
+Expected values are ‘channel A’, ‘channel B’, ‘channel C’, or ‘channel D’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Disables device interaction controls when the device is disconnected.</p>
+<p>This function updates the GUI to reflect that the device is no longer connected 
+by disabling the disconnect and start buttons and enabling the connect button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.getMinimumValue">
+<span class="sig-name descname"><span class="pre">getMinimumValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.getMinimumValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.getMinimumValue" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the initial plot X-axis minimum according to the device model.</p>
+<p>“TP12” model devices support negative Start-Stop delays, so the
+minimum is set slightly below zero (<code class="docutils literal notranslate"><span class="pre">-250</span></code> ns / <code class="docutils literal notranslate"><span class="pre">-0.00025</span></code> ms).
+Other models only support non-negative delays, so the minimum is
+set to 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.hide_graphic2">
+<span class="sig-name descname"><span class="pre">hide_graphic2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.hide_graphic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.hide_graphic2" title="Permalink to this definition"></a></dt>
+<dd><p>Disables the start and stop buttons in the graphical interface.</p>
+<p>This function is typically used to prevent user interaction during certain operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.resetSaveSentinels">
+<span class="sig-name descname"><span class="pre">resetSaveSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.resetSaveSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.resetSaveSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the sentinels that track which file formats have already been saved.</p>
+<p>Resets the txt/csv/dat save sentinels to 0, allowing the data to be
+saved again in any format (e.g. after a new measurement starts).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.save_graphic">
+<span class="sig-name descname"><span class="pre">save_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.save_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.save_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current data according to the selected format specified in the dialog box.</p>
+<p>The function starts by retrieving the default histogram name and the current 
+date, which is formatted to create a unique filename. It then initializes lists 
+to hold filenames, data, settings, and column names for the saved files.</p>
+<p>A dialog box is displayed for the user to select the desired file format 
+(txt, csv, or dat) for saving the data. Once the user accepts the selection, 
+the function checks if the selected format has already been saved before.</p>
+<p>If the selected format has not been saved, it collects data from the various 
+channels (A, B, C, D) if their corresponding sentinel variables indicate 
+they should be saved. It retrieves the average cycles, mode, number of stops, 
+stop edge, and stop mask for each channel to include in the settings. The 
+function then attempts to save the collected data in the specified format.</p>
+<p>If the save operation is successful, a message box is displayed, confirming 
+the successful save and showing the folder path and file names. If an error 
+occurs during the save process, an error message box is shown.</p>
+<p>If the selected format has already been saved, a message box is displayed 
+with the previous save information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.save_plots">
+<span class="sig-name descname"><span class="pre">save_plots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.save_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.save_plots" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current plots in the selected image format.</p>
+<p>This method opens a dialog for the user to select an image format (PNG, TIFF, or JPG) 
+and saves the plots for channels A, B, C, and D if their respective flags are set to True. 
+The plots are saved with a timestamp in the specified format in the default folder path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.show_graphic">
+<span class="sig-name descname"><span class="pre">show_graphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.show_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.show_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the device and its channels, enabling the start button for measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_new</strong> – The new device to be set (DeviceType).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the timer that periodically checks the device connection.</p>
+<p>The timer runs every 500 milliseconds to monitor connectivity. This is typically 
+called after a measurement finishes or when the application is idle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.start_graphic">
+<span class="sig-name descname"><span class="pre">start_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.start_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.start_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the graphical representation of the measurement based on the selected channels.</p>
+<p>If no channels are selected, it prompts the user to select at least one channel before proceeding. 
+It also disables certain buttons to prevent interaction during the measurement process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the timer responsible for checking the device connection.</p>
+<p>This function is typically called when a measurement begins to avoid interference
+during the acquisition process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.stop_graphic">
+<span class="sig-name descname"><span class="pre">stop_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.stop_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.stop_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Enables the functions to initiate a new measurement while disabling the buttons to clear graphs. 
+It also updates the status bar text and color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.threadComplete">
+<span class="sig-name descname"><span class="pre">threadComplete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.threadComplete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.threadComplete" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the completion of the measurement thread by enabling the ability to switch between windows. 
+It also calls the stop_graphic() function to update the UI accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.threadRunning">
+<span class="sig-name descname"><span class="pre">threadRunning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.threadRunning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.threadRunning" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the thread creation status.</p>
+<p>This method sets the threadCreatedSentinel attribute to indicate whether a thread has been created 
+based on the provided status value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>status</strong> – The status indicating whether a thread has been created (int). 
+Use 0 to indicate that the thread has been created, and 1 to indicate that it has not.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.updateBashDataPure">
+<span class="sig-name descname"><span class="pre">updateBashDataPure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valuesPureA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesPureB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesPureC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesPureD</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.updateBashDataPure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.updateBashDataPure" title="Permalink to this definition"></a></dt>
+<dd><p>Appends a batch of raw measurement values for each channel.</p>
+<p>Used in batched measurement mode, where the worker thread emits
+lists of raw (picosecond) values accumulated over several runs
+instead of one value at a time. Every value in each list is
+appended, as an integer, to the corresponding channel’s raw data
+list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>valuesPureA</strong> – List of new raw measurement values, in
+picoseconds, for channel A.</p></li>
+<li><p><strong>valuesPureB</strong> – List of new raw measurement values, in
+picoseconds, for channel B.</p></li>
+<li><p><strong>valuesPureC</strong> – List of new raw measurement values, in
+picoseconds, for channel C.</p></li>
+<li><p><strong>valuesPureD</strong> – List of new raw measurement values, in
+picoseconds, for channel D.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.updateBashSignal">
+<span class="sig-name descname"><span class="pre">updateBashSignal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valueListA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueListB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueListC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueListD</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.updateBashSignal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.updateBashSignal" title="Permalink to this definition"></a></dt>
+<dd><p>Appends a batch of processed measurement values and refreshes each channel’s histogram.</p>
+<p>Used in batched measurement mode, where the worker thread emits
+lists of values accumulated over several runs instead of one value
+at a time. Every value in each list is appended to the
+corresponding channel’s data, and the histogram is refreshed once
+per channel (not per value) if that channel received any new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>valueListA</strong> – List of new processed measurement values for
+channel A.</p></li>
+<li><p><strong>valueListB</strong> – List of new processed measurement values for
+channel B.</p></li>
+<li><p><strong>valueListC</strong> – List of new processed measurement values for
+channel C.</p></li>
+<li><p><strong>valueListD</strong> – List of new processed measurement values for
+channel D.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.updateDataPure">
+<span class="sig-name descname"><span class="pre">updateDataPure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.updateDataPure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.updateDataPure" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the raw data values for the specified channel.</p>
+<p>This method appends the new raw value (in picoseconds) to the list of data for the specified 
+channel (A, B, C, or D).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The raw data value to append to the data list (float or int). 
+This value is in picoseconds.</p></li>
+<li><p><strong>channel</strong> – The channel identifier for which the value is to be updated (str). 
+Accepted values are “A”, “B”, “C”, and “D”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.updateSignal">
+<span class="sig-name descname"><span class="pre">updateSignal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.updateSignal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.updateSignal" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the normalized data values for the specified channel and refreshes the corresponding histogram.</p>
+<p>This method appends the new value to the list of normalized data for the specified channel 
+(A, B, C, or D) and calls the update_histogram method to refresh the histogram with the 
+updated data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The normalized value to append to the data list (float or int).</p></li>
+<li><p><strong>channel</strong> – The channel identifier for which the value is to be updated (str). 
+Accepted values are “A”, “B”, “C”, and “D”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.update_histogram">
+<span class="sig-name descname"><span class="pre">update_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexChannel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.update_histogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.update_histogram" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates and updates the histogram for the specified channel based on the measured data.</p>
+<p>The function first checks the selected channel (A, B, C, or D) and retrieves the 
+current view range from the corresponding view box. It then creates bins for the 
+histogram based on this range, using a total of 61 bins.</p>
+<p>Finally, it computes the histogram of the provided data and updates the specified 
+curve in the plot with the histogram values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The measured data used to calculate the histogram (list).</p></li>
+<li><p><strong>curve</strong> – The curve item from the plot in PyQt5 with PyQtGraph that corresponds 
+to the channel (PlotCurveItem).</p></li>
+<li><p><strong>indexChannel</strong> – The identifier of the channel for the histogram, which can 
+be “A”, “B”, “C”, or “D” (str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.zoom_changedA">
+<span class="sig-name descname"><span class="pre">zoom_changedA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.zoom_changedA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedA" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically calculates and updates the histogram for channel A when the user 
+zooms in on the corresponding graph.</p>
+<p>The function checks if the zoom was triggered by code or user action. If it was 
+triggered by the user, it increments the sentinel for zoom changes. It then 
+retrieves the current x-range from the view box for channel A and computes the 
+bin width for the histogram.</p>
+<p>Next, it creates 61 bins based on the x-range and calculates the histogram 
+using the measured data. The histogram data is then used to update the curve 
+item for channel A in the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.zoom_changedB">
+<span class="sig-name descname"><span class="pre">zoom_changedB</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.zoom_changedB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedB" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically calculates and updates the histogram for channel B when the user 
+zooms in on the corresponding graph.</p>
+<p>The function checks if the zoom was triggered by code or user action. If it was 
+triggered by the user, it increments the sentinel for zoom changes. It then 
+retrieves the current x-range from the view box for channel B and computes the 
+bin width for the histogram.</p>
+<p>Next, it creates 61 bins based on the x-range and calculates the histogram 
+using the measured data. The histogram data is then used to update the curve 
+item for channel B in the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.zoom_changedC">
+<span class="sig-name descname"><span class="pre">zoom_changedC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.zoom_changedC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedC" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically calculates and updates the histogram for channel C when the user 
+zooms in on the corresponding graph.</p>
+<p>The function checks if the zoom was triggered by code or user action. If it was 
+triggered by the user, it increments the sentinel for zoom changes. It then 
+retrieves the current x-range from the view box for channel C and computes the 
+bin width for the histogram.</p>
+<p>Next, it creates 61 bins based on the x-range and calculates the histogram 
+using the measured data. The histogram data is then used to update the curve 
+item for channel C in the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.StartStopLogic.StartStopLogic.zoom_changedD">
+<span class="sig-name descname"><span class="pre">zoom_changedD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/StartStopLogic.html#StartStopLogic.zoom_changedD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.StartStopLogic.StartStopLogic.zoom_changedD" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically calculates and updates the histogram for channel D when the user 
+zooms in on the corresponding graph.</p>
+<p>The function checks if the zoom was triggered by code or user action. If it was 
+triggered by the user, it increments the sentinel for zoom changes. It then 
+retrieves the current x-range from the view box for channel D and computes the 
+bin width for the histogram.</p>
+<p>Next, it creates 61 bins based on the x-range and calculates the histogram 
+using the measured data. The histogram data is then used to update the curve 
+item for channel D in the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CountsEstimatedLogic.html" class="btn btn-neutral float-right" title="CountsEstimatedLogic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

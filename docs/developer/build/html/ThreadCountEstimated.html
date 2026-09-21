@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreadCountEstimated module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ThreadTimeStamping module" href="ThreadTimeStamping.html" />
+    <link rel="prev" title="ThreadStartStop module" href="ThreadStartStop.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ThreadCountEstimated module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.calculateIntervalWithStops()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.changeStatusColor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusText"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.changeStatusText</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.determineStopsNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.disconnectedDevice</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.enableDisableChannels"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.enableDisableChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.finalDate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.finalDate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.getMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.getMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.initialDate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newMeasurement"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.newMeasurement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newValue"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.newValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noPartialMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.noPartialMeasurements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noTotalMeasurements"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.noTotalMeasurements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.updateLabel"><code class="docutils literal notranslate"><span class="pre">WorkerThreadCountsEstimated.updateLabel</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ThreadCountEstimated module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ThreadCountEstimated.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Threads.ThreadCountEstimated">
+<span id="threadcountestimated-module"></span><h1>ThreadCountEstimated module<a class="headerlink" href="#module-Threads.ThreadCountEstimated" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Threads.ThreadCountEstimated.</span></span><span class="sig-name descname"><span class="pre">WorkerThreadCountsEstimated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelASentinel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelBSentinel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelCSentinel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelDSentinel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>This class represents a worker thread that processes Start-Stop measurements in a separate thread
+to avoid blocking the main GUI thread. It handles data acquisition from the Tempico device,
+determines the feasibility of performing measurements per channel, and continuously collects
+and emits measurement data while running.</p>
+<p>The thread evaluates which channels meet the minimum requirements for valid measurements
+(e.g., at least 2 stops within a defined time window), disables those that do not, and allows
+the user to decide whether to proceed with the remaining ones.</p>
+<p>Signals are extensively used to communicate with the GUI, updating labels, graphs, and table data
+in real time, or notifying when no valid measurements are available.</p>
+<p>Additional attributes track the number of stop events per channel and enable synchronization
+with the main interface using a <cite>threading.Event()</cite> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channelASentinel</strong> – Boolean indicating if Channel A is initially selected for measurement.</p></li>
+<li><p><strong>channelBSentinel</strong> – Boolean indicating if Channel B is initially selected for measurement.</p></li>
+<li><p><strong>channelCSentinel</strong> – Boolean indicating if Channel C is initially selected for measurement.</p></li>
+<li><p><strong>channelDSentinel</strong> – Boolean indicating if Channel D is initially selected for measurement.</p></li>
+<li><p><strong>device</strong> – The TempicoDevice instance used to perform the measurement operations.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Signals:</dt><dd><ul class="simple">
+<li><p>newValue(str, float, float): Emitted with updated values for display (label updates).</p></li>
+<li><p>updateLabel(str, float, float): Updates the label values for each channel.</p></li>
+<li><p>newMeasurement(float, datetime, float, float, float, float, float, float, float, float): 
+Emitted with measurement timestamp, and count/uncertainty data for each channel.</p></li>
+<li><p>noTotalMeasurements(list): Emitted with a list of channels that failed to provide stop data, when none of the selected channels provide valid stop data.</p></li>
+<li><p>noPartialMeasurements(list): Emitted with a list of channels that failed the threshold.</p></li>
+<li><p>changeStatusText(str): Updates the system status label with a custom message.</p></li>
+<li><p>changeStatusColor(int): Updates the system status label color code.</p></li>
+<li><p>disconnectedDevice(): Emitted when the Tempico device is no longer reachable.</p></li>
+<li><p>initialDate(str): Emitted with the starting timestamp of the measurement session.</p></li>
+<li><p>finalDate(str): Emitted with the ending timestamp of the measurement session.</p></li>
+</ul>
+</dd>
+<dt>Attributes:</dt><dd><ul class="simple">
+<li><p>channelsMeasure: List of channels accepted for measurement after validation.</p></li>
+<li><p>channelsWithoutMeasurements: List of channels that failed the validation criteria.</p></li>
+<li><p>continueEvent: Event object used to pause/resume thread logic when user interaction is needed.</p></li>
+<li><p>running: Boolean flag to control the thread’s main loop.</p></li>
+<li><p>numberStopsChannelA/B/C/D: Internal counters to track stop events for each channel.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops">
+<span class="sig-name descname"><span class="pre">calculateIntervalWithStops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentMeasure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberStops</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.calculateIntervalWithStops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates stop time intervals based on pulse timestamps from the measurement.</p>
+<p>The function receives a raw measurement and the expected number of stops, 
+then iteratively computes the time differences between consecutive valid 
+pulse timestamps. Each interval is converted to a frequency in Hz by 
+dividing 10^12 by the difference in timestamp units (assuming picoseconds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currentMeasure</strong> – A list containing pulse data for a single run.</p></li>
+<li><p><strong>numberStops</strong> – The number of stop intervals expected in the measurement.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of frequency values (in Hz) calculated from the stop intervals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusText">
+<span class="sig-name descname"><span class="pre">changeStatusText</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.changeStatusText" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber">
+<span class="sig-name descname"><span class="pre">determineStopsNumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelTest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.determineStopsNumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the optimal number of stop pulses for a given channel to ensure valid measurements.</p>
+<p>This function tests different stop configurations by progressively reducing the number of 
+required stop pulses (from 5 down to 2). For each configuration, it performs multiple test 
+measurements and checks if at least half of them return valid data. If a configuration with 
+sufficient measurements is found, it is returned. If none meet the condition, 1 is returned 
+by default. If the thread is stopped during execution, the process halts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channelTest</strong> – A string indicating the channel to test (“A”, “B”, “C”, or “D”).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An integer representing the number of stop pulses that reliably produce measurements.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.enableDisableChannels">
+<span class="sig-name descname"><span class="pre">enableDisableChannels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.enableDisableChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.enableDisableChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Enables or disables device channels based on active measurement sentinels.</p>
+<p>This function disables all channels initially, then enables only the selected ones based on 
+the sentinel flags. It configures each enabled channel with a default stop mask and averaging 
+settings, and adds them to the list of channels to be measured. This reduces processing time 
+by avoiding unnecessary measurements from inactive channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.finalDate">
+<span class="sig-name descname"><span class="pre">finalDate</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.finalDate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.getMeasurements">
+<span class="sig-name descname"><span class="pre">getMeasurements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.getMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.getMeasurements" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves and processes the latest measurement data from the Tempico device.</p>
+<p>For each enabled channel, it verifies that the received data is valid, calculates 
+stop intervals based on the number of pulses received, and computes both the mean 
+and standard deviation of the intervals. These values represent the estimated count 
+and its uncertainty.</p>
+<p>If valid data is found, the results are emitted via a signal along with the timestamp 
+of the measurement. If no data is available, default values are emitted depending 
+on the state of each channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate">
+<span class="sig-name descname"><span class="pre">initialDate</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.initialDate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newMeasurement">
+<span class="sig-name descname"><span class="pre">newMeasurement</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newMeasurement" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newValue">
+<span class="sig-name descname"><span class="pre">newValue</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.newValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noPartialMeasurements">
+<span class="sig-name descname"><span class="pre">noPartialMeasurements</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noPartialMeasurements" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noTotalMeasurements">
+<span class="sig-name descname"><span class="pre">noTotalMeasurements</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.noTotalMeasurements" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run" title="Permalink to this definition"></a></dt>
+<dd><p>Executes the thread’s main loop to perform count estimations from the Tempico device.</p>
+<p>First, it evaluates each selected channel to determine whether valid measurements can be 
+obtained. If a channel does not meet the required threshold, it is disabled and removed 
+from the measurement process. If at least one channel is valid, the measurement process begins.</p>
+<p>The loop runs continuously while the thread is active, triggering measurements every second. 
+If the device becomes unresponsive or the user stops the measurement, the thread exits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Threads/ThreadCountEstimated.html#WorkerThreadCountsEstimated.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the measurement process by setting the running sentinel to False.</p>
+<p>This function is typically called from the GUI when the user requests to stop the measurement. 
+Once the sentinel is set to False, the running loop in the thread will exit, effectively 
+terminating the background measurement process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.updateLabel">
+<span class="sig-name descname"><span class="pre">updateLabel</span></span><a class="headerlink" href="#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.updateLabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ThreadStartStop.html" class="btn btn-neutral float-left" title="ThreadStartStop module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreadTimeStamping.html" class="btn btn-neutral float-right" title="ThreadTimeStamping module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

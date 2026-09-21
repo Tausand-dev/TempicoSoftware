@@ -1,0 +1,1185 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeStampLogic module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LifeTimeLogic module" href="LifeTimeLogic.html" />
+    <link rel="prev" title="CountsEstimatedLogic module" href="CountsEstimatedLogic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TimeStampLogic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.autoSaveAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveActionRoute"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.autoSaveActionRoute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveSettings"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.autoSaveSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.beginMeasurementTime"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.beginMeasurementTime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.calibrateDeviceDelay"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.calibrateDeviceDelay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.captureMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.captureMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.changeLabelToUpdate"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.changeLabelToUpdate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.changeStatusLabel"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.changeStatusLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveData"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.checkBoxSaveData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveDataAfterMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.checkBoxSaveDataAfterMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.clearData"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.clearData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.countToBegin"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.countToBegin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.countToStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.countToStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.dialogFormatStart"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.dialogFormatStart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.dialogHelpSaveButton"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.dialogHelpSaveButton()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.dialogToShowSave"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.dialogToShowSave()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.fileNameAutoSave"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.fileNameAutoSave()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.finalMessageAfterSave"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.finalMessageAfterSave()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.finishedMeasurements"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.finishedMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThread"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.finishedThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThreadLimited"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.finishedThreadLimited()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThreadSchedule"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.finishedThreadSchedule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.formatWaitingTime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAproxTotalData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.getAvailableRam"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.getAvailableRam()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatLimitedStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatLimitedStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatNormalStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatNormalStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.notSelectedFormatScheduledStop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.onAutoSaveIntervalChanged"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.onAutoSaveIntervalChanged()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.pauseLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.pauseLimitedMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.pauseNormalMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.pauseNormalMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.pauseScheduledMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.resetValuesSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.saveDataAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveDataButtonAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.saveSettings"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.saveSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.setErrorAutoSaving"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.setErrorAutoSaving()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.setValuesBeforeMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.setValuesBeforeMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.settingsAfterMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.settingsAfterMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.settingsBeforeMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.settingsBeforeMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectDates"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.showDialogIncorrectDates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectInitDate"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.showDialogIncorrectInitDate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogNoChannels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.showDialogNoChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.showProgressDialog"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.showProgressDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.startLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.startLimitedMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.startNormalMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.startNormalMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.startScheduledMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.startScheduledMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopLimitedButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopLimitedButtonAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopLimitedMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopLimitedMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopNormalButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopNormalButtonAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopNormalMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopNormalMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopScheduledMeasurement"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopScheduledMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopScyheduledButtonAction"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopScyheduledButtonAction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateCheckBoxLabels"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateCheckBoxLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateProgressDialog"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateProgressDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateShowTable"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateShowTable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateValueTotalMeasurements"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateValueTotalMeasurements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementA"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateValuesMeasurementA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementB"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateValuesMeasurementB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementC"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateValuesMeasurementC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementD"><code class="docutils literal notranslate"><span class="pre">TimeStampLogic.updateValuesMeasurementD()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">TimeStampLogic module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/TimeStampLogic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Logic.TimeStampLogic">
+<span id="timestamplogic-module"></span><h1>TimeStampLogic module<a class="headerlink" href="#module-Logic.TimeStampLogic" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.TimeStampLogic.</span></span><span class="sig-name descname"><span class="pre">TimeStampLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enableCheckBoxA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enableCheckBoxB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enableCheckBoxC</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enableCheckBoxD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startNormalButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pauseNormalButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopNormalButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startScheduleButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pauseScheduleButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopScheduleButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startLimitedButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pauseLimitedButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopLimitedButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startDate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QDateEdit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startTime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimeEdit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finishDate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QDateEdit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finishTime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimeEdit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberMeasurementsSpinBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showTableCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurementLabelA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurementLabelB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurementLabelC</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurementLabelD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueMeasurementA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueMeasurementB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueMeasurementC</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueMeasurementD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueTotalMeasurement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tableTimeStamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTableWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataComplete</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabNormalMeasurement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabScheduleMeasurement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabLimitedMeasurement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTabWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoSaveComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helpSaveButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerConnection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTimer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class responsible for managing the logic and interface of the TimeStamp measurement tab.</p>
+<p>This class handles long-duration timestamp measurements across different operational modes, including:
+- <strong>Normal</strong> mode: Starts and stops measurements manually.
+- <strong>Scheduled</strong> mode: Automatically starts/stops measurements based on configured start and end date-times.
+- <strong>Limited</strong> mode: Runs measurements until a predefined number of events is recorded.</p>
+<p>It provides real-time updates of the measurement status, displays results in a table, and supports manual and automatic data saving in multiple formats. It also offers visual feedback, per-channel control, and user configuration for saving behaviors.</p>
+<p>The main responsibilities include:
+- Managing three measurement modes: normal, scheduled, and limited.
+- Displaying measurement data in a table, including per-channel and total counts.
+- Handling delayed start and stop based on date and time settings.
+- Enabling saving of data manually or automatically in <cite>.txt</cite>, <cite>.csv</cite>, and <cite>.dat</cite> formats.
+- Tracking system and measurement status through visual and textual indicators.
+- Controlling visibility and behavior of measurement labels and checkboxes.
+- Providing help dialogs and UI feedback during configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enableCheckBoxA</strong> – Checkbox to enable/disable channel A (QCheckBox).</p></li>
+<li><p><strong>enableCheckBoxB</strong> – Checkbox to enable/disable channel B (QCheckBox).</p></li>
+<li><p><strong>enableCheckBoxC</strong> – Checkbox to enable/disable channel C (QCheckBox).</p></li>
+<li><p><strong>enableCheckBoxD</strong> – Checkbox to enable/disable channel D (QCheckBox).</p></li>
+<li><p><strong>startNormalButton</strong> – Button to start normal measurement mode (QPushButton).</p></li>
+<li><p><strong>pauseNormalButton</strong> – Button to pause normal measurement mode (QPushButton).</p></li>
+<li><p><strong>stopNormalButton</strong> – Button to stop normal measurement mode (QPushButton).</p></li>
+<li><p><strong>startScheduleButton</strong> – Button to start scheduled measurement mode (QPushButton).</p></li>
+<li><p><strong>pauseScheduleButton</strong> – Button to pause scheduled measurement mode (QPushButton).</p></li>
+<li><p><strong>stopScheduleButton</strong> – Button to stop scheduled measurement mode (QPushButton).</p></li>
+<li><p><strong>startLimitedButton</strong> – Button to start limited measurement mode (QPushButton).</p></li>
+<li><p><strong>pauseLimitedButton</strong> – Button to pause limited measurement mode (QPushButton).</p></li>
+<li><p><strong>stopLimitedButton</strong> – Button to stop limited measurement mode (QPushButton).</p></li>
+<li><p><strong>startDate</strong> – Date selector for scheduled start date (QDateEdit).</p></li>
+<li><p><strong>startTime</strong> – Time selector for scheduled start time (QTimeEdit).</p></li>
+<li><p><strong>finishDate</strong> – Date selector for scheduled end date (QDateEdit).</p></li>
+<li><p><strong>finishTime</strong> – Time selector for scheduled end time (QTimeEdit).</p></li>
+<li><p><strong>numberMeasurementsSpinBox</strong> – Spin box to configure number of measurements in limited mode (QSpinBox).</p></li>
+<li><p><strong>showTableCheckBox</strong> – Checkbox to show/hide the measurement table (QCheckBox).</p></li>
+<li><p><strong>measurementLabelA</strong> – Label title for channel A measurement (QLabel).</p></li>
+<li><p><strong>measurementLabelB</strong> – Label title for channel B measurement (QLabel).</p></li>
+<li><p><strong>measurementLabelC</strong> – Label title for channel C measurement (QLabel).</p></li>
+<li><p><strong>measurementLabelD</strong> – Label title for channel D measurement (QLabel).</p></li>
+<li><p><strong>valueMeasurementA</strong> – Label showing count value for channel A (QLabel).</p></li>
+<li><p><strong>valueMeasurementB</strong> – Label showing count value for channel B (QLabel).</p></li>
+<li><p><strong>valueMeasurementC</strong> – Label showing count value for channel C (QLabel).</p></li>
+<li><p><strong>valueMeasurementD</strong> – Label showing count value for channel D (QLabel).</p></li>
+<li><p><strong>valueTotalMeasurement</strong> – Label showing total count value (QLabel).</p></li>
+<li><p><strong>tableTimeStamp</strong> – Table displaying recorded timestamp data (QTableWidget).</p></li>
+<li><p><strong>statusLabel</strong> – Label showing current system status (QLabel).</p></li>
+<li><p><strong>colorLabel</strong> – Color-coded label to indicate measurement state (QLabel).</p></li>
+<li><p><strong>saveDataComplete</strong> – Checkbox to toggle full data saving after measurement (QCheckBox).</p></li>
+<li><p><strong>tabNormalMeasurement</strong> – Tab widget for normal measurement UI (QWidget).</p></li>
+<li><p><strong>tabScheduleMeasurement</strong> – Tab widget for scheduled measurement UI (QWidget).</p></li>
+<li><p><strong>tabLimitedMeasurement</strong> – Tab widget for limited measurement UI (QWidget).</p></li>
+<li><p><strong>saveDataButton</strong> – Button to manually save timestamp data (QPushButton).</p></li>
+<li><p><strong>tabs</strong> – Main tab widget that hosts all measurement tabs (QTabWidget).</p></li>
+<li><p><strong>autoSaveComboBox</strong> – Combo box to select preferred format for automatic saving (QComboBox).</p></li>
+<li><p><strong>helpSaveButton</strong> – Button to show help dialog for save options (QPushButton).</p></li>
+<li><p><strong>parent</strong> – The parent UI element containing this tab (usually QMainWindow).</p></li>
+<li><p><strong>device</strong> – The connected TempicoDevice used for timestamp acquisition.</p></li>
+<li><p><strong>timerConnection</strong> – Timer object for device connection polling (QTimer).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.autoSaveAction">
+<span class="sig-name descname"><span class="pre">autoSaveAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.autoSaveAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveAction" title="Permalink to this definition"></a></dt>
+<dd><p>Performs periodic autosave during a measurement.</p>
+<p>This function is triggered automatically at regular intervals while a 
+measurement is running. It saves the current batch of measurement data 
+to a file using the predefined autosave format, then clears the saved 
+data from memory to free resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.autoSaveActionRoute">
+<span class="sig-name descname"><span class="pre">autoSaveActionRoute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.autoSaveActionRoute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveActionRoute" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the final autosave when a measurement ends.</p>
+<p>This function is executed as the last step of a measurement when either the 
+user stops it manually or the scheduled time finishes. It saves all remaining 
+measurement data to a file using the selected autosave format (<cite>txt</cite>, <cite>csv</cite>, 
+or <cite>dat</cite>), clears the in-memory data lists, and updates the corresponding 
+flags indicating that the data has been saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.autoSaveSettings">
+<span class="sig-name descname"><span class="pre">autoSaveSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.autoSaveSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.autoSaveSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Configures and starts the autosave timer based on the user’s interval selection.</p>
+<p>If not in the “Scheduled” tab, prompts the user to select the save format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.beginMeasurementTime">
+<span class="sig-name descname"><span class="pre">beginMeasurementTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.beginMeasurementTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.beginMeasurementTime" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the scheduled timestamp measurement when the countdown timer reaches zero.</p>
+<p>This function is automatically called after the waiting period in a scheduled measurement.
+It performs the following actions:
+- Clears previous data and resets internal sentinels.
+- Sets up pre-measurement values and stops the device connection timer.
+- Applies auto-save settings and generates the file name if needed.
+- Initializes the measurement worker thread in “scheduled” mode.
+- Starts a timer to monitor when the measurement should stop automatically.
+- Updates the UI to reflect that the measurement is now running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.calibrateDeviceDelay">
+<span class="sig-name descname"><span class="pre">calibrateDeviceDelay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.calibrateDeviceDelay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.calibrateDeviceDelay" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.captureMeasurement">
+<span class="sig-name descname"><span class="pre">captureMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valuesA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuesStart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurementsChannelA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurementsChannelB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurementsChannelC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurementsChannelD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totalMeasurements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.captureMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.captureMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Inserts new measurement data into the table, updates the internal data structures,
+and refreshes channel/total measurement labels.</p>
+<p>Called when the worker thread emits new measurement values for each channel.</p>
+<ul class="simple">
+<li><p>Adds rows for each measurement (A, B, C, D, and Start events) at the top of the table.</p></li>
+<li><p>Stores timestamps, stop values, and channel IDs in internal lists.</p></li>
+<li><p>Limits table size to 50,000 rows.</p></li>
+<li><p>Updates labels showing total measurements per channel and overall.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.changeLabelToUpdate">
+<span class="sig-name descname"><span class="pre">changeLabelToUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">textValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.changeLabelToUpdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.changeLabelToUpdate" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the status label or measurement status value depending on the reordering state.</p>
+<p>If not currently reordering, updates <cite>statusValueMeasurements</cite>.
+If reordering, updates the <cite>statusLabel</cite> text directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>textValue</strong> (<em>str</em>) – The text to display.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the color of the point in the status bar. Each color is assigned a specific numeric value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – The numeric value corresponding to the desired color (int).
+- 0: Gray
+- 1: Green
+- 2: Yellow
+- 3: Orange</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.changeStatusLabel">
+<span class="sig-name descname"><span class="pre">changeStatusLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">textValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.changeStatusLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.changeStatusLabel" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the status label text unless a save operation is in progress.</p>
+<p>If a save is occurring, the label is set to “Saving Data” instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>textValue</strong> (<em>str</em>) – The text to display if not currently saving.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveData">
+<span class="sig-name descname"><span class="pre">checkBoxSaveData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.checkBoxSaveData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveData" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the behavior of the “Save Data” checkbox for enabling or disabling auto-save options.
+Includes a confirmation dialog when disabling auto-save.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveDataAfterMeasurement">
+<span class="sig-name descname"><span class="pre">checkBoxSaveDataAfterMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.checkBoxSaveDataAfterMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.checkBoxSaveDataAfterMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the behavior of the “Save Data” checkbox for enabling or disabling auto-save options.
+Includes a confirmation dialog when disabling auto-save.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.clearData">
+<span class="sig-name descname"><span class="pre">clearData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.clearData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.clearData" title="Permalink to this definition"></a></dt>
+<dd><p>Clears all data and resets save-related sentinels from the previous measurement.</p>
+<p>This includes:
+- Resetting autosave and manual save flags.
+- Clearing stored measurement data and timestamps.
+- Resetting the display table.
+- Clearing internal autosave buffer via <cite>savefile</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.connectedDevice">
+<span class="sig-name descname"><span class="pre">connectedDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.connectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.connectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handles UI and internal state updates when the device is connected in the TimeStamp logic tab.</p>
+<p>This function performs the following actions:
+- Enables the disconnect button and disables the connect button in the main window.
+- Updates the internal sentinel to indicate the device is now connected.
+- Stores the reference to the connected device instance.
+- Enables the start buttons for normal, scheduled, and limited measurement modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device</strong> – The connected device instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.countToBegin">
+<span class="sig-name descname"><span class="pre">countToBegin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.countToBegin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.countToBegin" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the countdown status before the scheduled measurement begins.</p>
+<p>This function is called periodically by a QTimer during the waiting period before a scheduled measurement starts.
+It performs the following actions:
+- Calculates the remaining time until the scheduled start.
+- If time is still remaining:
+- Updates the status label and color with a formatted countdown.
+- If the start time has been reached or passed:
+- Stops the timer.
+- Calls the function to begin the actual measurement (<cite>beginMeasurementTime</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.countToStop">
+<span class="sig-name descname"><span class="pre">countToStop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.countToStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.countToStop" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the countdown status until the scheduled measurement ends.</p>
+<p>This function is called periodically by a QTimer during an active scheduled measurement.
+It performs the following actions:
+- Calculates the remaining time until the configured end time.
+- If time is still remaining:
+- Updates the status label with the current measurement state and formatted time.
+- If the end time has been reached or passed:
+- Automatically stops the scheduled measurement by calling <cite>stopScheduledMeasurement()</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.dialogFormatStart">
+<span class="sig-name descname"><span class="pre">dialogFormatStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currentTab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.dialogFormatStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.dialogFormatStart" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a dialog for selecting the file format when autosave is enabled.</p>
+<p>This function is called at the start of a measurement to let the user choose 
+the file format (<cite>txt</cite>, <cite>csv</cite>, or <cite>dat</cite>) for automatic data saving.
+If the user accepts, the selection is stored and measurement continues.
+If the user cancels, the measurement is stopped according to the current tab 
+(<cite>Normal</cite>, <cite>Scheduled</cite>, or <cite>Limited</cite>) and common post-measurement settings 
+are restored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>currentTab</strong> (<em>str</em>) – The tab where the measurement was started (“Normal”, “Scheduled”, or “Limited”).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.dialogHelpSaveButton">
+<span class="sig-name descname"><span class="pre">dialogHelpSaveButton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.dialogHelpSaveButton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.dialogHelpSaveButton" title="Permalink to this definition"></a></dt>
+<dd><p>Opens a help dialog explaining how autosave works.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.dialogToShowSave">
+<span class="sig-name descname"><span class="pre">dialogToShowSave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.dialogToShowSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.dialogToShowSave" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a confirmation dialog for a successful save operation.</p>
+<p>This function shows an information dialog indicating that the files have 
+been saved successfully. It includes the save folder path and the generated 
+file name based on the measurement start date and selected format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handles UI and internal state updates when the device is disconnected.</p>
+<p>This function performs the following actions:
+- Resets the internal sentinel indicating whether data is currently being saved.
+- Updates the status label and color to reflect that no measurement is running.
+- Disables the disconnect button and enables the connect button in the main window.
+- Disables the start buttons for normal, scheduled, and limited measurement modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.fileNameAutoSave">
+<span class="sig-name descname"><span class="pre">fileNameAutoSave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.fileNameAutoSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.fileNameAutoSave" title="Permalink to this definition"></a></dt>
+<dd><p>Generates and stores the autosave file name.</p>
+<p>This function builds the complete file path for the autosave operation 
+based on the save folder, file prefix, measurement start date, and 
+selected file format. The resulting path is stored in the <cite>fileName</cite> 
+class attribute for later use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.finalMessageAfterSave">
+<span class="sig-name descname"><span class="pre">finalMessageAfterSave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.finalMessageAfterSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.finalMessageAfterSave" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a confirmation dialog indicating that the file was saved successfully.</p>
+<p>This function shows an information message box with the final save message 
+(<cite>self.saveFinalText</cite>), informing the user of the file’s location and name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.finishedMeasurements">
+<span class="sig-name descname"><span class="pre">finishedMeasurements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.finishedMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.finishedMeasurements" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.finishedThread">
+<span class="sig-name descname"><span class="pre">finishedThread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.finishedThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThread" title="Permalink to this definition"></a></dt>
+<dd><p>Handles post-measurement actions after the normal measurement thread finishes.</p>
+<p>If autosave is enabled, prompts the user to save.
+Then resets saving state and stops the normal measurement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.finishedThreadLimited">
+<span class="sig-name descname"><span class="pre">finishedThreadLimited</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.finishedThreadLimited"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThreadLimited" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.finishedThreadSchedule">
+<span class="sig-name descname"><span class="pre">finishedThreadSchedule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.finishedThreadSchedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.finishedThreadSchedule" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime">
+<span class="sig-name descname"><span class="pre">formatWaitingTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secondsTotal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.formatWaitingTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.formatWaitingTime" title="Permalink to this definition"></a></dt>
+<dd><p>Formats a time duration (in seconds) into a human-readable string for countdown display.</p>
+<p>This function is used to show the remaining time before a scheduled measurement starts or ends.
+The format adapts depending on the total duration:
+- If more than one day: <cite>“Xd HH:MM:SS”</cite>
+- If more than one hour: <cite>“H:MM:SS”</cite>
+- If less than one hour: <cite>“M:SS”</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>secondsTotal</strong> – Total time in seconds to format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A formatted string representing the remaining time.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData">
+<span class="sig-name descname"><span class="pre">getAproxTotalData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">availableRamMb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.getAproxTotalData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.getAproxTotalData" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.getAvailableRam">
+<span class="sig-name descname"><span class="pre">getAvailableRam</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.getAvailableRam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.getAvailableRam" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatLimitedStop">
+<span class="sig-name descname"><span class="pre">notSelectedFormatLimitedStop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.notSelectedFormatLimitedStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatLimitedStop" title="Permalink to this definition"></a></dt>
+<dd><p>Cancels the limited measurement setup when no save format is selected while auto-save is enabled.</p>
+<p>This function is triggered when the user initiates a limited measurement with auto-save enabled
+but closes the format selection dialog without choosing a file format.</p>
+<p>It performs the following actions:
+- Aborts the measurement setup and resets saving state.
+- Updates the status label and color to indicate no measurement is running.
+- Re-enables the start button and disables pause/stop controls.
+- Re-enables the measurement count spinbox.
+- Restores tab access for the local interface and main window.
+- Resumes the device connection timer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatNormalStop">
+<span class="sig-name descname"><span class="pre">notSelectedFormatNormalStop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.notSelectedFormatNormalStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatNormalStop" title="Permalink to this definition"></a></dt>
+<dd><p>Cancels the normal measurement initialization when no save format is selected while auto-save is enabled.</p>
+<p>This function is triggered when the user attempts to start a normal measurement with auto-save enabled
+but closes the format selection dialog without choosing any format (e.g., pressing the X).</p>
+<p>It performs the following actions:
+- Stops any saving process and resets saving state.
+- Updates UI labels and colors to indicate no measurement is running.
+- Re-enables the start button and disables pause/stop buttons.
+- Re-enables all measurement tabs and resumes connection monitoring.
+- Restores main window tab interactivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop">
+<span class="sig-name descname"><span class="pre">notSelectedFormatScheduledStop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.notSelectedFormatScheduledStop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.notSelectedFormatScheduledStop" title="Permalink to this definition"></a></dt>
+<dd><p>Cancels the scheduled measurement setup when no save format is selected while auto-save is enabled.</p>
+<p>This function is triggered when the user attempts to start a scheduled measurement with auto-save enabled
+but closes the format selection dialog without choosing a format (e.g., presses the close [X] button).</p>
+<p>It performs the following actions:
+- Stops any saving operation and resets saving state.
+- Updates UI status and color to indicate no measurement is running.
+- Re-enables the start button and disables pause/stop buttons.
+- Restores tab interactivity for other measurement modes and the main window.
+- Resumes the timer for monitoring device connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.onAutoSaveIntervalChanged">
+<span class="sig-name descname"><span class="pre">onAutoSaveIntervalChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.onAutoSaveIntervalChanged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.onAutoSaveIntervalChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Warns the user if they change the auto-save interval from index 0 to any other value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.pauseLimitedMeasurement">
+<span class="sig-name descname"><span class="pre">pauseLimitedMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.pauseLimitedMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.pauseLimitedMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Toggles the pause/resume state of a limited measurement based on number of events.</p>
+<p>This function allows the user to temporarily pause or resume a limited measurement in progress.
+It communicates with the background worker thread to suspend or resume data acquisition accordingly.</p>
+<p>The function performs the following actions:
+- If the current button text is “Pause”:
+- Sends a pause signal to the worker thread.
+- Updates the button text to “Continue”.
+- If the current button text is “Continue”:
+- Temporarily disables the button to avoid duplicate clicks.
+- Sends a resume signal to the worker thread.
+- Updates the button text back to “Pause” and re-enables it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.pauseNormalMeasurement">
+<span class="sig-name descname"><span class="pre">pauseNormalMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.pauseNormalMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.pauseNormalMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Toggles the pause/resume state of a normal measurement.</p>
+<p>This function allows the user to pause and later resume an ongoing normal measurement.
+It interacts with the background worker thread to suspend or resume data acquisition accordingly.</p>
+<p>The function performs the following actions:
+- If the current state is “Pause acquisition”:
+- Sends a signal to the worker thread to pause the measurement.
+- Updates the button text to “Continue acquisition”.
+- If the current state is “Continue acquisition”:
+- Temporarily disables the button to avoid duplicate clicks.
+- Sends a signal to the worker thread to resume the measurement.
+- Restores the button text to “Pause acquisition” and re-enables it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement">
+<span class="sig-name descname"><span class="pre">pauseScheduledMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.pauseScheduledMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.pauseScheduledMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Toggles the pause/resume state of a scheduled measurement.</p>
+<p>This function allows the user to pause or resume an ongoing scheduled measurement.
+It communicates with the background worker thread to suspend or resume the acquisition process.</p>
+<p>The function performs the following actions:
+- If the current button text is “Pause”:
+- Sends a pause signal to the worker thread.
+- Updates the button text to “Continue”.
+- If the current button text is “Continue”:
+- Temporarily disables the button to prevent multiple clicks.
+- Sends a resume signal to the worker thread.
+- Updates the button text back to “Pause” and re-enables the button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.resetSaveSentinels">
+<span class="sig-name descname"><span class="pre">resetSaveSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.resetSaveSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.resetSaveSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Resets all save-related sentinels when the save folder is changed.</p>
+<p>This ensures that previously saved or autosaved data is marked as outdated,
+so it can be saved again in the new location if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels">
+<span class="sig-name descname"><span class="pre">resetValuesSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.resetValuesSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.resetValuesSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Resets all channel sentinels to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.saveDataAction">
+<span class="sig-name descname"><span class="pre">saveDataAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.saveDataAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.saveDataAction" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the logic for saving measurement data, either from autosave 
+or manual save.</p>
+<p>This function determines if the data has already been saved in the 
+requested format. If so, it notifies the user without duplicating the file. 
+If the data was autosaved in a different format, it converts the temporary 
+file to the selected format and saves it. If the data has not been saved yet, 
+it creates a new file with the current measurement data.</p>
+<p>Additionally, it displays informational dialogs to confirm the save 
+or alert the user if the process fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> (<em>str</em>) – The desired file format to save (<cite>“txt”</cite>, <cite>“csv”</cite>, or <cite>“dat”</cite>).</p></li>
+<li><p><strong>date</strong> (<em>datetime</em>) – The date and time used to generate the filename for saving.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction">
+<span class="sig-name descname"><span class="pre">saveDataButtonAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.saveDataButtonAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.saveDataButtonAction" title="Permalink to this definition"></a></dt>
+<dd><p>Opens a dialog for selecting the file format when saving data manually.</p>
+<p>This function is triggered when the user clicks the manual “Save” button.
+It displays a dialog with available formats (<cite>txt</cite>, <cite>csv</cite>, <cite>dat</cite>) and, 
+upon acceptance, calls <cite>saveDataAction</cite> with the selected format and the 
+current date and time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.saveSettings">
+<span class="sig-name descname"><span class="pre">saveSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.saveSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.saveSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Builds and stores the header for the data file, including device and active channel settings.</p>
+<p>The header contains:
+- Active channels in the measurement.
+- General device configurations.
+- Per-channel settings for each active channel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.setErrorAutoSaving">
+<span class="sig-name descname"><span class="pre">setErrorAutoSaving</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.setErrorAutoSaving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.setErrorAutoSaving" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.setValuesBeforeMeasurement">
+<span class="sig-name descname"><span class="pre">setValuesBeforeMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.setValuesBeforeMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.setValuesBeforeMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Activates channel sentinels based on the selected checkboxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.settingsAfterMeasurement">
+<span class="sig-name descname"><span class="pre">settingsAfterMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.settingsAfterMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.settingsAfterMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Restores common UI controls after completing any measurement type.</p>
+<p>Re-enables connection, save options, and channel selection checkboxes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.settingsBeforeMeasurement">
+<span class="sig-name descname"><span class="pre">settingsBeforeMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.settingsBeforeMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.settingsBeforeMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Applies common UI settings before starting any type of measurement.</p>
+<p>Disables save options and channel checkboxes to prevent changes during acquisition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectDates">
+<span class="sig-name descname"><span class="pre">showDialogIncorrectDates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.showDialogIncorrectDates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectDates" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a warning dialog if the end date is earlier than the start date in a scheduled measurement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectInitDate">
+<span class="sig-name descname"><span class="pre">showDialogIncorrectInitDate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.showDialogIncorrectInitDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogIncorrectInitDate" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a warning dialog if the start date is earlier than the current date and time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.showDialogNoChannels">
+<span class="sig-name descname"><span class="pre">showDialogNoChannels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.showDialogNoChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.showDialogNoChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a warning dialog if no channels are selected for measurement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.showProgressDialog">
+<span class="sig-name descname"><span class="pre">showProgressDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.showProgressDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.showProgressDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a modal dialog showing the progress of the file saving process.</p>
+<p>This function creates and shows a progress dialog with a label and a 
+progress bar. It starts a background worker (<cite>ProcessingDataSaved</cite>) to 
+process the file saving and updates the progress bar in real time via 
+signals. When the process finishes, it triggers the final confirmation 
+message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The full path of the file being saved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.startLimitedMeasurement">
+<span class="sig-name descname"><span class="pre">startLimitedMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.startLimitedMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.startLimitedMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Starts a limited timestamp measurement based on a fixed number of measurement cycles.</p>
+<p>This mode runs the acquisition process until the user-defined number of measurements is reached.
+The function performs the following actions:
+- Verifies that at least one channel (A, B, C, or D) is selected.
+- If none are selected, shows an alert and aborts the start.
+- If valid:
+- Disables other measurement tabs to prevent mode switching.
+- Disables the start button and enables pause/stop controls.
+- Prepares measurement parameters and auto-save options.
+- Generates the filename if auto-save is active.
+- Initializes the worker thread in “limited” mode, passing the number of desired measurements.
+- Connects thread signals to appropriate UI update handlers.
+- Starts the background thread and updates the UI to reflect the running state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.startNormalMeasurement">
+<span class="sig-name descname"><span class="pre">startNormalMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.startNormalMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.startNormalMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Starts a normal timestamp measurement.</p>
+<p>Normal measurements begin immediately when the user presses “Start” and continue until manually stopped. 
+This function performs the following actions:
+- Validates that at least one channel (A, B, C, or D) is selected.
+- If no channels are selected, an alert dialog is displayed and the measurement is not started.
+- If valid:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Disables the start button and enables pause/stop controls.</p></li>
+<li><p>Disables other measurement tabs to prevent mode changes mid-measurement.</p></li>
+<li><p>Saves pre-measurement settings and prepares auto-save behavior if selected.</p></li>
+<li><p>Updates UI labels and status indicators to reflect active measurement.</p></li>
+<li><p>Creates and starts a background thread (<cite>WorkerThreadTimeStamping</cite>) to handle the measurement process.</p></li>
+<li><p>Connects worker signals to UI update slots.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.startScheduledMeasurement">
+<span class="sig-name descname"><span class="pre">startScheduledMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.startScheduledMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.startScheduledMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Initiates a scheduled timestamp measurement with start and end times defined by the user.</p>
+<p>Scheduled measurements begin at a future time and automatically stop at the configured end time.
+This function performs the following actions:
+- Verifies that at least one channel is selected for measurement.
+- Disables tab navigation to prevent mode switching.
+- Retrieves and converts the start and end date-time values from the UI fields.
+- Validates:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>That the start time is not in the past.</p></li>
+<li><p>That the end time is after the start time.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>If validation fails, corresponding alert dialogs are shown.</p></li>
+<li><dl class="simple">
+<dt>If validation passes:</dt><dd><ul>
+<li><p>Initializes auto-save format selection if enabled.</p></li>
+<li><p>Configures a countdown timer (<cite>timerBeginMeasurement</cite>) to wait until the scheduled start time.</p></li>
+<li><p>Updates the UI to reflect the waiting state with remaining time.</p></li>
+<li><p>Begins measurement immediately if the scheduled start time is now or has passed.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the connection monitoring timer to periodically check the device status.</p>
+<p>This function activates the <cite>timerConnection</cite>, which verifies the connection with the Tempico device every 500 milliseconds. It is typically called after a measurement has ended or when the device is reconnected, ensuring continuous monitoring of the device’s availability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopLimitedButtonAction">
+<span class="sig-name descname"><span class="pre">stopLimitedButtonAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopLimitedButtonAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopLimitedButtonAction" title="Permalink to this definition"></a></dt>
+<dd><p>Stops an ongoing limited measurement.</p>
+<p>This function disables the pause and stop buttons for the limited 
+measurement mode and sends a stop signal to the worker thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopLimitedMeasurement">
+<span class="sig-name descname"><span class="pre">stopLimitedMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopLimitedMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopLimitedMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the limited measurement process, regardless of whether the target number of measurements has been reached.</p>
+<p>This function can be used by the user to interrupt the measurement at any point.
+It performs the following actions:
+- Marks the measurement as completed (even if prematurely).
+- Stops the background worker thread.
+- Updates the UI status and color to reflect that no measurement is running.
+- Resets the pause button state (if previously in “Continue” mode).
+- Re-enables the start button and disables pause/stop buttons.
+- Re-enables the measurement count spinbox for further configuration.
+- Restores tab navigation for both the local interface and main window.
+- Signals the main window to re-enable settings and perform cleanup.
+- Restarts the timer that monitors device connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopNormalButtonAction">
+<span class="sig-name descname"><span class="pre">stopNormalButtonAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopNormalButtonAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopNormalButtonAction" title="Permalink to this definition"></a></dt>
+<dd><p>Stops an ongoing normal measurement.</p>
+<p>This function disables the pause and stop buttons for the normal 
+measurement mode and sends a stop signal to the worker thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopNormalMeasurement">
+<span class="sig-name descname"><span class="pre">stopNormalMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopNormalMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopNormalMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Stops an ongoing normal measurement and resets the interface to its default state.</p>
+<p>This function performs the following actions:
+- Marks the measurement as completed by setting the corresponding sentinel.
+- Sends a stop signal to the background worker thread.
+- Updates the UI to reflect that no measurement is running (label, color, buttons).
+- If the measurement was paused, resets the pause button text to “Pause acquisition”.
+- Re-enables tab switching and restores the initial measurement configuration.
+- Restarts the timer for checking device connection.
+- Notifies the main window to reflect the updated system state and re-enable settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopScheduledMeasurement">
+<span class="sig-name descname"><span class="pre">stopScheduledMeasurement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopScheduledMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopScheduledMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Stops a scheduled measurement at any point — before it starts (waiting phase) or during execution.</p>
+<p>This function handles both scenarios:
+- If the measurement hasn’t started yet and is waiting for the scheduled start time:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Cancels the countdown timer and resets all UI elements to their default state.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the measurement is already running:</dt><dd><ul>
+<li><p>Stops the data acquisition thread and the timer responsible for countdown to the end.</p></li>
+<li><p>Updates the internal state and UI accordingly.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>In both cases, the function:
+- Resets saving state and UI labels.
+- Restores tab and button availability.
+- Notifies the main window to re-enable configuration options.
+- Calls post-measurement cleanup logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopScyheduledButtonAction">
+<span class="sig-name descname"><span class="pre">stopScyheduledButtonAction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopScyheduledButtonAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopScyheduledButtonAction" title="Permalink to this definition"></a></dt>
+<dd><p>Stops an ongoing scheduled measurement.</p>
+<p>If the measurement is still in the waiting state, it calls 
+<cite>stopScheduledMeasurement()</cite> directly. Otherwise, it stops the 
+scheduled timer, disables the pause and stop buttons, and sends 
+a stop signal to the worker thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the connection monitoring timer during an active measurement.</p>
+<p>This function is called when a measurement begins to prevent interference from the periodic connection checks. It halts the <cite>timerConnection</cite>, which normally runs in the background to monitor the status of the Tempico device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateCheckBoxLabels">
+<span class="sig-name descname"><span class="pre">updateCheckBoxLabels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateCheckBoxLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateCheckBoxLabels" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the visibility of measurement labels and values based on each channel’s checkbox state.</p>
+<p>This function performs the following actions:
+- For each channel (A, B, C, D), if its corresponding checkbox is checked:
+- The label and value indicator showing the number of measurements for that channel are made visible.
+- If unchecked, both elements are hidden.</p>
+<p>This allows dynamic feedback on active channels during timestamp measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateProgressDialog">
+<span class="sig-name descname"><span class="pre">updateProgressDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateProgressDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateProgressDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the progress dialog during the save process.</p>
+<p>This function updates the progress bar and label to reflect the current 
+progress percentage. If the progress reaches or exceeds 100%, the dialog 
+is automatically closed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>percent</strong> (<em>int</em>) – The current progress percentage (0 to 100).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateShowTable">
+<span class="sig-name descname"><span class="pre">updateShowTable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateShowTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateShowTable" title="Permalink to this definition"></a></dt>
+<dd><p>Toggles the visibility of the timestamp data table based on the checkbox state.</p>
+<p>This function performs the following actions:
+- If the “Show Table” checkbox is checked, the timestamp data table is displayed.
+- If the checkbox is unchecked, the table is hidden.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateValueTotalMeasurements">
+<span class="sig-name descname"><span class="pre">updateValueTotalMeasurements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateValueTotalMeasurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateValueTotalMeasurements" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label showing the total measurements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementA">
+<span class="sig-name descname"><span class="pre">updateValuesMeasurementA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateValuesMeasurementA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementA" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label showing the measurement value for channel A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementB">
+<span class="sig-name descname"><span class="pre">updateValuesMeasurementB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateValuesMeasurementB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementB" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label showing the measurement value for channel B.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementC">
+<span class="sig-name descname"><span class="pre">updateValuesMeasurementC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateValuesMeasurementC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementC" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label showing the measurement value for channel C.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementD">
+<span class="sig-name descname"><span class="pre">updateValuesMeasurementD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/TimeStampLogic.html#TimeStampLogic.updateValuesMeasurementD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.TimeStampLogic.TimeStampLogic.updateValuesMeasurementD" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the label showing the measurement value for channel D.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CountsEstimatedLogic.html" class="btn btn-neutral float-left" title="CountsEstimatedLogic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="LifeTimeLogic.html" class="btn btn-neutral float-right" title="LifeTimeLogic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

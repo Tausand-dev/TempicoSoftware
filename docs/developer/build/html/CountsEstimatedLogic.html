@@ -1,0 +1,1229 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CountsEstimatedLogic module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TimeStampLogic module" href="TimeStampLogic.html" />
+    <link rel="prev" title="StartStopLogic module" href="StartStopLogic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CountsEstimatedLogic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.calibrateDeviceDelay"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.calibrateDeviceDelay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureFinalDate"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.captureFinalDate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureInitalDate"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.captureInitalDate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureMeasurement"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.captureMeasurement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusLabel"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.changeStatusLabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.checkBoxListenerChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.checkBoxListenerChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelA"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.clearChannelA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelB"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.clearChannelB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelC"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.clearChannelC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelD"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.clearChannelD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeDialogChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.closeDialogChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeLabelDialog"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.closeLabelDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeTableDialog"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.closeTableDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructAllGraphics"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.constructAllGraphics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicA"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.constructGraphicA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicB"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.constructGraphicB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicC"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.constructGraphicC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicD"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.constructGraphicD()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createCloneTable"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.createCloneTable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createDialogFactory"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.createDialogFactory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createRow"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.createRow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.deatachedTable"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.deatachedTable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.detachedLabels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.detachedLabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.eliminateCheckBoxChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.eliminateCheckBoxChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.enableButtons"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.enableButtons()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.factoryGraphChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.factoryGraphsAllChannels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.finishedThread"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.finishedThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.getChannelsMeasure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.helpButtonDialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.hideColumns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.lostConnection"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.lostConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.noChannelsSelected"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.noChannelsSelected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.noMeasurementsFounded"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.noMeasurementsFounded()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSentinels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetValues"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.resetValues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.returnSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.rightAlignedItem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.saveData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.savePlots"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.savePlots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveSettings"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.saveSettings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.startMeasure"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.startMeasure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopMeasure"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.stopMeasure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphic"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.updateGraphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphicsLayout"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.updateGraphicsLayout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateLabels"><code class="docutils literal notranslate"><span class="pre">CountEstimatedLogic.updateLabels()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CountsEstimatedLogic module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/CountsEstimatedLogic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Logic.CountsEstimatedLogic">
+<span id="countsestimatedlogic-module"></span><h1>CountsEstimatedLogic module<a class="headerlink" href="#module-Logic.CountsEstimatedLogic" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.CountsEstimatedLogic.</span></span><span class="sig-name descname"><span class="pre">CountEstimatedLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelACheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelBCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelCCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelDCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphModeComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeRangeComboBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButtonChannelA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButtonChannelB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButtonChannelC</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButtonChannelD</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelAValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelBValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelCValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelDValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelAUncertainty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelBUncertainty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelCUncertainty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">countChannelDUncertainty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tableCounts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QTableWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphicsFrame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelAFrameLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelBFrameLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelCFrameLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelDFrameLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointStatusLabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deatachedCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detachedLabelCheckBox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helpButton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPushButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerConnection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class responsible for managing the logic and graphical representation of the Count Estimation window.</p>
+<p>This class handles user interactions and graphical updates related to photon/event count estimations across multiple channels (A, B, C, D). It coordinates the initialization of graphical elements, manages real-time measurements, and provides options for data saving, graphical visualization modes, and uncertainty tracking per channel. The main responsibilities include:
+- Initializing and updating graphical frames for each measurement channel.
+- Starting and stopping the count measurements.
+- Handling user interactions with checkboxes, radio buttons, and combo boxes.
+- Displaying and updating count values and their uncertainties.
+- Managing separate, merged, or detached graphics.
+- Saving count data and graphical plots.
+- Monitoring the device connection and measurement state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channelACheckBox</strong> – Checkbox for enabling/disabling measurements on channel A (QCheckBox).</p></li>
+<li><p><strong>channelBCheckBox</strong> – Checkbox for enabling/disabling measurements on channel B (QCheckBox).</p></li>
+<li><p><strong>channelCCheckBox</strong> – Checkbox for enabling/disabling measurements on channel C (QCheckBox).</p></li>
+<li><p><strong>channelDCheckBox</strong> – Checkbox for enabling/disabling measurements on channel D (QCheckBox).</p></li>
+<li><p><strong>startButton</strong> – Button to start the count measurement (QPushButton).</p></li>
+<li><p><strong>stopButton</strong> – Button to stop the count measurement (QPushButton).</p></li>
+<li><p><strong>graphModeComboBox</strong> – Combo box for selecting the graphical visualization mode - index 0 “Merge”, index 1 “Separate”, index 2 “Detached” (QComboBox).</p></li>
+<li><p><strong>timeRangeComboBox</strong> – Combo box for selecting the time range for plot visualization (QComboBox).</p></li>
+<li><p><strong>clearButtonChannelA</strong> – Button to clear the graph and data of channel A (QPushButton).</p></li>
+<li><p><strong>clearButtonChannelB</strong> – Button to clear the graph and data of channel B (QPushButton).</p></li>
+<li><p><strong>clearButtonChannelC</strong> – Button to clear the graph and data of channel C (QPushButton).</p></li>
+<li><p><strong>clearButtonChannelD</strong> – Button to clear the graph and data of channel D (QPushButton).</p></li>
+<li><p><strong>saveDataButton</strong> – Button to save count data for all channels (QPushButton).</p></li>
+<li><p><strong>savePlotButton</strong> – Button to save the plot images (QPushButton).</p></li>
+<li><p><strong>countChannelAValue</strong> – Label displaying current count value on channel A (QLabel).</p></li>
+<li><p><strong>countChannelBValue</strong> – Label displaying current count value on channel B (QLabel).</p></li>
+<li><p><strong>countChannelCValue</strong> – Label displaying current count value on channel C (QLabel).</p></li>
+<li><p><strong>countChannelDValue</strong> – Label displaying current count value on channel D (QLabel).</p></li>
+<li><p><strong>countChannelAUncertainty</strong> – Label showing uncertainty of channel A (QLabel).</p></li>
+<li><p><strong>countChannelBUncertainty</strong> – Label showing uncertainty of channel B (QLabel).</p></li>
+<li><p><strong>countChannelCUncertainty</strong> – Label showing uncertainty of channel C (QLabel).</p></li>
+<li><p><strong>countChannelDUncertainty</strong> – Label showing uncertainty of channel D (QLabel).</p></li>
+<li><p><strong>tableCounts</strong> – Table displaying count and uncertainty data per measurement cycle (QTableWidget).</p></li>
+<li><p><strong>graphicsFrame</strong> – Frame container for holding the graphical layouts (QFrame).</p></li>
+<li><p><strong>channelAFrameLabel</strong> – Frame label associated with channel A graphics (QFrame).</p></li>
+<li><p><strong>channelBFrameLabel</strong> – Frame label associated with channel B graphics (QFrame).</p></li>
+<li><p><strong>channelCFrameLabel</strong> – Frame label associated with channel C graphics (QFrame).</p></li>
+<li><p><strong>channelDFrameLabel</strong> – Frame label associated with channel D graphics (QFrame).</p></li>
+<li><p><strong>statusLabel</strong> – Label showing the system status (QLabel).</p></li>
+<li><p><strong>pointStatusLabel</strong> – Label showing the status of the current measurement point (QLabel).</p></li>
+<li><p><strong>deatachedCheckBox</strong> – Checkbox to toggle between embedded and detached graphics layout (QCheckBox).</p></li>
+<li><p><strong>detachedLabelCheckBox</strong> – Checkbox to toggle detached labels in the plot layout (QCheckBox).</p></li>
+<li><p><strong>helpButton</strong> – Button that displays a help/information dialog (QPushButton).</p></li>
+<li><p><strong>device</strong> – The connected measurement device.</p></li>
+<li><p><strong>parent</strong> – The parent window containing the UI (usually a QMainWindow).</p></li>
+<li><p><strong>timerConnection</strong> – Timer responsible for checking device connection status (QTimer).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.calibrateDeviceDelay">
+<span class="sig-name descname"><span class="pre">calibrateDeviceDelay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.calibrateDeviceDelay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.calibrateDeviceDelay" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.captureFinalDate">
+<span class="sig-name descname"><span class="pre">captureFinalDate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.captureFinalDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureFinalDate" title="Permalink to this definition"></a></dt>
+<dd><p>Stores the final date received from a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>date</strong> – QDateTime - The end date of the measurement range.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.captureInitalDate">
+<span class="sig-name descname"><span class="pre">captureInitalDate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.captureInitalDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureInitalDate" title="Permalink to this definition"></a></dt>
+<dd><p>Stores the initial date received from a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>date</strong> – QDateTime - The start date of the measurement range.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.captureMeasurement">
+<span class="sig-name descname"><span class="pre">captureMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secondsTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelAValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelAUncertainty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelBValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelBUncertainty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelCValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelCUncertainty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelDValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channelDUncertainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.captureMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.captureMeasurement" title="Permalink to this definition"></a></dt>
+<dd><p>Captures and processes a new set of measurement values emitted via signal, updating the UI and internal data structures.</p>
+<p>This function is connected to a QSignal from the background worker thread and is responsible for handling a single measurement cycle. It validates the presence of data, provides real-time user feedback when no measurements are detected for specific channels, updates plots with valid values, populates the measurement table, and refreshes visual labels.</p>
+<p>This function performs the following actions:
+- Checks for zero values in any channel and informs the user if one or more channels are not receiving valid measurements.
+- Updates the status bar and color indicator depending on whether all channels are acquiring data.
+- Appends valid count values and timestamps to the corresponding lists for each channel.
+- Updates the graphical curves for each channel if valid data is present.
+- Converts zero and -1 values into status messages like “Low Counts” or “Not Selected” for display purposes.
+- Adds the latest measurement row to both the main table (<cite>tableCounts</cite>) and its clone (<cite>cloneTable</cite>).
+- Updates the live count and uncertainty labels for any actively selected channel.
+- Refreshes the visible X-axis range of the graphs using <cite>updateGraphic()</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>secondsTime</strong> – Timestamp in seconds since measurement start (float).</p></li>
+<li><p><strong>dateTime</strong> – Human-readable datetime string for the measurement (str).</p></li>
+<li><p><strong>channelAValue</strong> – Count value for channel A (float or int).</p></li>
+<li><p><strong>channelAUncertainty</strong> – Uncertainty value for channel A (float).</p></li>
+<li><p><strong>channelBValue</strong> – Count value for channel B (float or int).</p></li>
+<li><p><strong>channelBUncertainty</strong> – Uncertainty value for channel B (float).</p></li>
+<li><p><strong>channelCValue</strong> – Count value for channel C (float or int).</p></li>
+<li><p><strong>channelCUncertainty</strong> – Uncertainty value for channel C (float).</p></li>
+<li><p><strong>channelDValue</strong> – Count value for channel D (float or int).</p></li>
+<li><p><strong>channelDUncertainty</strong> – Uncertainty value for channel D (float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the color of the point in the status bar. Each color is assigned a specific numeric value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – The numeric value corresponding to the desired color (int).
+- 0: Gray
+- 1: Green
+- 2: Yellow
+- 3: Orange</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusLabel">
+<span class="sig-name descname"><span class="pre">changeStatusLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">textValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.changeStatusLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.changeStatusLabel" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the status label with a new message.</p>
+<p>This function sets the text of the <cite>statusLabel</cite> widget to the given string.
+It is used throughout the application to inform the user of the current 
+measurement status, errors, warnings, or progress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>textValue</strong> – str - The message to display in the status label.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.checkBoxListenerChannels">
+<span class="sig-name descname"><span class="pre">checkBoxListenerChannels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.checkBoxListenerChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.checkBoxListenerChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the visibility of graphical elements and table columns based on the state of the channel checkboxes.</p>
+<p>This function performs the following actions:
+- Checks the state of each channel’s checkbox (A, B, C, D).
+- Shows or hides the corresponding frame label for each channel depending on whether the checkbox is checked.
+- Calls <cite>hideColumns()</cite> to hide the table columns associated with unchecked channels.
+- Calls <cite>updateGraphicsLayout()</cite> to refresh the displayed plots based on the selected channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelA">
+<span class="sig-name descname"><span class="pre">clearChannelA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.clearChannelA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelA" title="Permalink to this definition"></a></dt>
+<dd><p>Clears all stored measurement data for channel A and updates the corresponding plot.</p>
+<p>This function is called when the user clicks the Clear button for channel A. It resets the timestamp lists and count values associated with channel A, and refreshes the plot to reflect the cleared state.</p>
+<p>This function performs the following actions:
+- Empties the list of raw timestamps and formatted date timestamps for channel A.
+- Clears the list of count values associated with channel A.
+- Updates the channel A curve to remove all plotted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelB">
+<span class="sig-name descname"><span class="pre">clearChannelB</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.clearChannelB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelB" title="Permalink to this definition"></a></dt>
+<dd><p>Clears all stored measurement data for channel B and updates the corresponding plot.</p>
+<p>This function is called when the user clicks the Clear button for channel B. It resets the timestamp lists and count values associated with channel B, and refreshes the plot to reflect the cleared state.</p>
+<p>This function performs the following actions:
+- Empties the list of raw timestamps and formatted date timestamps for channel B.
+- Clears the list of count values associated with channel B.
+- Updates the channel B curve to remove all plotted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelC">
+<span class="sig-name descname"><span class="pre">clearChannelC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.clearChannelC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelC" title="Permalink to this definition"></a></dt>
+<dd><p>Clears all stored measurement data for channel C and updates the corresponding plot.</p>
+<p>This function is called when the user clicks the Clear button for channel C. It resets the timestamp lists and count values associated with channel C, and refreshes the plot to reflect the cleared state.</p>
+<p>This function performs the following actions:
+- Empties the list of raw timestamps and formatted date timestamps for channel C.
+- Clears the list of count values associated with channel C.
+- Updates the channel C curve to remove all plotted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelD">
+<span class="sig-name descname"><span class="pre">clearChannelD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.clearChannelD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.clearChannelD" title="Permalink to this definition"></a></dt>
+<dd><p>Clears all stored measurement data for channel D and updates the corresponding plot.</p>
+<p>This function is called when the user clicks the Clear button for channel D. It resets the timestamp lists and count values associated with channel D, and refreshes the plot to reflect the cleared state.</p>
+<p>This function performs the following actions:
+- Empties the list of raw timestamps and formatted date timestamps for channel D.
+- Clears the list of count values associated with channel D.
+- Updates the channel D curve to remove all plotted data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.closeDialogChannels">
+<span class="sig-name descname"><span class="pre">closeDialogChannels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.closeDialogChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeDialogChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Handles cleanup and UI updates when a detached graphics dialog is closed.</p>
+<p>This function is triggered when a user manually closes a detached dialog window corresponding to a specific channel. It clears the internal reference to the dialog and unchecks the associated channel checkbox to reflect that the channel is no longer active in the detached view.</p>
+<p>This function performs the following actions:
+- Sets the corresponding <cite>dialogXCreated</cite> variable to <cite>None</cite>, where X is the channel (A–D).
+- Unchecks the checkbox for the specified channel to visually indicate it is no longer selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> – The identifier of the channel whose dialog was closed (‘A’, ‘B’, ‘C’, or ‘D’).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.closeLabelDialog">
+<span class="sig-name descname"><span class="pre">closeLabelDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.closeLabelDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeLabelDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the dialog state and unchecks the measurement label checkbox
+if the dialog was closed while still marked as active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.closeTableDialog">
+<span class="sig-name descname"><span class="pre">closeTableDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.closeTableDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.closeTableDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Handles cleanup when the detached table dialog is closed.</p>
+<p>This function is triggered when the detached table dialog (<cite>dialogTableOpen</cite>) is closed by the user.
+It performs the following actions to maintain consistency in the UI state:</p>
+<ul class="simple">
+<li><p>Sets the internal dialog reference <cite>dialogTableOpen</cite> to <cite>None</cite>.</p></li>
+<li><p>Unchecks the <cite>deatachedCheckBox</cite> to reflect that the detached view is no longer active.</p></li>
+</ul>
+<p>This ensures that the application’s interface remains synchronized and avoids inconsistencies
+when reopening or reattaching the measurement table view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.connectedDevice">
+<span class="sig-name descname"><span class="pre">connectedDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.connectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.connectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the UI and internal state updates when the device is successfully connected.</p>
+<p>This function performs the following actions:
+- Enables the disconnect button and disables the connect button in the main window.
+- Updates the internal sentinel to indicate that the device is connected and measurements are allowed.
+- Stores the reference to the connected device.
+- Enables the start button to allow measurements to begin.
+- (Optional) Starts a timer for updating measurement status (currently commented out).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device</strong> – The connected device instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.constructAllGraphics">
+<span class="sig-name descname"><span class="pre">constructAllGraphics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.constructAllGraphics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructAllGraphics" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs and initializes the unified graphical layout for all measurement channels.</p>
+<p>This function calls <cite>factoryGraphsAllChannels</cite> to generate a single plot widget that contains curves for channels A, B, C, and D. Each curve is customized by color and visibility based on whether its corresponding checkbox is enabled. The resulting components are stored as instance variables for centralized access and updates.</p>
+<p>This function performs the following actions:
+- Calls <cite>factoryGraphsAllChannels</cite> to create the shared plot and individual channel curves.
+- Stores the plot widget, plot item, and all channel-specific curves as instance variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicA">
+<span class="sig-name descname"><span class="pre">constructGraphicA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.constructGraphicA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicA" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs and initializes the graphical components for channel A.</p>
+<p>This function uses the <cite>factoryGraphChannels</cite> method to generate the graphical layout for channel A, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.</p>
+<p>This function performs the following actions:
+- Calls <cite>factoryGraphChannels</cite> with channel ‘A’ to generate the graph.
+- Stores the returned plot widget, plot item, and curve for channel A.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicB">
+<span class="sig-name descname"><span class="pre">constructGraphicB</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.constructGraphicB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicB" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs and initializes the graphical components for channel B.</p>
+<p>This function uses the <cite>factoryGraphChannels</cite> method to generate the graphical layout for channel B, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.</p>
+<p>This function performs the following actions:
+- Calls <cite>factoryGraphChannels</cite> with channel ‘B’ to generate the graph.
+- Stores the returned plot widget, plot item, and curve for channel B.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicC">
+<span class="sig-name descname"><span class="pre">constructGraphicC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.constructGraphicC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicC" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs and initializes the graphical components for channel C.</p>
+<p>This function uses the <cite>factoryGraphChannels</cite> method to generate the graphical layout for channel C, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.</p>
+<p>This function performs the following actions:
+- Calls <cite>factoryGraphChannels</cite> with channel ‘C’ to generate the graph.
+- Stores the returned plot widget, plot item, and curve for channel C.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicD">
+<span class="sig-name descname"><span class="pre">constructGraphicD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.constructGraphicD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.constructGraphicD" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs and initializes the graphical components for channel D.</p>
+<p>This function uses the <cite>factoryGraphChannels</cite> method to generate the graphical layout for channel D, including the main plot widget, the plot area, and the curve used to display count data. The resulting components are stored as instance variables for later access and updates during measurement.</p>
+<p>This function performs the following actions:
+- Calls <cite>factoryGraphChannels</cite> with channel ‘D’ to generate the graph.
+- Stores the returned plot widget, plot item, and curve for channel D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.createCloneTable">
+<span class="sig-name descname"><span class="pre">createCloneTable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.createCloneTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createCloneTable" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and configures a cloned table instance for storing a copy of the measurement data.</p>
+<p>This function initializes a separate <cite>QTableWidget</cite> that mirrors the structure of the main count table. It includes predefined column headers for the date and channels A, B, C, and D. The cloned table is set to stretch its columns to fit the available space and is made read-only to prevent user edits.</p>
+<p>This function performs the following actions:
+- Creates a new <cite>QTableWidget</cite> instance with 5 columns.
+- Sets the horizontal headers to [‘Date’, ‘A’, ‘B’, ‘C’, ‘D’].
+- Enables automatic stretching of column widths.
+- Disables editing to preserve the integrity of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.createDialogFactory">
+<span class="sig-name descname"><span class="pre">createDialogFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.createDialogFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createDialogFactory" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and returns a non-modal dialog window for displaying detached graphics for the specified channel.</p>
+<p>This factory function is used when the user selects the “detached graphics” mode. It generates a dedicated <cite>QDialog</cite> for a given channel (A, B, C, or D), configures its appearance and behavior, and positions it to avoid overlap with other dialogs. The dialog is linked to a callback that ensures proper cleanup when it is closed.</p>
+<p>This function performs the following actions:
+- Instantiates a <cite>QDialog</cite> as a child of the main window.
+- Sets the dialog title and default size.
+- Connects the <cite>finished</cite> signal to a cleanup method for the channel.
+- Assigns a fixed screen position for each channel to avoid visual overlap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> – A string indicating the target channel (‘A’, ‘B’, ‘C’, or ‘D’).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A configured, ready-to-display <cite>QDialog</cite> for the given channel.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.createRow">
+<span class="sig-name descname"><span class="pre">createRow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">leftLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rightLabel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.createRow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.createRow" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a horizontal row frame containing two labels.</p>
+<p>This function constructs a <cite>QFrame</cite> that represents a single row in a dialog or panel.
+It arranges two given <cite>QLabel</cite> widgets — one aligned to the left and the other to the right —
+using a <cite>QHBoxLayout</cite>. The labels are styled with a consistent font size and the vertical
+margins are removed to minimize vertical spacing between rows.</p>
+<p>This method is used to visually structure measurement data (such as estimated counts and uncertainties)
+in a clean, compact format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leftLabel</strong> – QLabel - The label to place on the left side of the row.</p></li>
+<li><p><strong>rightLabel</strong> – QLabel - The label to place on the right side of the row.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>QFrame - A frame containing the two labels arranged horizontally.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.deatachedTable">
+<span class="sig-name descname"><span class="pre">deatachedTable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.deatachedTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.deatachedTable" title="Permalink to this definition"></a></dt>
+<dd><p>Manages the visibility of the estimated counts table in a detached dialog window.</p>
+<p>This function is triggered when the <cite>deatachedCheckBox</cite> is toggled. If the checkbox is checked, it opens a new non-modal <cite>QDialog</cite> containing the cloned measurement table (<cite>cloneTable</cite>). If the checkbox is unchecked, it closes the dialog and resets the internal reference to <cite>None</cite>.</p>
+<p>This function performs the following actions:
+- If the detached table mode is enabled:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creates and configures a new <cite>QDialog</cite> with the cloned table.</p></li>
+<li><p>Displays the dialog to the user.</p></li>
+<li><p>Connects the dialog’s close event to a cleanup function.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the detached table mode is disabled:</dt><dd><ul>
+<li><p>Closes the existing dialog if it is open.</p></li>
+<li><p>Clears the internal dialog reference.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.detachedLabels">
+<span class="sig-name descname"><span class="pre">detachedLabels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.detachedLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.detachedLabels" title="Permalink to this definition"></a></dt>
+<dd><p>Displays or hides a dialog showing current measurement values for selected channels.</p>
+<p>When the ‘Detached current measurement’ checkbox is checked, this function creates 
+and displays a non-modal QDialog containing the current estimated count rates 
+and their uncertainties for each selected channel (A–D). Each visible row in the 
+dialog corresponds to a channel, displaying the estimated counts (in cps) and the 
+associated uncertainty. If a channel is not selected, its row remains hidden.</p>
+<p>The dialog layout is organized using a sunken panel-style QFrame with a vertical 
+layout. A bold header row indicates the meaning of each column. This interface 
+allows users to quickly inspect the most recent count values without modifying the 
+ongoing measurement.</p>
+<p>If the checkbox is unchecked, any open measurement dialog is closed automatically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the UI and internal state updates when the device is disconnected.</p>
+<p>This function performs the following actions:
+- Disables the disconnect button and enables the connect button in the main window.
+- Disables the start button to prevent new measurements from being initiated.
+- (Optional) May start a timer for monitoring status or reconnection attempts (currently commented out).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.eliminateCheckBoxChannels">
+<span class="sig-name descname"><span class="pre">eliminateCheckBoxChannels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelList</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.eliminateCheckBoxChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.eliminateCheckBoxChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the removal of channels with insufficient measurement signals and prompts the user to continue or stop.</p>
+<p>This function is triggered when one or more selected channels fail to meet the minimum pulse requirements for reliable count estimation (e.g., fewer than 500 pulses per second). It presents a dialog informing the user about the affected channels and asks whether to continue the measurement with the remaining valid channels or to stop entirely.</p>
+<p>This function performs the following actions:
+- Builds a human-readable list of the channels that failed to provide sufficient data.
+- Displays a warning dialog with the option to continue or cancel the measurement.
+- If the user chooses to continue:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Disables the affected channels in the device.</p></li>
+<li><p>Unchecks and disables the associated checkboxes.</p></li>
+<li><p>Disables the “Clear” button for each affected channel.</p></li>
+<li><p>Marks the <cite>measurementChannelX</cite> sentinel as <cite>False</cite> for each affected channel.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the user chooses not to continue:</dt><dd><ul>
+<li><p>Stops the measurement thread.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Signals the worker thread to proceed based on the user’s decision via <cite>continueEvent</cite>.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channelList</strong> – A list of channel identifiers (e.g., [‘A’, ‘C’]) that failed to meet the minimum measurement conditions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.enableButtons">
+<span class="sig-name descname"><span class="pre">enableButtons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.enableButtons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.enableButtons" title="Permalink to this definition"></a></dt>
+<dd><p>Enables or disables the clear buttons for each channel based on the current selection state.</p>
+<p>This function checks which channels (A–D) have been marked as selected for measurement and enables their corresponding “Clear” buttons. If a channel is not selected, its clear button remains disabled. Additionally, it disables the disconnect button to prevent accidental disconnection during an active measurement setup.</p>
+<p>This function performs the following actions:
+- Enables the “Clear” button for each selected channel.
+- Disables the “Clear” button for any unselected channel.
+- Disables the disconnect button in the main window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphChannels">
+<span class="sig-name descname"><span class="pre">factoryGraphChannels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.factoryGraphChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and returns a configured plot widget for the specified measurement channel.</p>
+<p>This factory function generates a graphical layout for visualizing count data from one of the four available channels (A, B, C, or D). The plot is customized with a unique color per channel, grid display, axis labeling, and a legend. It returns the PyQtGraph components necessary for real-time plotting.</p>
+<p>This function performs the following actions:
+- Selects a predefined color for the specified channel.
+- Initializes a <cite>GraphicsLayoutWidget</cite> with a white background.
+- Adds a plot to the widget with grid lines, axis labels, and legend.
+- Creates a stylized curve object for plotting count data using markers and colored lines.
+- Returns the components needed to integrate the plot into the GUI and update it dynamically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> – A single-character string indicating the channel (‘A’, ‘B’, ‘C’, or ‘D’).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:
+- <cite>GraphicsLayoutWidget</cite>: the plot container.
+- <cite>PlotItem</cite>: the configured plot.
+- <cite>PlotDataItem</cite>: the curve used for plotting the counts.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels">
+<span class="sig-name descname"><span class="pre">factoryGraphsAllChannels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.factoryGraphsAllChannels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.factoryGraphsAllChannels" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and returns a single plot widget containing curves for all selected measurement channels.</p>
+<p>This factory function generates a unified graphical layout that displays the estimated counts for channels A, B, C, and D in a single plot. Each channel is represented with a distinct color and labeled curve, depending on whether its checkbox is enabled. This approach consolidates the visualization into one graph rather than creating separate ones per channel.</p>
+<p>This function performs the following actions:
+- Defines a unique color for each channel (A, B, C, D).
+- Initializes a <cite>GraphicsLayoutWidget</cite> with a white background and grid lines.
+- Configures a single plot with appropriate axis labels and a legend.
+- Creates curve objects for each channel using stylized markers and pens.
+- Only assigns a name to a curve if its corresponding channel checkbox is checked.
+- Returns the complete widget and all channel curves for display and real-time updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing:
+- <cite>GraphicsLayoutWidget</cite>: the shared plot container for all channels.
+- <cite>PlotItem</cite>: the unified plot area.
+- <cite>PlotDataItem</cite>: curve for channel A.
+- <cite>PlotDataItem</cite>: curve for channel B.
+- <cite>PlotDataItem</cite>: curve for channel C.
+- <cite>PlotDataItem</cite>: curve for channel D.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.finishedThread">
+<span class="sig-name descname"><span class="pre">finishedThread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.finishedThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.finishedThread" title="Permalink to this definition"></a></dt>
+<dd><p>Handles the post-execution cleanup and UI updates when the measurement thread finishes.</p>
+<p>This function is automatically triggered when the background measurement thread completes. It resets internal sentinels, updates the UI to reflect the end of the measurement, enables or disables appropriate buttons depending on whether data was captured, and invokes the standard stop measurement routine.</p>
+<p>This function performs the following actions:
+- Resets all <cite>selectChannelX</cite> sentinels (A–D) to <cite>False</cite>.
+- Enables the Start button and disables the Stop button.
+- If any channel has collected data, enables the save buttons for data and plots.
+- Disables all “Clear” buttons for individual channels.
+- Updates the status label and color to indicate that no measurement is running.
+- Calls <cite>stopMeasure()</cite> to finalize the stop process and restore the interface to its initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure">
+<span class="sig-name descname"><span class="pre">getChannelsMeasure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.getChannelsMeasure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.getChannelsMeasure" title="Permalink to this definition"></a></dt>
+<dd><p>Determines which measurement channels are selected and updates internal sentinels accordingly.</p>
+<p>This function evaluates the state of each channel’s checkbox (A, B, C, D) to establish which channels will participate in the measurement. It sets the corresponding selection and measurement sentinels to <cite>True</cite> or <cite>False</cite> based on the checkboxes. Additionally, it disables the checkbox for any unselected channel to prevent user changes during the active measurement session.</p>
+<p>This function performs the following actions:
+- Assumes all channels are selected by default.
+- Checks the state of each channel checkbox and updates:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>selectChannelX</cite>: sentinel to include channel X in the measurement loop.</p></li>
+<li><p><cite>measurementChannelX</cite>: sentinel to track measurement activity per channel.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Disables the checkbox for any channel that was not selected to lock in the configuration.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog">
+<span class="sig-name descname"><span class="pre">helpButtonDialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.helpButtonDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.helpButtonDialog" title="Permalink to this definition"></a></dt>
+<dd><p>Displays an informational dialog with instructions for using the Count Estimation window.</p>
+<p>This function shows a modal QMessageBox with an information icon to guide the user
+on how to correctly connect the signal sources for pulse estimation. It clarifies
+that a periodic signal should be connected to the Start input, and the sources to be
+measured should be connected to the Stop channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns">
+<span class="sig-name descname"><span class="pre">hideColumns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.hideColumns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.hideColumns" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the visibility of the table columns based on the selected measurement channels.</p>
+<p>This function ensures that only the columns corresponding to active channels (A–D) are visible in both the main and cloned data tables. It first shows all channel columns, then hides those whose associated checkboxes are unchecked.</p>
+<p>This function performs the following actions:
+- Ensures all channel columns (1–4) are visible initially in both <cite>tableCounts</cite> and <cite>cloneTable</cite>.
+- Checks the state of each channel’s checkbox.
+- Hides the column in both tables for any channel that is not currently selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.lostConnection">
+<span class="sig-name descname"><span class="pre">lostConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.lostConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.lostConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a critical error message indicating that the device connection has been lost.</p>
+<p>This function sets the sentinel flag <cite>disconnectedMeasurement</cite> to True and shows
+a modal QMessageBox with a critical icon to inform the user that the connection to
+the device has been lost. The dialog must be acknowledged before continuing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.noChannelsSelected">
+<span class="sig-name descname"><span class="pre">noChannelsSelected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.noChannelsSelected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.noChannelsSelected" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a warning dialog indicating that no channels have been selected for measurement.</p>
+<p>This function is called when the user attempts to start a measurement without selecting any channels. It generates a modal warning dialog to inform the user that at least one channel must be selected to proceed.</p>
+<p>This function performs the following actions:
+- Opens a <cite>QMessageBox</cite> warning with a title and informative message.
+- Prevents the measurement process from starting until the issue is resolved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.noMeasurementsFounded">
+<span class="sig-name descname"><span class="pre">noMeasurementsFounded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channelList</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.noMeasurementsFounded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.noMeasurementsFounded" title="Permalink to this definition"></a></dt>
+<dd><p>Displays a warning dialog and disables channel interactions when no measurements are detected.</p>
+<p>This function is triggered when the system fails to obtain valid measurements from any of the selected channels. It informs the user of the issue, disables the “Clear” buttons for all channels, and resets the internal sentinels that indicate active measurement states.</p>
+<p>This function performs the following actions:
+- Shows a <cite>QMessageBox</cite> warning explaining that no measurements were found and outlines the minimum requirements for detection (e.g., 500 pulses per second).
+- Disables the “Clear” buttons for channels A–D to prevent further user interaction.
+- Resets <cite>measurementChannelX</cite> sentinels (A–D) to <cite>False</cite>, marking all channels as inactive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channelList</strong> – A list of channel identifiers (e.g., [‘A’, ‘B’]) that failed to meet the minimum measurement conditions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSaveSentinels">
+<span class="sig-name descname"><span class="pre">resetSaveSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.resetSaveSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSaveSentinels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSentinels">
+<span class="sig-name descname"><span class="pre">resetSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.resetSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Resets internal channel selection sentinels and re-enables all channel checkboxes.</p>
+<p>This function is typically called after a measurement is stopped. It clears the selection flags (<cite>selectChannelX</cite>) for all channels (A–D) and re-enables their corresponding checkboxes in the UI, allowing the user to configure new measurement selections.</p>
+<p>This function performs the following actions:
+- Sets all <cite>selectChannelX</cite> sentinels to <cite>False</cite>, indicating no active selections.
+- Enables the checkboxes for channels A, B, C, and D to restore full configuration flexibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.resetValues">
+<span class="sig-name descname"><span class="pre">resetValues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.resetValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.resetValues" title="Permalink to this definition"></a></dt>
+<dd><p>Resets all measurement-related data, graphics, tables, and save-state sentinels to their initial state.</p>
+<p>This function is typically called before starting a new measurement session. It ensures that all previous data and UI elements are cleared to avoid inconsistencies or overlapping results. It resets internal storage lists, clears the curves on the plots, empties the result tables, and resets file save status indicators.</p>
+<p>This function performs the following actions:
+- Clears all count values and timestamps for channels A–D.
+- Clears the corresponding date-formatted timestamp lists.
+- Resets the row count of the main and cloned data tables.
+- Clears all data from the plotted curves for each channel.
+- Resets internal sentinels that track whether the data has been saved in TXT, CSV, or DAT format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings">
+<span class="sig-name descname"><span class="pre">returnSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.returnSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.returnSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Restores the previously saved configuration settings to the Tempico device.</p>
+<p>This function is typically called after a measurement session ends. It applies the saved settings—previously captured via <cite>saveSettings()</cite>—back to the Tempico device for all channels (A–D). This includes restoring the number of runs, number of stops, mode, averaging cycles, and stop mask values. If any of the required variables were not initialized (e.g., due to a missing <cite>saveSettings()</cite> call), the function catches the <cite>NameError</cite> and prints the exception.</p>
+<p>This function performs the following actions:
+- Restores the number of acquisition runs for the entire device.
+- Restores the number of averaging cycles for each channel.
+- Restores the number of stop events for each channel.
+- Restores the operation mode for each channel.
+- Restores the stop mask configuration for each channel.
+- Catches and prints <cite>NameError</cite> if any setting is undefined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem">
+<span class="sig-name descname"><span class="pre">rightAlignedItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.rightAlignedItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.rightAlignedItem" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a QTableWidgetItem with right-aligned and vertically centered text.</p>
+<p>This function takes a value, converts it to a string, wraps it in a QTableWidgetItem,
+and sets the text alignment to align the content to the right and center it vertically.
+It is used to ensure consistent formatting of numerical or textual data in table cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>Any</em>) – The value to be displayed in the table cell.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A QTableWidgetItem with the specified alignment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QTableWidgetItem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData">
+<span class="sig-name descname"><span class="pre">saveData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.saveData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveData" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current data according to the selected format specified in the dialog box.</p>
+<p>The function starts by retrieving the default histogram name and the current 
+date, which is formatted to create a unique filename. It then initializes lists 
+to hold filenames, data, settings, and column names for the saved files.</p>
+<p>A dialog box is displayed for the user to select the desired file format 
+(txt, csv, or dat) for saving the data. Once the user accepts the selection, 
+the function checks if the selected format has already been saved before.</p>
+<p>If the selected format has not been saved, it collects data from the various 
+channels (A, B, C, D) if their corresponding sentinel variables indicate 
+they should be saved. It retrieves the average cycles, mode, number of stops, 
+stop edge, and stop mask for each channel to include in the settings. The 
+function then attempts to save the collected data in the specified format.</p>
+<p>If the save operation is successful, a message box is displayed, confirming 
+the successful save and showing the folder path and file names. If an error 
+occurs during the save process, an error message box is shown.</p>
+<p>If the selected format has already been saved, a message box is displayed 
+with the previous save information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.savePlots">
+<span class="sig-name descname"><span class="pre">savePlots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.savePlots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.savePlots" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current plots in the selected image format.</p>
+<p>This method opens a dialog for the user to select an image format (PNG, TIFF, or JPG) 
+and saves the plots for channels A, B, C, and D if their respective flags are set to True. 
+The plots are saved with a timestamp in the specified format in the default folder path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.saveSettings">
+<span class="sig-name descname"><span class="pre">saveSettings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.saveSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.saveSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the current configuration settings of the Tempico device for all channels.</p>
+<p>This function queries the device and stores key configuration parameters for each channel (A–D), such as the number of stops, acquisition mode, averaging cycles, and stop mask. These values are cached in instance variables so they can be restored later (e.g., after a measurement session). If the device is unavailable or any read operation fails, the function safely ignores the error.</p>
+<p>This function performs the following actions:
+- Retrieves and stores the global number of acquisition runs.
+- Retrieves and stores the number of stops per channel.
+- Retrieves and stores the operation mode per channel.
+- Retrieves and stores the number of averaging cycles per channel.
+- Retrieves and stores the stop mask per channel.
+- Ignores exceptions silently if the device is not ready.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.startMeasure">
+<span class="sig-name descname"><span class="pre">startMeasure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.startMeasure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.startMeasure" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the count measurement process by configuring the UI, preparing internal states, and launching the background worker thread.</p>
+<p>This function is triggered when the user clicks the Start button. It verifies that at least one measurement channel (A–D) is selected. If so, it proceeds to initialize the measurement by disabling conflicting buttons and tabs, saving current settings, resetting values, and setting up the worker thread responsible for data acquisition. If no channels are selected, it displays a dialog warning the user.</p>
+<p>This function performs the following actions:
+- Verifies that at least one channel checkbox is active.
+- Disables the Start button and enables the Stop button.
+- Disables data saving buttons and tab navigation to prevent user interference.
+- Saves current settings and stops the connection monitoring timer.
+- Resets measurement values and identifies the selected channels.
+- Updates the UI status bar to indicate active measurement.
+- Creates and configures a <cite>WorkerThreadCountsEstimated</cite> thread to perform background data acquisition.
+- Connects various thread signals to corresponding update methods in the class.
+- Starts the measurement thread.
+- If no channels are selected, displays a warning dialog requiring the user to activate at least one channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the connection monitoring timer to periodically check the device status.</p>
+<p>This function activates the <cite>timerConnection</cite>, which verifies the connection with the Tempico device every 500 milliseconds. It is typically called after a measurement has ended or when the device is reconnected, ensuring continuous monitoring of the device’s availability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.stopMeasure">
+<span class="sig-name descname"><span class="pre">stopMeasure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.stopMeasure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopMeasure" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the ongoing measurement process and restores the UI and device to their initial configuration.</p>
+<p>This function is triggered when the user clicks the Stop button. It halts the background measurement thread, resets relevant internal flags (sentinels), re-enables UI tabs and controls, and restores the initial settings of the Tempico device if the disconnection did not occur. If the device was disconnected during measurement, it triggers the disconnection handling routine.</p>
+<p>This function performs the following actions:
+- Re-enables the disabled UI tabs to allow user interaction post-measurement.
+- Calls <cite>resetSentinels()</cite> to clear internal flags related to active measurement channels.
+- Disables the Stop button and signals the worker thread to stop.
+- If the device is still connected:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Restarts the connection-monitoring timer.</p></li>
+<li><p>Re-enables the disconnect button.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If the device was disconnected during measurement:</dt><dd><ul>
+<li><p>Triggers the disconnection handling logic in the main window.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Updates the main window status to indicate that no measurement is currently running.</p></li>
+<li><p>Calls <cite>returnSettings()</cite> to restore device parameters to their original configuration.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the connection monitoring timer during an active measurement.</p>
+<p>This function is called when a measurement begins to prevent interference from the periodic connection checks. It halts the <cite>timerConnection</cite>, which normally runs in the background to monitor the status of the Tempico device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphic">
+<span class="sig-name descname"><span class="pre">updateGraphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.updateGraphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphic" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the visible X-axis range of all channel plots based on the selected time window.</p>
+<p>This function is triggered when the user changes the time range using the <cite>timeRangeComboBox</cite>. It determines the most recent timestamp in channel A and adjusts the X-axis range for all plots (A–D) accordingly, displaying only the data within the selected time interval.</p>
+<p>This function performs the following actions:
+- Verifies that channel A has data; if not, it exits early.
+- Attempts to extract the number of seconds from the selected combo box option.
+- Calculates the minimum and maximum X-axis values based on the most recent timestamp.
+- Updates the X-axis range of all plots (A, B, C, and D) to reflect the selected time window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphicsLayout">
+<span class="sig-name descname"><span class="pre">updateGraphicsLayout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.updateGraphicsLayout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateGraphicsLayout" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the graphical layout based on the selected visualization mode and active channel checkboxes.</p>
+<p>This function dynamically reconfigures how the channel plots are displayed, depending on the selected radio button mode: 
+separate graphics, merged graph, or detached dialogs. It ensures that the interface reflects the current user selections by showing or hiding the corresponding curves, windows, or layouts.</p>
+<p>This function performs the following actions:
+- If <strong>separate graphics</strong> mode is selected:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Closes any open detached dialogs.</p></li>
+<li><p>Clears the current layout inside the <cite>graphicsFrame</cite>.</p></li>
+<li><p>Creates individual graphs for each selected channel (A–D).</p></li>
+<li><dl class="simple">
+<dt>Arranges them responsively:</dt><dd><ul>
+<li><p>1 channel → full frame.</p></li>
+<li><p>2 channels → one above the other.</p></li>
+<li><p>3 channels → two top, one bottom.</p></li>
+<li><p>4 channels → 2×2 grid layout.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If <strong>merge graphics</strong> mode is selected:</dt><dd><ul>
+<li><p>Closes detached dialogs if any exist.</p></li>
+<li><p>Clears the layout in <cite>graphicsFrame</cite>.</p></li>
+<li><p>Creates a single graph containing all curves.</p></li>
+<li><p>Displays or hides each curve depending on its checkbox status.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If <strong>detached graphics</strong> mode is selected:</dt><dd><ul>
+<li><p>Clears the main <cite>graphicsFrame</cite> layout.</p></li>
+<li><p>For each selected channel (A–D), opens a dedicated dialog window.</p></li>
+<li><p>Loads previous data into the newly created plots.</p></li>
+<li><p>Closes dialog windows for unchecked channels.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.CountsEstimatedLogic.CountEstimatedLogic.updateLabels">
+<span class="sig-name descname"><span class="pre">updateLabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/CountsEstimatedLogic.html#CountEstimatedLogic.updateLabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.CountsEstimatedLogic.CountEstimatedLogic.updateLabels" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the UI labels displaying the latest measurement value and its uncertainty for the specified channel.</p>
+<p>This function formats and sets the value and uncertainty labels for a given channel (A–D). If the value is a string (e.g., “Low Counts” or “Not Selected”), it is displayed as-is. If it is a numeric value, the function rounds it for clearer presentation before updating the corresponding labels.</p>
+<p>This function performs the following actions:
+- Determines if the value is a string or numeric.
+- Rounds numeric values (value to 2 decimals, uncertainty to 5 decimals).
+- Updates the <cite>QLabel</cite> elements associated with the selected channel to reflect the latest measurement results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – The target channel identifier (‘A’, ‘B’, ‘C’, or ‘D’).</p></li>
+<li><p><strong>value</strong> – The most recent measured value (float, int, or str).</p></li>
+<li><p><strong>uncertainty</strong> – The associated uncertainty of the measurement (float or str).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="StartStopLogic.html" class="btn btn-neutral float-left" title="StartStopLogic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TimeStampLogic.html" class="btn btn-neutral float-right" title="TimeStampLogic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

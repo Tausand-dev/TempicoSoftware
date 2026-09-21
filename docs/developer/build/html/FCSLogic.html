@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FCSLogic module &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a66068bb"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="G2Logic module" href="G2Logic.html" />
+    <link rel="prev" title="LifeTimeLogic module" href="LifeTimeLogic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FCSLogic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.FCSLogic.FCSLogAxis"><code class="docutils literal notranslate"><span class="pre">FCSLogAxis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogAxis.staticMetaObject"><code class="docutils literal notranslate"><span class="pre">FCSLogAxis.staticMetaObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogAxis.tickStrings"><code class="docutils literal notranslate"><span class="pre">FCSLogAxis.tickStrings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic"><code class="docutils literal notranslate"><span class="pre">FCSLogic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.PARAM_LABELS"><code class="docutils literal notranslate"><span class="pre">FCSLogic.PARAM_LABELS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.changeColorThread"><code class="docutils literal notranslate"><span class="pre">FCSLogic.changeColorThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.changeStatusColor"><code class="docutils literal notranslate"><span class="pre">FCSLogic.changeStatusColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.changeStatusThread"><code class="docutils literal notranslate"><span class="pre">FCSLogic.changeStatusThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.clear_curve"><code class="docutils literal notranslate"><span class="pre">FCSLogic.clear_curve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.connectedDevice"><code class="docutils literal notranslate"><span class="pre">FCSLogic.connectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.disconnectedDevice"><code class="docutils literal notranslate"><span class="pre">FCSLogic.disconnectedDevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.hide_graphic2"><code class="docutils literal notranslate"><span class="pre">FCSLogic.hide_graphic2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.resetSaveSentinels"><code class="docutils literal notranslate"><span class="pre">FCSLogic.resetSaveSentinels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.run_fit"><code class="docutils literal notranslate"><span class="pre">FCSLogic.run_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.save_data"><code class="docutils literal notranslate"><span class="pre">FCSLogic.save_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.save_plot"><code class="docutils literal notranslate"><span class="pre">FCSLogic.save_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.set_parameter_widgets"><code class="docutils literal notranslate"><span class="pre">FCSLogic.set_parameter_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.show_graphic"><code class="docutils literal notranslate"><span class="pre">FCSLogic.show_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.startTimerConnection"><code class="docutils literal notranslate"><span class="pre">FCSLogic.startTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.start_graphic"><code class="docutils literal notranslate"><span class="pre">FCSLogic.start_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.stopTimerConnection"><code class="docutils literal notranslate"><span class="pre">FCSLogic.stopTimerConnection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.stop_graphic"><code class="docutils literal notranslate"><span class="pre">FCSLogic.stop_graphic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.threadComplete"><code class="docutils literal notranslate"><span class="pre">FCSLogic.threadComplete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.threadRunning"><code class="docutils literal notranslate"><span class="pre">FCSLogic.threadRunning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Logic.FCSLogic.FCSLogic.update_plot"><code class="docutils literal notranslate"><span class="pre">FCSLogic.update_plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FCSLogic module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/FCSLogic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Logic.FCSLogic">
+<span id="fcslogic-module"></span><h1>FCSLogic module<a class="headerlink" href="#module-Logic.FCSLogic" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogAxis">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.FCSLogic.</span></span><span class="sig-name descname"><span class="pre">FCSLogAxis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogAxis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogAxis" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AxisItem</span></code></p>
+<p>Custom logarithmic AxisItem for FCS.
+Only labels decade boundary ticks (e.g. 10^-6, 10^-5) to prevent overlapping labels.
+If zoomed in very closely (less than a decade visible), labels intermediate ticks with units.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogAxis.staticMetaObject">
+<span class="sig-name descname"><span class="pre">staticMetaObject</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PySide2.QtCore.QMetaObject</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#Logic.FCSLogic.FCSLogAxis.staticMetaObject" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogAxis.tickStrings">
+<span class="sig-name descname"><span class="pre">tickStrings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogAxis.tickStrings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogAxis.tickStrings" title="Permalink to this definition"></a></dt>
+<dd><p>Formats tick labels for the logarithmic τ axis.</p>
+<p>When not in log mode, delegates to the base class implementation. In
+log mode, if any of the given tick <code class="docutils literal notranslate"><span class="pre">values</span></code> sit on an integer decade
+boundary, only those decades are labeled (as <code class="docutils literal notranslate"><span class="pre">10^n</span></code>) and all other
+ticks are left blank to avoid overlapping text. If no decade boundary
+is visible (i.e. the view is zoomed in to less than one decade),
+every tick is instead labeled with its time value converted to the
+most readable unit (ns, µs, ms, or s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – Tick positions, expressed as <code class="docutils literal notranslate"><span class="pre">log10</span></code> of the
+underlying value.</p></li>
+<li><p><strong>scale</strong> – Axis scale factor, as provided by pyqtgraph.</p></li>
+<li><p><strong>spacing</strong> – Spacing between major ticks, as provided by
+pyqtgraph.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of formatted tick label strings, one per value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Logic.FCSLogic.</span></span><span class="sig-name descname"><span class="pre">FCSLogic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnectButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TempicoDevice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveDataButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savePlotButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statusPoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timerStatus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callsLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventsLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsedLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitButton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitModelCombo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitEquationLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResultsFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitOffsetCheckBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopChannelComboBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitResetParamsButton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Orchestration layer for the FCS measurement tab.</p>
+<p>Creates and manages a single pyqtgraph <code class="docutils literal notranslate"><span class="pre">PlotWidget</span></code> that displays the
+normalized autocorrelation function G(τ) in real time. Instantiates and
+controls a <code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS</span></code> during acquisition, and provides save
+(data + plot) functionality after the measurement finishes.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>parent<span class="classifier">QWidget</span></dt><dd><p>The <code class="docutils literal notranslate"><span class="pre">QFrame</span></code> / <code class="docutils literal notranslate"><span class="pre">QWidget</span></code> inside the FCS tab where the plot is
+injected (equivalent to <code class="docutils literal notranslate"><span class="pre">Graph3</span></code> in <code class="docutils literal notranslate"><span class="pre">StartStopLogic</span></code>).</p>
+</dd>
+<dt>disconnectButton<span class="classifier">QPushButton</span></dt><dd><p>Main-window Disconnect button – disabled while measuring.</p>
+</dd>
+<dt>device<span class="classifier">Tempico.TempicoDevice</span></dt><dd><p>Open Tempico device instance.</p>
+</dd>
+<dt>startButton<span class="classifier">QPushButton</span></dt><dd><p>Starts the acquisition.</p>
+</dd>
+<dt>stopButton<span class="classifier">QPushButton</span></dt><dd><p>Stops the acquisition.</p>
+</dd>
+<dt>saveDataButton<span class="classifier">QPushButton</span></dt><dd><p>Saves the raw G(τ) curve to a text/csv/dat file.</p>
+</dd>
+<dt>savePlotButton<span class="classifier">QPushButton</span></dt><dd><p>Saves the plot as an image file.</p>
+</dd>
+<dt>clearButton<span class="classifier">QPushButton</span></dt><dd><p>Clears the accumulated curve without restarting the device.</p>
+</dd>
+<dt>connectButton<span class="classifier">QPushButton</span></dt><dd><p>Main-window Connect button – re-enabled when disconnected.</p>
+</dd>
+<dt>mainWindow<span class="classifier">QMainWindow</span></dt><dd><p>Reference to the application’s main window (for tab management and
+<code class="docutils literal notranslate"><span class="pre">activeMeasurement</span></code> / <code class="docutils literal notranslate"><span class="pre">noMeasurement</span></code> coordination).</p>
+</dd>
+<dt>statusValue<span class="classifier">QLabel</span></dt><dd><p>Label that shows the current acquisition status text.</p>
+</dd>
+<dt>statusPoint<span class="classifier">QLabel</span></dt><dd><p>Small label used as a coloured status indicator (traffic-light dot).</p>
+</dd>
+<dt>timerStatus<span class="classifier">QTimer</span></dt><dd><p>Shared timer that polls the device connection; stopped during
+measurement and restarted when idle.</p>
+</dd>
+<dt>tau_0<span class="classifier">int, optional</span></dt><dd><p>Base bin size in picoseconds. Default: 1 000 000 ps (1 ms).</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.PARAM_LABELS">
+<span class="sig-name descname"><span class="pre">PARAM_LABELS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{0:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τD',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('κ',</span> <span class="pre">'',</span> <span class="pre">1.0)],</span> <span class="pre">1:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τD',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('α',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('κ',</span> <span class="pre">'',</span> <span class="pre">1.0)],</span> <span class="pre">2:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τB',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('K',</span> <span class="pre">'',</span> <span class="pre">1.0)],</span> <span class="pre">3:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τD',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('a',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τv',</span> <span class="pre">'ms',</span> <span class="pre">1000.0)],</span> <span class="pre">4:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τD',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('a',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('F',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τF',</span> <span class="pre">'µs',</span> <span class="pre">1000000.0)],</span> <span class="pre">5:</span> <span class="pre">[('N',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('τD1',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('τD2',</span> <span class="pre">'ms',</span> <span class="pre">1000.0),</span> <span class="pre">('α1',</span> <span class="pre">'',</span> <span class="pre">1.0),</span> <span class="pre">('a',</span> <span class="pre">'',</span> <span class="pre">1.0)]}</span></em><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.PARAM_LABELS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.changeColorThread">
+<span class="sig-name descname"><span class="pre">changeColorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.changeColorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.changeColorThread" title="Permalink to this definition"></a></dt>
+<dd><p>Update the status-indicator dot colour from a thread signal.</p>
+<p>Uses the same colour code as <code class="docutils literal notranslate"><span class="pre">StartStopLogic</span></code>:
+0 = grey, 1 = green, 2 = yellow, 3 = orange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – Colour code (int).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.changeStatusColor">
+<span class="sig-name descname"><span class="pre">changeStatusColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.changeStatusColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.changeStatusColor" title="Permalink to this definition"></a></dt>
+<dd><p>Set the status-indicator dot colour from Logic-layer code.</p>
+<p>Colour codes: 0 = grey, 1 = green, 2 = yellow, 3 = orange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – Colour code (int).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.changeStatusThread">
+<span class="sig-name descname"><span class="pre">changeStatusThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.changeStatusThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.changeStatusThread" title="Permalink to this definition"></a></dt>
+<dd><p>Update the status label text from a thread signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_text</strong> – Text to display (str).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.clear_curve">
+<span class="sig-name descname"><span class="pre">clear_curve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.clear_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.clear_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Clear the G(τ) curve and cached data without stopping the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.connectedDevice">
+<span class="sig-name descname"><span class="pre">connectedDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.connectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.connectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Update the device reference after a reconnection.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">MainWindow.open_dialog</span></code> when the user reconnects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_new</strong> – New open <code class="docutils literal notranslate"><span class="pre">TempicoDevice</span></code> instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.disconnectedDevice">
+<span class="sig-name descname"><span class="pre">disconnectedDevice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.disconnectedDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.disconnectedDevice" title="Permalink to this definition"></a></dt>
+<dd><p>Handle a device disconnection event.</p>
+<p>Stops any running measurement, disables the start button, and resets
+the status indicator to grey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.hide_graphic2">
+<span class="sig-name descname"><span class="pre">hide_graphic2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.hide_graphic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.hide_graphic2" title="Permalink to this definition"></a></dt>
+<dd><p>Disable start and stop buttons (called on disconnect from main.py).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.resetSaveSentinels">
+<span class="sig-name descname"><span class="pre">resetSaveSentinels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.resetSaveSentinels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.resetSaveSentinels" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the per-format save sentinels.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">MainWindow.resetSaveSentinelsAllWindows</span></code> so the user can
+re-save data in the same format after a new measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.run_fit">
+<span class="sig-name descname"><span class="pre">run_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.run_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.run_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the current G(τ) curve with the model selected in <code class="docutils literal notranslate"><span class="pre">fitModelCombo</span></code>.</p>
+<p>The initial guess (<code class="docutils literal notranslate"><span class="pre">p0</span></code>) comes from the editable “Initial value”
+column of <code class="docutils literal notranslate"><span class="pre">fitTable</span></code> (<code class="docutils literal notranslate"><span class="pre">_read_initial_params</span></code>), falling back to
+the auto-computed guess for anything left blank/invalid, and is
+clipped into the model’s <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> bounds (<code class="docutils literal notranslate"><span class="pre">_get_bounds</span></code>) so
+an out-of-range entry can’t make the fit raise. On success, the
+“Fit result” column is filled in (<code class="docutils literal notranslate"><span class="pre">_fill_fit_results</span></code>), the fit
+curve is redrawn, and <code class="docutils literal notranslate"><span class="pre">last_p0_used</span></code>/<code class="docutils literal notranslate"><span class="pre">last_fit_idx</span></code> are recorded
+so the saved-data header can report exactly what guess produced the
+displayed result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.save_data">
+<span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.save_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.save_data" title="Permalink to this definition"></a></dt>
+<dd><p>Prompts for a file format and saves the current G(τ) curve and photon times.</p>
+<p>Does nothing if there is no measurement data cached. Otherwise, shows
+a small dialog to let the user choose the output format (txt, csv, or
+dat), then writes two files into the configured save folder: one with
+the <code class="docutils literal notranslate"><span class="pre">tau_s</span></code> / <code class="docutils literal notranslate"><span class="pre">G(tau)</span></code> pairs of the autocorrelation curve, and
+another with the raw stop timestamps in picoseconds. Both files share
+a header with the measurement window, device model, correlator
+parameters, selected stop channel, and — if a fit was run — the fit
+model, equation, and fitted parameter values. Shows a confirmation or
+error message box depending on the outcome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.save_plot">
+<span class="sig-name descname"><span class="pre">save_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.save_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.save_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Prompts for an image format and exports the current plot to a file.</p>
+<p>Shows a small dialog to let the user choose the output image format
+(png, tiff, or jpg), builds the destination file name from the
+configured file prefix, the current timestamp, and the selected stop
+channel, then exports the plot at 800x600 pixels using pyqtgraph’s
+<code class="docutils literal notranslate"><span class="pre">ImageExporter</span></code>. The destination folder is created if it does not
+already exist. Shows a confirmation or error message box depending on
+the outcome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.set_parameter_widgets">
+<span class="sig-name descname"><span class="pre">set_parameter_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau0SpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">durationSpinBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indefiniteCheckBox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.set_parameter_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.set_parameter_widgets" title="Permalink to this definition"></a></dt>
+<dd><p>Provide references to the parameter widgets.</p>
+<p>Called by <code class="docutils literal notranslate"><span class="pre">main.py</span></code> immediately after constructing <code class="docutils literal notranslate"><span class="pre">FCSLogic</span></code> so
+that <code class="docutils literal notranslate"><span class="pre">start_graphic</span></code> can read the user-configured values at the
+moment the measurement starts — not at construction time.</p>
+<p>This is critical for <code class="docutils literal notranslate"><span class="pre">tau0SpinBox</span></code>: if the user changes τ₀ after
+the tab is first opened, the new value must be picked up when
+“Begin measurement” is pressed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tau0SpinBox</strong> – QSpinBox with τ₀ in µs.</p></li>
+<li><p><strong>durationSpinBox</strong> – QSpinBox with duration in seconds.</p></li>
+<li><p><strong>indefiniteCheckBox</strong> – QCheckBox; when checked the measurement
+runs until the user presses Stop.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.show_graphic">
+<span class="sig-name descname"><span class="pre">show_graphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.show_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.show_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Re-enable the start button after a reconnection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_new</strong> – New open <code class="docutils literal notranslate"><span class="pre">TempicoDevice</span></code> instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.startTimerConnection">
+<span class="sig-name descname"><span class="pre">startTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.startTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.startTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Restart the shared connection-polling timer at 500 ms.</p>
+<p>Called when the measurement finishes or is stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.start_graphic">
+<span class="sig-name descname"><span class="pre">start_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.start_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.start_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Start the FCS acquisition.</p>
+<p>Resets the curve, disables buttons that must not be used during
+measurement, stops the connection-polling timer, notifies the main
+window, and launches the <code class="docutils literal notranslate"><span class="pre">WorkerThreadFCS</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.stopTimerConnection">
+<span class="sig-name descname"><span class="pre">stopTimerConnection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.stopTimerConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.stopTimerConnection" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the shared connection-polling timer.</p>
+<p>Called when measurement starts so the timer does not interfere with
+the thread’s exclusive use of the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.stop_graphic">
+<span class="sig-name descname"><span class="pre">stop_graphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.stop_graphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.stop_graphic" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the acquisition and restore the UI to idle state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.threadComplete">
+<span class="sig-name descname"><span class="pre">threadComplete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.threadComplete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.threadComplete" title="Permalink to this definition"></a></dt>
+<dd><p>Called when the worker thread finishes naturally (<code class="docutils literal notranslate"><span class="pre">finished</span></code> signal).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.threadRunning">
+<span class="sig-name descname"><span class="pre">threadRunning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.threadRunning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.threadRunning" title="Permalink to this definition"></a></dt>
+<dd><p>Update <code class="docutils literal notranslate"><span class="pre">threadCreatedSentinel</span></code> from the <code class="docutils literal notranslate"><span class="pre">threadCreated</span></code> signal.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>status<span class="classifier">int</span></dt><dd><p>0 → thread just started; 1 → thread just stopped.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Logic.FCSLogic.FCSLogic.update_plot">
+<span class="sig-name descname"><span class="pre">update_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">taus_ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_times_ps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Logic/FCSLogic.html#FCSLogic.update_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Logic.FCSLogic.FCSLogic.update_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Update the G(τ) scatter plot with the latest correlation data.</p>
+<p>Converts lag times from picoseconds to seconds before plotting.
+Keeps a copy of the last arrays for the save functions.</p>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>taus_ps<span class="classifier">numpy.ndarray</span></dt><dd><p>Lag times in picoseconds (emitted by the thread).</p>
+</dd>
+<dt>g<span class="classifier">numpy.ndarray</span></dt><dd><p>Normalized autocorrelation values G(τ).</p>
+</dd>
+<dt>stop_times_ps<span class="classifier">numpy.ndarray</span></dt><dd><p>All raw stop times collected so far, in picoseconds.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="LifeTimeLogic.html" class="btn btn-neutral float-left" title="LifeTimeLogic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="G2Logic.html" class="btn btn-neutral float-right" title="G2Logic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

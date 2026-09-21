@@ -1,0 +1,781 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threads.ThreadG2 &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=a66068bb"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Threads.ThreadG2</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Threads.ThreadG2</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">io</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Slot</span>
+<span class="kn">import</span> <span class="nn">pyTempico</span> <span class="k">as</span> <span class="nn">tempico</span>
+<span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<span class="c1"># Overflow sentinel returned by pyTempico when no valid stop is recorded.</span>
+<span class="n">_OVERFLOW_SENTINEL</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1_000_000</span>
+
+<span class="c1"># Maps the 1-4 numeric TDC channel index used internally to the A-D letter</span>
+<span class="c1"># shown to the user in status messages.</span>
+<span class="n">_CHANNEL_LETTERS</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="WorkerThreadG2"><a class="viewcode-back" href="../../ThreadG2.html#Threads.ThreadG2.WorkerThreadG2">[docs]</a><span class="k">class</span> <span class="nc">WorkerThreadG2</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker thread for g²(τ) HBT acquisition and real-time histogram update.</span>
+
+<span class="sd">    Runs entirely in the background so the GUI thread stays responsive during</span>
+<span class="sd">    the measurement. Communicates with the GUI exclusively through Qt signals.</span>
+
+<span class="sd">    The thread calls ``device.measure()`` in a continuous loop and processes</span>
+<span class="sd">    each row&#39;s stop_ps1 time into a nanosecond delay τ.  Valid τ values are</span>
+<span class="sd">    accumulated into a symmetric histogram spanning [−window_ns, +window_ns]</span>
+<span class="sd">    with bin width bin_ns.  After every batch the normalized g²(τ) curve is</span>
+<span class="sd">    emitted via ``dataReady``.</span>
+
+<span class="sd">    Normalization (from Prueba7.py):</span>
+<span class="sd">        baseline = mean( counts[counts &gt; 0] )</span>
+<span class="sd">        g²(τ)   = counts(τ) / baseline</span>
+
+<span class="sd">    Rate (stop-stop):</span>
+<span class="sd">        The displayed rate is NOT total_events / elapsed_time — that naive</span>
+<span class="sd">        estimate is skewed by the hardware dead-time between acquisition</span>
+<span class="sd">        runs. Instead, the stop channel is configured for exactly the</span>
+<span class="sd">        number of stops per run requested by the caller (``num_stops``,</span>
+<span class="sd">        no forced minimum), and, within each individual run, the delta</span>
+<span class="sd">        between consecutive valid stops is accumulated (mirroring</span>
+<span class="sd">        ``WorkerThreadFCS``&#39;s inter-stop delta logic). The gap between the</span>
+<span class="sd">        last stop of one run and the first stop of the next run is never</span>
+<span class="sd">        computed, so the inter-run dead-time can&#39;t contaminate the</span>
+<span class="sd">        estimate. The rate is then::</span>
+
+<span class="sd">            Rate (stop-stop) = 1 / mean(delta_stop)</span>
+
+<span class="sd">        with a guard against delta_stop &lt;= 0 to avoid a division by zero.</span>
+<span class="sd">        If ``num_stops`` is 1, no intra-run delta ever exists, so</span>
+<span class="sd">        Rate (stop-stop) has no data and the UI shows it as unavailable —</span>
+<span class="sd">        the g²(τ) histogram itself is unaffected either way, since it only</span>
+<span class="sd">        ever uses the first stop of each run.</span>
+
+<span class="sd">    Signals</span>
+<span class="sd">    -------</span>
+<span class="sd">    dataReady : Signal(object, object, int, float)</span>
+<span class="sd">        Emitted after every ``measure()`` call with</span>
+<span class="sd">        ``(centres_ns, g2, total_events, rate_stop_stop)``.</span>
+<span class="sd">    statusUpdate : Signal(str)</span>
+<span class="sd">        Emitted after every ``measure()`` call with a human-readable status</span>
+<span class="sd">        string (event count, elapsed time).</span>
+<span class="sd">    colorValue : Signal(int)</span>
+<span class="sd">        Status-indicator colour code: 1 = running OK, 3 = warning / no data.</span>
+<span class="sd">    stringValue : Signal(str)</span>
+<span class="sd">        Short status messages for the status label.</span>
+<span class="sd">    threadCreated : Signal(int)</span>
+<span class="sd">        Emitted with 0 when the loop starts, 1 when it stops.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_stop_ps : list</span>
+<span class="sd">        Every individual valid stop time recorded during the acquisition,</span>
+<span class="sd">        in picoseconds and in arrival order. This is the raw start-stop</span>
+<span class="sd">        data behind the accumulated g²(τ) histogram, kept so it can be</span>
+<span class="sd">        exported separately (e.g. as ``..._StartStopTimes``).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parent : QWidget</span>
+<span class="sd">        Parent widget that owns this thread.</span>
+<span class="sd">    device : tempico.TempicoDevice</span>
+<span class="sd">        Open Tempico device instance.</span>
+<span class="sd">    stop_channel : int</span>
+<span class="sd">        Which TDC channel (1–4) carries the stop signal. Default: 1.</span>
+<span class="sd">    bin_ns : float</span>
+<span class="sd">        Histogram bin width in nanoseconds. Default: 2.0 ns.</span>
+<span class="sd">    window_ns : float</span>
+<span class="sd">        Half-window in nanoseconds; histogram spans [−window_ns, +window_ns].</span>
+<span class="sd">        Default: 200.0 ns.</span>
+<span class="sd">    mode : int</span>
+<span class="sd">        TDC acquisition mode (1 = ±200 ns typical, 2 = up to 4 ms). Default: 1.</span>
+<span class="sd">    num_runs : int</span>
+<span class="sd">        Number of runs per ``measure()`` call. Default: 100.</span>
+<span class="sd">    num_stops : int</span>
+<span class="sd">        Number of stops requested per run on the active channel, exactly</span>
+<span class="sd">        as configured by the caller (no forced minimum; 1 is the hardware</span>
+<span class="sd">        floor). Only the first valid stop of each run is used to build the</span>
+<span class="sd">        g²(τ) histogram regardless of this value. If less than 2, no</span>
+<span class="sd">        intra-run stop-to-stop delta can be computed, so Rate (stop-stop)</span>
+<span class="sd">        has no data to show. Default: 2.</span>
+<span class="sd">    channel_mode : int</span>
+<span class="sd">        TDC mode applied to the stop channel at device configuration time.</span>
+<span class="sd">        Kept for symmetry with WorkerThreadFCS; mirrors ``mode``. Default: 1.</span>
+<span class="sd">    total_seconds : float or None</span>
+<span class="sd">        If set, the loop exits after this many wall-clock seconds. If None,</span>
+<span class="sd">        the loop runs until ``stop()`` is called. Default: None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dataReady</span>     <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">statusUpdate</span>  <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">colorValue</span>    <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">stringValue</span>   <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">threadCreated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">tempico</span><span class="o">.</span><span class="n">TempicoDevice</span><span class="p">,</span>
+        <span class="n">stop_channel</span><span class="p">:</span> <span class="nb">int</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">bin_ns</span><span class="p">:</span>       <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="n">window_ns</span><span class="p">:</span>    <span class="nb">float</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span>
+        <span class="n">num_stops</span><span class="p">:</span>    <span class="nb">int</span>   <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">total_seconds</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configures the acquisition parameters and builds the τ histogram.</span>
+
+<span class="sd">        Stores the device and acquisition settings, initializes the</span>
+<span class="sd">        loop-control and error-tracking sentinels, resets the photon</span>
+<span class="sd">        counters, and builds the symmetric τ histogram spanning</span>
+<span class="sd">        ``[-window_ns, +window_ns]`` with bin width ``bin_ns``. Bin edges are</span>
+<span class="sd">        offset by half a bin so that bin centres always fall exactly on</span>
+<span class="sd">        ``0, ±bin_ns, ±2*bin_ns, ...``, guaranteeing a bin centred at τ = 0.</span>
+
+<span class="sd">        :param parent: Parent widget that owns this thread.</span>
+<span class="sd">        :param device: Open ``tempico.TempicoDevice`` instance.</span>
+<span class="sd">        :param stop_channel: TDC channel (1-4) carrying the stop signal.</span>
+<span class="sd">        :type stop_channel: int</span>
+<span class="sd">        :param bin_ns: Histogram bin width, in nanoseconds.</span>
+<span class="sd">        :type bin_ns: float</span>
+<span class="sd">        :param window_ns: Half-window, in nanoseconds; the histogram spans</span>
+<span class="sd">            ``[-window_ns, +window_ns]``.</span>
+<span class="sd">        :type window_ns: float</span>
+<span class="sd">        :param num_stops: Number of stops requested per run on the active</span>
+<span class="sd">            channel, exactly as configured by the user (e.g. via the</span>
+<span class="sd">            Channels settings dialog). If 1, the g²(τ) histogram still</span>
+<span class="sd">            works normally, but the Rate (stop-stop) display will have no</span>
+<span class="sd">            data to show, since it needs at least 2 stops in the same run</span>
+<span class="sd">            to compute an intra-run delta.</span>
+<span class="sd">        :type num_stops: int</span>
+<span class="sd">        :param total_seconds: Duration, in seconds, after which the</span>
+<span class="sd">            acquisition loop exits automatically, or ``None`` to run until</span>
+<span class="sd">            ``stop()`` is called.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>        <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span>        <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span>  <span class="o">=</span> <span class="n">stop_channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_ns</span>        <span class="o">=</span> <span class="n">bin_ns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_ns</span>     <span class="o">=</span> <span class="n">window_ns</span>
+        <span class="c1"># Respect exactly what was requested (no silent minimum). If the</span>
+        <span class="c1"># caller passes 1, the active channel genuinely runs with 1 stop</span>
+        <span class="c1"># per run: the g²(τ) histogram is unaffected (it only ever uses</span>
+        <span class="c1"># the first stop), but no intra-run stop-to-stop delta will exist,</span>
+        <span class="c1"># so Rate (stop-stop) will show as unavailable — see the</span>
+        <span class="c1"># len(valid_stops) &gt;= 2 guard further down.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_stops</span>     <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_stops</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># 1 is the hardware minimum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span> <span class="o">=</span> <span class="n">total_seconds</span>
+
+        <span class="c1"># Loop-control sentinel; set to False by stop()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itsRunning</span>        <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Consecutive device errors — auto-stop on persistent hardware fault</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># ── Photon counters ───────────────────────────────────────────────────</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_starts</span>     <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_stops</span>      <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># ── Raw start-stop data ───────────────────────────────────────────────</span>
+        <span class="c1"># Every individual valid stop time (ps), in the order it was recorded,</span>
+        <span class="c1"># kept for the whole acquisition so it can be exported as raw</span>
+        <span class="c1"># start-stop data (independent from the accumulated g²(τ) histogram).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_stop_ps</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># ── Stop-to-stop deltas (Rate stop-stop) ──────────────────────────────</span>
+        <span class="c1"># Running accumulators for the dead-time-safe stop-stop rate: only</span>
+        <span class="c1"># deltas between consecutive valid stops WITHIN the same run are</span>
+        <span class="c1"># ever added here (see _getMeasurements), so the hardware dead-time</span>
+        <span class="c1"># between runs never contaminates the estimate.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum_delta_stop_ps</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_delta_stop</span>      <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># ── Build symmetric histogram [-window_ns, +window_ns] ───────────────</span>
+        <span class="c1"># Edges are offset by half a bin so bin centres fall exactly on</span>
+        <span class="c1"># 0, ±bin_ns, ±2·bin_ns, …  (always a bin centred at τ = 0).</span>
+        <span class="c1"># n_half bins on each side → 2*n_half bins total → 2*n_half+1 edges.</span>
+        <span class="n">n_half</span>   <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">window_ns</span> <span class="o">/</span> <span class="n">bin_ns</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">half_bin</span> <span class="o">=</span> <span class="n">bin_ns</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="c1"># Left edge of bin 0 … right edge of bin 2*n_half-1</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">n_half</span><span class="p">,</span> <span class="n">n_half</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="n">bin_ns</span> <span class="o">-</span> <span class="n">half_bin</span>
+        <span class="c1"># &#39;edges&#39; already has 2*n_half+1 elements — no extra np.append needed.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span>   <span class="o">=</span> <span class="n">edges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span>  <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centres</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counts</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="c1"># isBatched and num_runs are determined in run() after reading the device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isBatched</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span>  <span class="o">=</span> <span class="mi">100</span>   <span class="c1"># placeholder; overwritten in run()</span>
+
+    <span class="c1"># ── Device configuration snapshot ────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="WorkerThreadG2.saveCurrentSettings"><a class="viewcode-back" href="../../ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.saveCurrentSettings">[docs]</a>    <span class="k">def</span> <span class="nf">saveCurrentSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Snapshot the current device configuration.</span>
+
+<span class="sd">        Stores all relevant channel and global parameters so they can be</span>
+<span class="sd">        re-applied with ``applyCurrentSettings()`` after the thread finishes.</span>
+<span class="sd">        Mirrors ``WorkerThreadFCS.saveCurrentSettings``.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberRunsSetting</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getNumberOfRuns</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getThresholdVoltage</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChannelA</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelA</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelA</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChannelB</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelB</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelB</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChannelC</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelC</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelC</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">modeChannelD</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getMode</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelD</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getNumberOfStops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelD</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getStopEdge</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">getStopMask</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WorkerThreadG2.applyCurrentSettings"><a class="viewcode-back" href="../../ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.applyCurrentSettings">[docs]</a>    <span class="k">def</span> <span class="nf">applyCurrentSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-apply the snapshotted device configuration.</span>
+
+<span class="sd">        Called after the acquisition loop exits to restore the device to the</span>
+<span class="sd">        state it was in before the G2 measurement started.</span>
+<span class="sd">        Mirrors ``WorkerThreadFCS.applyCurrentSettings``.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberRunsSetting</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setThresholdVoltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChannelA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setStopEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelA</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChannelB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setStopEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelB</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChannelC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setStopEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelC</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modeChannelD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setStopEdge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopMaskChannelD</span><span class="p">)</span>
+
+        <span class="c1"># Re-enable all channels after the single-channel HBT configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span></div>
+
+    <span class="c1"># ── Main loop ─────────────────────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="WorkerThreadG2.run"><a class="viewcode-back" href="../../ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Acquisition loop for g²(τ) HBT measurement.  Runs in a separate QThread.</span>
+
+<span class="sd">        Configures the selected stop channel for HBT (mode, 1 stop, stop_mask</span>
+<span class="sd">        = −0.25 µs to capture negative delays), then enters a loop that calls</span>
+<span class="sd">        ``device.measure()`` until ``stop()`` is called or ``total_seconds``</span>
+<span class="sd">        have elapsed.  Each batch accumulates τ values into the symmetric</span>
+<span class="sd">        histogram, recomputes g²(τ), and emits the updated curve.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># ── Snapshot device settings as the very first thing in run() ─────────</span>
+        <span class="c1"># Doing this here (not in __init__) guarantees that no device API call</span>
+        <span class="c1"># can throw a silent exception that kills the Qt slot before the thread</span>
+        <span class="c1"># even starts — exactly the pattern WorkerThreadFCS follows.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveCurrentSettings</span><span class="p">()</span>
+
+        <span class="c1"># Read the currently configured number of runs and decide batching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberRunsSetting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isBatched</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="c1"># HBT always uses TDC Mode 1 (≈±200 ns range); no user selection needed.</span>
+        <span class="n">_mode</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># ── Save generator settings for TP12 (reset clears them) ─────────────</span>
+        <span class="n">is_tp12</span> <span class="o">=</span> <span class="s2">&quot;TP12&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getModelIdn</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">is_tp12</span><span class="p">:</span>
+            <span class="n">saved_gen_freq</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getGeneratorFrequency</span><span class="p">()</span>
+            <span class="n">saved_start_srcs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getStartSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>
+            <span class="n">saved_stop_srcs</span>  <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getStopSource</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>  <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>
+
+        <span class="c1"># Reset clears previous measurements and default-restores settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># Restore generator settings if TP12</span>
+        <span class="k">if</span> <span class="n">is_tp12</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">saved_gen_freq</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setGeneratorFrequency</span><span class="p">(</span><span class="n">saved_gen_freq</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch_num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">saved_start_srcs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INTERNAL&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setStartInternalSource</span><span class="p">(</span><span class="n">ch_num</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setStartExternalSource</span><span class="p">(</span><span class="n">ch_num</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">saved_stop_srcs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INTERNAL&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setStopInternalSource</span><span class="p">(</span><span class="n">ch_num</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setStopExternalSource</span><span class="p">(</span><span class="n">ch_num</span><span class="p">)</span>
+
+        <span class="c1"># Restore threshold voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setThresholdVoltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdVoltage</span><span class="p">)</span>
+
+        <span class="c1"># ── Disable all channels, then enable only the stop channel ───────────</span>
+        <span class="n">_all_chs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">_all_chs</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+
+        <span class="n">_stop_edges</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelB</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopEdgeTypeChannelD</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span> <span class="o">=</span> <span class="n">_all_chs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="n">_mode</span><span class="p">)</span>
+        <span class="c1"># Use exactly the number of stops the user configured for this</span>
+        <span class="c1"># channel. The first stop is still the only one used to build the</span>
+        <span class="c1"># g²(τ) histogram; if 2+ stops are requested, the extra stop(s)</span>
+        <span class="c1"># let us compute a genuine intra-run stop-to-stop delta for the</span>
+        <span class="c1"># Rate (stop-stop) display, free of inter-run hardware dead-time.</span>
+        <span class="c1"># If only 1 stop is configured, Rate (stop-stop) has no data to</span>
+        <span class="c1"># show and the UI falls back to &quot;—&quot; (see the len(valid_stops) &gt;= 2</span>
+        <span class="c1"># guard below).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_stops</span><span class="p">)</span>
+        <span class="c1"># Stop mask = −0.25 µs: allows the TP1204 to capture negative delays natively</span>
+        <span class="n">target_stop_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getStopMaskMinimum</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="n">target_stop_mask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">setAverageCycles</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">active_stop_edge</span> <span class="o">=</span> <span class="n">_stop_edges</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_ch</span><span class="o">.</span><span class="n">setStopEdge</span><span class="p">(</span><span class="n">active_stop_edge</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span><span class="p">)</span>
+
+        <span class="n">call_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">t_start</span>    <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="c1"># ── Acquisition loop ───────────────────────────────────────────────</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">itsRunning</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span>
+                <span class="k">if</span> <span class="n">elapsed</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">call_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t_per_run</span>   <span class="o">=</span> <span class="n">elapsed</span> <span class="o">/</span> <span class="n">call_count</span>
+                    <span class="n">time_left</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span> <span class="o">-</span> <span class="n">elapsed</span>
+                    <span class="n">runs_to_use</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_left</span> <span class="o">/</span> <span class="n">t_per_run</span><span class="p">))</span>
+                    <span class="n">runs_to_use</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">runs_to_use</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="n">runs_to_use</span><span class="p">)</span>
+
+            <span class="n">call_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getMeasurements</span><span class="p">(</span><span class="n">call_count</span><span class="p">,</span> <span class="n">t_start</span><span class="p">)</span>
+
+        <span class="c1"># Restore device configuration and signal completion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applyCurrentSettings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;G2 acquisition finished.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colorValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+    <span class="c1"># ── Batch measurement step ────────────────────────────────────────────────</span>
+
+    <span class="k">def</span> <span class="nf">_getMeasurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">call_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t_start</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Acquire one batch from the device, accumulate τ into the histogram,</span>
+<span class="sd">        recompute g²(τ), and emit all relevant signals.</span>
+
+<span class="sd">        Mirrors ``WorkerThreadFCS._getMeasurements`` in structure.</span>
+
+<span class="sd">        :param call_count: Number of ``measure()`` calls completed so far.</span>
+<span class="sd">        :param t_start: Wall-clock timestamp at acquisition start (seconds).</span>
+<span class="sd">        :return: Updated call_count.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Suppress pyTempico console output (same pattern as Prueba7.py)</span>
+            <span class="n">_orig_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>   <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">data</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>   <span class="o">=</span> <span class="n">_orig_stdout</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">colorValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;No measurements in Start Channel&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">return</span> <span class="n">call_count</span>
+
+            <span class="n">overflow_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">getOverflowParameter</span><span class="p">()</span>
+
+            <span class="c1"># Check whether all stops on the active channel are missing</span>
+            <span class="n">all_missing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="nb">all</span><span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">==</span> <span class="n">overflow_val</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">all_missing</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">colorValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No measurements in Stop Channel </span><span class="si">{</span><span class="n">_CHANNEL_LETTERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">return</span> <span class="n">call_count</span>
+
+            <span class="n">taus_batch_ns</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">run_row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">run_row</span><span class="p">:</span>
+                    <span class="c1"># Empty row → no START in this run</span>
+                    <span class="k">continue</span>
+
+                <span class="n">ch</span> <span class="o">=</span> <span class="n">run_row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">ch</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span><span class="p">:</span>
+                    <span class="k">continue</span>          <span class="c1"># Only the selected stop channel</span>
+
+                <span class="c1"># Number of valid stop slots present in this row. The active</span>
+                <span class="c1"># channel is configured for self.num_stops (&gt;= 2) so that,</span>
+                <span class="c1"># when available, a second (or later) stop lets us compute a</span>
+                <span class="c1"># genuine intra-run stop-to-stop delta.</span>
+                <span class="n">n_stops_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getRange</span><span class="p">(</span><span class="n">run_row</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_stops</span><span class="p">)</span>
+
+                <span class="n">valid_stops</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_stops_row</span><span class="p">):</span>
+                    <span class="n">raw_ps</span> <span class="o">=</span> <span class="n">run_row</span><span class="p">[</span><span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span>
+                    <span class="c1"># Discard overflow / sentinel</span>
+                    <span class="k">if</span> <span class="n">raw_ps</span> <span class="o">==</span> <span class="n">overflow_val</span> <span class="ow">or</span> <span class="n">raw_ps</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">valid_stops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_ps</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_stops</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># ── g²(τ) histogram: only the FIRST valid stop of the run ──</span>
+                <span class="c1"># is used — exactly as before — since it&#39;s the start→stop</span>
+                <span class="c1"># delay the correlation histogram is built from. Any extra</span>
+                <span class="c1"># stops are used below only for the stop-stop rate, never</span>
+                <span class="c1"># added to the histogram.</span>
+                <span class="n">raw_ps0</span> <span class="o">=</span> <span class="n">valid_stops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_starts</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Convert ps → ns (sign preserved — TP1204 can give τ &lt; 0)</span>
+                <span class="n">tau_ns</span> <span class="o">=</span> <span class="n">raw_ps0</span> <span class="o">/</span> <span class="mf">1_000.0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_stops</span>      <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Keep the raw (unbinned) stop time for later export as</span>
+                <span class="c1"># raw start-stop data</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raw_stop_ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_ps0</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isBatched</span><span class="p">:</span>
+                    <span class="n">taus_batch_ns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tau_ns</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_accumulate</span><span class="p">([</span><span class="n">tau_ns</span><span class="p">])</span>
+
+                <span class="c1"># ── Stop-to-stop deltas (Rate stop-stop) ────────────────────</span>
+                <span class="c1"># Only intra-run consecutive deltas are used (mirrors</span>
+                <span class="c1"># WorkerThreadFCS): the gap between the last stop of this run</span>
+                <span class="c1"># and the first stop of the NEXT run includes the hardware</span>
+                <span class="c1"># dead-time between runs and is never computed here, so it</span>
+                <span class="c1"># can&#39;t corrupt the rate estimate.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_stops</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">prev_t</span> <span class="o">=</span> <span class="n">valid_stops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">t_ps</span> <span class="ow">in</span> <span class="n">valid_stops</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                        <span class="n">delta_t_ps</span> <span class="o">=</span> <span class="n">t_ps</span> <span class="o">-</span> <span class="n">prev_t</span>
+                        <span class="c1"># Filter: discard non-positive deltas (dead-time /</span>
+                        <span class="c1"># ordering artifacts) so they can&#39;t corrupt the mean</span>
+                        <span class="c1"># or cause a division by zero downstream.</span>
+                        <span class="k">if</span> <span class="n">delta_t_ps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_sum_delta_stop_ps</span> <span class="o">+=</span> <span class="n">delta_t_ps</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_n_delta_stop</span>      <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">prev_t</span> <span class="o">=</span> <span class="n">t_ps</span>
+
+            <span class="c1"># Flush the batch</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isBatched</span> <span class="ow">and</span> <span class="n">taus_batch_ns</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_accumulate</span><span class="p">(</span><span class="n">taus_batch_ns</span><span class="p">)</span>
+
+            <span class="n">call_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Recompute g²(τ) and emit</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span>
+            <span class="n">g2</span><span class="p">,</span> <span class="n">rate_stop_stop</span><span class="p">,</span> <span class="n">baseline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_g2</span><span class="p">(</span><span class="n">elapsed</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataReady</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">centres</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span><span class="p">,</span> <span class="n">rate_stop_stop</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Status string (same format as FCS so G2Logic can reuse parser)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">status_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;events: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_events</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;elapsed: </span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_seconds</span><span class="si">}</span><span class="s2"> s&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status_str</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;events: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_events</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;elapsed: </span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">colorValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No measurements in Stop Channel </span><span class="si">{</span><span class="n">_CHANNEL_LETTERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">stop_channel</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">colorValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stringValue</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">status_str</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">statusUpdate</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">status_str</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Restore stdout if it was intercepted when the exception occurred</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">PermissionError</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;PermissionError&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">consecutiveErrors</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">call_count</span>
+
+    <span class="c1"># ── Histogram helpers (ported from Prueba7.py HBTWorker) ─────────────────</span>
+
+    <span class="k">def</span> <span class="nf">_accumulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taus_ns</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accumulate a list of τ values [ns] into the histogram.</span>
+
+<span class="sd">        Only values that fall inside the pre-computed edges are counted.</span>
+<span class="sd">        Uses np.digitize for robust bin assignment consistent with self.edges.</span>
+
+<span class="sd">        :param taus_ns: Iterable of delay values in nanoseconds.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">taus_ns</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># Keep only values strictly inside the histogram range</span>
+        <span class="n">lo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">arr</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">arr</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">)</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># np.digitize returns 1-based bin indices; subtract 1 for 0-based</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_g2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_elapsed</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalize the accumulated histogram to produce g²(τ).</span>
+
+<span class="sd">        Normalization (tail method, Prueba7.py):</span>
+<span class="sd">            baseline = mean( counts[counts &gt; 0] )</span>
+<span class="sd">            g²(τ)   = counts(τ) / baseline</span>
+
+<span class="sd">        This is correct for a single-TDC start→stop measurement where</span>
+<span class="sd">        n_stops ≈ n_starts and the classical ``r·r·T·Δt`` formula would</span>
+<span class="sd">        produce a vanishingly small baseline.</span>
+
+<span class="sd">        Also computes the Rate (stop-stop) for display: 1 / mean(delta_stop),</span>
+<span class="sd">        where delta_stop is the mean of every intra-run stop-to-stop delta</span>
+<span class="sd">        accumulated so far (see ``_getMeasurements``). Using elapsed time</span>
+<span class="sd">        would be biased by the hardware dead-time between runs, so the rate</span>
+<span class="sd">        is derived purely from the accumulated deltas instead.</span>
+
+<span class="sd">        :param t_elapsed: Wall-clock seconds since acquisition began.</span>
+<span class="sd">        :return: Tuple (g2, rate_stop_stop, baseline).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="c1"># Rate (stop-stop) = 1 / mean(delta_stop), guarded against</span>
+        <span class="c1"># delta_stop == 0 (division by zero) or no valid deltas yet.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_delta_stop</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mean_delta_stop_ps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sum_delta_stop_ps</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_delta_stop</span>
+            <span class="n">mean_delta_stop_s</span>  <span class="o">=</span> <span class="n">mean_delta_stop_ps</span> <span class="o">*</span> <span class="mf">1e-12</span>   <span class="c1"># ps → s</span>
+            <span class="n">rate_stop_stop</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">mean_delta_stop_s</span><span class="p">)</span> <span class="k">if</span> <span class="n">mean_delta_stop_s</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rate_stop_stop</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_stops</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">g2</span><span class="p">,</span> <span class="n">rate_stop_stop</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Baseline = mean of all non-empty bins</span>
+        <span class="n">all_nonzero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_nonzero</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">baseline</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">all_nonzero</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">baseline</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="k">if</span> <span class="n">baseline</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">g2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">/</span> <span class="n">baseline</span>
+
+        <span class="k">return</span> <span class="n">g2</span><span class="p">,</span> <span class="n">rate_stop_stop</span><span class="p">,</span> <span class="n">baseline</span>
+
+    <span class="k">def</span> <span class="nf">_getRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_row</span><span class="p">,</span> <span class="n">stop_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of valid stop values in a measurement row.</span>
+
+<span class="sd">        Mirrors the ``getRange`` helper from Prueba7.py / ThreadStartStop.</span>
+
+<span class="sd">        :param run_row: A single measurement row from pyTempico.</span>
+<span class="sd">        :param stop_number: Maximum number of stops to expect.</span>
+<span class="sd">        :return: Number of valid stop slots in the row.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_row</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_len</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_len</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stop_number</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="c1"># ── Public control interface ──────────────────────────────────────────────</span>
+
+<div class="viewcode-block" id="WorkerThreadG2.stop"><a class="viewcode-back" href="../../ThreadG2.html#Threads.ThreadG2.WorkerThreadG2.stop">[docs]</a>    <span class="nd">@Slot</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Request the acquisition loop to exit on the next iteration.</span>
+
+<span class="sd">        Sets ``itsRunning`` to False and emits ``threadCreated(1)`` to notify</span>
+<span class="sd">        the GUI that the thread is stopping.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threadCreated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itsRunning</span> <span class="o">=</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

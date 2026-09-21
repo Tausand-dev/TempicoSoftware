@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threads.ThreadLifeTime &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=a66068bb"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Threads.ThreadLifeTime</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Threads.ThreadLifeTime</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Slot</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span><span class="p">,</span> <span class="n">histogram</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">append</span> <span class="k">as</span> <span class="n">appnd</span>
+<span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+<div class="viewcode-block" id="WorkerThreadLifeTime"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime">[docs]</a><span class="k">class</span> <span class="nc">WorkerThreadLifeTime</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker thread for handling LifeTime (Fluorescence Lifetime Measurement) processing in a separate thread </span>
+<span class="sd">    to ensure that the GUI remains responsive during measurements.</span>
+
+<span class="sd">    This class performs the measurement tasks in the background, processes the data, and communicates with </span>
+<span class="sd">    the main thread to update the GUI with the measurement status, results, and other relevant information.</span>
+<span class="sd">    </span>
+<span class="sd">    Signals:</span>
+<span class="sd">        - createdSignal: Signal emitted when the worker thread is created.</span>
+<span class="sd">        - statusSignal: Signal emitted to update the status message in the GUI.</span>
+<span class="sd">        - pointSignal: Signal emitted to update the current measurement point.</span>
+<span class="sd">        - updateValues: Signal emitted to update measurement values and corresponding times.</span>
+<span class="sd">        - updateLabel: Signal emitted to update a specific label in the GUI.</span>
+<span class="sd">        - updateMeasurementsLabel: Signal emitted to update the label showing the number of measurements taken.</span>
+
+<span class="sd">    :param deviceStartChannel: The start channel of the Tempico device used for measurement (TempicoChannel).</span>
+<span class="sd">    :param deviceStopChannel: The stop channel of the Tempico device used for measurement (TempicoChannel).</span>
+<span class="sd">    :param binwidthText: The selected bin width for the measurement (str).</span>
+<span class="sd">    :param numberMeasurements: The number of measurements to be taken (int).</span>
+<span class="sd">    :param device: The Tempico device used for performing measurements (Tempico).</span>
+<span class="sd">    :param TimeRange: The time range for the measurements (int).</span>
+<span class="sd">    :param startChannelLabel: Letter (A-D) identifying deviceStartChannel, used only to</span>
+<span class="sd">        build status messages. None if no start channel is being used (str or None).</span>
+<span class="sd">    :param stopChannelLabel: Letter (A-D) identifying deviceStopChannel, used only to</span>
+<span class="sd">        build status messages (str).</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">createdSignal</span><span class="o">=</span><span class="n">Signal</span><span class="p">()</span>
+    <span class="n">statusSignal</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">pointSignal</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">updateValues</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">updateLabel</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">updateMeasurementsLabel</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">disconectedSignal</span><span class="o">=</span><span class="n">Signal</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">deviceStartChannel</span><span class="p">,</span><span class="n">deviceStopChannel</span><span class="p">,</span><span class="n">binwidthText</span><span class="p">,</span><span class="n">numberMeasurements</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">TimeRange</span><span class="p">,</span><span class="n">startChannelLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">stopChannelLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1">#Parameters of the measurement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalTime</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalStarts</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalRuns</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1">#Class parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="o">=</span><span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deviceStartChannel</span><span class="o">=</span><span class="n">deviceStartChannel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deviceStopChannel</span><span class="o">=</span><span class="n">deviceStopChannel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binwidthText</span><span class="o">=</span><span class="n">binwidthText</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurements</span><span class="o">=</span><span class="n">numberMeasurements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">=</span><span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="o">=</span><span class="n">TimeRange</span>
+        <span class="c1">#Letters (A-D) identifying the selected channels, only used to build</span>
+        <span class="c1">#human-readable status messages (e.g. &quot;No measurements in Stop Channel A&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startChannelLabel</span><span class="o">=</span><span class="n">startChannelLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopChannelLabel</span><span class="o">=</span><span class="n">stopChannelLabel</span>
+        <span class="c1">#Getting the value in picoSeconds of binWidtrh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getBinWidthNumber</span><span class="p">()</span>
+        <span class="c1">#Getting the mode of the device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measurementMode</span><span class="p">()</span>
+        <span class="c1">#Measurement List</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1">#Get the sequence of no measurements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">=</span><span class="mi">0</span>
+        
+    <span class="c1">#Function to build the &quot;No measurements in ...&quot; status text, showing the</span>
+    <span class="c1">#channel letter when it&#39;s known and falling back to the generic wording</span>
+    <span class="c1">#otherwise (kept for backwards compatibility with older callers).</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.noMeasurementsMessage"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.noMeasurementsMessage">[docs]</a>    <span class="k">def</span> <span class="nf">noMeasurementsMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">channelType</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the &quot;No measurements&quot; status text for the given channel type.</span>
+
+<span class="sd">        :param channelType: Either &quot;Start&quot; or &quot;Stop&quot; (str).</span>
+<span class="sd">        :return: The formatted status message (str).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startChannelLabel</span> <span class="k">if</span> <span class="n">channelType</span><span class="o">==</span><span class="s2">&quot;Start&quot;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopChannelLabel</span>
+        <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;No measurements in &quot;</span><span class="o">+</span><span class="n">channelType</span><span class="o">+</span><span class="s2">&quot; Channel &quot;</span><span class="o">+</span><span class="n">label</span>
+        <span class="k">return</span> <span class="s2">&quot;No measurements in &quot;</span><span class="o">+</span><span class="n">channelType</span><span class="o">+</span><span class="s2">&quot; Channel&quot;</span></div>
+        
+    <span class="c1">#Main Function</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.run"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the measurement thread, continuously taking measurements based on user-selected values</span>
+<span class="sd">        and passing them to the graphs.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">createdSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurements</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">:</span>
+            
+            <span class="n">percentage</span><span class="o">=</span><span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurements</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checkDeviceStatus</span><span class="p">()</span>
+            <span class="c1">#Try in order to avoid the errors related to suddenly disconnect the device</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">takeMeasurements</span><span class="p">(</span><span class="n">percentage</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">createLifeTimeData</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+            
+    <span class="c1">#Functon to define the mode of the measurement</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.measurementMode"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.measurementMode">[docs]</a>    <span class="k">def</span> <span class="nf">measurementMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the measurement mode for the device channels based on the specified time range.</span>
+
+<span class="sd">        If the time range is less than or equal to 500000 ps , sets all channels to mode 1.</span>
+<span class="sd">        Otherwise, sets all channels to mode 2.</span>
+
+<span class="sd">        :param self: The instance of the class.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="o">&lt;=</span><span class="mi">500000</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+        
+    <span class="c1">#Take one measurement function</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.takeMeasurements"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.takeMeasurements">[docs]</a>    <span class="k">def</span> <span class="nf">takeMeasurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentage</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes measurements from the device and updates the start-stop differences list.</span>
+
+<span class="sd">        Configures the device for measurement runs and checks the input and stop channels for data.</span>
+<span class="sd">        If no measurements are detected, emits a status signal to update the main thread about the current measurement state.</span>
+
+<span class="sd">        :param percentage: The percentage of measurement completion (float).</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Init the config to take measurement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deviceStartChannel</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deviceStartChannel</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deviceStartChannel</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deviceStopChannel</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deviceStopChannel</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">measurement</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">totalRuns</span><span class="o">+=</span><span class="mi">100</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">100</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsMessage</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">&gt;=</span><span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsMessage</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;Measurement running: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">percentage</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;%&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="c1">#TO DO: CHANGE THE VALUE ACCORDING TO THE CHANNEL</span>
+                    <span class="c1">#TO DO: CHECK IF THE START VALUE IS THE SAME</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deviceStartChannel</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                        <span class="n">currentStartMeasurement</span><span class="o">=</span><span class="n">measurement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">currentStopMeasurement</span><span class="o">=</span><span class="n">measurement</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">100</span><span class="p">]</span>
+                        <span class="n">sentinelStart</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">currentStartMeasurement</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">currentStartMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span>
+                        <span class="n">sentinelStop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">currentStopMeasurement</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span>
+                        <span class="k">if</span> <span class="n">sentinelStart</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">totalStarts</span><span class="o">+=</span><span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">sentinelStart</span> <span class="ow">and</span> <span class="n">sentinelStop</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">currentStartMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                                <span class="n">differenceValue</span><span class="o">=</span><span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">currentStartMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">+=</span><span class="mi">1</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">totalTime</span><span class="o">+=</span><span class="n">differenceValue</span>
+                                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span><span class="o">&lt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">=</span><span class="mi">0</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                            
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                        
+                                
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">currentStopMeasurement</span><span class="o">=</span><span class="n">measurement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">sentinelStop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">currentStopMeasurement</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;=</span><span class="mi">0</span>
+                        <span class="n">partialStop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">currentStopMeasurement</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> 
+                        <span class="k">if</span> <span class="n">sentinelStop</span><span class="p">:</span>
+                            <span class="n">differenceValue</span><span class="o">=</span><span class="n">currentStopMeasurement</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">differenceValue</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">+=</span><span class="mi">1</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">totalTime</span><span class="o">+=</span><span class="n">differenceValue</span>
+                                <span class="k">if</span> <span class="n">differenceValue</span><span class="o">&lt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">=</span><span class="mi">0</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">partialStop</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">totalStarts</span><span class="o">+=</span><span class="mi">1</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">&gt;=</span><span class="bp">self</span><span class="o">.</span><span class="n">numberMeasurements</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">&gt;=</span><span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsMessage</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                    
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">totalRuns</span><span class="o">+=</span><span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsCounter</span><span class="o">+=</span><span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noMeasurementsMessage</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+                
+                
+    <span class="c1">#Function to created the data to update the histogram graphic</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.createLifeTimeData"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.createLifeTimeData">[docs]</a>    <span class="k">def</span> <span class="nf">createLifeTimeData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates LifeTime data from the start-stop differences and emits the calculated results to the main thread.</span>
+
+<span class="sd">        Processes the collected data to determine the number of counts within a given time based on the maximum value of start-stop differences.</span>
+<span class="sd">        Normalizes the data according to the determined units and calculates the histogram counts.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">maximumValue</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span>
+            <span class="n">minimunValue</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span><span class="o">&gt;</span><span class="nb">abs</span><span class="p">(</span><span class="n">minimunValue</span><span class="p">)</span> <span class="ow">and</span> <span class="n">minimunValue</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=-</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+            <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span><span class="o">&lt;=</span><span class="nb">abs</span><span class="p">(</span><span class="n">minimunValue</span><span class="p">)</span> <span class="ow">and</span> <span class="n">minimunValue</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=-</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+            <span class="k">elif</span> <span class="n">minimunValue</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maximumValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeRange</span>
+                <span class="n">minimunValue</span><span class="o">=</span><span class="mi">0</span>
+            
+            <span class="n">unitsDivisionFactor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getUnits</span><span class="p">(</span><span class="n">maximumValue</span><span class="p">)</span>
+            <span class="n">units</span><span class="o">=</span><span class="n">unitsDivisionFactor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">divisionFactor</span><span class="o">=</span><span class="n">unitsDivisionFactor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">newDifferences</span><span class="o">=</span><span class="p">[]</span>
+            <span class="c1">#Normalizing the data according to the units</span>
+            <span class="k">if</span> <span class="n">divisionFactor</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">newDifferences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span>
+                <span class="n">newBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">binwidthPicoSeconds</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newBinWidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">binwidthPicoSeconds</span><span class="o">/</span><span class="n">divisionFactor</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">)):</span>
+                    <span class="n">currentValue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">newValue</span><span class="o">=</span><span class="n">currentValue</span><span class="o">/</span><span class="n">divisionFactor</span>
+                    <span class="n">newDifferences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newValue</span><span class="p">)</span>
+            <span class="n">domainValues</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="n">minimunValue</span><span class="o">/</span><span class="n">divisionFactor</span><span class="p">,</span><span class="n">maximumValue</span><span class="o">/</span><span class="n">divisionFactor</span><span class="o">+</span><span class="n">newBinWidth</span><span class="p">,</span><span class="n">newBinWidth</span><span class="p">)</span>
+            <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">appnd</span><span class="p">(</span><span class="n">domainValues</span> <span class="o">-</span> <span class="n">newBinWidth</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">domainValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">newBinWidth</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">counts</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">(</span><span class="n">newDifferences</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bin_edges</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateValues</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span><span class="n">domainValues</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateLabel</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateMeasurementsLabel</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalStarts</span><span class="p">))</span></div>
+            
+    <span class="c1">#Function to get the scale in time of the histogram</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.getUnits"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getUnits">[docs]</a>    <span class="k">def</span> <span class="nf">getUnits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">picosecondsValue</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the appropriate units for a given value in picoseconds.</span>
+
+<span class="sd">        Converts a given value in picoseconds to the most suitable time unit (picoseconds, nanoseconds, microseconds, or milliseconds).</span>
+
+<span class="sd">        :param picosecondsValue: The value in picoseconds (float).</span>
+<span class="sd">        :return: A list containing the unit as a string and the factor by which to divide the value (list).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">picosecondsValue</span> <span class="o">&lt;</span> <span class="mf">1e3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;ps&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">picosecondsValue</span> <span class="o">&lt;</span> <span class="mf">1e6</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">picosecondsValue</span> <span class="o">&lt;</span> <span class="mf">1e9</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;µs&quot;</span><span class="p">,</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">picosecondsValue</span> <span class="o">&lt;</span> <span class="mf">1e12</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;ms&quot;</span><span class="p">,</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">]</span></div>
+        
+<div class="viewcode-block" id="WorkerThreadLifeTime.getBinWidthNumber"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.getBinWidthNumber">[docs]</a>    <span class="k">def</span> <span class="nf">getBinWidthNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the bin width in picoseconds based on user input in different units.</span>
+
+<span class="sd">        Extracts the numerical value and its corresponding unit from the user-provided text,</span>
+<span class="sd">        and converts it into picoseconds for further calculations.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">splitList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">binwidthText</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">number</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splitList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">units</span><span class="o">=</span><span class="n">splitList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">units</span><span class="o">==</span><span class="s1">&#39;ps&#39;</span><span class="p">:</span>
+            <span class="n">multiplier</span><span class="o">=</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">units</span><span class="o">==</span><span class="s1">&#39;ns&#39;</span><span class="p">:</span>
+            <span class="n">multiplier</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">units</span><span class="o">==</span><span class="s1">&#39;µs&#39;</span><span class="p">:</span>
+            <span class="n">multiplier</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binwidthPicoSeconds</span><span class="o">=</span><span class="n">number</span><span class="o">*</span><span class="n">multiplier</span></div>
+    
+    <span class="c1">#Function to clear the graphic</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.clear"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears the recorded start-stop differences and resets the total measurement count.</span>
+
+<span class="sd">        This function empties the list that stores the differences between start and stop measurements,</span>
+<span class="sd">        and sets the total number of measurements back to zero.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startStopDifferences</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalMeasurements</span><span class="o">=</span><span class="mi">0</span></div>
+    
+    <span class="c1">#Check the connection of the device</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.checkDeviceStatus"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.checkDeviceStatus">[docs]</a>    <span class="k">def</span> <span class="nf">checkDeviceStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks the status of the device by attempting to read a parameter.</span>
+
+<span class="sd">        If an error occurs during the read operation, the measurement process is stopped.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">readIdnFromDevice</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+    
+    <span class="c1">#Stop thread function</span>
+<div class="viewcode-block" id="WorkerThreadLifeTime.stop"><a class="viewcode-back" href="../../ThreadLifeTime.html#Threads.ThreadLifeTime.WorkerThreadLifeTime.stop">[docs]</a>    <span class="nd">@Slot</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the measurement process by setting the running flag to False.</span>
+
+<span class="sd">        Emits a status message indicating that the measurement is ending and updates the status bar color to yellow.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statusSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;Ending measurement&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointSignal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

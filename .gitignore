@@ -1,11 +1,8 @@
-#Excluir entorno virtual
+# Excluir entorno virtual
 /instalador-env/
 /src/__pycache__
-/docs/_static
-/docs/_templates
-/docs/build/doctrees
-/docs/build/latex/*
-!/docs/build/latex/tempicosoftware.pdf
+
+
 /src/ubuntuInstaller/
 /src/WindowsInstaller/
 /WindowsInstaller/
@@ -95,6 +92,12 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/_static
+docs/_templates
+!docs/developer/build/
+docs/developer/build/doctrees
+docs/developer/build/latex/*
+!docs/developer/build/latex/tempicosoftware.pdf
 
 # PyBuilder
 .pybuilder/

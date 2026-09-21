@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threads.ThreadCountEstimated &mdash; Tempico Software 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=a66068bb"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Tempico Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../StartStopLogic.html">StartStopLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CountsEstimatedLogic.html">CountsEstimatedLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../TimeStampLogic.html">TimeStampLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LifeTimeLogic.html">LifeTimeLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../FCSLogic.html">FCSLogic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../G2Logic.html">G2Logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadProccessData.html">ThreadProccessData module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadStartStop.html">ThreadStartStop module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadCountEstimated.html">ThreadCountEstimated module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadTimeStamping.html">ThreadTimeStamping module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadLifeTime.html">ThreadLifeTime module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadFCS.html">ThreadFCS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ThreadG2.html">ThreadG2 module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tempico Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Threads.ThreadCountEstimated</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Threads.ThreadCountEstimated</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">Signal</span><span class="p">,</span> <span class="n">Slot</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">std</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">pyTempico</span> <span class="k">as</span> <span class="nn">tempico</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">Utils.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<div class="viewcode-block" id="WorkerThreadCountsEstimated"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated">[docs]</a><span class="k">class</span> <span class="nc">WorkerThreadCountsEstimated</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents a worker thread that processes Start-Stop measurements in a separate thread</span>
+<span class="sd">    to avoid blocking the main GUI thread. It handles data acquisition from the Tempico device,</span>
+<span class="sd">    determines the feasibility of performing measurements per channel, and continuously collects</span>
+<span class="sd">    and emits measurement data while running.</span>
+
+<span class="sd">    The thread evaluates which channels meet the minimum requirements for valid measurements</span>
+<span class="sd">    (e.g., at least 2 stops within a defined time window), disables those that do not, and allows</span>
+<span class="sd">    the user to decide whether to proceed with the remaining ones.</span>
+
+<span class="sd">    Signals are extensively used to communicate with the GUI, updating labels, graphs, and table data</span>
+<span class="sd">    in real time, or notifying when no valid measurements are available.</span>
+
+<span class="sd">    Additional attributes track the number of stop events per channel and enable synchronization</span>
+<span class="sd">    with the main interface using a `threading.Event()` object.</span>
+
+<span class="sd">    :param channelASentinel: Boolean indicating if Channel A is initially selected for measurement.</span>
+<span class="sd">    :param channelBSentinel: Boolean indicating if Channel B is initially selected for measurement.</span>
+<span class="sd">    :param channelCSentinel: Boolean indicating if Channel C is initially selected for measurement.</span>
+<span class="sd">    :param channelDSentinel: Boolean indicating if Channel D is initially selected for measurement.</span>
+<span class="sd">    :param device: The TempicoDevice instance used to perform the measurement operations.</span>
+
+<span class="sd">    Signals:</span>
+<span class="sd">        - newValue(str, float, float): Emitted with updated values for display (label updates).</span>
+<span class="sd">        - updateLabel(str, float, float): Updates the label values for each channel.</span>
+<span class="sd">        - newMeasurement(float, datetime, float, float, float, float, float, float, float, float): </span>
+<span class="sd">          Emitted with measurement timestamp, and count/uncertainty data for each channel.</span>
+<span class="sd">        - noTotalMeasurements(list): Emitted with a list of channels that failed to provide stop data, when none of the selected channels provide valid stop data.</span>
+<span class="sd">        - noPartialMeasurements(list): Emitted with a list of channels that failed the threshold.</span>
+<span class="sd">        - changeStatusText(str): Updates the system status label with a custom message.</span>
+<span class="sd">        - changeStatusColor(int): Updates the system status label color code.</span>
+<span class="sd">        - disconnectedDevice(): Emitted when the Tempico device is no longer reachable.</span>
+<span class="sd">        - initialDate(str): Emitted with the starting timestamp of the measurement session.</span>
+<span class="sd">        - finalDate(str): Emitted with the ending timestamp of the measurement session.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        - channelsMeasure: List of channels accepted for measurement after validation.</span>
+<span class="sd">        - channelsWithoutMeasurements: List of channels that failed the validation criteria.</span>
+<span class="sd">        - continueEvent: Event object used to pause/resume thread logic when user interaction is needed.</span>
+<span class="sd">        - running: Boolean flag to control the thread&#39;s main loop.</span>
+<span class="sd">        - numberStopsChannelA/B/C/D: Internal counters to track stop events for each channel.</span>
+
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1">#One value is for the count estimated and the other is for the uncertainty</span>
+    <span class="n">newValue</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">updateLabel</span><span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1">#Represents date, channelAValue, channelAUncertainty, channelBValue, channelBUncertainty,channelCValue, channelCUncertainty,channelDValue, channelDUncertainty</span>
+    <span class="n">newMeasurement</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span><span class="n">datetime</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1">#Signals to manage the total stops values</span>
+    <span class="n">noTotalMeasurements</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">noPartialMeasurements</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">changeStatusText</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">changeStatusColor</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">disconnectedDevice</span><span class="o">=</span><span class="n">Signal</span><span class="p">()</span>
+    <span class="n">initialDate</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">finalDate</span><span class="o">=</span><span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channelASentinel</span><span class="p">,</span> <span class="n">channelBSentinel</span><span class="p">,</span> <span class="n">channelCSentinel</span><span class="p">,</span><span class="n">channelDSentinel</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">tempico</span><span class="o">.</span><span class="n">TempicoDevice</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1">#Set the values for the  thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="o">=</span> <span class="n">channelASentinel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="o">=</span> <span class="n">channelBSentinel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="o">=</span> <span class="n">channelCSentinel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="o">=</span> <span class="n">channelDSentinel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1">#Set the settings for the device</span>
+        <span class="c1">#for the moment the stops number will be set to 5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enableDisableChannels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continueEvent</span><span class="o">=</span><span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelA</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelB</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelC</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelD</span><span class="o">=</span><span class="mi">0</span>
+        
+        
+        
+    
+    <span class="c1">#Main function</span>
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.run"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes the thread&#39;s main loop to perform count estimations from the Tempico device.</span>
+
+<span class="sd">        First, it evaluates each selected channel to determine whether valid measurements can be </span>
+<span class="sd">        obtained. If a channel does not meet the required threshold, it is disabled and removed </span>
+<span class="sd">        from the measurement process. If at least one channel is valid, the measurement process begins.</span>
+
+<span class="sd">        The loop runs continuously while the thread is active, triggering measurements every second. </span>
+<span class="sd">        If the device becomes unresponsive or the user stops the measurement, the thread exits.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.createdSignal.emit()</span>
+        <span class="c1"># for i in range(10):</span>
+        <span class="c1">#     self.getMeasurements()</span>
+        <span class="c1">#     time.sleep(1)</span>
+        
+        
+        <span class="c1">#Test determine stops measurement</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusText</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimating number stops in channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2"> 0%&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusColor</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">totalStops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">determineStopsNumber</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">totalStops</span><span class="o">&lt;</span><span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="k">elif</span> <span class="n">channel</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="k">elif</span> <span class="n">channel</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="k">elif</span> <span class="n">channel</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelA</span><span class="o">=</span><span class="n">totalStops</span>
+                        <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;B&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelB</span><span class="o">=</span><span class="n">totalStops</span>
+                        <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;C&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelC</span><span class="o">=</span><span class="n">totalStops</span>
+                        <span class="k">elif</span> <span class="n">channel</span><span class="o">==</span><span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelD</span><span class="o">=</span><span class="n">totalStops</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span>
+                
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span><span class="p">)</span><span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noTotalMeasurements</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">noPartialMeasurements</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channelsWithoutMeasurements</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">continueEvent</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enableDisableChannels</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="c1">#Get the init time for measurement</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialDate</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialMeasurementTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">readIdnFromDevice</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getMeasurements</span><span class="p">()</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalDate</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span></div>
+            
+            
+        
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.getMeasurements"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.getMeasurements">[docs]</a>    <span class="k">def</span> <span class="nf">getMeasurements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves and processes the latest measurement data from the Tempico device.</span>
+
+<span class="sd">        For each enabled channel, it verifies that the received data is valid, calculates </span>
+<span class="sd">        stop intervals based on the number of pulses received, and computes both the mean </span>
+<span class="sd">        and standard deviation of the intervals. These values represent the estimated count </span>
+<span class="sd">        and its uncertainty.</span>
+
+<span class="sd">        If valid data is found, the results are emitted via a signal along with the timestamp </span>
+<span class="sd">        of the measurement. If no data is available, default values are emitted depending </span>
+<span class="sd">        on the state of each channel.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">valuesB</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">valuesC</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">valuesD</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">measure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">measure</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">measure</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">measure</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">run</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">run</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span> <span class="p">:</span>
+                                <span class="n">intervalValues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculateIntervalWithStops</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelA</span><span class="p">)</span>
+                               
+                                <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="o">+</span><span class="n">intervalValues</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">run</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">run</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span> <span class="p">:</span>
+                                <span class="n">intervalValues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculateIntervalWithStops</span><span class="p">(</span><span class="n">run</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelB</span><span class="p">)</span>
+                                <span class="n">valuesB</span><span class="o">=</span><span class="n">valuesB</span><span class="o">+</span><span class="n">intervalValues</span>
+                    
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">run</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">run</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span> <span class="p">:</span>
+                                <span class="n">intervalValues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculateIntervalWithStops</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelC</span><span class="p">)</span>
+                                <span class="n">valuesC</span><span class="o">=</span><span class="n">valuesC</span><span class="o">+</span><span class="n">intervalValues</span>
+                    
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">run</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">run</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span> <span class="p">:</span>
+                                <span class="n">intervalValues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculateIntervalWithStops</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberStopsChannelD</span><span class="p">)</span>
+                                <span class="n">valuesD</span><span class="o">=</span><span class="n">valuesD</span><span class="o">+</span><span class="n">intervalValues</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">meanValue</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">)</span><span class="o">/</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">desvestValues</span><span class="o">=</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+            <span class="n">meanValuePs</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">desvestValues</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">uncertaintyValue</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uncertaintyValue</span> <span class="o">=</span> <span class="p">(</span><span class="n">desvestValues</span> <span class="o">/</span> <span class="p">(</span><span class="n">meanValuePs</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">*</span> <span class="mf">1e12</span>
+            <span class="c1">#Send the signal to the main window</span>
+            <span class="c1">#TODO calculate everything for all channels</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="p">:</span>
+                <span class="n">valueChannelA</span><span class="o">=</span><span class="n">meanValue</span>
+                <span class="n">uncertaintyChannelA</span><span class="o">=</span><span class="n">uncertaintyValue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelA</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelA</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="p">:</span>
+                <span class="n">valueChannelA</span><span class="o">=</span><span class="mi">0</span>
+                <span class="n">uncertaintyChannelA</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelA</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelA</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valuesB</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">meanValueB</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">)</span><span class="o">/</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesB</span><span class="p">)</span>
+            <span class="n">desvestValuesB</span><span class="o">=</span><span class="n">std</span><span class="p">(</span><span class="n">valuesB</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">valuesB</span><span class="p">))</span>
+            <span class="n">meanValueBPs</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesB</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">desvestValuesB</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">uncertaintyValueB</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uncertaintyValueB</span> <span class="o">=</span> <span class="p">(</span><span class="n">desvestValuesB</span> <span class="o">/</span> <span class="p">(</span><span class="n">meanValueBPs</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">*</span> <span class="mf">1e12</span>
+            <span class="c1">#Send the signal to the main window</span>
+            <span class="c1">#TODO calculate everything for all channels</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelB</span><span class="o">=</span><span class="n">meanValueB</span>
+                <span class="n">uncertaintyChannelB</span><span class="o">=</span><span class="n">uncertaintyValueB</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelB</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelB</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelB</span><span class="o">=</span><span class="mi">0</span>
+                <span class="n">uncertaintyChannelB</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelB</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelB</span><span class="o">=-</span><span class="mi">1</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valuesC</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">meanValueC</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">)</span><span class="o">/</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesC</span><span class="p">)</span>
+            <span class="n">desvestValuesC</span><span class="o">=</span><span class="n">std</span><span class="p">(</span><span class="n">valuesC</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">valuesC</span><span class="p">))</span>
+            <span class="n">meanValuesCPs</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesC</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">desvestValuesC</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">uncertaintyValueC</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uncertaintyValueC</span> <span class="o">=</span> <span class="p">(</span><span class="n">desvestValuesC</span> <span class="o">/</span> <span class="p">(</span><span class="n">meanValuesCPs</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">*</span> <span class="mf">1e12</span>
+            <span class="c1">#Send the signal to the main window</span>
+            <span class="c1">#TODO calculate everything for all channels</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelC</span><span class="o">=</span><span class="n">meanValueC</span>
+                <span class="n">uncertaintyChannelC</span><span class="o">=</span><span class="n">uncertaintyValueC</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelC</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelC</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelC</span><span class="o">=</span><span class="mi">0</span>
+                <span class="n">uncertaintyChannelC</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelC</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelC</span><span class="o">=-</span><span class="mi">1</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valuesD</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">meanValueD</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">)</span><span class="o">/</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesD</span><span class="p">)</span>
+            <span class="n">desvestValuesD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">valuesD</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">valuesD</span><span class="p">))</span>
+            <span class="n">meanValuesDPs</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="n">valuesD</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">desvestValuesD</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">uncertaintyValueD</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uncertaintyValueD</span> <span class="o">=</span> <span class="p">(</span><span class="n">desvestValuesD</span> <span class="o">/</span> <span class="p">(</span><span class="n">meanValuesDPs</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">*</span> <span class="mf">1e12</span>
+            <span class="c1">#Send the signal to the main window</span>
+            <span class="c1">#TODO calculate everything for all channels</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelD</span><span class="o">=</span><span class="n">meanValueD</span>
+                <span class="n">uncertaintyChannelD</span><span class="o">=</span><span class="n">uncertaintyValueD</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelD</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelD</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="p">:</span>
+                <span class="n">valueChannelD</span><span class="o">=</span><span class="mi">0</span>
+                <span class="n">uncertaintyChannelD</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valueChannelD</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="n">uncertaintyChannelD</span><span class="o">=-</span><span class="mi">1</span> 
+            
+        <span class="n">currentTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">initialMeasurementTime</span>
+        <span class="n">currentDate</span><span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newMeasurement</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">currentTime</span><span class="p">,</span><span class="n">currentDate</span><span class="p">,</span> <span class="n">valueChannelA</span><span class="p">,</span> <span class="n">uncertaintyChannelA</span><span class="p">,</span> <span class="n">valueChannelB</span><span class="p">,</span> <span class="n">uncertaintyChannelB</span><span class="p">,</span> <span class="n">valueChannelC</span><span class="p">,</span> <span class="n">uncertaintyChannelC</span><span class="p">,</span> <span class="n">valueChannelD</span><span class="p">,</span> <span class="n">uncertaintyChannelD</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.calculateIntervalWithStops"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.calculateIntervalWithStops">[docs]</a>    <span class="k">def</span> <span class="nf">calculateIntervalWithStops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currentMeasure</span><span class="p">,</span> <span class="n">numberStops</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates stop time intervals based on pulse timestamps from the measurement.</span>
+
+<span class="sd">        The function receives a raw measurement and the expected number of stops, </span>
+<span class="sd">        then iteratively computes the time differences between consecutive valid </span>
+<span class="sd">        pulse timestamps. Each interval is converted to a frequency in Hz by </span>
+<span class="sd">        dividing 10^12 by the difference in timestamp units (assuming picoseconds).</span>
+
+<span class="sd">        :param currentMeasure: A list containing pulse data for a single run.</span>
+<span class="sd">        :param numberStops: The number of stop intervals expected in the measurement.</span>
+<span class="sd">        :return: A list of frequency values (in Hz) calculated from the stop intervals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#TODO: CHANGE RECALCULATING NUMBER OF STOPS</span>
+        <span class="n">tempValues</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numberStops</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">currentMeasure</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span> <span class="ow">and</span> <span class="n">currentMeasure</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">!=</span><span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span><span class="p">:</span>
+                <span class="n">differenceValue</span><span class="o">=</span><span class="n">currentMeasure</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">currentMeasure</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">tempValues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">differenceValue</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">tempValues</span></div>
+    
+    
+    <span class="c1">#TODO: DETERMINE THE NUMBER OF STOPS TO PERFORM THE MEASUREMENTS</span>
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.determineStopsNumber"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.determineStopsNumber">[docs]</a>    <span class="k">def</span> <span class="nf">determineStopsNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channelTest</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the optimal number of stop pulses for a given channel to ensure valid measurements.</span>
+
+<span class="sd">        This function tests different stop configurations by progressively reducing the number of </span>
+<span class="sd">        required stop pulses (from 5 down to 2). For each configuration, it performs multiple test </span>
+<span class="sd">        measurements and checks if at least half of them return valid data. If a configuration with </span>
+<span class="sd">        sufficient measurements is found, it is returned. If none meet the condition, 1 is returned </span>
+<span class="sd">        by default. If the thread is stopped during execution, the process halts.</span>
+
+<span class="sd">        :param channelTest: A string indicating the channel to test (&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, or &quot;D&quot;).</span>
+<span class="sd">        :return: An integer representing the number of stop pulses that reliably produce measurements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Disable all channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="c1">##-------------------</span>
+        <span class="c1">##Enable only the tested channel</span>
+        <span class="k">if</span> <span class="n">channelTest</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span>
+        <span class="k">elif</span> <span class="n">channelTest</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span>
+        <span class="k">elif</span> <span class="n">channelTest</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span>
+        <span class="k">elif</span> <span class="n">channelTest</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span>
+        <span class="c1">##--------------------</span>
+            
+        <span class="c1">#Pre settings for determine stop number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">setNumberOfRuns</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">channel</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1">##-------------</span>
+        <span class="n">valuePercent</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">/</span><span class="mi">80</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">stopsInMeasure</span><span class="o">=</span><span class="mi">5</span>
+        <span class="n">stopsFounded</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">totalIterations</span><span class="o">=</span><span class="mi">20</span>
+        <span class="c1">#This number is arbitrary in order to determine how many measurements are necessary for determine the stop number</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">stopsInMeasure</span><span class="o">&gt;=</span><span class="mi">2</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">stopsFounded</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">):</span>
+            
+            <span class="n">channel</span><span class="o">.</span><span class="n">setNumberOfStops</span><span class="p">(</span><span class="n">stopsInMeasure</span><span class="p">)</span>
+            <span class="n">totalMeasurements</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">totalIterations</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">readIdnFromDevice</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">disconnectedDevice</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusText</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimating number stops in channel </span><span class="si">{</span><span class="n">channelTest</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">valuePercent</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+                <span class="n">valuePercent</span><span class="o">+=</span><span class="mi">100</span><span class="o">/</span><span class="mi">80</span>
+                <span class="n">valuePercent</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">valuePercent</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>    
+                <span class="n">measurements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">measurements</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OVERFLOW_PARAMETER</span><span class="p">:</span>
+                            <span class="n">totalMeasurements</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="n">totalMeasurements</span><span class="o">&gt;</span><span class="n">totalIterations</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">stopsFounded</span><span class="o">=</span><span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stopsInMeasure</span><span class="o">-=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changeStatusText</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimating number stops in channel </span><span class="si">{</span><span class="n">channelTest</span><span class="si">}</span><span class="s2"> 100%&quot;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">stopsInMeasure</span></div>
+        
+    
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.enableDisableChannels"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.enableDisableChannels">[docs]</a>    <span class="k">def</span> <span class="nf">enableDisableChannels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables or disables device channels based on active measurement sentinels.</span>
+
+<span class="sd">        This function disables all channels initially, then enables only the selected ones based on </span>
+<span class="sd">        the sentinel flags. It configures each enabled channel with a default stop mask and averaging </span>
+<span class="sd">        settings, and adds them to the list of channels to be measured. This reduces processing time </span>
+<span class="sd">        by avoiding unnecessary measurements from inactive channels.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">disableChannel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelASentinel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setAverageCycles</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelBSentinel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setAverageCycles</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelCSentinel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setAverageCycles</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channelDSentinel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channelsMeasure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">enableChannel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setStopMask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setAverageCycles</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch1</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch2</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch3</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ch4</span><span class="o">.</span><span class="n">setMode</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="WorkerThreadCountsEstimated.stop"><a class="viewcode-back" href="../../ThreadCountEstimated.html#Threads.ThreadCountEstimated.WorkerThreadCountsEstimated.stop">[docs]</a>    <span class="nd">@Slot</span><span class="p">()</span>   
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the measurement process by setting the running sentinel to False.</span>
+
+<span class="sd">        This function is typically called from the GUI when the user requests to stop the measurement. </span>
+<span class="sd">        Once the sentinel is set to False, the running loop in the thread will exit, effectively </span>
+<span class="sd">        terminating the background measurement process.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026,Tausand Electronics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
